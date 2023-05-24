@@ -19,7 +19,7 @@ abstract class BaseFragment<VB : ViewDataBinding>(
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = bindingFactory(inflater, container, false)
         return binding.run {
@@ -45,7 +45,7 @@ abstract class BaseFragment<VB : ViewDataBinding>(
     protected fun sendSnackBar(
         message: String,
         @IntRange(from = -2) length: Int = Snackbar.LENGTH_SHORT,
-        anchorView: View? = null
+        anchorView: View? = null,
     ) {
         Snackbar.make(
             binding.root,

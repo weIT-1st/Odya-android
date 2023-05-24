@@ -50,7 +50,7 @@ abstract class BaseFragment<VB : ViewDataBinding>(
         Snackbar.make(
             binding.root,
             message,
-            length
+            length,
         ).apply {
             if (anchorView != null) {
                 this.anchorView = anchorView

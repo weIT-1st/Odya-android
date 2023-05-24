@@ -1,19 +1,16 @@
 package com.weit.presentation.ui.base
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
-import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseFragment<VB : ViewDataBinding>(
-    @LayoutRes private val layoutRes: Int
+    private val bindingFactory: (LayoutInflater, ViewGroup?, Boolean) -> VB,
 ) : Fragment() {
 
     private var _binding: VB? = null
@@ -24,7 +21,7 @@ abstract class BaseFragment<VB : ViewDataBinding>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = DataBindingUtil.inflate(inflater, layoutRes, container, false)
+        _binding = bindingFactory(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
             root
@@ -59,11 +56,6 @@ abstract class BaseFragment<VB : ViewDataBinding>(
                 this.anchorView = anchorView
             }
         }.show()
-    }
-
-    protected fun navigateActivity(activity: Class<*>) {
-        startActivity(Intent(requireContext(), activity))
-        requireActivity().finish()
     }
 
     override fun onDestroyView() {

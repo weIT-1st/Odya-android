@@ -13,6 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 private const val BASE_URL = "https://jayden-bin.kro.kr/"
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {

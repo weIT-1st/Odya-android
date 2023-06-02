@@ -1,18 +1,8 @@
 package com.weit.presentation.ui
 
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.weit.presentation.databinding.ActivityMainBinding
+import com.weit.presentation.ui.base.BaseActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
-}
+class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate)

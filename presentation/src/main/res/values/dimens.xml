@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- radius -->
+    <dimen name="button_small_radius">4dp</dimen>
+    <dimen name="button_large_radius">8dp</dimen>
+    <dimen name="bottom_sheet_radius">12dp</dimen>
+
+    <!-- font -->
+    <dimen name="h1">36sp</dimen>
+    <dimen name="h2">32sp</dimen>
+    <dimen name="h3">24sp</dimen>
+    <dimen name="h4">22sp</dimen>
+    <dimen name="h5">20sp</dimen>
+    <dimen name="h6">18sp</dimen>
+
+    <dimen name="body1">16sp</dimen>
+    <dimen name="body2">16sp</dimen>
+
+    <dimen name="detail1">12sp</dimen>
+    <dimen name="detail2">12sp</dimen>
+</resources>

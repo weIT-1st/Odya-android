@@ -22,6 +22,11 @@ class ImageRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getImageBytes(uri: String): ByteArray {
+        val bitmap = dataSource.getBitmapByUri(uri)
+        return dataSource.getCompressedBytes(bitmap)
+    }
+
     private suspend fun getReadPermissionResult(): TedPermissionResult {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             Manifest.permission.READ_MEDIA_IMAGES

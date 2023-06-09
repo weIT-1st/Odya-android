@@ -2,16 +2,21 @@ package com.weit.data.source
 
 import android.content.ContentResolver
 import android.content.ContentUris
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.Build
 import android.provider.MediaStore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class ImageDataSource @Inject constructor(
     private val contentResolver: ContentResolver,
 ) {
-    suspend fun getImages(path: String?): List<String> {
-        return withContext(Dispatchers.IO) {
+    suspend fun getImages(path: String?): List<String> =
+        withContext(Dispatchers.IO) {
             val where = path?.takeIf { path.isNotEmpty() }?.apply {
                 MediaStore.Images.Media.DATA + " LIKE '%$path%'"
             }
@@ -33,5 +38,27 @@ class ImageDataSource @Inject constructor(
             }
             images
         }
+
+    suspend fun getCompressedBytes(bitmap: Bitmap): ByteArray =
+        withContext(Dispatchers.IO) {
+            ByteArrayOutputStream().use { outputStream ->
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    bitmap.compress(Bitmap.CompressFormat.WEBP_LOSSY, DEFAULT_QUALITY, outputStream)
+                } else {
+                    bitmap.compress(Bitmap.CompressFormat.WEBP, DEFAULT_QUALITY, outputStream)
+                }
+                outputStream.toByteArray()
+            }
+        }
+
+    suspend fun getBitmapByUri(uri: String): Bitmap =
+        withContext(Dispatchers.IO) {
+            contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
+                BitmapFactory.decodeStream(inputStream)
+            }
+        }
+
+    companion object {
+        private const val DEFAULT_QUALITY = 90
     }
 }

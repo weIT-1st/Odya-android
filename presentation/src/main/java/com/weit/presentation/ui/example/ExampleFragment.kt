@@ -21,18 +21,12 @@ class ExampleFragment : BaseFragment<FragmentExampleBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        viewModel.getImages()
     }
 
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.errorEvent.collectLatest { exception ->
                 handleError(exception)
-            }
-        }
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.images.collectLatest { images ->
-
             }
         }
     }

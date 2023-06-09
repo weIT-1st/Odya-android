@@ -3,7 +3,9 @@ package com.weit.presentation.ui.example
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.example.GetUserUseCase
+import com.weit.domain.usecase.image.GetImageBytesByUrisUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -13,17 +15,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.system.measureTimeMillis
 
 @HiltViewModel
 class ExampleViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getImagesUseCase: GetImagesUseCase,
+    private val getImageBytesByUrisUseCase: GetImageBytesByUrisUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
-
-    private val _images = MutableStateFlow<List<String>>(emptyList())
-    val images: StateFlow<List<String>> get() = _images
 
     private val _lastSearchedUser = MutableStateFlow("")
     val lastSearchedUser: StateFlow<String> get() = _lastSearchedUser
@@ -35,14 +36,29 @@ class ExampleViewModel @Inject constructor(
         cancel()
     }
 
-    fun getImages() {
+    init {
+        getImages()
+    }
+
+    private fun getImages() {
         viewModelScope.launch {
             val result = getImagesUseCase()
             if (result.isSuccess) {
-                _images.emit(result.getOrThrow())
+                val uris = result.getOrThrow().subList(0, 100)
+                convertUrisToImageBytes(uris)
             } else {
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())
             }
+        }
+    }
+
+    private fun convertUrisToImageBytes(uris: List<String>) {
+        viewModelScope.launch {
+            val millis = measureTimeMillis {
+                getImageBytesByUrisUseCase(uris)
+            }
+            // 10장 2초, 100장 15초
+            Logger.t("MainTest").i("$millis")
         }
     }
 

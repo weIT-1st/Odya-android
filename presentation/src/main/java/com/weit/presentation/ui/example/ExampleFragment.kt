@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.example
 
 import android.Manifest
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -27,6 +28,13 @@ class ExampleFragment : BaseFragment<FragmentExampleBinding>(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.errorEvent.collectLatest { exception ->
                 handleError(exception)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.loadImageEvent.collectLatest { bytes ->
+                // bytes -> bitmap 변환은 없을거 같아서 따로 usecase로 빼지 않음
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                binding.ivExampleScaled.setImageBitmap(bitmap)
             }
         }
     }

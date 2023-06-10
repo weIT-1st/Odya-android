@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.example.GetUserUseCase
-import com.weit.domain.usecase.image.GetImageBytesByUrisUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
+import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,13 +21,16 @@ import kotlin.system.measureTimeMillis
 class ExampleViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getImagesUseCase: GetImagesUseCase,
-    private val getImageBytesByUrisUseCase: GetImageBytesByUrisUseCase,
+    private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
 
     private val _lastSearchedUser = MutableStateFlow("")
     val lastSearchedUser: StateFlow<String> get() = _lastSearchedUser
+
+    private val _loadImageEvent = MutableEventFlow<ByteArray>()
+    val loadImageEvent = _loadImageEvent.asEventFlow()
 
     private val _errorEvent = MutableEventFlow<Throwable>()
     val errorEvent = _errorEvent.asEventFlow()
@@ -55,9 +58,12 @@ class ExampleViewModel @Inject constructor(
     private fun convertUrisToImageBytes(uris: List<String>) {
         viewModelScope.launch {
             val millis = measureTimeMillis {
-                getImageBytesByUrisUseCase(uris)
+                val list = getScaledImageBytesByUrisUseCase(uris)
+                Logger.t("MainTest").i(list.sumOf { it.size }.toString())
+                list.firstOrNull()?.let {
+                    _loadImageEvent.emit(it)
+                }
             }
-            // 10장 2초, 100장 15초
             Logger.t("MainTest").i("$millis")
         }
     }

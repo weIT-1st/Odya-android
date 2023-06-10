@@ -2,12 +2,12 @@ package com.weit.data.di
 
 import android.content.Context
 import com.weit.data.repository.example.ExampleRepositoryImpl
-import com.weit.data.repository.example.ImageRepositoryImpl
+import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.service.ExampleService
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.ImageDataSource
 import com.weit.domain.repository.example.ExampleRepository
-import com.weit.domain.repository.example.ImageRepository
+import com.weit.domain.repository.image.ImageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

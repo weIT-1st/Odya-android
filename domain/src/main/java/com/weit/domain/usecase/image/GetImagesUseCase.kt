@@ -1,6 +1,6 @@
 package com.weit.domain.usecase.image
 
-import com.weit.domain.repository.example.ImageRepository
+import com.weit.domain.repository.image.ImageRepository
 import javax.inject.Inject
 
 class GetImagesUseCase @Inject constructor(

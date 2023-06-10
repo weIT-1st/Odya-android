@@ -1,13 +1,13 @@
 package com.weit.domain.usecase.image
 
-import com.weit.domain.repository.example.ImageRepository
+import com.weit.domain.repository.image.ImageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import javax.inject.Inject
 
-class GetImageBytesByUrisUseCase @Inject constructor(
+class GetScaledImageBytesByUrisUseCase @Inject constructor(
     private val repository: ImageRepository,
 ) {
     suspend operator fun invoke(uris: List<String>): List<ByteArray> {

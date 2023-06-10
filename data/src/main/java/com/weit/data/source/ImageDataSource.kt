@@ -58,6 +58,19 @@ class ImageDataSource @Inject constructor(
             }
         }
 
+    suspend fun getScaledBitmap(bitmap: Bitmap): Bitmap =
+        withContext(Dispatchers.IO) {
+            val (width, height) = getScaledWidthAndHeight(bitmap.width, bitmap.height)
+            Bitmap.createScaledBitmap(bitmap, width, height, false)
+        }
+
+    private fun getScaledWidthAndHeight(width: Int, height: Int) =
+        when {
+            width in 1025 until height -> 1024 to (1024 / width.toFloat() * height).toInt()
+            height in 1025 until width -> (1024 / height.toFloat() * height).toInt() to 1024
+            else -> width to height
+        }
+
     companion object {
         private const val DEFAULT_QUALITY = 90
     }

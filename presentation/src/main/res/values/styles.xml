@@ -1,9 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!--  ImageView Style  -->
     <style name="ShapeAppearanceOverlay.App.CornerSize50Percent" parent="">
         <item name="cornerSize">50%</item>
     </style>
 
 
+    <style name="h1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="h2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="h3" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="h4" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h4</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
+    </style>
+
+    <style name="h5" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h5</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <style name="h6" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/h6</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.4</item>
+    </style>
+
+    <style name="body1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/body1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.7</item>
+    </style>
+
+    <style name="body2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/body2</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingMultiplier">1.7</item>
+    </style>
+
+    <style name="detail1" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/detail1</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
+
+    <style name="detail2" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textSize">@dimen/detail2</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
 </resources>
+

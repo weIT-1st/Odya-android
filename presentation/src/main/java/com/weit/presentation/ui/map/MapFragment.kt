@@ -17,6 +17,7 @@ import com.google.maps.android.ui.IconGenerator
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentExampleBinding
 import com.weit.presentation.databinding.FragmentMapBinding
+import com.weit.presentation.model.map.LatLngEntity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,10 +55,10 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         // 1. icongenerator로 marker만들기
         var iconGenerator = IconGenerator(context)
         var markerView: View = LayoutInflater.from(context).inflate(R.layout.layout_marker, null)
-//        var marker = markerView.findViewById<CircleImageView>(R.id.circle_iv)
-//        Glide.with(markerView)
-//            .load()
-//            .into(marker)
+        var marker = markerView.findViewById<CircleImageView>(R.id.circle_iv)
+        Glide.with(marker.context)
+            .load("https://github.com/overthename/ShoppingApp/assets/80188940/1b67a62c-67a3-41ea-89d4-e889490154e9")
+            .into(marker)
 
         iconGenerator.setContentView(markerView)
         iconGenerator.setBackground(null)
@@ -108,9 +109,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         super.onDestroy()
     }
 
-    data class LatLngEntity(
-        var latitude: Double?,
-        var longitude: Double?
-    )
+
 
 }

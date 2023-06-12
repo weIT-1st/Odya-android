@@ -17,15 +17,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
 
     private lateinit var navController: NavController
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setupJetpackNavigation()
+        setupBottomNavigation()
     }
 
-    private fun setupJetpackNavigation() {
+    private fun setupBottomNavigation() {
         val host: NavHostFragment = supportFragmentManager
             .findFragmentById(R.id.navigation_main) as NavHostFragment? ?: return
         navController = host.navController

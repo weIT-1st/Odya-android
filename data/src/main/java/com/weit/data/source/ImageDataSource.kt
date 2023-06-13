@@ -66,12 +66,13 @@ class ImageDataSource @Inject constructor(
 
     private fun getScaledWidthAndHeight(width: Int, height: Int) =
         when {
-            width in 1025 until height -> 1024 to (1024 / width.toFloat() * height).toInt()
-            height in 1025 until width -> (1024 / height.toFloat() * height).toInt() to 1024
+            width in DEFAULT_RESIZE until height -> DEFAULT_RESIZE to (DEFAULT_RESIZE / width.toFloat() * height).toInt()
+            height in DEFAULT_RESIZE until width -> (DEFAULT_RESIZE / height.toFloat() * height).toInt() to DEFAULT_RESIZE
             else -> width to height
         }
 
     companion object {
         private const val DEFAULT_QUALITY = 90
+        private const val DEFAULT_RESIZE = 1024
     }
 }

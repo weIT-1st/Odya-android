@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Odya</string>
+    <string name="error_api_key" translatable="false">No API key</string>
+    <string name="search_a_place">Search for a Place</string>
 </resources>

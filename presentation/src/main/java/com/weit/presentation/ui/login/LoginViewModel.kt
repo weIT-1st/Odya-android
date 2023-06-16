@@ -11,9 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-    private val loginWithKakaoUseCase: LoginWithKakaoUseCase,
-) : ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
 
     private val _loginEvent = MutableEventFlow<Unit>()
     val loginEvent = _loginEvent.asEventFlow()
@@ -22,7 +20,7 @@ class LoginViewModel @Inject constructor(
     val errorEvent = _errorEvent.asEventFlow()
 
     @MainThread
-    fun onLoginWithKakao() {
+    fun onLoginWithKakao(loginWithKakaoUseCase: LoginWithKakaoUseCase) {
         viewModelScope.launch {
             val result = loginWithKakaoUseCase()
             if (result.isSuccess) {

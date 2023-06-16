@@ -6,9 +6,6 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
 }
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file("local.properties").newDataInputStream())
-
 android {
     namespace 'com.weit.data'
     compileSdk 33
@@ -16,8 +13,6 @@ android {
     defaultConfig {
         minSdk 26
         targetSdk 33
-        buildConfigField "String", "KAKAO_LOGIN_KEY", properties["KAKAO_LOGIN_KEY"]
-        manifestPlaceholders = ["KAKAO_LOGIN_KEY" : "${properties["KAKAO_LOGIN_KEY"]}"]
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }

@@ -5,14 +5,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.libraries.places.api.model.AutocompletePrediction
+import com.weit.domain.model.place.PlacePrediction
 import com.weit.presentation.R
 import java.util.*
 
 
-class PlacePredictionAdapter : RecyclerView.Adapter<PlacePredictionAdapter.PlacePredictionViewHolder>() {
-    private val predictions: MutableList<AutocompletePrediction> = ArrayList()
-    var onPlaceClickListener: ((AutocompletePrediction) -> Unit)? = null
+class PlacePredictionAdapter(
+    val onPlaceClickListener : (String) -> Unit
+) : RecyclerView.Adapter<PlacePredictionAdapter.PlacePredictionViewHolder>() {
+    private val predictions: MutableList<PlacePrediction> = ArrayList()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacePredictionViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -24,7 +26,7 @@ class PlacePredictionAdapter : RecyclerView.Adapter<PlacePredictionAdapter.Place
         val place = predictions[position]
         holder.setPrediction(place)
         holder.itemView.setOnClickListener {
-            onPlaceClickListener?.invoke(place)
+            onPlaceClickListener(place.placeId)
         }
     }
 
@@ -32,7 +34,7 @@ class PlacePredictionAdapter : RecyclerView.Adapter<PlacePredictionAdapter.Place
         return predictions.size
     }
 
-    fun setPredictions(predictions: List<AutocompletePrediction>?) {
+    fun setPredictions(predictions: List<PlacePrediction>?) {
         this.predictions.clear()
         this.predictions.addAll(predictions!!)
         notifyDataSetChanged()
@@ -42,13 +44,13 @@ class PlacePredictionAdapter : RecyclerView.Adapter<PlacePredictionAdapter.Place
         private val title: TextView = itemView.findViewById(R.id.tv_title)
         private val address: TextView = itemView.findViewById(R.id.tv_address)
 
-        fun setPrediction(prediction: AutocompletePrediction) {
-            title.text = prediction.getPrimaryText(null)
-            address.text = prediction.getSecondaryText(null)
+        fun setPrediction(prediction: PlacePrediction) {
+            title.text = prediction.name
+            address.text = prediction.address
         }
+
+        //onBind(
     }
 
-    interface OnPlaceClickListener {
-        fun onPlaceClicked(place: AutocompletePrediction)
-    }
+
 }

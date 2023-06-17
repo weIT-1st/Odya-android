@@ -24,11 +24,11 @@
         app:iconifiedByDefault="false"
         app:queryHint="Search a place" />
 
-        <androidx.recyclerview.widget.RecyclerView
+     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_place_prediction"
             android:layout_width="match_parent"
             android:visibility="gone"
-            android:layout_height="200dp" />
+            android:layout_height="wrap_content" />
 
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"

@@ -57,7 +57,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.searchPlaceList.collectLatest {
-                adapter.setPredictions(it)
+                adapter.submitList(it)
             }
         }
 

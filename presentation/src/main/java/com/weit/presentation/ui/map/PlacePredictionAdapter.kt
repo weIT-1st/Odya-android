@@ -4,53 +4,55 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.presentation.R
+import com.weit.presentation.databinding.PlacePredictionItemBinding
 import java.util.*
 
 
 class PlacePredictionAdapter(
     val onPlaceClickListener : (String) -> Unit
-) : RecyclerView.Adapter<PlacePredictionAdapter.PlacePredictionViewHolder>() {
-    private val predictions: MutableList<PlacePrediction> = ArrayList()
-
+) : ListAdapter<PlacePrediction, PlacePredictionAdapter.PlacePredictionViewHolder>(PlaceDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacePredictionViewHolder {
-        val inflater = LayoutInflater.from(parent.context)
         return PlacePredictionViewHolder(
-            inflater.inflate(R.layout.place_prediction_item, parent, false))
+            PlacePredictionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
     override fun onBindViewHolder(holder: PlacePredictionViewHolder, position: Int) {
-        val place = predictions[position]
-        holder.setPrediction(place)
+        val place = getItem(position)
+        holder.bind(place)
         holder.itemView.setOnClickListener {
             onPlaceClickListener(place.placeId)
         }
     }
 
-    override fun getItemCount(): Int {
-        return predictions.size
-    }
+    class PlacePredictionViewHolder(
+        private val binding: PlacePredictionItemBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(prediction: PlacePrediction) {
 
-    fun setPredictions(predictions: List<PlacePrediction>?) {
-        this.predictions.clear()
-        this.predictions.addAll(predictions!!)
-        notifyDataSetChanged()
-    }
-
-    class PlacePredictionViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val title: TextView = itemView.findViewById(R.id.tv_title)
-        private val address: TextView = itemView.findViewById(R.id.tv_address)
-
-        fun setPrediction(prediction: PlacePrediction) {
-            title.text = prediction.name
-            address.text = prediction.address
+            itemView.apply {
+                binding.tvTitle.text = prediction.name
+                binding.tvAddress.text = prediction.address
+            }
         }
 
-        //onBind(
     }
+    companion object {
+        private val PlaceDiffCallback: DiffUtil.ItemCallback<PlacePrediction> =
+            object : DiffUtil.ItemCallback<PlacePrediction>() {
+                override fun areItemsTheSame(oldItem: PlacePrediction, newItem: PlacePrediction): Boolean {
+                    return oldItem.placeId == newItem.placeId
+                }
 
+                override fun areContentsTheSame(oldItem: PlacePrediction, newItem: PlacePrediction): Boolean {
+                    return oldItem == newItem
+                }
+            }
+    }
 
 }

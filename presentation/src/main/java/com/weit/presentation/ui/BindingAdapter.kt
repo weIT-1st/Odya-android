@@ -9,6 +9,6 @@ import com.weit.presentation.R
 fun bindImageUri(view: ImageView, uri: String?) {
     Glide.with(view.context)
         .load(uri)
-        .placeholder(R.color.white)
+        .placeholder(R.color.disable)
         .into(view)
 }

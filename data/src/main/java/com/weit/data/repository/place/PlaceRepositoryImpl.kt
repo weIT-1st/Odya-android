@@ -8,21 +8,28 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
-    private val dataSource: PlaceDateSource
+    private val dataSource: PlaceDateSource,
 ) : PlaceRepository {
 
-    override suspend fun searchPlace(query: String):List<PlacePrediction> {
+    override suspend fun searchPlace(query: String): List<PlacePrediction> {
         val result = dataSource.searchPlaces(query).first()
         return result.map {
-            PlacePrediction(it.placeId,
+            PlacePrediction(
+                it.placeId,
                 it.getPrimaryText(null).toString(),
-                it.getSecondaryText(null).toString())
+                it.getSecondaryText(null).toString(),
+            )
         }
     }
 
     override suspend fun getPlaceDetail(placeId: String): PlaceDetail {
         val result = dataSource.getPlaceDetail(placeId).result[0]
-        return PlaceDetail(result.placeId,result.name,result.adrAddress,
-            result.geometry?.location?.lat,result.geometry?.location?.lng)
+        return PlaceDetail(
+            result.placeId,
+            result.name,
+            result.adrAddress,
+            result.geometry?.location?.lat,
+            result.geometry?.location?.lng,
+        )
     }
 }

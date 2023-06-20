@@ -11,6 +11,5 @@ interface PlaceService {
     suspend fun getPlaceDetail(
         @Query("key") apiKey: String,
         @Query("place_id") placeId: String,
-        ): GeocodingResult
-
+    ): GeocodingResult
 }

@@ -32,16 +32,3 @@ data class Place(
     @field:Json(name = "vicinity")val vicinity: String?,
     @field:Json(name = "website")val website: String?,
 )
-
-
-
-
-
-
-
-
-
-
-
-
-

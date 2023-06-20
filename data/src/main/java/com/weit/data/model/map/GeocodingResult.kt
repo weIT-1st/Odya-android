@@ -10,18 +10,4 @@ data class GeocodingResult(
     @field:Json(name = "status")val status: String,
     @field:Json(name = "info_messages")val info_messages: Array<String>?,
 
-
 )
-
-
-
-
-
-
-
-
-
-
-
-
-

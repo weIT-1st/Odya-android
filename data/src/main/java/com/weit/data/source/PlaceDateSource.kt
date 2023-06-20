@@ -16,12 +16,12 @@ import javax.inject.Inject
 class PlaceDateSource @Inject constructor(
     private val service: PlaceService,
     private val sessionToken: AutocompleteSessionToken,
-    private val placesClient: PlacesClient
+    private val placesClient: PlacesClient,
 ) {
-    suspend fun getPlaceDetail(placeId : String): GeocodingResult =
-        service.getPlaceDetail(BuildConfig.GOOGLE_MAP_KEY,placeId)
+    suspend fun getPlaceDetail(placeId: String): GeocodingResult =
+        service.getPlaceDetail(BuildConfig.GOOGLE_MAP_KEY, placeId)
 
-    suspend fun searchPlaces(query: String): Flow<List<AutocompletePrediction>> = callbackFlow{
+    suspend fun searchPlaces(query: String): Flow<List<AutocompletePrediction>> = callbackFlow {
         val newRequest = FindAutocompletePredictionsRequest.builder()
             .setCountries("KR")
             .setTypesFilter(listOf(PlaceTypes.ESTABLISHMENT))
@@ -31,12 +31,10 @@ class PlaceDateSource @Inject constructor(
 
         placesClient.findAutocompletePredictions(newRequest)
             .addOnSuccessListener { response ->
-               trySend(response.autocompletePredictions)
-
+                trySend(response.autocompletePredictions)
             }.addOnFailureListener { exception: Exception? ->
                 trySend(emptyList())
             }
-        awaitClose {  }
+        awaitClose { }
     }
-
 }

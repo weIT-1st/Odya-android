@@ -435,10 +435,5 @@ enum class AddressType(private val addressType: String) {
      * Indicates an unknown address type returned by the server. The Java Client for Google Maps
      * Services should be updated to support the new value.
      */
-    UNKNOWN("unknown");
-
-    override fun toString(): String {
-        return addressType
-    }
-
+    UNKNOWN("unknown"),
 }

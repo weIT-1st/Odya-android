@@ -5,19 +5,14 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.weit.data.BuildConfig
-import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.place.PlaceRepositoryImpl
-import com.weit.data.service.ExampleService
 import com.weit.data.service.PlaceService
-import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.PlaceDateSource
-import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.place.PlaceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.android.scopes.ActivityRetainedScoped
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -26,17 +21,16 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class PlaceModule {
 
-
     @Singleton
     @Provides
-    fun providePlaceClient(@ApplicationContext context: Context) : PlacesClient {
+    fun providePlaceClient(@ApplicationContext context: Context): PlacesClient {
         Places.initialize(context, BuildConfig.GOOGLE_MAP_KEY)
         return Places.createClient(context)
     }
 
     @Singleton
     @Provides
-    fun provideAutocompleteSessionToken() : AutocompleteSessionToken {
+    fun provideAutocompleteSessionToken(): AutocompleteSessionToken {
         return AutocompleteSessionToken.newInstance()
     }
 
@@ -48,7 +42,7 @@ class PlaceModule {
     @Singleton
     @Provides
     fun providePlaceDataSource(service: PlaceService, sessionToken: AutocompleteSessionToken, placesClient: PlacesClient): PlaceDateSource =
-        PlaceDateSource(service,sessionToken,placesClient)
+        PlaceDateSource(service, sessionToken, placesClient)
 
     @Singleton
     @Provides

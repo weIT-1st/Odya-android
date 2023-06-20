@@ -2,12 +2,10 @@ package com.weit.presentation.ui.map
 
 import android.content.res.Resources
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.LinearLayout
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +18,6 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.weit.presentation.BuildConfig
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
@@ -29,13 +26,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class MapFragment : BaseFragment<FragmentMapBinding>(
-    FragmentMapBinding::inflate,
-) , OnMapReadyCallback {
+class MapFragment :
+    BaseFragment<FragmentMapBinding>(
+        FragmentMapBinding::inflate,
+    ),
+    OnMapReadyCallback {
 
     private val viewModel: MapViewModel by viewModels()
 
-    private val adapter = PlacePredictionAdapter{
+    private val adapter = PlacePredictionAdapter {
         binding.rvPlacePrediction.visibility = View.GONE
         viewModel.getDetailPlace(it)
     }
@@ -53,7 +52,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         initSearchView()
     }
 
-
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.searchPlaceList.collectLatest {
@@ -63,29 +61,27 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.detailPlace.collectLatest {
-                    val latlng = LatLng(it.latitude!!,it.longitude!!)
-                    showMap(latlng)
+                val latlng = LatLng(it.latitude!!, it.longitude!!)
+                showMap(latlng)
             }
         }
     }
 
-
     private fun initSearchView() {
+
         binding.svSearch.run{
-            queryHint = getString(R.string.search_a_place)
-            isIconifiedByDefault = false
-            isFocusable = true
             isIconified = false
+            queryHint = getString(R.string.search_a_place)
             requestFocusFromTouch()
         }
+
         binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
                 return false
             }
 
             override fun onQueryTextChange(newText: String): Boolean {
-
-                binding.rvPlacePrediction.visibility=View.VISIBLE
+                binding.rvPlacePrediction.visibility = View.VISIBLE
                 viewModel.searchPlace(newText)
                 return true
             }
@@ -93,12 +89,9 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
     }
 
     private fun initRecyclerView() {
-        val layoutManager = LinearLayoutManager(context)
-        binding.rvPlacePrediction.layoutManager = layoutManager
         binding.rvPlacePrediction.adapter = adapter
-        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context, layoutManager.orientation))
+        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
     }
-
 
     private fun showMap(latLng: LatLng) {
         coordinates = latLng
@@ -107,7 +100,6 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
             requireActivity().supportFragmentManager.findFragmentByTag(MAP_FRAGMENT_TAG) as SupportMapFragment?
 
         if (mapFragment == null) {
-
             val mapOptions = GoogleMapOptions()
             mapOptions.mapToolbarEnabled(false)
 
@@ -118,7 +110,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
                 .add(
                     R.id.confirmation_map,
                     mapFragment!!,
-                    MAP_FRAGMENT_TAG
+                    MAP_FRAGMENT_TAG,
                 )
                 .commit()
 
@@ -136,7 +128,7 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
         map = googleMap
         try {
             val success = map!!.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json)
+                MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json),
             )
             if (!success) {
                 Log.e(TAG, "Style parsing failed.")
@@ -145,13 +137,17 @@ class MapFragment : BaseFragment<FragmentMapBinding>(
             Log.e(TAG, "Can't find style. Error: ", e)
         }
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
-        marker =  map!!.addMarker(MarkerOptions().position(coordinates))
+        marker = map!!.addMarker(MarkerOptions().position(coordinates))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        map?.clear()
+        mapFragment?.onDestroyView()
 
     }
     companion object {
         private val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"
     }
-
-
 }

@@ -5,6 +5,9 @@ plugins {
     id 'dagger.hilt.android.plugin'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file("local.properties").newDataInputStream())
+
 android {
     namespace 'com.weit.odya'
     compileSdk 33
@@ -16,6 +19,7 @@ android {
         versionCode 1
         versionName "1.0"
 
+        buildConfigField "String", "KAKAO_LOGIN_KEY", properties["KAKAO_LOGIN_KEY"]
 
     }
 
@@ -48,6 +52,8 @@ dependencies {
 
     implementation 'com.google.dagger:hilt-android:2.45'
     kapt 'com.google.dagger:hilt-android-compiler:2.45'
+
+    implementation "com.kakao.sdk:v2-user:2.14.0"
 
     implementation 'com.orhanobut:logger:2.2.0'
 }

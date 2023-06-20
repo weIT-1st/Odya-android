@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_example_name"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -39,6 +40,18 @@
                 android:textSize="14sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
+        <ImageView
+            android:id="@+id/iv_example_scaled"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintTop_toBottomOf="@id/ti_example_name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@tools:sample/avatars" />
+
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_example_search"
             android:layout_width="wrap_content"
@@ -51,18 +64,17 @@
             app:layout_constraintStart_toEndOf="@id/ti_example_name"
             app:layout_constraintTop_toTopOf="@id/ti_example_name" />
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_example_searched"
+            style="@style/h2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@{vm.lastSearchedUser}"
-            android:textStyle="bold"
-            android:textSize="36sp"
             app:layout_constraintBottom_toTopOf="@+id/ti_example_name"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="김한빈"/>
+            tools:text="김한빈\n김한빈"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

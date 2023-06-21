@@ -27,7 +27,6 @@ class ImageRepositoryImpl @Inject constructor(
         val bitmap = dataSource.getBitmapByUri(uri)
         val scaledBitmap = dataSource.getScaledBitmap(bitmap)
         val bytes = dataSource.getCompressedBytes(scaledBitmap)
-        bitmap.recycle()
         scaledBitmap.recycle()
         return bytes
     }

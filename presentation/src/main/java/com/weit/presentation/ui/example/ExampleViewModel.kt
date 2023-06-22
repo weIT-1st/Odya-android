@@ -1,10 +1,12 @@
 package com.weit.presentation.ui.example
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.example.GetUserUseCase
+import com.weit.domain.usecase.image.GetCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -22,6 +24,7 @@ class ExampleViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
+    private val getCoordinatesUseCase: GetCoordinatesUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -42,19 +45,25 @@ class ExampleViewModel @Inject constructor(
     init {
         getImages()
     }
-
+    private fun getCoordinates(uri: String) {
+        viewModelScope.launch {
+           val result = getCoordinatesUseCase(uri)
+            Log.d("LatLong","lat ${result.latitude} lng ${result.longitude}")
+        }
+    }
     private fun getImages() {
         viewModelScope.launch {
             val result = getImagesUseCase()
             if (result.isSuccess) {
                 val uris = result.getOrThrow().subList(0, 100)
+                //Test to get coordinates
+                getCoordinates(uris.get(2))
                 convertUrisToImageBytes(uris)
             } else {
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())
             }
         }
     }
-
     private fun convertUrisToImageBytes(uris: List<String>) {
         viewModelScope.launch {
             val millis = measureTimeMillis {

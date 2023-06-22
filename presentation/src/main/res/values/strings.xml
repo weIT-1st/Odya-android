@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Odya</string>
+    <string name="error_api_key" translatable="false">No API key</string>
+    <string name="search_a_place">Search for a Place</string>
+
+    <!-- login_activity -->
+    <string name="text_login_kakao">카카오로 로그인</string>
 </resources>

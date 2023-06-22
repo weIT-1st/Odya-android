@@ -4,9 +4,11 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -57,6 +59,24 @@ class ImageDataSource @Inject constructor(
                 BitmapFactory.decodeStream(inputStream)
             }
         }
+
+    suspend fun getLatLongByUri(uri: String?) : List<Float> =
+        withContext(Dispatchers.IO) {
+            val coordinates = mutableListOf<Float>()
+            contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
+                val exif = inputStream?.let { ExifInterface(it) }
+                if (exif != null) {
+                    val latLong = FloatArray(2)
+                    if (exif.getLatLong(latLong)) {
+                        coordinates.add(latLong[0])
+                        coordinates.add(latLong[1])
+                    }
+                }
+            }
+            coordinates
+        }
+
+
 
     suspend fun getScaledBitmap(bitmap: Bitmap): Bitmap =
         withContext(Dispatchers.IO) {

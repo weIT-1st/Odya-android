@@ -4,7 +4,6 @@ import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -68,8 +67,7 @@ class MapFragment :
     }
 
     private fun initSearchView() {
-
-        binding.svSearch.run{
+        binding.svSearch.run {
             isIconified = false
             queryHint = getString(R.string.search_a_place)
             requestFocusFromTouch()
@@ -90,7 +88,7 @@ class MapFragment :
 
     private fun initRecyclerView() {
         binding.rvPlacePrediction.adapter = adapter
-        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context,LinearLayoutManager.VERTICAL))
+        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
     private fun showMap(latLng: LatLng) {
@@ -144,7 +142,6 @@ class MapFragment :
         super.onDestroyView()
         map?.clear()
         mapFragment?.onDestroyView()
-
     }
     companion object {
         private val TAG = "MapFragment"

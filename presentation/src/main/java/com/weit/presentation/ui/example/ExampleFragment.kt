@@ -2,11 +2,8 @@ package com.weit.presentation.ui.example
 
 import android.Manifest
 import android.graphics.BitmapFactory
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import androidx.exifinterface.media.ExifInterface
 import androidx.fragment.app.viewModels
 import com.weit.domain.model.exception.RequestDeniedException
 import com.weit.presentation.databinding.FragmentExampleBinding
@@ -14,8 +11,6 @@ import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import java.io.File
-import java.io.IOException
 
 @AndroidEntryPoint
 class ExampleFragment : BaseFragment<FragmentExampleBinding>(

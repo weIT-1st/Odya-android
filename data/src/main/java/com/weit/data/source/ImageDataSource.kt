@@ -8,7 +8,6 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
@@ -60,7 +59,7 @@ class ImageDataSource @Inject constructor(
             }
         }
 
-    suspend fun getLatLongByUri(uri: String?) : List<Float> =
+    suspend fun getLatLongByUri(uri: String?): List<Float> =
         withContext(Dispatchers.IO) {
             val coordinates = mutableListOf<Float>()
             contentResolver.openInputStream(Uri.parse(uri)).use { inputStream ->
@@ -75,8 +74,6 @@ class ImageDataSource @Inject constructor(
             }
             coordinates
         }
-
-
 
     suspend fun getScaledBitmap(bitmap: Bitmap): Bitmap =
         withContext(Dispatchers.IO) {

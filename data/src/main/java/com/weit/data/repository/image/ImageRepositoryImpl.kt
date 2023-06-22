@@ -5,10 +5,7 @@ import android.os.Build
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.R
-import com.weit.data.model.WeitUserDTO
-import com.weit.data.model.WeitUserName
 import com.weit.data.source.ImageDataSource
-import com.weit.domain.model.WeitUser
 import com.weit.domain.model.exception.RequestDeniedException
 import com.weit.domain.model.image.ImageLatLng
 import com.weit.domain.repository.image.ImageRepository
@@ -35,11 +32,10 @@ class ImageRepositoryImpl @Inject constructor(
         return bytes
     }
 
-    override suspend fun getCoordinates(uri: String?) : ImageLatLng {
+    override suspend fun getCoordinates(uri: String?): ImageLatLng {
         val result = dataSource.getLatLongByUri(uri)
-        return ImageLatLng(result.get(0),result.get(1))
-        }
-
+        return ImageLatLng(result.get(0), result.get(1))
+    }
 
     private suspend fun getReadPermissionResult(): TedPermissionResult {
         val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

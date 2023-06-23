@@ -48,7 +48,7 @@ class ExampleViewModel @Inject constructor(
     private fun getCoordinates(uri: String) {
         viewModelScope.launch {
             val result = getCoordinatesUseCase(uri)
-            Log.d("LatLong", "lat ${result.latitude} lng ${result.longitude}")
+            Log.d("LatLong", "lat ${result?.latitude} lng ${result?.longitude}")
         }
     }
     private fun getImages() {
@@ -57,7 +57,10 @@ class ExampleViewModel @Inject constructor(
             if (result.isSuccess) {
                 val uris = result.getOrThrow().subList(0, 100)
                 // Test to get coordinates
-                getCoordinates(uris.get(2))
+                for(x  in uris){
+                    Log.d("LatLong", x)
+                    getCoordinates(x)
+                }
                 convertUrisToImageBytes(uris)
             } else {
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())

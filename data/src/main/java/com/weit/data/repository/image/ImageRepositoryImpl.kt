@@ -32,9 +32,8 @@ class ImageRepositoryImpl @Inject constructor(
         return bytes
     }
 
-    override suspend fun getCoordinates(uri: String?): ImageLatLng {
-        val result = dataSource.getLatLongByUri(uri)
-        return ImageLatLng(result.get(0), result.get(1))
+    override suspend fun getCoordinates(uri: String?): ImageLatLng? {
+        return  dataSource.getLatLongByUri(uri)
     }
 
     private suspend fun getReadPermissionResult(): TedPermissionResult {

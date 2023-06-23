@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetCoordinatesUseCase @Inject constructor(
     private val repository: ImageRepository,
 ) {
-    suspend operator fun invoke(uri: String?): ImageLatLng =
+    suspend operator fun invoke(uri: String?): ImageLatLng? =
         repository.getCoordinates(uri)
 }

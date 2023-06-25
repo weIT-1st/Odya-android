@@ -26,12 +26,14 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
         }
+        binding.btnToMain.setOnClickListener {
+            moveToMain()
+        }
     }
 
     override fun initCollector() {
         repeatOnStarted(this) {
             viewModel.loginEvent.collectLatest { token ->
-                Logger.t("MainTest").i(token)
                 moveToMain()
             }
         }

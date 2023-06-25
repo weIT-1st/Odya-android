@@ -30,7 +30,8 @@ class LoginActivity : BaseActivity<ActivityLoginBinding>(
 
     override fun initCollector() {
         repeatOnStarted(this) {
-            viewModel.loginEvent.collectLatest {
+            viewModel.loginEvent.collectLatest { token ->
+                Logger.t("MainTest").i(token)
                 moveToMain()
             }
         }

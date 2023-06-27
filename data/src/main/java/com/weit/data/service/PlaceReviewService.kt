@@ -3,6 +3,7 @@ package com.weit.data.service
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -17,7 +18,7 @@ interface PlaceReviewService {
         @Field("review") review: String,
     )
 
-    @PUT("/api/v1/place-reviews")
+    @PATCH("/api/v1/place-reviews")
     @FormUrlEncoded
     suspend fun update(
         @Field("id") id: Long,

@@ -18,7 +18,6 @@ android {
         targetSdk 33
         versionCode 1
         versionName "1.0"
-
         buildConfigField "String", "KAKAO_LOGIN_KEY", properties["KAKAO_LOGIN_KEY"]
 
     }

@@ -16,7 +16,7 @@ class PlaceReviewDateSource @Inject constructor(
         service.register(
             placeId = info.placeId,
             rating = info.rating,
-            review = info.review
+            review = info.review,
         )
     }
 
@@ -24,7 +24,7 @@ class PlaceReviewDateSource @Inject constructor(
         service.update(
             id = info.id,
             rating = info.rating,
-            review = info.review
+            review = info.review,
         )
     }
 
@@ -32,19 +32,17 @@ class PlaceReviewDateSource @Inject constructor(
         service.delete(id)
     }
 
-    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo) : PlaceReviewListDTO =
+    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): PlaceReviewListDTO =
         service.getReviewsByPlaceId(
             id = info.placeId,
             startId = info.startId,
-            count = info.count
+            count = info.count,
         )
 
-
-    suspend fun getByUserId(info: PlaceReviewByUserIdInfo) : PlaceReviewListDTO =
+    suspend fun getByUserId(info: PlaceReviewByUserIdInfo): PlaceReviewListDTO =
         service.getReviewsByUserId(
             id = info.userId,
             startId = info.startId,
-            count = info.count
+            count = info.count,
         )
-
 }

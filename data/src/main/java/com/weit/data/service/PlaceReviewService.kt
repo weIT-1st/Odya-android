@@ -7,7 +7,6 @@ import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
-import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface PlaceReviewService {
@@ -30,9 +29,8 @@ interface PlaceReviewService {
 
     @DELETE("/api/v1/place-reviews/{id}")
     suspend fun delete(
-        @Path("id") id: Long
+        @Path("id") id: Long,
     )
-
 
     @GET("/api/v1/place-reviews/place/{id}")
     @FormUrlEncoded

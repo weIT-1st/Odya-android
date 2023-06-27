@@ -29,6 +29,4 @@ class PlaceReviewModule {
     @Provides
     fun providePlaceReviewRepository(dataSource: PlaceReviewDateSource): PlaceReviewRepository =
         PlaceReviewRepositoryImpl(dataSource)
-
-
 }

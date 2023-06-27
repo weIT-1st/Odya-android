@@ -1,6 +1,5 @@
 package com.weit.domain.usecase.auth
 
-import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
 import javax.inject.Inject

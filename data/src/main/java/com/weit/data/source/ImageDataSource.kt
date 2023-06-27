@@ -5,11 +5,9 @@ import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ExifInterface
-import android.media.Image
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import android.util.Log
 import com.weit.domain.model.image.ImageLatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -75,7 +73,7 @@ class ImageDataSource @Inject constructor(
                     }
                 }
             }
-            ImageLatLng(imageLatLng[0],imageLatLng[1])
+            ImageLatLng(imageLatLng[0], imageLatLng[1])
         }
 
     suspend fun getScaledBitmap(bitmap: Bitmap): Bitmap =

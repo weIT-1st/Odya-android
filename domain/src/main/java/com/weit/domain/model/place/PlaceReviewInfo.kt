@@ -6,5 +6,5 @@ data class PlaceReviewInfo(
     val userId: Long,
     val writerNickname: String,
     val starRating: Int,
-    val review: String
+    val review: String,
 )

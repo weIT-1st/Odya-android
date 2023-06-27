@@ -8,6 +8,7 @@ import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface PlaceReviewService {
 
@@ -20,7 +21,6 @@ interface PlaceReviewService {
     )
 
     @PATCH("/api/v1/place-reviews")
-    @FormUrlEncoded
     suspend fun update(
         @Field("id") id: Long,
         @Field("rating") rating: Int,
@@ -33,18 +33,16 @@ interface PlaceReviewService {
     )
 
     @GET("/api/v1/place-reviews/place/{id}")
-    @FormUrlEncoded
     suspend fun getReviewsByPlaceId(
         @Path("id") id: String,
-        @Field("startId") startId: Long?,
-        @Field("count") count: Int,
+        @Query("startId") startId: Long?,
+        @Query("count") count: Int,
     ): PlaceReviewListDTO
 
     @GET("/api/v1/place-reviews/user/{id}")
-    @FormUrlEncoded
     suspend fun getReviewsByUserId(
         @Path("id") id: Long,
-        @Field("startId") startId: Long?,
-        @Field("count") count: Int,
+        @Query("startId") startId: Long?,
+        @Query("count") count: Int,
     ): PlaceReviewListDTO
 }

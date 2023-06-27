@@ -5,4 +5,5 @@
 
     <item android:id="@+id/fragment_example"
         android:title="Example"/>
+
 </menu>

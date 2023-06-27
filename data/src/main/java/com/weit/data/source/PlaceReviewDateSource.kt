@@ -22,14 +22,14 @@ class PlaceReviewDateSource @Inject constructor(
 
     suspend fun update(info: PlaceReviewUpdateInfo) {
         service.update(
-            id = info.id,
+            id = info.placeReviewId,
             rating = info.rating,
             review = info.review,
         )
     }
 
-    suspend fun delete(id: Long) {
-        service.delete(id)
+    suspend fun delete(placeReviewId: Long) {
+        service.delete(placeReviewId)
     }
 
     suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): PlaceReviewListDTO =

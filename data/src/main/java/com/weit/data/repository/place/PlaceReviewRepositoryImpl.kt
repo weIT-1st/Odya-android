@@ -3,7 +3,7 @@ package com.weit.data.repository.place
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
-import com.weit.domain.model.place.PlaceReviewInfo
+import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
@@ -25,17 +25,17 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun delete(id: Long): Result<Unit> {
+    override suspend fun delete(placeReviewId: Long): Result<Unit> {
         return runCatching {
-            dataSource.delete(id)
+            dataSource.delete(placeReviewId)
         }
     }
 
-    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): Result<List<PlaceReviewInfo>> {
+    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): Result<List<PlaceReviewDetail>> {
         return runCatching {
             dataSource.getByPlaceId(info).reviews.map {
-                PlaceReviewInfo(
-                    it.id,
+                PlaceReviewDetail(
+                    it.placeReviewId,
                     it.placeId,
                     it.userId,
                     it.writerNickname,
@@ -46,11 +46,11 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getByUserId(info: PlaceReviewByUserIdInfo): Result<List<PlaceReviewInfo>> {
+    override suspend fun getByUserId(info: PlaceReviewByUserIdInfo): Result<List<PlaceReviewDetail>> {
         return runCatching {
             dataSource.getByUserId(info).reviews.map {
-                PlaceReviewInfo(
-                    it.id,
+                PlaceReviewDetail(
+                    it.placeReviewId,
                     it.placeId,
                     it.userId,
                     it.writerNickname,

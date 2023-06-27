@@ -16,21 +16,21 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateEmail(newEmail: String): Result<Unit> {
+    override suspend fun updateEmail(email: String): Result<Unit> {
         return runCatching {
-            userDataSource.updateEmail(newEmail)
+            userDataSource.updateEmail(email)
         }
     }
 
-    override suspend fun updatePhoneNumber(newPhonenumber: String): Result<Unit> {
+    override suspend fun updatePhoneNumber(phonenumber: String): Result<Unit> {
         return runCatching {
-            userDataSource.updatePhoneNumber(newPhonenumber)
+            userDataSource.updatePhoneNumber(phonenumber)
         }
     }
 
-    override suspend fun updateInformation(newNickname: String): Result<Unit> {
+    override suspend fun updateInformation(nickname: String): Result<Unit> {
         return runCatching {
-            userDataSource.updateInformation(newNickname)
+            userDataSource.updateInformation(nickname)
         }
     }
 

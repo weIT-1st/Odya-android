@@ -1,6 +1,7 @@
 package com.weit.data.repository.auth
 
 import com.kakao.sdk.user.UserApiClient
+import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
 import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.repository.auth.AuthRepository
@@ -20,7 +21,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun register(info: UserRegistrationInfo): Result<Unit> {
         return runCatching {
-            authDataSource.register(info)
+            authDataSource.register(info.toUserRegistration())
         }
     }
 
@@ -34,4 +35,14 @@ class AuthRepositoryImpl @Inject constructor(
         }
         awaitClose { /* Do Nothing */ }
     }
+
+    private fun UserRegistrationInfo.toUserRegistration(): UserRegistration =
+        UserRegistration(
+            name = name,
+            email = email,
+            phoneNumber = phoneNumber,
+            nickname = nickname,
+            gender = gender,
+            birthday = birthday,
+        )
 }

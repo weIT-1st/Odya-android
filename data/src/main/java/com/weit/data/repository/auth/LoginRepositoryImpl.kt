@@ -4,6 +4,7 @@ import android.content.Context
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
 import com.kakao.sdk.user.UserApiClient
+import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO
 import com.weit.data.source.AuthDataSource
 import com.weit.domain.model.auth.UserToken
@@ -72,7 +73,7 @@ class LoginRepositoryImpl @Inject constructor(
     private suspend fun loginToServer(): Result<UserToken> {
         return authDataSource.getKakaoToken().first()?.let { token ->
             val result = kotlin.runCatching {
-                authDataSource.login(token).toUserToken()
+                authDataSource.login(KakaoAccessToken(token)).toUserToken()
             }
             if (result.isSuccess) {
                 Result.success(result.getOrThrow())

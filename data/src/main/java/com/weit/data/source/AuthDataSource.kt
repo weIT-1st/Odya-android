@@ -2,9 +2,10 @@ package com.weit.data.source
 
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
+import com.weit.data.model.auth.KakaoAccessToken
+import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
 import com.weit.data.service.AuthService
-import com.weit.domain.model.auth.UserRegistrationInfo
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -14,17 +15,10 @@ class AuthDataSource @Inject constructor(
     private val service: AuthService,
 ) {
 
-    suspend fun login(accessToken: String): UserTokenDTO = service.login(accessToken)
+    suspend fun login(accessToken: KakaoAccessToken): UserTokenDTO = service.login(accessToken)
 
-    suspend fun register(info: UserRegistrationInfo) {
-        service.register(
-            name = info.name,
-            email = info.email,
-            phoneNumber = info.phoneNumber,
-            nickname = info.nickname,
-            gender = info.gender,
-            birthday = info.birthday,
-        )
+    suspend fun register(userRegistration: UserRegistration) {
+        service.register(userRegistration)
     }
 
     fun hasKakaoToken(): Boolean =

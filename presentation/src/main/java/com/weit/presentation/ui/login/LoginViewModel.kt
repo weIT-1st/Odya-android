@@ -13,7 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor() : ViewModel() {
 
-    private val _loginEvent = MutableEventFlow<Unit>()
+    private val _loginEvent = MutableEventFlow<String>()
     val loginEvent = _loginEvent.asEventFlow()
 
     private val _errorEvent = MutableEventFlow<Throwable>()
@@ -24,7 +24,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         viewModelScope.launch {
             val result = loginWithKakaoUseCase()
             if (result.isSuccess) {
-                _loginEvent.emit(Unit)
+                _loginEvent.emit(result.getOrThrow().token)
             } else {
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())
             }

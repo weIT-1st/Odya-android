@@ -1,5 +1,6 @@
 package com.weit.domain.usecase.auth
 
+import com.weit.domain.model.auth.UserToken
 import com.weit.domain.repository.auth.LoginRepository
 import javax.inject.Inject
 
@@ -9,5 +10,5 @@ import javax.inject.Inject
 class LoginWithKakaoUseCase @Inject constructor(
     private val repository: LoginRepository,
 ) {
-    suspend operator fun invoke(): Result<Unit> = repository.loginWithKakao()
+    suspend operator fun invoke(): Result<UserToken> = repository.loginWithKakao()
 }

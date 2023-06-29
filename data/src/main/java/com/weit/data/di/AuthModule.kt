@@ -1,13 +1,14 @@
 package com.weit.data.di
 
-import android.content.Context
 import com.weit.data.repository.auth.AuthRepositoryImpl
+import com.weit.data.service.AuthService
+import com.weit.data.source.AuthDataSource
 import com.weit.domain.repository.auth.AuthRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -17,6 +18,12 @@ object AuthModule {
     @Singleton
     @Provides
     fun providesAuthRepository(
-        @ApplicationContext context: Context,
-    ): AuthRepository = AuthRepositoryImpl(context)
+        authDataSource: AuthDataSource,
+    ): AuthRepository = AuthRepositoryImpl(authDataSource)
+
+    @Singleton
+    @Provides
+    fun providesAuthService(
+        retrofit: Retrofit,
+    ): AuthService = retrofit.create(AuthService::class.java)
 }

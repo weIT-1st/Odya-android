@@ -13,7 +13,12 @@ abstract class BaseActivity<VB : ViewBinding>(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        preLoad()
+
         binding = bindingFactory(layoutInflater)
         setContentView(binding.root)
     }
+
+    abstract fun preLoad()
 }

@@ -12,6 +12,7 @@ abstract class BaseActivity<VB : ViewBinding>(
     protected lateinit var binding: VB
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        preInitListener()
         super.onCreate(savedInstanceState)
 
         binding = bindingFactory(layoutInflater)
@@ -20,6 +21,8 @@ abstract class BaseActivity<VB : ViewBinding>(
         initCollector()
     }
 
+    protected open fun preInitListener(){
+    }
     protected open fun initListener() {
         // 호출을 BaseActivity로 위임하기 위한 빈 메소드 입니다.
     }

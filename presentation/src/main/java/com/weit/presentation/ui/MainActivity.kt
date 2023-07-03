@@ -1,12 +1,6 @@
 package com.weit.presentation.ui
 
 import android.os.Bundle
-//<<<<<<< HEAD
-//import android.view.View
-//import android.view.ViewTreeObserver
-//import androidx.activity.viewModels
-//import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-//=======
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController

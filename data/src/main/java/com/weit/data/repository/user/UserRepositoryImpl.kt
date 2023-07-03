@@ -23,7 +23,7 @@ class UserRepositoryImpl @Inject constructor(
 
         val result : Result<Unit> = runCatching{
 
-            if(Pattern.matches("^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", email)){
+            if(Pattern.matches(REGEX_EMAIL, email)){
                 userDataSource.updateEmail(email)
             } else {
                 throw RegexException()
@@ -36,7 +36,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updatePhoneNumber(phonenumber: String): Result<Unit> {
         val result : Result<Unit> = runCatching{
 
-            if (Pattern.matches("^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$", "010-0000-0000")) {
+            if (Pattern.matches(REGEX_PHONE, phonenumber)) {
                 userDataSource.updatePhoneNumber(phonenumber)
             } else {
                 throw RegexException()
@@ -62,4 +62,9 @@ class UserRepositoryImpl @Inject constructor(
             birthday = birthday,
             socialType = socialType
         )
+
+    companion object{
+        const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        const val REGEX_PHONE = "^01(?:0|1|[6-9]) - (?:\\d{3}|\\d{4}) - \\d{4}$"
+    }
 }

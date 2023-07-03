@@ -14,11 +14,17 @@ abstract class BaseActivity<VB : ViewBinding>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        preLoad()
-
         binding = bindingFactory(layoutInflater)
         setContentView(binding.root)
+        initListener()
+        initCollector()
     }
 
-    abstract fun preLoad()
+    protected open fun initListener() {
+        // 호출을 BaseActivity로 위임하기 위한 빈 메소드 입니다.
+    }
+
+    protected open fun initCollector() {
+        // 호출을 BaseActivity로 위임하기 위한 빈 메소드 입니다.
+    }
 }

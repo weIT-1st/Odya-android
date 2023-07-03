@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- radius -->
+    <dimen name="button_small_radius">4dp</dimen>
+    <dimen name="button_large_radius">8dp</dimen>
+    <dimen name="modal_radius">12dp</dimen>
+
+    <!-- font -->
+    <dimen name="h1">36sp</dimen>
+    <dimen name="h2">32sp</dimen>
+    <dimen name="h3">24sp</dimen>
+    <dimen name="h4">22sp</dimen>
+    <dimen name="h5">20sp</dimen>
+    <dimen name="h6">18sp</dimen>
+    <dimen name="h1_line_height">46dp</dimen>
+    <dimen name="h2_line_height">41dp</dimen>
+    <dimen name="h3_line_height">31dp</dimen>
+    <dimen name="h4_line_height">28dp</dimen>
+    <dimen name="h5_line_height">28dp</dimen>
+    <dimen name="h6_line_height">25dp</dimen>
+
+    <dimen name="body1">16sp</dimen>
+    <dimen name="body2">16sp</dimen>
+    <dimen name="body1_line_height">27dp</dimen>
+    <dimen name="body2_line_height">27dp</dimen>
+
+    <dimen name="detail1">12sp</dimen>
+    <dimen name="detail2">12sp</dimen>
+    <dimen name="detail1_line_height">18dp</dimen>
+    <dimen name="detail2_line_height">18dp</dimen>
+</resources>

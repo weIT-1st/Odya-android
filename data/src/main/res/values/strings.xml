@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="read_permission_denied">사진을 가져오기 위해서 권한이 필요해요!\n신사답게 행동하십쇼</string>
+</resources>

@@ -13,9 +13,16 @@ android {
     defaultConfig {
         minSdk 26
         targetSdk 33
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("local.properties").newDataInputStream())
+        buildConfigField "String", "GOOGLE_MAP_KEY", "\"${properties.getProperty("GOOGLE_MAP_KEY")}\""
+
+        defaultConfig {
+            manifestPlaceholders = ["GOOGLE_MAP_KEY" : "\"${properties.getProperty("GOOGLE_MAP_KEY")}\""]
+        }
     }
 
     buildTypes {
@@ -54,7 +61,14 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.6'
     implementation 'com.squareup.retrofit2:converter-moshi:2.9.0'
 
+    implementation 'io.github.ParkSangGwon:tedpermission-coroutine:3.3.0'
+
+    implementation "com.kakao.sdk:v2-user:2.14.0"
+
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    implementation 'com.google.android.libraries.places:places:3.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.4.0'
 }

@@ -1,6 +1,9 @@
 package com.weit.data.service
 
 import com.weit.data.model.place.PlaceReviewListDTO
+import com.weit.data.model.place.PlaceReviewModification
+import com.weit.data.model.place.PlaceReviewRegistration
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -15,16 +18,12 @@ interface PlaceReviewService {
     @POST("/api/v1/place-reviews")
     @FormUrlEncoded
     suspend fun register(
-        @Field("placeId") placeId: String,
-        @Field("rating") rating: Int,
-        @Field("review") review: String,
+      @Body placeReviewRegistration: PlaceReviewRegistration
     )
 
     @PATCH("/api/v1/place-reviews")
     suspend fun update(
-        @Field("id") id: Long,
-        @Field("rating") rating: Int,
-        @Field("review") review: String,
+       @Body placeReviewModification: PlaceReviewModification
     )
 
     @DELETE("/api/v1/place-reviews/{id}")

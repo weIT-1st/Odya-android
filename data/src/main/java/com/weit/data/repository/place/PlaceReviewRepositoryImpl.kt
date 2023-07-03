@@ -1,5 +1,7 @@
 package com.weit.data.repository.place
 
+import com.weit.data.model.place.PlaceReviewModification
+import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
@@ -15,13 +17,13 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 
     override suspend fun register(info: PlaceReviewRegistrationInfo): Result<Unit> {
         return runCatching {
-            dataSource.register(info)
+            dataSource.register(info.toPlaceReviewRegistraion())
         }
     }
 
     override suspend fun update(info: PlaceReviewUpdateInfo): Result<Unit> {
         return runCatching {
-            dataSource.update(info)
+            dataSource.update(info.toPlaceReviewModification())
         }
     }
 
@@ -60,4 +62,18 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
+        PlaceReviewRegistration(
+            placeId = placeId,
+            rating = rating,
+            review = review,
+        )
+
+    private fun PlaceReviewUpdateInfo.toPlaceReviewModification(): PlaceReviewModification =
+        PlaceReviewModification(
+            id = placeReviewId,
+            rating = rating,
+            review = review,
+        )
 }

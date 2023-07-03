@@ -1,6 +1,8 @@
 package com.weit.data.source
 
 import com.weit.data.model.place.PlaceReviewListDTO
+import com.weit.data.model.place.PlaceReviewModification
+import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.PlaceReviewService
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
@@ -12,20 +14,12 @@ class PlaceReviewDateSource @Inject constructor(
     private val service: PlaceReviewService,
 ) {
 
-    suspend fun register(info: PlaceReviewRegistrationInfo) {
-        service.register(
-            placeId = info.placeId,
-            rating = info.rating,
-            review = info.review,
-        )
+    suspend fun register(placeReviewRegistration: PlaceReviewRegistration) {
+        service.register(placeReviewRegistration)
     }
 
-    suspend fun update(info: PlaceReviewUpdateInfo) {
-        service.update(
-            id = info.placeReviewId,
-            rating = info.rating,
-            review = info.review,
-        )
+    suspend fun update(placeReviewModification: PlaceReviewModification) {
+        service.update(placeReviewModification)
     }
 
     suspend fun delete(placeReviewId: Long) {

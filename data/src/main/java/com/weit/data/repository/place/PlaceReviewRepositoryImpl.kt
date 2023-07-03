@@ -72,7 +72,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 
     private fun PlaceReviewUpdateInfo.toPlaceReviewModification(): PlaceReviewModification =
         PlaceReviewModification(
-            id = placeReviewId,
+            placeReviewId = placeReviewId,
             rating = rating,
             review = review,
         )

@@ -4,6 +4,8 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.auth.UserRegistrationInfo
+import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.usecase.auth.RegisterUserUseCase
 import com.weit.presentation.model.GenderType
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -46,7 +48,7 @@ class UserRegistrationViewModel @AssistedInject constructor(
     fun registerUser() {
         viewModelScope.launch {
             if (checkUserRegistrationCondition()) {
-                registerUserUseCase(
+                val result = registerUserUseCase(
                     UserRegistrationInfo(
                         name = username,
                         nickname = nickname.value,
@@ -54,7 +56,24 @@ class UserRegistrationViewModel @AssistedInject constructor(
                         birthday = birth
                     )
                 )
+                handleRegistrationResult(result)
             }
+        }
+    }
+
+    private suspend fun handleRegistrationResult(result: Result<Unit>) {
+        if (result.isSuccess) {
+            _event.emit(Event.RegistrationSuccess)
+        } else {
+            handleRegistrationError(result.exceptionOrNull() ?: UnKnownException())
+        }
+    }
+
+    private suspend fun handleRegistrationError(error: Throwable) {
+        // TODO 에러 코드가 추가 되면 에러 처리 세분화
+        when (error) {
+            is DuplicatedSomethingException -> _event.emit(Event.DuplicatedNickname)
+            else -> _event.emit(Event.RegistrationFailed)
         }
     }
 
@@ -79,6 +98,7 @@ class UserRegistrationViewModel @AssistedInject constructor(
         object GenderNotSelected : Event()
         object BirthNotSelected : Event()
         object RegistrationSuccess : Event()
+        object DuplicatedNickname : Event()
         object RegistrationFailed : Event()
     }
 }

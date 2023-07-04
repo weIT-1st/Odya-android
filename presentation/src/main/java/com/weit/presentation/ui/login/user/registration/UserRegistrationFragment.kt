@@ -2,6 +2,7 @@ package com.weit.presentation.ui.login.user.registration
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
@@ -12,6 +13,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonChec
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUserRegistrationBinding
 import com.weit.presentation.model.GenderType
+import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -84,15 +86,30 @@ class UserRegistrationFragment : BaseFragment<FragmentUserRegistrationBinding>(
     private fun handleEvent(event: UserRegistrationViewModel.Event) {
         when (event) {
             UserRegistrationViewModel.Event.GenderNotSelected -> {
+                sendSnackBar("성별이 비어있어요!")
             }
             UserRegistrationViewModel.Event.RegistrationSuccess -> {
+                moveToMain()
             }
             UserRegistrationViewModel.Event.RegistrationFailed -> {
+                sendSnackBar("많은 에러 케이스를 뚫고 그냥 실패했어요\n인터넷 연결이라도 확인해보세요")
             }
             UserRegistrationViewModel.Event.BirthNotSelected -> {
+                sendSnackBar("생년월일이 비어있어요!")
             }
             UserRegistrationViewModel.Event.NicknameIsEmpty -> {
+                sendSnackBar("닉네임이 비어있어요!")
             }
+            UserRegistrationViewModel.Event.DuplicatedNickname -> {
+                sendSnackBar("뭔가 중복이 났는데 아마 닉네임일 겁니다.")
+            }
+        }
+    }
+
+    private fun moveToMain() {
+        requireActivity().run {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 

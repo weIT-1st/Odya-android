@@ -1,7 +1,6 @@
 package com.weit.data.service
 
 
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import com.weit.data.model.user.UserDTO
 import retrofit2.http.Field
 import retrofit2.http.GET

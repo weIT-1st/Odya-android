@@ -1,6 +1,5 @@
 package com.weit.data.repository.user
 
-import android.util.Patterns
 import com.weit.data.model.user.UserDTO
 import com.weit.data.source.UserDataSource
 import com.weit.domain.model.exception.RegexException

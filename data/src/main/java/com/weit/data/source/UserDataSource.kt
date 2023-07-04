@@ -2,7 +2,6 @@ package com.weit.data.source
 
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
-import com.weit.domain.model.user.User
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(

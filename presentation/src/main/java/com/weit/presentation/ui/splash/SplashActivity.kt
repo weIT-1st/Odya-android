@@ -16,11 +16,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding> (
 
     private val viewModel: SplashViewModel by viewModels()
 
-    override fun initListener() {
-        viewModel.splashDelay()
-    }
-
-
     override fun initCollector() {
         repeatOnStarted(this){
             viewModel.splashEvent.collectLatest {

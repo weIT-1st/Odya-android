@@ -15,6 +15,10 @@ class SplashViewModel @Inject constructor() : ViewModel() {
     private var _splashEvent = MutableEventFlow<Boolean>()
     val splashEvent = _splashEvent.asEventFlow()
 
+    init {
+        splashDelay()
+    }
+
     fun splashDelay(){
         viewModelScope.launch {
             delay(1000)

@@ -33,7 +33,7 @@ class ImageRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCoordinates(uri: String?): ImageLatLng? {
-        return  dataSource.getLatLongByUri(uri)
+        return dataSource.getLatLongByUri(uri)
     }
 
     private suspend fun getReadPermissionResult(): TedPermissionResult {

@@ -57,7 +57,7 @@ class ExampleViewModel @Inject constructor(
             if (result.isSuccess) {
                 val uris = result.getOrThrow().subList(0, 100)
                 // Test to get coordinates
-                for(x  in uris){
+                for (x in uris) {
                     Log.d("LatLong", x)
                     getCoordinates(x)
                 }

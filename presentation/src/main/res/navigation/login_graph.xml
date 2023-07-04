@@ -2,7 +2,7 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/login_graph"
-    app:startDestination="@id/userRegistrationFragment">
+    app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -15,5 +15,8 @@
     <fragment
         android:id="@+id/userRegistrationFragment"
         android:name="com.weit.presentation.ui.login.user.registration.UserRegistrationFragment"
-        android:label="UserRegistrationFragment" />
+        android:label="UserRegistrationFragment" >
+        <argument android:name="username"
+            app:argType="string" />
+    </fragment>
 </navigation>

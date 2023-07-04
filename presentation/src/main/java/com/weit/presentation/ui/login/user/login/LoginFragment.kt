@@ -43,9 +43,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             LoginViewModel.Event.LoginFailed -> {
                 // TODO 그냥 실패 시 에러 처리 필요
             }
-            LoginViewModel.Event.UserRegistrationRequired -> {
+            is LoginViewModel.Event.UserRegistrationRequired -> {
                 findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment()
+                    LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
+                        username = event.username
+                    )
                 )
             }
             LoginViewModel.Event.LoginSuccess -> {

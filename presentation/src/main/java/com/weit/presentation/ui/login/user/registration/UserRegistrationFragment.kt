@@ -5,6 +5,9 @@ import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonCheckedListener
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUserRegistrationBinding
@@ -13,13 +16,25 @@ import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class UserRegistrationFragment : BaseFragment<FragmentUserRegistrationBinding>(
     FragmentUserRegistrationBinding::inflate
 ) {
 
-    private val viewModel: UserRegistrationViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: UserRegistrationViewModel.UsernameFactory
+
+    private val args: UserRegistrationFragmentArgs by navArgs()
+
+    private val viewModel: UserRegistrationViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return viewModelFactory.create(args.username) as T
+            }
+        }
+    }
 
     private val datePicker by lazy {
         val dateSetListener = OnDateSetListener { _, year, month, dayOfMonth ->
@@ -75,8 +90,6 @@ class UserRegistrationFragment : BaseFragment<FragmentUserRegistrationBinding>(
             UserRegistrationViewModel.Event.RegistrationFailed -> {
             }
             UserRegistrationViewModel.Event.BirthNotSelected -> {
-            }
-            UserRegistrationViewModel.Event.NameIsEmpty -> {
             }
             UserRegistrationViewModel.Event.NicknameIsEmpty -> {
             }

@@ -24,8 +24,9 @@ class LoginViewModel @Inject constructor() : ViewModel() {
             if (result.isSuccess) {
                 _event.emit(Event.LoginSuccess)
             } else {
-                if (result.exceptionOrNull() is NeedUserRegistrationException) {
-                    _event.emit(Event.UserRegistrationRequired)
+                val error = result.exceptionOrNull()
+                if (error is NeedUserRegistrationException) {
+                    _event.emit(Event.UserRegistrationRequired(error.username))
                 } else {
                     _event.emit(Event.LoginFailed)
                 }
@@ -36,6 +37,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     sealed class Event {
         object LoginSuccess : Event()
         object LoginFailed : Event()
-        object UserRegistrationRequired : Event()
+        data class UserRegistrationRequired(
+            val username: String
+        ) : Event()
     }
 }

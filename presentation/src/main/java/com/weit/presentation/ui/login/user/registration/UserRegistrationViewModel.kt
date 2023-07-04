@@ -8,17 +8,17 @@ import com.weit.domain.usecase.auth.RegisterUserUseCase
 import com.weit.presentation.model.GenderType
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class UserRegistrationViewModel @Inject constructor(
-    private val registerUserUseCase: RegisterUserUseCase
+class UserRegistrationViewModel @AssistedInject constructor(
+    private val registerUserUseCase: RegisterUserUseCase,
+    @Assisted private val username: String
 ) : ViewModel() {
 
-    val name = MutableStateFlow("")
     val nickname = MutableStateFlow("")
     private var gender = GenderType.IDLE
     // TODO 이렇게 받는게 맞냐
@@ -26,6 +26,11 @@ class UserRegistrationViewModel @Inject constructor(
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
+
+    @AssistedFactory
+    interface UsernameFactory {
+        fun create(username: String): UserRegistrationViewModel
+    }
 
     @MainThread
     fun setBirth(year: Int, month: Int, day: Int) {
@@ -43,7 +48,7 @@ class UserRegistrationViewModel @Inject constructor(
             if (checkUserRegistrationCondition()) {
                 registerUserUseCase(
                     UserRegistrationInfo(
-                        name = name.value,
+                        name = username,
                         nickname = nickname.value,
                         gender = gender.type,
                         birthday = birth
@@ -54,10 +59,6 @@ class UserRegistrationViewModel @Inject constructor(
     }
 
     private suspend fun checkUserRegistrationCondition(): Boolean {
-        if (name.value.isEmpty()) {
-            _event.emit(Event.NameIsEmpty)
-            return false
-        }
         if (nickname.value.isEmpty()) {
             _event.emit(Event.NicknameIsEmpty)
             return false
@@ -74,7 +75,6 @@ class UserRegistrationViewModel @Inject constructor(
     }
 
     sealed class Event {
-        object NameIsEmpty : Event()
         object NicknameIsEmpty : Event()
         object GenderNotSelected : Event()
         object BirthNotSelected : Event()

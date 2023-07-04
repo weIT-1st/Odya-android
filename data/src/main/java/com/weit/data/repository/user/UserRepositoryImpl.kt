@@ -18,12 +18,12 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateEmail(email: String): Result<Unit> {
+    override suspend fun updateEmail(emailUpdateUser : User): Result<Unit> {
 
         val result : Result<Unit> = runCatching{
 
-            if(Pattern.matches(REGEX_EMAIL, email)){
-                userDataSource.updateEmail(email)
+            if(Pattern.matches(REGEX_EMAIL, emailUpdateUser.email)){
+                userDataSource.updateEmail(emailUpdateUser)
             } else {
                 throw RegexException()
             }
@@ -32,15 +32,15 @@ class UserRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun updatePhoneNumber(phonenumber: String): Result<Unit> {
+    override suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit> {
         return runCatching{
-            userDataSource.updatePhoneNumber(phonenumber)
+            userDataSource.updatePhoneNumber(phoneNumberUpdateUser)
         }
     }
 
-    override suspend fun updateInformation(nickname: String): Result<Unit> {
+    override suspend fun updateInformation(informationUpdateUser: User): Result<Unit> {
         return runCatching {
-            userDataSource.updateInformation(nickname)
+            userDataSource.updateInformation(informationUpdateUser)
         }
     }
 

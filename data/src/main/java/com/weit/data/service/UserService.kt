@@ -2,7 +2,8 @@ package com.weit.data.service
 
 
 import com.weit.data.model.user.UserDTO
-import retrofit2.http.Field
+import com.weit.domain.model.user.User
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 
@@ -14,17 +15,17 @@ interface UserService {
 
     @PATCH("/api/v1/users/email")
     suspend fun updateEmail(
-        @Field("email") email: String
+        @Body emailUpdateUser : User
     )
 
     @PATCH("/api/v1/users/phone-number")
     suspend fun updatePhoneNumber(
-        @Field("phoneNumber") phoneNumber : String
+        @Body phoneNumberUpdateUser : User
     )
 
     @PATCH("/api/v1/users/information")
     suspend fun updateInformation(
-        @Field("nickname") nickname: String
+        @Body informationUpdateUser : User
     )
 
 }

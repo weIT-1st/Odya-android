@@ -2,6 +2,7 @@ package com.weit.data.source
 
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
+import com.weit.domain.model.user.User
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
@@ -12,21 +13,21 @@ class UserDataSource @Inject constructor(
         return userService.getUser()
     }
 
-    suspend fun updateEmail(newEmail: String) {
+    suspend fun updateEmail(emailUpdateUser: User) {
         userService.updateEmail(
-            email = newEmail
+            emailUpdateUser
         )
     }
 
-    suspend fun updatePhoneNumber(newPhonenumber: String) {
+    suspend fun updatePhoneNumber(phoneNumberUpdateUser: User) {
         userService.updatePhoneNumber(
-            phoneNumber = newPhonenumber
+            phoneNumberUpdateUser
         )
     }
 
-    suspend fun updateInformation(newNickname: String) {
+    suspend fun updateInformation(informationUpdateUser: User) {
         userService.updateInformation(
-            nickname = newNickname
+            informationUpdateUser
         )
     }
 }

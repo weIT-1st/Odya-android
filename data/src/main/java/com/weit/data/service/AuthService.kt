@@ -4,19 +4,16 @@ import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
 import retrofit2.http.Body
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.POST
 
 interface AuthService {
 
     @POST("/api/v1/auth/login/kakao")
-    @FormUrlEncoded
     suspend fun login(
         @Body accessToken: KakaoAccessToken,
     ): UserTokenDTO
 
     @POST("/api/v1/auth/register/kakao")
-    @FormUrlEncoded
     suspend fun register(
         @Body userRegistration: UserRegistration,
     )

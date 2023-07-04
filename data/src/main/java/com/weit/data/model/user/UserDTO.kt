@@ -2,6 +2,7 @@ package com.weit.data.model.user
 
 import com.squareup.moshi.Json
 
+
 data class UserDTO(
 
     @field:Json(name = "userID") val userID: Int?,

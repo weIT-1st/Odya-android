@@ -5,8 +5,8 @@ import com.weit.domain.repository.user.UserRepository
 import javax.inject.Inject
 
 class UpdateUserInformationUseCase@Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-    suspend fun updateInformation(informationUpdateUser: User) : Result<Unit> =
+    suspend fun updateInformation(informationUpdateUser: User): Result<Unit> =
         userRepository.updateInformation(informationUpdateUser)
 }

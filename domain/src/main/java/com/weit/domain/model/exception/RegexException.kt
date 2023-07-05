@@ -1,3 +1,3 @@
 package com.weit.domain.model.exception
 
-class RegexException () : Exception()
+class RegexException : Exception()

@@ -9,8 +9,8 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
-    private val userDataSource: UserDataSource
-): UserRepository {
+    private val userDataSource: UserDataSource,
+) : UserRepository {
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
@@ -18,22 +18,19 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateEmail(emailUpdateUser : User): Result<Unit> {
-
-        val result : Result<Unit> = runCatching{
-
-            if(Pattern.matches(REGEX_EMAIL, emailUpdateUser.email)){
+    override suspend fun updateEmail(emailUpdateUser: User): Result<Unit> {
+        val result: Result<Unit> = runCatching {
+            if (Pattern.matches(REGEX_EMAIL, emailUpdateUser.email.toString())) {
                 userDataSource.updateEmail(emailUpdateUser)
             } else {
                 throw RegexException()
             }
         }
-
         return result
     }
 
     override suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit> {
-        return runCatching{
+        return runCatching {
             userDataSource.updatePhoneNumber(phoneNumberUpdateUser)
         }
     }
@@ -44,19 +41,18 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-
     private fun UserDTO.toUser() =
         User(
-            userID= userID,
+            userID = userID,
             nickname = nickname,
             email = email,
             phoneNumber = phoneNumber,
             gender = gender,
             birthday = birthday,
-            socialType = socialType
+            socialType = socialType,
         )
 
-    companion object{
-        const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+    companion object {
+        private const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
     }
 }

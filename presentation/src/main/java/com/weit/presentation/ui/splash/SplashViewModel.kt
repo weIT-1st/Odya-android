@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.splash
 
-
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -19,7 +18,7 @@ class SplashViewModel @Inject constructor() : ViewModel() {
         splashDelay()
     }
 
-    fun splashDelay(){
+    private fun splashDelay() {
         viewModelScope.launch {
             delay(1000)
             _splashEvent.emit(true)

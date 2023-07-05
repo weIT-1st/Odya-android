@@ -24,6 +24,12 @@ object AuthModule {
     @Singleton
     @Provides
     fun providesAuthService(
-        retrofit: Retrofit,
+        @NormalNetworkObject retrofit: Retrofit,
     ): AuthService = retrofit.create(AuthService::class.java)
+
+    @Singleton
+    @Provides
+    fun providesAuthDataSource(
+        service: AuthService,
+    ): AuthDataSource = AuthDataSource(service)
 }

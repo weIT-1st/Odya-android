@@ -37,7 +37,7 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideExampleService(retrofit: Retrofit): ExampleService =
+    fun provideExampleService(@NormalNetworkObject retrofit: Retrofit): ExampleService =
         retrofit.create(ExampleService::class.java)
 
     @ActivityRetainedScoped
@@ -52,7 +52,7 @@ class MainModule {
 
     @Singleton
     @Provides
-    fun providePlaceReviewService(retrofit: Retrofit): PlaceReviewService =
+    fun providePlaceReviewService(@AuthNetworkObject retrofit: Retrofit): PlaceReviewService =
         retrofit.create(PlaceReviewService::class.java)
 
     @Singleton

@@ -36,13 +36,16 @@ class PlaceModule {
 
     @Singleton
     @Provides
-    fun providePlaceService(retrofit: Retrofit): PlaceService =
+    fun providePlaceService(@NormalNetworkObject retrofit: Retrofit): PlaceService =
         retrofit.create(PlaceService::class.java)
 
     @Singleton
     @Provides
-    fun providePlaceDataSource(service: PlaceService, sessionToken: AutocompleteSessionToken, placesClient: PlacesClient): PlaceDateSource =
-        PlaceDateSource(service, sessionToken, placesClient)
+    fun providePlaceDataSource(
+        service: PlaceService,
+        sessionToken: AutocompleteSessionToken,
+        placesClient: PlacesClient,
+    ): PlaceDateSource = PlaceDateSource(service, sessionToken, placesClient)
 
     @Singleton
     @Provides

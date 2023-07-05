@@ -5,7 +5,6 @@ import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import retrofit2.http.Body
 import retrofit2.http.DELETE
-import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -18,12 +17,12 @@ interface PlaceReviewService {
     @POST("/api/v1/place-reviews")
     @FormUrlEncoded
     suspend fun register(
-      @Body placeReviewRegistration: PlaceReviewRegistration
+        @Body placeReviewRegistration: PlaceReviewRegistration,
     )
 
     @PATCH("/api/v1/place-reviews")
     suspend fun update(
-       @Body placeReviewModification: PlaceReviewModification
+        @Body placeReviewModification: PlaceReviewModification,
     )
 
     @DELETE("/api/v1/place-reviews/{id}")

@@ -11,13 +11,13 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class SplashActivity : BaseActivity<ActivitySplashBinding> (
-    ActivitySplashBinding::inflate
-        ){
+    ActivitySplashBinding::inflate,
+) {
 
     private val viewModel: SplashViewModel by viewModels()
 
     override fun initCollector() {
-        repeatOnStarted(this){
+        repeatOnStarted(this) {
             viewModel.splashEvent.collectLatest {
                 moveToLogin()
             }
@@ -30,4 +30,3 @@ class SplashActivity : BaseActivity<ActivitySplashBinding> (
         finish()
     }
 }
-

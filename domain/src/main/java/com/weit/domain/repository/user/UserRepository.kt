@@ -8,7 +8,7 @@ interface UserRepository {
 
     suspend fun updateEmail(emailUpdateUser: User): Result<Unit>
 
-    suspend fun updatePhoneNumber(phoneNumberUpdateUser : User) : Result<Unit>
+    suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit>
 
-    suspend fun updateInformation(informationUpdateUser : User) : Result<Unit>
+    suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
 }

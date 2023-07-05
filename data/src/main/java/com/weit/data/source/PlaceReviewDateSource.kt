@@ -6,8 +6,6 @@ import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.PlaceReviewService
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
-import com.weit.domain.model.place.PlaceReviewRegistrationInfo
-import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import javax.inject.Inject
 
 class PlaceReviewDateSource @Inject constructor(

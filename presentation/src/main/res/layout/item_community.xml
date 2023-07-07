@@ -10,6 +10,7 @@
         android:id="@+id/iv_post_bg"
         android:layout_width="375dp"
         android:layout_height="308dp"
+        android:scaleType="centerCrop"
         android:background="@drawable/bg_item_community_main_image"
         android:src="@drawable/background"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +20,7 @@
     <View
         android:id="@+id/view_post_title"
         android:layout_width="375dp"
-        android:layout_height="50dp"
+        android:layout_height="46dp"
         android:background="@drawable/bg_item_community_title"
         app:layout_constraintBottom_toBottomOf="@+id/iv_post_bg"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,8 +32,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
         android:layout_marginTop="11dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="7dp"
         android:src="@drawable/ic_diary"
+        app:layout_constraintTop_toTopOf="@+id/view_post_title"
         app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
         app:layout_constraintStart_toStartOf="@id/view_post_title" />
 
@@ -43,8 +45,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="12dp"
         android:textColor="?attr/colorOnSurface"
+        app:layout_constraintTop_toTopOf="@+id/view_post_title"
         app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
         app:layout_constraintLeft_toRightOf="@+id/iv_post_bookmark"
         tools:text="2020 컴공과 졸업여행" />
@@ -56,8 +59,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
         android:layout_marginEnd="13dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="7dp"
         android:src="@drawable/ic_direction"
+        app:layout_constraintTop_toTopOf="@+id/view_post_title"
         app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
         app:layout_constraintEnd_toEndOf="@+id/view_post_title" />
 

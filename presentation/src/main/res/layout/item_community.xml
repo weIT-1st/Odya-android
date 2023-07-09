@@ -8,9 +8,10 @@
 
     <ImageView
         android:id="@+id/iv_post_bg"
-        android:layout_width="375dp"
-        android:layout_height="308dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1.2"
         android:background="@drawable/bg_item_community_main_image"
         android:src="@drawable/background"
         app:layout_constraintEnd_toEndOf="parent"
@@ -19,7 +20,7 @@
 
     <View
         android:id="@+id/view_post_title"
-        android:layout_width="375dp"
+        android:layout_width="0dp"
         android:layout_height="46dp"
         android:background="@drawable/bg_item_community_title"
         app:layout_constraintBottom_toBottomOf="@+id/iv_post_bg"
@@ -68,10 +69,11 @@
 
     <View
         android:id="@+id/view_post_content"
-        android:layout_width="375dp"
-        android:layout_height="160dp"
+        android:layout_width="0dp"
+        android:layout_height="170dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/bg_item_community_content"
-        android:backgroundTint="#0ABDDBFF"
+        android:backgroundTint="#121212"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_post_title" />
@@ -85,7 +87,7 @@
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_profile"
         app:layout_constraintStart_toStartOf="@+id/view_post_content"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title" />
+        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
 
 
     <com.google.android.material.textview.MaterialTextView
@@ -97,7 +99,7 @@
         android:layout_marginTop="22dp"
         android:textColor="?attr/colorOnSurface"
         app:layout_constraintLeft_toRightOf="@+id/iv_post_profile"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title"
+        app:layout_constraintTop_toTopOf="@+id/view_post_content"
         tools:text="닉네임" />
 
     <ImageView
@@ -108,7 +110,7 @@
         android:layout_marginTop="24dp"
         android:src="@drawable/ic_diamond"
         app:layout_constraintLeft_toRightOf="@+id/tv_post_nickname"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title" />
+        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
 
 
     <com.google.android.material.textview.MaterialTextView
@@ -119,7 +121,7 @@
         android:layout_marginTop="22dp"
         android:textColor="@color/label_assistive"
         app:layout_constraintLeft_toRightOf="@+id/iv_post_diamond"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title"
+        app:layout_constraintTop_toTopOf="@+id/view_post_content"
         tools:text="·" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -132,7 +134,7 @@
         android:textSize="12dp"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@+id/tv_post_dot"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title"
+        app:layout_constraintTop_toTopOf="@+id/view_post_content"
         tools:text="2일전" />
 
     <com.google.android.material.button.MaterialButton
@@ -144,12 +146,12 @@
         android:layout_marginEnd="20dp"
         android:background="@drawable/bt_follow"
         app:layout_constraintEnd_toEndOf="@+id/view_post_content"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title" />
+        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_post_content"
         style="@style/detail2"
-        android:layout_width="335dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
@@ -163,16 +165,33 @@
         tools:text="디자이너분들 정말 존경스럽습니다....저는 디자인을 하지 못할 것 같습니다 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구" />
 
 
+    <View
+        android:id="@+id/view_post_reply"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="18.5dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_item_community_reply"
+        android:backgroundTint="#121212"
+        app:layout_constraintBottom_toBottomOf="@+id/view_post_content"
+        app:layout_constraintEnd_toEndOf="@+id/view_post_content"
+        app:layout_constraintStart_toStartOf="@+id/view_post_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_post_content"
+        app:layout_constraintVertical_bias="0.235" />
+
     <ImageView
         android:id="@+id/iv_post_heart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="236.5dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:src="@drawable/ic_heart"
-        app:layout_constraintStart_toStartOf="@+id/view_post_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_post_content" />
+        app:layout_constraintStart_toStartOf="@+id/view_post_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
+        app:layout_constraintTop_toTopOf="@+id/view_post_reply" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_post_heart"
@@ -180,10 +199,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+        android:layout_marginTop="15.5dp"
+        android:layout_marginBottom="15.5dp"
         android:textColor="@color/label_assistive"
         app:layout_constraintLeft_toRightOf="@+id/iv_post_heart"
-        app:layout_constraintTop_toTopOf="@id/iv_post_heart"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_post_heart"
+        app:layout_constraintTop_toTopOf="@id/view_post_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
         tools:text="99+" />
 
     <ImageView
@@ -192,10 +213,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="14dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="20dp"
         android:src="@drawable/ic_reply"
         app:layout_constraintLeft_toRightOf="@+id/tv_post_heart"
-        app:layout_constraintTop_toBottomOf="@+id/tv_post_content" />
+        app:layout_constraintTop_toTopOf="@id/view_post_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_post_reply"
@@ -203,10 +225,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
+
+        android:layout_marginTop="15.5dp"
+        android:layout_marginBottom="15.5dp"
         android:textColor="@color/label_assistive"
         app:layout_constraintLeft_toRightOf="@+id/iv_post_reply"
-        app:layout_constraintTop_toTopOf="@id/iv_post_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_post_reply"
+        app:layout_constraintTop_toTopOf="@id/view_post_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
         tools:text="99+" />
 
 

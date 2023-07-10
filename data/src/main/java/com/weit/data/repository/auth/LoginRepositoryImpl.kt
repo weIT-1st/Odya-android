@@ -38,11 +38,16 @@ class LoginRepositoryImpl @Inject constructor(
         } else {
             loginWithKakaoAccount()
         }
-        if (kakaoLoginResult.isSuccess.not()) {
+        if (kakaoLoginResult.isFailure) {
             return Result.failure(kakaoLoginResult.exceptionOrNull() ?: Exception())
         }
 
-        val customToken = loginToServer().getOrNull()?.token ?: throw TokenNotFoundException()
+        val serverLoginResult = loginToServer()
+        if (serverLoginResult.isFailure) {
+            return Result.failure(serverLoginResult.exceptionOrNull() ?: Exception())
+        }
+
+        val customToken = serverLoginResult.getOrNull()?.token ?: throw TokenNotFoundException()
         val firebaseLoginResult = loginWithCustomToken(customToken)
         return if (firebaseLoginResult.isSuccess) {
             Result.success(Unit)
@@ -51,7 +56,7 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun loginWithKakaoTalk(): Result<Unit> = callbackFlow<Result<Unit>> {
+    private suspend fun loginWithKakaoTalk(): Result<Unit> = callbackFlow {
         UserApiClient.instance.loginWithKakaoTalk(context) { _, error ->
             if (error != null) {
                 if (error is ClientError && error.reason == ClientErrorCause.Cancelled) {

@@ -7,4 +7,7 @@
     <!-- login_activity -->
     <string name="text_login_kakao">카카오로 로그인</string>
 
+    <!-- user_registration -->
+    <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
+
 </resources>

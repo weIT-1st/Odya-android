@@ -1,4 +1,4 @@
-package com.weit.domain.usecase.auth
+package com.weit.domain.usecase.place
 
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository

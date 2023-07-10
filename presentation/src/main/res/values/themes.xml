@@ -18,6 +18,8 @@
         <item name="colorOnSurface">@color/label_normal</item>
         <item name="colorError">@color/warning</item>
         <item name="android:datePickerStyle">@style/defaultDatePicker</item>
+    </style>
+    <style name="Theme.Splash" parent="Theme.Odya">
         <item name="android:windowFullscreen">true</item>
     </style>
     <style name="defaultDatePicker">

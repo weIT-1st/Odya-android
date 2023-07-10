@@ -7,6 +7,7 @@ import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.R
 import com.weit.data.source.ImageDataSource
 import com.weit.domain.model.exception.RequestDeniedException
+import com.weit.domain.model.image.ImageLatLng
 import com.weit.domain.repository.image.ImageRepository
 import javax.inject.Inject
 
@@ -29,6 +30,10 @@ class ImageRepositoryImpl @Inject constructor(
         val bytes = dataSource.getCompressedBytes(scaledBitmap)
         scaledBitmap.recycle()
         return bytes
+    }
+
+    override suspend fun getCoordinates(uri: String?): ImageLatLng? {
+        return dataSource.getLatLongByUri(uri)
     }
 
     private suspend fun getReadPermissionResult(): TedPermissionResult {

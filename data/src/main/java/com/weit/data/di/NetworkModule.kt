@@ -3,6 +3,7 @@ package com.weit.data.di
 import com.squareup.moshi.Moshi
 import com.weit.data.BuildConfig
 import com.weit.data.interceptor.AuthInterceptor
+import com.weit.data.source.AuthDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -91,6 +92,12 @@ object NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun providesAuthInterceptor(
+        dataSource: AuthDataSource,
+    ): AuthInterceptor = AuthInterceptor(dataSource)
 
     @Singleton
     @Provides

@@ -1,5 +1,6 @@
 package com.weit.data.di
 
+import com.google.firebase.auth.FirebaseAuth
 import com.weit.data.repository.auth.AuthRepositoryImpl
 import com.weit.data.service.AuthService
 import com.weit.data.source.AuthDataSource
@@ -30,6 +31,11 @@ object AuthModule {
     @Singleton
     @Provides
     fun providesAuthDataSource(
+        auth: FirebaseAuth,
         service: AuthService,
-    ): AuthDataSource = AuthDataSource(service)
+    ): AuthDataSource = AuthDataSource(auth, service)
+
+    @Singleton
+    @Provides
+    fun providesFirebaseAuth(): FirebaseAuth = FirebaseAuth.getInstance()
 }

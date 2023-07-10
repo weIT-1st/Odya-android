@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import org.json.JSONObject
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -96,7 +97,10 @@ class LoginRepositoryImpl @Inject constructor(
     private fun handleServerLoginError(t: Throwable): Throwable {
         return if (t is HttpException) {
             when (t.code()) {
-                HTTP_UNAUTHORIZED -> NeedUserRegistrationException()
+                HTTP_UNAUTHORIZED -> {
+                    val message = t.response()?.errorBody()?.string().toString()
+                    NeedUserRegistrationException(getUsername(message))
+                }
                 HTTP_INTERNAL_SERVER_ERROR -> ServerLoginFailedException()
                 else -> UnKnownException()
             }
@@ -104,6 +108,8 @@ class LoginRepositoryImpl @Inject constructor(
             t
         }
     }
+
+    private fun getUsername(message: String): String = JSONObject(message)["username"].toString()
 
     private fun UserTokenDTO.toUserToken() = UserToken(token)
 }

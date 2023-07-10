@@ -15,6 +15,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class UserRegistrationViewModel @AssistedInject constructor(
     private val registerUserUseCase: RegisterUserUseCase,
@@ -23,8 +24,7 @@ class UserRegistrationViewModel @AssistedInject constructor(
 
     val nickname = MutableStateFlow("")
     private var gender = GenderType.IDLE
-    // TODO 이렇게 받는게 맞냐
-    private var birth = listOf<Int>()
+    private lateinit var birth: LocalDate
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -36,7 +36,7 @@ class UserRegistrationViewModel @AssistedInject constructor(
 
     @MainThread
     fun setBirth(year: Int, month: Int, day: Int) {
-        birth = listOf(year, month, day)
+        birth = LocalDate.of(year, month + 1, day)
     }
 
     @MainThread
@@ -86,7 +86,7 @@ class UserRegistrationViewModel @AssistedInject constructor(
             _event.emit(Event.GenderNotSelected)
             return false
         }
-        if (birth.isEmpty()) {
+        if (::birth.isInitialized.not()) {
             _event.emit(Event.BirthNotSelected)
             return false
         }

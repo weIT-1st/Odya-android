@@ -67,6 +67,6 @@ class AuthRepositoryImpl @Inject constructor(
             phoneNumber = phoneNumber,
             nickname = nickname,
             gender = gender,
-            birthday = birthday,
+            birthday = listOf(birthday.year, birthday.monthValue, birthday.dayOfMonth),
         )
 }

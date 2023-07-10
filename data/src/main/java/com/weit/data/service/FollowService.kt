@@ -31,7 +31,7 @@ interface FollowService {
         @Query("sortType") sortType: String
     ): FollowSearchDTO
 
-    @GET("/api/v1/follows/{userId}}/followers")
+    @GET("/api/v1/follows/{userId}/followers")
     suspend fun getInfiniteFollower(
         @Path("userId") userId: Long,
         @Query("page") page: Int,

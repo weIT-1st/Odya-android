@@ -26,15 +26,17 @@ class PlaceReviewDateSource @Inject constructor(
 
     suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): PlaceReviewListDTO =
         service.getReviewsByPlaceId(
-            id = info.placeId,
-            startId = info.startId,
-            count = info.count,
+            placeId = info.placeId,
+            size = info.size,
+            sortType = info.sortType,
+            lastPlaceReviewId = info.lastPlaceReviewId,
         )
 
     suspend fun getByUserId(info: PlaceReviewByUserIdInfo): PlaceReviewListDTO =
         service.getReviewsByUserId(
-            id = info.userId,
-            startId = info.startId,
-            count = info.count,
+            userId = info.userId,
+            size = info.size,
+            sortType = info.sortType,
+            lastPlaceReviewId = info.lastPlaceReviewId,
         )
 }

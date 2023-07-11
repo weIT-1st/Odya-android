@@ -19,7 +19,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -37,7 +36,7 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideExampleService(retrofit: Retrofit): ExampleService =
+    fun provideExampleService(@NormalNetworkObject retrofit: Retrofit): ExampleService =
         retrofit.create(ExampleService::class.java)
 
     @ActivityRetainedScoped
@@ -50,17 +49,17 @@ class MainModule {
     fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
         ImageDataSource(context.contentResolver)
 
-    @Singleton
+    @ActivityRetainedScoped
     @Provides
-    fun providePlaceReviewService(retrofit: Retrofit): PlaceReviewService =
+    fun providePlaceReviewService(@AuthNetworkObject retrofit: Retrofit): PlaceReviewService =
         retrofit.create(PlaceReviewService::class.java)
 
-    @Singleton
+    @ActivityRetainedScoped
     @Provides
     fun providePlaceReviewDataSource(service: PlaceReviewService): PlaceReviewDateSource =
         PlaceReviewDateSource(service)
 
-    @Singleton
+    @ActivityRetainedScoped
     @Provides
     fun providePlaceReviewRepository(dataSource: PlaceReviewDateSource): PlaceReviewRepository =
         PlaceReviewRepositoryImpl(dataSource)

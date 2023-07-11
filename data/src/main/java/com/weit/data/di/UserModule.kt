@@ -16,7 +16,7 @@ object UserModule {
 
     @Singleton
     @Provides
-    fun provideUserService(retrofit: Retrofit): UserService =
+    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
         retrofit.create(UserService::class.java)
 
     @Singleton

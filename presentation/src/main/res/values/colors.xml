@@ -26,4 +26,12 @@
     <color name="interaction_inactive">#989BA2</color>
     <color name="interaction_disable">#F4F4F5</color>
 
+    <color name="elevation_background">#121212</color>
+    <color name="elevation1">#0ABDDBFF</color>
+    <color name="elevation2">#0FBDDBFF</color>
+    <color name="elevation3">#14BDDBFF</color>
+    <color name="elevation4">#1FBDDBFF</color>
+    <color name="elevation5">#29BDDBFF</color>
+    <color name="elevation6">#33BDDBFF</color>
+
 </resources>

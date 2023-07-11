@@ -7,7 +7,7 @@
 
 
     <ImageView
-        android:id="@+id/iv_post_bg"
+        android:id="@+id/iv_community_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
@@ -19,137 +19,146 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
-        android:id="@+id/view_post_title"
+        android:id="@+id/view_community_title"
         android:layout_width="0dp"
         android:layout_height="46dp"
         android:background="@drawable/bg_item_community_title"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_post_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_post_bookmark"
+        android:id="@+id/iv_community_bookmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
-        android:layout_marginTop="11dp"
-        android:layout_marginBottom="7dp"
         android:src="@drawable/ic_diary"
-        app:layout_constraintTop_toTopOf="@+id/view_post_title"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
-        app:layout_constraintStart_toStartOf="@id/view_post_title" />
+        app:layout_constraintTop_toTopOf="@+id/view_community_title"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
+        app:layout_constraintStart_toStartOf="@id/view_community_title" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_title"
+        android:id="@+id/tv_community_title"
         style="@style/detail1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="12dp"
+        android:maxLines="1"
+        android:ellipsize="end"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="@+id/view_post_title"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
-        app:layout_constraintLeft_toRightOf="@+id/iv_post_bookmark"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
+        app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_bookmark"
+        app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
         tools:text="2020 컴공과 졸업여행" />
 
 
     <ImageView
-        android:id="@+id/iv_post_direction"
+        android:id="@+id/iv_community_direction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
         android:layout_marginEnd="13dp"
-        android:layout_marginBottom="7dp"
         android:src="@drawable/ic_direction"
-        app:layout_constraintTop_toTopOf="@+id/view_post_title"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_title"
-        app:layout_constraintEnd_toEndOf="@+id/view_post_title" />
+        app:layout_constraintTop_toTopOf="@+id/view_community_title"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
+        app:layout_constraintEnd_toEndOf="@+id/view_community_title" />
 
 
     <View
-        android:id="@+id/view_post_content"
+        android:id="@+id/view_community_content"
         android:layout_width="0dp"
-        android:layout_height="170dp"
+        android:layout_height="0dp"
+        app:layout_constraintDimensionRatio="2.3"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bg_item_community_content"
-        android:backgroundTint="#121212"
+        android:backgroundTint="@color/elevation_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_post_title" />
+        app:layout_constraintTop_toBottomOf="@+id/view_community_title" />
 
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_post_profile"
+        android:id="@+id/iv_community_profile"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
         android:src="@drawable/ic_profile"
-        app:layout_constraintStart_toStartOf="@+id/view_post_content"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
+        app:layout_constraintStart_toStartOf="@+id/view_community_content"
+        app:layout_constraintTop_toTopOf="@+id/view_community_content" />
 
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_nickname"
+        android:id="@+id/tv_community_nickname"
         style="@style/body1"
         android:layout_width="0dp"
-        android:layout_height="20dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="22dp"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintLeft_toRightOf="@+id/iv_post_profile"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content"
-        tools:text="닉네임" />
+        android:maxLines="1"
+        android:ellipsize="end"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
+        app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+        tools:text="닉네임을 최대한 짧게 하도록 하세요 알겠습니까?" />
 
     <ImageView
-        android:id="@+id/iv_post_diamond"
+        android:id="@+id/iv_community_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="24dp"
         android:src="@drawable/ic_diamond"
-        app:layout_constraintLeft_toRightOf="@+id/tv_post_nickname"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
+        app:layout_constraintStart_toEndOf="@+id/tv_community_nickname"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
 
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_dot"
-        android:layout_width="0dp"
+        android:id="@+id/tv_community_dot"
+        android:layout_width="8dp"
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="22dp"
         android:textColor="@color/label_assistive"
-        app:layout_constraintLeft_toRightOf="@+id/iv_post_diamond"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content"
+        app:layout_constraintWidth_max="wrap"
+        app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
         tools:text="·" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_datetime"
+        android:id="@+id/tv_community_datetime"
         android:layout_width="0dp"
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="22dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="@color/label_assistive"
         android:textSize="12dp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/tv_post_dot"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+        app:layout_constraintWidth_max="wrap"
         tools:text="2일전" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/bt_post_follow"
+    <ToggleButton
+        android:id="@+id/bt_community_follow"
         android:layout_width="54dp"
         android:layout_height="29dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="17.5dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/bt_follow"
-        app:layout_constraintEnd_toEndOf="@+id/view_post_content"
-        app:layout_constraintTop_toTopOf="@+id/view_post_content" />
+        android:background="@drawable/bt_item_community_follow_selector"
+        android:textOff=""
+        android:textOn=""
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+        app:layout_constraintEnd_toEndOf="@+id/view_community_content" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_content"
+        android:id="@+id/tv_community_content"
         style="@style/detail2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -159,79 +168,78 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toEndOf="@+id/view_post_content"
-        app:layout_constraintStart_toStartOf="@+id/view_post_content"
-        app:layout_constraintTop_toBottomOf="@+id/bt_post_follow"
-        tools:text="디자이너분들 정말 존경스럽습니다....저는 디자인을 하지 못할 것 같습니다 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구" />
+        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+        app:layout_constraintStart_toStartOf="@+id/view_community_content"
+        app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
+        tools:text="컴공과 졸업여행으로 제주도를 갔다왔습니다. 푸른밤 제주 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구" />
 
 
     <View
-        android:id="@+id/view_post_reply"
+        android:id="@+id/view_community_reply"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_marginTop="12dp"
         android:layout_marginStart="18.5dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="18.5dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bg_item_community_reply"
-        android:backgroundTint="#121212"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_content"
-        app:layout_constraintEnd_toEndOf="@+id/view_post_content"
-        app:layout_constraintStart_toStartOf="@+id/view_post_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_post_content"
+        android:backgroundTint="@color/elevation_background"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_content"
+        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+        app:layout_constraintStart_toStartOf="@+id/view_community_content"
+        app:layout_constraintTop_toBottomOf="@+id/tv_community_content"
         app:layout_constraintVertical_bias="0.235" />
 
-    <ImageView
-        android:id="@+id/iv_post_heart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="236.5dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/ic_heart"
-        app:layout_constraintStart_toStartOf="@+id/view_post_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
-        app:layout_constraintTop_toTopOf="@+id/view_post_reply" />
+    <ToggleButton
+        android:id="@+id/iv_community_heart"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/bt_item_community_heart_selector"
+        android:textOff=""
+        android:textOn=""
+        android:layout_marginEnd="4dp"
+        app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+        app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_heart"
+        android:id="@+id/tv_community_heart"
         style="@style/detail1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="15.5dp"
-        android:layout_marginBottom="15.5dp"
+        android:layout_marginEnd="12dp"
         android:textColor="@color/label_assistive"
-        app:layout_constraintLeft_toRightOf="@+id/iv_post_heart"
-        app:layout_constraintTop_toTopOf="@id/view_post_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
+        app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
+        app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
+        app:layout_constraintTop_toTopOf="@id/view_community_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         tools:text="99+" />
 
     <ImageView
-        android:id="@+id/iv_post_reply"
+        android:id="@+id/iv_community_reply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="14dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginEnd="4dp"
         android:src="@drawable/ic_reply"
-        app:layout_constraintLeft_toRightOf="@+id/tv_post_heart"
-        app:layout_constraintTop_toTopOf="@id/view_post_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"/>
+        app:layout_constraintEnd_toStartOf="@+id/tv_community_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+        app:layout_constraintLeft_toRightOf="@+id/tv_community_heart"
+        app:layout_constraintTop_toTopOf="@id/view_community_reply" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_post_reply"
+        android:id="@+id/tv_community_reply"
         style="@style/detail1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-
-        android:layout_marginTop="15.5dp"
-        android:layout_marginBottom="15.5dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/label_assistive"
-        app:layout_constraintLeft_toRightOf="@+id/iv_post_reply"
-        app:layout_constraintTop_toTopOf="@id/view_post_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_post_reply"
+        app:layout_constraintEnd_toEndOf="@+id/view_community_reply"
+        app:layout_constraintLeft_toRightOf="@+id/iv_community_reply"
+        app:layout_constraintTop_toTopOf="@id/view_community_reply"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         tools:text="99+" />
 
 

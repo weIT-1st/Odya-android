@@ -9,5 +9,7 @@
 
     <!-- user_registration -->
     <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

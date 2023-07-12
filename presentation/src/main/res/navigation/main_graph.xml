@@ -2,14 +2,22 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_graph"
-    app:startDestination="@id/fragment_map">
+    app:startDestination="@id/fragment_home">
 
     <fragment
-        android:id="@+id/fragment_example"
+        android:id="@+id/fragment_memory"
         android:name="com.weit.presentation.ui.example.ExampleFragment"
         android:label="ExampleFragment" />
     <fragment
-        android:id="@+id/fragment_map"
+        android:id="@+id/fragment_home"
         android:name="com.weit.presentation.ui.map.MapFragment"
         android:label="MapFragment" />
+    <fragment
+        android:id="@+id/fragment_feed"
+        android:name="com.weit.presentation.ui.feed.FeedFragment"
+        android:label="FeedFragment" />
+    <fragment
+        android:id="@+id/fragment_mypage"
+        android:name="com.weit.presentation.ui.mypage.MyPageFragment"
+        android:label="MyPageFragment" />
 </navigation>

@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/fragment_map"
-        android:title="Home"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/fragment_example"
-        android:title="Example"/>
+    <item android:id="@+id/fragment_home"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always"
+        android:title="홈"/>
+
+    <item android:id="@+id/fragment_memory"
+        android:icon="@drawable/ic_diary"
+        app:showAsAction="always"
+        android:title="내추억"/>
+
+    <item android:id="@+id/fragment_feed"
+        android:icon="@drawable/ic_feed"
+        app:showAsAction="always"
+        android:title="피드"/>
+
+    <item android:id="@+id/fragment_mypage"
+        android:icon="@drawable/ic_my_info"
+        app:showAsAction="always"
+        android:title="내정보"/>
 
 </menu>

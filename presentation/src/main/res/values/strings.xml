@@ -7,9 +7,12 @@
     <!-- login_activity -->
     <string name="text_login_kakao">카카오로 로그인</string>
 
+
     <string name="text_home">홈</string>
     <string name="text_memory">내추억</string>
     <string name="text_feed">피드</string>
     <string name="text_mypage">내정보</string>
+
+    <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
 
 </resources>

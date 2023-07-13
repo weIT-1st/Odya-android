@@ -64,9 +64,7 @@
         android:layout_height="wrap_content"
         android:text="친구 관리"
         style="@style/h6"
-        android:layout_gravity="center"
-        text
-        />
+        android:layout_gravity="center" />
 
     </com.google.android.material.appbar.MaterialToolbar>
 
@@ -139,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="• 최신순"
-            style="@style/detail2"
+            style="@style/btn_follow_sort"
             android:backgroundTint="@color/background_normal"/>
 
         <com.google.android.material.button.MaterialButton
@@ -147,7 +145,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="• 가나다순"
-            style="@style/detail2"
+            style="@style/btn_follow_sort"
             android:backgroundTint="@color/background_normal"/>
 
     </com.google.android.material.button.MaterialButtonToggleGroup>

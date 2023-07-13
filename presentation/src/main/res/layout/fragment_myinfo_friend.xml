@@ -6,67 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.myinfo.MyinfoFriendActivity">
-<!--
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/ly_friend"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tl_follower_following"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageView
-            android:id="@+id/iv_community_direction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_go_back"
-            android:layout_margin="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="친구 관리"
-            style="@style/h6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
--->
-
-<!--    <com.google.android.material.appbar.MaterialToolbar-->
-<!--        android:id="@+id/tb_follower_following"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="56dp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/tl_follower_following"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent">-->
-
-<!--    <ImageView-->
-<!--        android:id="@+id/iv_community_direction"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:src="@drawable/ic_go_back"-->
-<!--        android:layout_margin="16dp"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        />-->
-
-<!--    <TextView-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="친구 관리"-->
-<!--        style="@style/h6"-->
-<!--        android:layout_gravity="center" />-->
-
-<!--    </com.google.android.material.appbar.MaterialToolbar>-->
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab_follower_following"
@@ -81,7 +20,7 @@
             android:id="@+id/tb_follower_following"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            app:title="친구관리"
+            app:title="@string/myinfo_friend_title"
             app:titleTextAppearance="@style/h6"
             app:titleTextColor="@color/label_normal"
             app:titleCentered="true"
@@ -99,7 +38,7 @@
         app:tabIndicatorHeight="4dp"
         app:tabSelectedTextColor="@color/label_normal"
         app:tabTextAppearance="@style/h6"
-        app:tabTextColor="@color/interaction_inactive"
+        app:tabTextColor="@color/label_inactive"
         app:tabBackground="@drawable/selector_tl_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +49,7 @@
             android:id="@+id/tab_follower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="팔로워"
+            android:text="@string/follower"
             style="@style/h6"/>
 
         <com.google.android.material.tabs.TabItem
@@ -118,7 +57,7 @@
             style="@style/h6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="팔로잉"
+            android:text="@string/following"
             tools:layout_editor_absoluteX="205dp"
             tools:layout_editor_absoluteY="56dp" />
 
@@ -133,7 +72,7 @@
         android:layout_marginRight="16dp"
         android:background="@drawable/bg_item_community_reply"
         android:drawableRight="@drawable/ic_search"
-        android:hint="친구를 찾아보세요"
+        android:hint="@string/hint_find_friend"
         style="@style/body2"
         android:textColor="#595959"
         android:imeOptions="actionSearch"
@@ -159,7 +98,7 @@
             android:id="@+id/btn_sort_new"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="• 최신순"
+            android:text="@string/sort_new"
             style="@style/btn_follow_sort"
             android:backgroundTint="@color/background_normal"/>
 
@@ -167,7 +106,7 @@
             android:id="@+id/btn_sort_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="• 가나다순"
+            android:text="@string/sort_abc"
             style="@style/btn_follow_sort"
             android:backgroundTint="@color/background_normal"/>
 
@@ -176,6 +115,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -11,5 +11,13 @@
     <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <!-- myinfo_friend -->
+    <string name="myinfo_friend_title">친구 관리</string>
+    <string name="follower">팔로워</string>
+    <string name="following">팔로잉</string>
+    <string name="hint_find_friend">친구를 찾아보세요!</string>
+    <string name="sort_new">• 최신순</string>
+    <string name="sort_abc">• 가나다순</string>
 
 </resources>

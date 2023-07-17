@@ -8,16 +8,16 @@
     tools:context=".ui.myinfo.MyinfoFriendActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/ab_follower_following"
+        android:id="@+id/ab_friend_follow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tl_follower_following"
+        app:layout_constraintTop_toBottomOf="@+id/tab_friend_follow"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tb_follower_following"
+            android:id="@+id/tool_friend_follow"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             app:title="@string/myinfo_friend_title"
@@ -31,7 +31,7 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tl_follower_following"
+        android:id="@+id/tab_friend_follow"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         app:tabIndicatorColor="@color/primary"
@@ -42,18 +42,18 @@
         app:tabBackground="@drawable/selector_tl_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ab_follower_following"
-        app:layout_constraintBottom_toTopOf="@+id/et_search_friend">
+        app:layout_constraintTop_toBottomOf="@+id/ab_friend_follow"
+        app:layout_constraintBottom_toTopOf="@+id/et_friend_search">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_follower"
+            android:id="@+id/tab_item_friend_follower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/follower"
             style="@style/h6"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_following"
+            android:id="@+id/tab_item_friend_following"
             style="@style/h6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <EditText
-        android:id="@+id/et_search_friend"
+        android:id="@+id/et_friend_search"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="16dp"
@@ -83,27 +83,27 @@
         android:textColorHint="@color/interaction_inactive"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tl_follower_following" />
+        app:layout_constraintTop_toBottomOf="@+id/tab_friend_follow" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/btn_tgg_sort"
+        android:id="@+id/btn_friend_sort"
         app:singleSelection="true"
         app:checkedButton="@+id/btn_sort_new"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/et_search_friend"
-        app:layout_constraintTop_toBottomOf="@+id/et_search_friend">
+        app:layout_constraintEnd_toEndOf="@+id/et_friend_search"
+        app:layout_constraintTop_toBottomOf="@+id/et_friend_search">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_sort_new"
+            android:id="@+id/btn_friend_sort_new"
+            style="@style/btn_follow_sort"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sort_new"
-            style="@style/btn_follow_sort"
-            android:backgroundTint="@color/background_normal"/>
+            android:backgroundTint="@color/background_normal"
+            android:text="@string/sort_new" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_sort_abc"
+            android:id="@+id/btn_friend_sort_abc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/sort_abc"
@@ -113,6 +113,7 @@
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_friend_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -120,7 +121,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_tgg_sort"
+        app:layout_constraintTop_toBottomOf="@id/btn_friend_sort"
         tools:listitem="@layout/item_friends" />
 
 

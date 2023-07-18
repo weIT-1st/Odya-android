@@ -10,10 +10,10 @@
         android:id="@+id/iv_community_bg"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@drawable/corners_top_8"
         android:scaleType="centerCrop"
-        app:layout_constraintDimensionRatio="1.2"
-        android:background="@drawable/bg_item_community_main_image"
         android:src="@drawable/background"
+        app:layout_constraintDimensionRatio="1.2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -22,7 +22,8 @@
         android:id="@+id/view_community_title"
         android:layout_width="0dp"
         android:layout_height="46dp"
-        android:background="@drawable/bg_item_community_title"
+        android:background="@drawable/corners_top_8"
+        android:backgroundTint="@color/background_dim"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_bg"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -33,9 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="17dp"
         android:src="@drawable/ic_diary"
-        app:layout_constraintTop_toTopOf="@+id/view_community_title"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
-        app:layout_constraintStart_toStartOf="@id/view_community_title" />
+        app:layout_constraintStart_toStartOf="@id/view_community_title"
+        app:layout_constraintTop_toTopOf="@+id/view_community_title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_community_title"
@@ -43,13 +44,13 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:maxLines="1"
         android:ellipsize="end"
+        android:maxLines="1"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
-        app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_bookmark"
+        app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
         app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
         tools:text="2020 컴공과 졸업여행" />
 
 
@@ -59,19 +60,19 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="13dp"
         android:src="@drawable/ic_direction"
-        app:layout_constraintTop_toTopOf="@+id/view_community_title"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_title" />
+        app:layout_constraintEnd_toEndOf="@+id/view_community_title"
+        app:layout_constraintTop_toTopOf="@+id/view_community_title" />
 
 
     <View
         android:id="@+id/view_community_content"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintDimensionRatio="2.3"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/bg_item_community_content"
-        android:backgroundTint="@color/elevation_background"
+        android:background="@drawable/corners_bottom_8"
+        android:backgroundTint="@color/elevation2"
+        app:layout_constraintDimensionRatio="2.3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view_community_title" />
@@ -94,14 +95,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:textColor="?attr/colorOnSurface"
-        android:maxLines="1"
         android:ellipsize="end"
-        app:layout_constraintWidth_max="wrap"
+        android:maxLines="1"
+        android:textColor="?attr/colorOnSurface"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
         app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
         app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+        app:layout_constraintWidth_max="wrap"
         tools:text="닉네임을 최대한 짧게 하도록 하세요 알겠습니까?" />
 
     <ImageView
@@ -109,9 +110,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:src="@drawable/ic_diamond"
-        app:layout_constraintStart_toEndOf="@+id/tv_community_nickname"
+        android:src="@drawable/ic_badge"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintStart_toEndOf="@+id/tv_community_nickname"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
 
 
@@ -121,10 +122,10 @@
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/label_assistive"
-        app:layout_constraintWidth_max="wrap"
-        app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+        app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+        app:layout_constraintWidth_max="wrap"
         tools:text="·" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -150,12 +151,12 @@
         android:layout_width="54dp"
         android:layout_height="29dp"
         android:layout_marginEnd="20dp"
-        android:background="@drawable/bt_item_community_follow_selector"
+        android:background="@drawable/selector_bt_follow"
         android:textOff=""
         android:textOn=""
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_content" />
+        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+        app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_community_content"
@@ -178,12 +179,12 @@
         android:id="@+id/view_community_reply"
         android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginTop="12dp"
         android:layout_marginStart="18.5dp"
+        android:layout_marginTop="12dp"
         android:layout_marginEnd="18.5dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/bg_item_community_reply"
-        android:backgroundTint="@color/elevation_background"
+        android:background="@drawable/corners_all_8"
+        android:backgroundTint="@color/elevation3"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_content"
         app:layout_constraintEnd_toEndOf="@+id/view_community_content"
         app:layout_constraintStart_toStartOf="@+id/view_community_content"
@@ -195,10 +196,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:src="@drawable/ic_location"
-        app:layout_constraintStart_toStartOf="@+id/view_community_reply"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintTop_toTopOf="@+id/view_community_reply"
-        />
+        app:layout_constraintStart_toStartOf="@+id/view_community_reply"
+        app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_community_location"
@@ -208,9 +208,9 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="12dp"
         android:textColor="@color/label_assistive"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         app:layout_constraintStart_toEndOf="@+id/iv_community_location"
         app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         tools:text="오이도" />
 
 
@@ -218,12 +218,12 @@
         android:id="@+id/iv_community_heart"
         android:layout_width="24dp"
         android:layout_height="24dp"
-        android:background="@drawable/bt_item_community_heart_selector"
+        android:layout_marginEnd="4dp"
+        android:background="@drawable/selector_bt_heart"
         android:textOff=""
         android:textOn=""
-        android:layout_marginEnd="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+        app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
         app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -234,10 +234,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="12dp"
         android:textColor="@color/label_assistive"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
         app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
         app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         tools:text="99+" />
 
     <ImageView
@@ -247,8 +247,8 @@
         android:layout_marginStart="36dp"
         android:layout_marginEnd="4dp"
         android:src="@drawable/ic_reply"
-        app:layout_constraintEnd_toStartOf="@+id/tv_community_reply"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+        app:layout_constraintEnd_toStartOf="@+id/tv_community_reply"
         app:layout_constraintLeft_toRightOf="@+id/tv_community_heart"
         app:layout_constraintTop_toTopOf="@id/view_community_reply" />
 
@@ -260,10 +260,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="8dp"
         android:textColor="@color/label_assistive"
+        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         app:layout_constraintEnd_toEndOf="@+id/view_community_reply"
         app:layout_constraintLeft_toRightOf="@+id/iv_community_reply"
         app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
         tools:text="99+" />
 
 

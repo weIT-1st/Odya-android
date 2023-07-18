@@ -20,13 +20,7 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file("local.properties").newDataInputStream())
-        buildConfigField "String", "GOOGLE_MAP_KEY", "\"${properties.getProperty("GOOGLE_MAP_KEY")}\""
 
-        defaultConfig {
-            manifestPlaceholders = ["GOOGLE_MAP_KEY" : "\"${properties.getProperty("GOOGLE_MAP_KEY")}\""]
-        }
     }
 
     buildTypes {

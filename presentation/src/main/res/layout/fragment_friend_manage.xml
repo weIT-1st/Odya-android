@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.myinfo.MyinfoFriendActivity">
+    tools:context=".ui.myinfo.FriendManageFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab_friend_follow"
@@ -74,7 +74,7 @@
         android:drawableRight="@drawable/ic_search"
         android:hint="@string/hint_find_friend"
         style="@style/body2"
-        android:textColor="#595959"
+        android:textColor="@color/label_inactive"
         android:imeOptions="actionSearch"
         android:inputType="text"
         android:maxLines="1"

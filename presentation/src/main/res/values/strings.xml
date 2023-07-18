@@ -10,4 +10,10 @@
     <!-- user_registration -->
     <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
 
+    <!-- popular_spot -->
+    <string name="popular_spot_title">인기 여행일지</string>
+
+    <!-- maykonw_friend -->
+    <string name="mayknow_friend_title">알 수도 있는 친구</string>
+
 </resources>

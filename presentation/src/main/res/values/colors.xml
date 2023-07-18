@@ -15,6 +15,7 @@
     <color name="label_disable">#61FFFFFF</color>
     <color name="label_reversed">#2E363A</color>
     <color name="label_reversed_assistive">#444F55</color>
+    <color name="label_inactive">#525D63</color>
 
     <color name="background_normal">#121212</color>
     <color name="background_alternative">#262626</color>

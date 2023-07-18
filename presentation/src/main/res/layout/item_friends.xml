@@ -40,7 +40,7 @@
         android:layout_height="0dp"
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
-        android:src="@drawable/ic_diamond"
+        android:src="@drawable/ic_badge"
         app:layout_constraintBottom_toBottomOf="@+id/tv_friend_name"
         app:layout_constraintEnd_toStartOf="@+id/bt_friend_follow"
         app:layout_constraintHorizontal_bias="0"

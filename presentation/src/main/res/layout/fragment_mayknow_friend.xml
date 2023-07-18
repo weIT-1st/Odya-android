@@ -29,11 +29,11 @@
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="28dp"
         android:orientation="horizontal"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_popular_spot_title"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/fragment_mayknow_friend"
-        tools:itemCount="1"/>
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

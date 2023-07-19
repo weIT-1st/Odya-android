@@ -25,4 +25,5 @@
     <style name="defaultDatePicker">
         <item name="android:datePickerMode">spinner</item>
     </style>
+
 </resources>

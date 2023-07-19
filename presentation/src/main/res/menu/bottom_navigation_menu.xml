@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/fragment_map"
-        android:title="Home"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/fragment_example"
-        android:title="Example"/>
+    <item android:id="@+id/fragment_map"
+        android:icon="@drawable/ic_home"
+        app:showAsAction="always"
+        android:title="@string/text_home"/>
+
+    <item android:id="@+id/fragment_memory"
+        android:icon="@drawable/ic_diary"
+        app:showAsAction="always"
+        android:title="@string/text_memory"/>
+
+    <item android:id="@+id/fragment_feed"
+        android:icon="@drawable/ic_feed"
+        app:showAsAction="always"
+        android:title="@string/text_feed"/>
+
+    <item android:id="@+id/fragment_mypage"
+        android:icon="@drawable/ic_my_info"
+        app:showAsAction="always"
+        android:title="@string/text_mypage"/>
 
 </menu>

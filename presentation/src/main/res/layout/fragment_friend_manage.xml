@@ -7,33 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".ui.myinfo.FriendManageFragment">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/ab_friend_follow"
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/tool_friend_follow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:title="@string/myinfo_friend_title"
+        app:titleTextAppearance="@style/h6"
+        app:titleTextColor="@color/label_normal"
+        app:titleCentered="true"
+        app:navigationIcon="@drawable/ic_go_back"
+        android:background="@color/background_normal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tab_friend_follow"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/tool_friend_follow"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            app:title="@string/myinfo_friend_title"
-            app:titleTextAppearance="@style/h6"
-            app:titleTextColor="@color/label_normal"
-            app:titleCentered="true"
-            app:navigationIcon="@drawable/ic_go_back"
-            android:background="@color/background_normal"
-            />
-
-    </com.google.android.material.appbar.AppBarLayout>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_friend_follow"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         app:tabIndicatorColor="@color/primary"
         app:tabIndicatorHeight="4dp"
         app:tabSelectedTextColor="@color/label_normal"
@@ -42,7 +34,7 @@
         app:tabBackground="@drawable/selector_tl_background"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ab_friend_follow"
+        app:layout_constraintTop_toBottomOf="@+id/tool_friend_follow"
         app:layout_constraintBottom_toTopOf="@+id/et_friend_search">
 
         <com.google.android.material.tabs.TabItem
@@ -66,13 +58,17 @@
     <EditText
         android:id="@+id/et_friend_search"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
+        android:padding="8dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
         android:background="@drawable/corners_all_8"
         android:drawableRight="@drawable/ic_search"
         android:hint="@string/hint_find_friend"
+        android:backgroundTint="@color/elevation4"
         style="@style/body2"
         android:textColor="@color/label_normal"
         android:imeOptions="actionSearch"

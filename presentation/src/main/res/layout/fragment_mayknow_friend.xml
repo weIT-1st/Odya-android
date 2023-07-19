@@ -4,6 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:padding="28dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
     >
 
     <TextView
@@ -13,8 +16,6 @@
         android:text="@string/mayknow_friend_title"
         style="@style/h4"
         android:textColor="@color/label_normal"
-        android:layout_marginTop="28dp"
-        android:layout_marginStart="20dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/tv_popular_spot_summary"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,16 +25,15 @@
         android:id="@+id/tv_popular_spot_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
         android:layout_marginTop="24dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="28dp"
         android:orientation="horizontal"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_popular_spot_title"
         app:layout_constraintBottom_toBottomOf="parent"
+        tools:listitem="@layout/item_maykonw_friend_summary"
+        tools:itemCount="1"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

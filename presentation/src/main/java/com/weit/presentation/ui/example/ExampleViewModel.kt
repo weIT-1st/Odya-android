@@ -5,6 +5,9 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.usecase.DeleteLocationsUseCase
+import com.weit.domain.usecase.GetLocationsUseCase
+import com.weit.domain.usecase.InsertLocationsUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
@@ -25,6 +28,9 @@ class ExampleViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
     private val getCoordinatesUseCase: GetCoordinatesUseCase,
+    private val getLocationsUseCase: GetLocationsUseCase,
+    private val insertLocationsUseCase: InsertLocationsUseCase,
+    private val deleteLocationsUseCase: DeleteLocationsUseCase
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -43,8 +49,40 @@ class ExampleViewModel @Inject constructor(
     }
 
     init {
-        getImages()
+        //getImages()
+        //insertLocation()
+        //getLocations()
+        //deleteLocation()
     }
+
+    // room database test
+    private fun insertLocation(){
+        val lat : Float = 0.2343f
+        val lng : Float = 0.2343f
+
+        viewModelScope.launch {
+            for(i in 0..5){
+                insertLocationsUseCase(System.currentTimeMillis(),lat,lng)
+                Thread.sleep(5000)
+            }
+        }
+    }
+
+    private fun getLocations(){
+        viewModelScope.launch {
+           val result = getLocationsUseCase(1689747678667,1689747703850)
+            for(location in result){
+                Log.d("LocationInfo", "time ${location.time} lat ${location.lat} lng ${location.lng}")
+            }
+        }
+    }
+
+    private fun deleteLocation(){
+        viewModelScope.launch {
+           deleteLocationsUseCase(1)
+        }
+    }
+
     private fun getCoordinates(uri: String) {
         viewModelScope.launch {
             val result = getCoordinatesUseCase(uri)

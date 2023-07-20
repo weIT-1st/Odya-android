@@ -5,6 +5,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class FollowFollowingIdDTO(
-    @field:Json(name = "userId") val userId: Long
+    @field:Json(name = "userId") val userId: Long,
 )
-

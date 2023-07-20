@@ -38,7 +38,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         object LoginSuccess : Event()
         object LoginFailed : Event()
         data class UserRegistrationRequired(
-            val username: String
+            val username: String,
         ) : Event()
     }
 }

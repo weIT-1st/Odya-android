@@ -8,5 +8,5 @@ interface LocationRepository {
 
     suspend fun deleteLocation(locationId: Long)
 
-    suspend fun getLocationsInfo(timeInfo : LocationTimeInfo): List<LocationInfo>
+    suspend fun getLocationsInfo(timeInfo: LocationTimeInfo): List<LocationInfo>
 }

@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginFragment : BaseFragment<FragmentLoginBinding>(
-    FragmentLoginBinding::inflate
+    FragmentLoginBinding::inflate,
 ) {
     @Inject
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
@@ -46,8 +46,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             is LoginViewModel.Event.UserRegistrationRequired -> {
                 findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
-                        username = event.username
-                    )
+                        username = event.username,
+                    ),
                 )
             }
             LoginViewModel.Event.LoginSuccess -> {

@@ -4,13 +4,11 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.weit.data.model.Location
 
-
 @Database(
     entities = [Location::class],
     version = 1,
-    exportSchema = false
+    exportSchema = false,
 )
-
-abstract class LocationDatabase: RoomDatabase() {
+abstract class LocationDatabase : RoomDatabase() {
     abstract fun locationDao(): LocationDao
 }

@@ -27,6 +27,6 @@ object FollowModule {
 
     @Singleton
     @Provides
-    fun provideFollowRepository(followDataSource: FollowDataSource) : FollowRepository =
+    fun provideFollowRepository(followDataSource: FollowDataSource): FollowRepository =
         FollowRepositoryImpl(followDataSource)
 }

@@ -1,6 +1,5 @@
 package com.weit.domain.usecase
 
-import com.weit.domain.model.LocationInfo
 import com.weit.domain.repository.LocationRepository
 import javax.inject.Inject
 

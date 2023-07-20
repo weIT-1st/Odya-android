@@ -19,7 +19,7 @@ import java.time.LocalDate
 
 class UserRegistrationViewModel @AssistedInject constructor(
     private val registerUserUseCase: RegisterUserUseCase,
-    @Assisted private val username: String
+    @Assisted private val username: String,
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
@@ -53,8 +53,8 @@ class UserRegistrationViewModel @AssistedInject constructor(
                         name = username,
                         nickname = nickname.value,
                         gender = gender.type,
-                        birthday = birth
-                    )
+                        birthday = birth,
+                    ),
                 )
                 handleRegistrationResult(result)
             }

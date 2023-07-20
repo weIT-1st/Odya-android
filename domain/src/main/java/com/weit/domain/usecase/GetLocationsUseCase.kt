@@ -8,6 +8,6 @@ import javax.inject.Inject
 class GetLocationsUseCase @Inject constructor(
     private val repository: LocationRepository,
 ) {
-    suspend operator fun invoke(startTime: Long, endTime:Long): List<LocationInfo> =
-        repository.getLocationsInfo(LocationTimeInfo(startTime,endTime))
+    suspend operator fun invoke(startTime: Long, endTime: Long): List<LocationInfo> =
+        repository.getLocationsInfo(LocationTimeInfo(startTime, endTime))
 }

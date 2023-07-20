@@ -20,7 +20,5 @@ class MyPageFragment : BaseFragment<FragmentMyPageBinding>(
     }
 
     override fun initCollector() {
-
     }
-
 }

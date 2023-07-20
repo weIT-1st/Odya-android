@@ -3,9 +3,9 @@ package com.weit.data.di
 import android.content.Context
 import androidx.room.Room
 import com.weit.data.di.db.LocationDatabase
-import com.weit.data.repository.location.LocationRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
+import com.weit.data.repository.location.LocationRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.service.ExampleService
 import com.weit.data.service.PlaceReviewService
@@ -76,7 +76,7 @@ class MainModule {
         Room.databaseBuilder(
             context.applicationContext,
             LocationDatabase::class.java,
-            "location-database"
+            "location-database",
         ).build()
 
     @ActivityRetainedScoped
@@ -86,6 +86,6 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideLocationDataSource(database : LocationDatabase): LocationDataSource =
+    fun provideLocationDataSource(database: LocationDatabase): LocationDataSource =
         LocationDataSource(database)
 }

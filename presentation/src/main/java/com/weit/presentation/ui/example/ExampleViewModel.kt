@@ -30,7 +30,7 @@ class ExampleViewModel @Inject constructor(
     private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val getLocationsUseCase: GetLocationsUseCase,
     private val insertLocationsUseCase: InsertLocationsUseCase,
-    private val deleteLocationsUseCase: DeleteLocationsUseCase
+    private val deleteLocationsUseCase: DeleteLocationsUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -49,37 +49,37 @@ class ExampleViewModel @Inject constructor(
     }
 
     init {
-        //getImages()
-        //insertLocation()
-        //getLocations()
-        //deleteLocation()
+        // getImages()
+        // insertLocation()
+        // getLocations()
+        // deleteLocation()
     }
 
     // location room database test
-    private fun insertLocation(){
-        val lat : Float = 0.2343f
-        val lng : Float = 0.2343f
+    private fun insertLocation() {
+        val lat: Float = 0.2343f
+        val lng: Float = 0.2343f
 
         viewModelScope.launch {
-            for(i in 0..5){
-                insertLocationsUseCase(lat,lng)
+            for (i in 0..5) {
+                insertLocationsUseCase(lat, lng)
                 Thread.sleep(5000)
             }
         }
     }
 
-    private fun getLocations(){
+    private fun getLocations() {
         viewModelScope.launch {
-           val result = getLocationsUseCase(1689837261741,1689837288711)
-            for(location in result){
+            val result = getLocationsUseCase(1689837261741, 1689837288711)
+            for (location in result) {
                 Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }
         }
     }
 
-    private fun deleteLocation(){
+    private fun deleteLocation() {
         viewModelScope.launch {
-           deleteLocationsUseCase(1)
+            deleteLocationsUseCase(1)
         }
     }
 

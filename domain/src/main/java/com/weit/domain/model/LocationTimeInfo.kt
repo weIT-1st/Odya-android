@@ -1,6 +1,6 @@
 package com.weit.domain.model
 
 data class LocationTimeInfo(
-    val startTime : Long,
-    val endTime : Long,
+    val startTime: Long,
+    val endTime: Long,
 )

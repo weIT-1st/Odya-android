@@ -25,14 +25,14 @@ class LocationRepositoryImpl @Inject constructor(
     override suspend fun getLocationsInfo(timeInfo : LocationTimeInfo): List<LocationInfo> {
         val result = dataSource.getLocations(timeInfo)
         return result.map {
-            LocationInfo(it.time,it.lat,it.lng)
+            LocationInfo(it.lat,it.lng)
         }
       }
 
     private fun LocationInfo.toLocation(): Location =
         Location(
             id = 0,
-            time = time,
+            time = System.currentTimeMillis(),
             lat = lat,
             lng = lng
         )

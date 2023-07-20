@@ -55,14 +55,14 @@ class ExampleViewModel @Inject constructor(
         //deleteLocation()
     }
 
-    // room database test
+    // location room database test
     private fun insertLocation(){
         val lat : Float = 0.2343f
         val lng : Float = 0.2343f
 
         viewModelScope.launch {
             for(i in 0..5){
-                insertLocationsUseCase(System.currentTimeMillis(),lat,lng)
+                insertLocationsUseCase(lat,lng)
                 Thread.sleep(5000)
             }
         }
@@ -70,9 +70,9 @@ class ExampleViewModel @Inject constructor(
 
     private fun getLocations(){
         viewModelScope.launch {
-           val result = getLocationsUseCase(1689747678667,1689747703850)
+           val result = getLocationsUseCase(1689837261741,1689837288711)
             for(location in result){
-                Log.d("LocationInfo", "time ${location.time} lat ${location.lat} lng ${location.lng}")
+                Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }
         }
     }

@@ -7,6 +7,6 @@ import javax.inject.Inject
 class InsertLocationsUseCase @Inject constructor(
     private val repository: LocationRepository,
 ) {
-    suspend operator fun invoke(time: Long, lat:Float, lng:Float) =
-        repository.insertLocation(LocationInfo(time,lat,lng))
+    suspend operator fun invoke(lat:Float, lng:Float) =
+        repository.insertLocation(LocationInfo(lat,lng))
 }

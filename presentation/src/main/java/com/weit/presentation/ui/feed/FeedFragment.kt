@@ -20,7 +20,5 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     override fun initCollector() {
-
     }
-
 }

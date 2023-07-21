@@ -3,13 +3,18 @@ package com.weit.data.repository.follow
 import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowSearchDTO
 import com.weit.data.source.FollowDataSource
-import com.weit.domain.model.follow.*
+import com.weit.domain.model.follow.FollowFollowingIdInfo
+import com.weit.domain.model.follow.FollowNumDetail
+import com.weit.domain.model.follow.FollowSearchDetail
+import com.weit.domain.model.follow.FollowUserIdInfo
+import com.weit.domain.model.follow.FollowerSearchInfo
+import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.repository.follow.FollowRepository
 import javax.inject.Inject
 
 class FollowRepositoryImpl @Inject constructor(
-    private val followDataSource: FollowDataSource
-): FollowRepository {
+    private val followDataSource: FollowDataSource,
+) : FollowRepository {
 
     override suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
         return runCatching {
@@ -44,14 +49,12 @@ class FollowRepositoryImpl @Inject constructor(
     private fun FollowNumDTO.toFollowNumDetail() =
         FollowNumDetail(
             followerCount = followerCount,
-            followingCount = followingCount
+            followingCount = followingCount,
         )
 
     private fun FollowSearchDTO.toFollowSearchDetail() =
         FollowSearchDetail(
             haseNext = hasNext,
-            content = content
+            content = content,
         )
 }
-
-

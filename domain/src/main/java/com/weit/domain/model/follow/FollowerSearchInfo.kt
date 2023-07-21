@@ -4,5 +4,5 @@ data class FollowerSearchInfo(
     val userId: Long,
     val page: Int,
     val size: Int,
-    val sortType: String
+    val sortType: String,
 )

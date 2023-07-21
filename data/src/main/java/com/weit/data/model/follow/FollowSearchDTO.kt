@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FollowSearchDTO(
     @field:Json(name = "hasNext") val hasNext: Boolean,
-    @field:Json(name = "content") val content: List<FollowUserContentDTO>
+    @field:Json(name = "content") val content: List<FollowUserContentDTO>,
 )

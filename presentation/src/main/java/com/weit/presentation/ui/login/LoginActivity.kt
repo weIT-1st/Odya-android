@@ -7,5 +7,4 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class LoginActivity : BaseActivity<ActivityLoginBinding>(
     ActivityLoginBinding::inflate,
-) {
-}
+)

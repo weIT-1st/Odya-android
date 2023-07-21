@@ -3,10 +3,10 @@ package com.weit.data.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "location")
-data class Location(
+@Entity(tableName = "coordinate")
+data class Coordinate(
     @PrimaryKey(autoGenerate = true)
-    val id: Long,
+    val id: Long = 0,
     val time: Long,
     val lat: Float,
     val lng: Float,

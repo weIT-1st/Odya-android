@@ -1,6 +1,6 @@
 package com.weit.domain.model
 
-data class LocationInfo(
+data class CoordinateInfo(
     val lat: Float,
     val lng: Float,
 )

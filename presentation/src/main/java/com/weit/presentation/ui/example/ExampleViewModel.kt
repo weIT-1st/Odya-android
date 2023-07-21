@@ -5,11 +5,11 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
-import com.weit.domain.usecase.DeleteLocationsUseCase
-import com.weit.domain.usecase.GetLocationsUseCase
-import com.weit.domain.usecase.InsertLocationsUseCase
+import com.weit.domain.usecase.DeleteCoordinateUseCase
+import com.weit.domain.usecase.GetCoordinatesUseCase
+import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
-import com.weit.domain.usecase.image.GetCoordinatesUseCase
+import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -27,10 +27,10 @@ class ExampleViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
+    private val getImageCoordinatesUseCase: GetImageCoordinatesUseCase,
     private val getCoordinatesUseCase: GetCoordinatesUseCase,
-    private val getLocationsUseCase: GetLocationsUseCase,
-    private val insertLocationsUseCase: InsertLocationsUseCase,
-    private val deleteLocationsUseCase: DeleteLocationsUseCase,
+    private val insertCoordinateUseCase: InsertCoordinateUseCase,
+    private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -50,42 +50,42 @@ class ExampleViewModel @Inject constructor(
 
     init {
         // getImages()
-        // insertLocation()
-        // getLocations()
-        // deleteLocation()
+//        insertCoordinate()
+//        getCoordinates()
+        // deleteCoordinate()
     }
 
     // location room database test
-    private fun insertLocation() {
+    private fun insertCoordinate() {
         val lat: Float = 0.2343f
         val lng: Float = 0.2343f
 
         viewModelScope.launch {
             for (i in 0..5) {
-                insertLocationsUseCase(lat, lng)
+                insertCoordinateUseCase(lat, lng)
                 Thread.sleep(5000)
             }
         }
     }
 
-    private fun getLocations() {
+    private fun getCoordinates() {
         viewModelScope.launch {
-            val result = getLocationsUseCase(1689837261741, 1689837288711)
+            val result = getCoordinatesUseCase(1689925493106, 1689925518186)
             for (location in result) {
                 Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }
         }
     }
 
-    private fun deleteLocation() {
+    private fun deleteCoordinate() {
         viewModelScope.launch {
-            deleteLocationsUseCase(1)
+            deleteCoordinateUseCase(1)
         }
     }
 
-    private fun getCoordinates(uri: String) {
+    private fun getImageCoordinates(uri: String) {
         viewModelScope.launch {
-            val result = getCoordinatesUseCase(uri)
+            val result = getImageCoordinatesUseCase(uri)
             Log.d("LatLong", "lat ${result?.latitude} lng ${result?.longitude}")
         }
     }
@@ -97,7 +97,7 @@ class ExampleViewModel @Inject constructor(
                 // Test to get coordinates
                 for (x in uris) {
                     Log.d("LatLong", x)
-                    getCoordinates(x)
+                    getImageCoordinates(x)
                 }
                 convertUrisToImageBytes(uris)
             } else {

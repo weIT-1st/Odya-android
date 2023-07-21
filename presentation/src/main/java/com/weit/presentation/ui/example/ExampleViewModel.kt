@@ -8,10 +8,14 @@ import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.DeleteCoordinateUseCase
 import com.weit.domain.usecase.GetCoordinatesUseCase
 import com.weit.domain.usecase.InsertCoordinateUseCase
+import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
+import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
+import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +35,9 @@ class ExampleViewModel @Inject constructor(
     private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val insertCoordinateUseCase: InsertCoordinateUseCase,
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
+    private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
+    private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
+
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -53,6 +60,10 @@ class ExampleViewModel @Inject constructor(
 //        insertCoordinate()
 //        getCoordinates()
         // deleteCoordinate()
+
+        // addReview()
+        getReview()
+
     }
 
     // location room database test
@@ -105,6 +116,42 @@ class ExampleViewModel @Inject constructor(
             }
         }
     }
+
+    private fun addReview() {
+        viewModelScope.launch {
+            val result = registerPlaceReviewUseCase(
+                PlaceReviewRegistrationInfo(
+                    placeId = "test",
+                    rating = 8,
+                    review = "테스트"
+                )
+            )
+            if (result.isSuccess) {
+                Logger.t("MainTest").i("성공!")
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    private fun getReview() {
+        viewModelScope.launch {
+            val result = getPlaceReviewByPlaceIdUseCase(
+                PlaceReviewByPlaceIdInfo(
+                    placeId = "test",
+                    size = 2,
+                )
+            )
+            if (result.isSuccess) {
+                val reviews = result.getOrThrow()
+                val review = reviews.firstOrNull()
+                Logger.t("MainTest").i("${reviews.size} ${review?.writerNickname} ${review?.review}")
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
     private fun convertUrisToImageBytes(uris: List<String>) {
         viewModelScope.launch {
             val millis = measureTimeMillis {

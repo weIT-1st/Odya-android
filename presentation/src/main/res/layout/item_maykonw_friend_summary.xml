@@ -8,11 +8,13 @@
     android:paddingBottom="6dp"
     >
     
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_mayknow_firend_summary_profile"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/ic_profile"
+        app:shapeAppearanceOverlay="@style/ShapeableImageViewCircle"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>

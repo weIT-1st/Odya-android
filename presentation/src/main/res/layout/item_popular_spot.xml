@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/corners_all_12"
+    android:background="@drawable/corners_all_8"
+    android:backgroundTint="@color/elevation1"
     android:clipToOutline="true"
     android:paddingTop="24dp"
     android:paddingBottom="24dp">

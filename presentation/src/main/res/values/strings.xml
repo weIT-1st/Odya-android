@@ -25,4 +25,11 @@
     <string name="sort_new">• 최신순</string>
     <string name="sort_abc">• 가나다순</string>
 
+    <!-- popular_spot -->
+    <string name="popular_spot_title">인기 여행일지</string>
+    <string name="popular_spot_hot">HOT🔥</string>
+
+    <!-- maykonw_friend -->
+    <string name="mayknow_friend_title">알 수도 있는 친구</string>
+
 </resources>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/corners_all_8"
+    android:clipToOutline="true"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:layout_marginEnd="8dp"
+    >
+
+    <ImageView
+        android:id="@+id/iv_popular_spot_summary"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        tools:src="@drawable/bg_popular_spot_summary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_popular_spot_summary_profile"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/ic_profile"
+        android:scaleType="centerCrop"
+        app:shapeAppearanceOverlay="@style/ShapeableImageViewCircle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_popular_spot_summary_nickname"
+        style="@style/h6"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/label_normal"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_popular_spot_summary_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_popular_spot_summary_profile"
+        app:layout_constraintTop_toTopOf="@id/iv_popular_spot_summary_profile"
+        app:layout_constraintWidth_max="wrap"
+        tools:text="닉네임" />
+
+    <ImageView
+        android:id="@+id/iv_popular_spot_summary_diary"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/ic_diary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tv_popular_spot_summary_title"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_popular_spot_summary_title"
+        style="@style/detail1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/label_alternative"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_popular_spot_summary_diary"
+        app:layout_constraintEnd_toStartOf="@+id/tv_popular_spot_hot"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/iv_popular_spot_summary_diary"
+        app:layout_constraintTop_toTopOf="@+id/iv_popular_spot_summary_diary"
+        tools:text="2020 컴공과 졸업여행" />
+
+    <TextView
+        android:id="@+id/tv_popular_spot_hot"
+        android:layout_width="33dp"
+        android:layout_height="14dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/corners_all_4"
+        android:backgroundTint="@color/warning"
+        android:gravity="center"
+        android:text="@string/popular_spot_hot"
+        android:textColor="@color/label_alternative"
+        android:textSize="8dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_popular_spot_summary_diary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_popular_spot_summary_diary" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

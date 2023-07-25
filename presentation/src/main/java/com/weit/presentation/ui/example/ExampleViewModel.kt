@@ -10,6 +10,7 @@ import com.weit.domain.usecase.GetCoordinatesUseCase
 import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
+import com.weit.domain.usecase.GetLocationUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
@@ -22,6 +23,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.system.measureTimeMillis
@@ -37,6 +39,7 @@ class ExampleViewModel @Inject constructor(
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
+    private val getLocationUseCase: GetLocationUseCase
 
 ) : ViewModel() {
 
@@ -57,13 +60,33 @@ class ExampleViewModel @Inject constructor(
 
     init {
         // getImages()
-//        insertCoordinate()
-//        getCoordinates()
+
+        //coordinate room test
+        // insertCoordinate()
+        // getCoordinates()
         // deleteCoordinate()
 
+        //place review test
         // addReview()
-        getReview()
+        //getReview()
 
+        //현재 위치를 수신받는 usecase test
+        getDeviceLocation()
+
+    }
+    //get device location
+    private fun getDeviceLocation() {
+        viewModelScope.launch {
+            val result = getLocationUseCase()
+            if (result.isSuccess) {
+                val coordinate = result.getOrThrow()
+                coordinate.collect {
+                    Logger.t("MainTest").i("${it.lat} ${it.lng}")
+                }
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
     }
 
     // location room database test

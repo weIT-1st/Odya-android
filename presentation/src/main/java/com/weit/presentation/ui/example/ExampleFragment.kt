@@ -40,7 +40,7 @@ class ExampleFragment : BaseFragment<FragmentExampleBinding>(
     }
 
     private fun handleError(e: Throwable) {
-        val readPermission = listOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_MEDIA_IMAGES)
+        val readPermission = listOf(Manifest.permission.ACCESS_FINE_LOCATION,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_MEDIA_IMAGES)
         if (e is RequestDeniedException && readPermission.contains(e.permission)) {
             sendSnackBar("이 일을 기억할 것 입니다.")
         } else {

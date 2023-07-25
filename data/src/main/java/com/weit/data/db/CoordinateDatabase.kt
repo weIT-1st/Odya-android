@@ -1,4 +1,4 @@
-package com.weit.data.di.db
+package com.weit.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

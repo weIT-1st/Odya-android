@@ -1,6 +1,6 @@
 package com.weit.data.source
 
-import com.weit.data.di.db.CoordinateDatabase
+import com.weit.data.db.CoordinateDatabase
 import com.weit.data.model.Coordinate
 import com.weit.domain.model.CoordinateTimeInfo
 import javax.inject.Inject

@@ -5,6 +5,7 @@ import android.Manifest
 import android.location.Location
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
+import com.weit.data.R
 import com.weit.data.source.LocationDataSource
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.exception.RequestDeniedException
@@ -19,7 +20,7 @@ class LocationRepositoryImpl @Inject constructor(
 
 
     override suspend fun getCurCoordinate(): Result<Flow<CoordinateInfo>> {
-        val result = getReadPermissionResult()
+        val result = getLocationPermissionResult()
         return if (result.isGranted) {
             val coordinate = dataSource.requestLocationUpdates().map {
                 it.toCoordinateInfo()
@@ -36,11 +37,11 @@ class LocationRepositoryImpl @Inject constructor(
             lng = longitude.toFloat(),
         )
 
-    private suspend fun getReadPermissionResult(): TedPermissionResult {
+    private suspend fun getLocationPermissionResult(): TedPermissionResult {
         val permission = Manifest.permission.ACCESS_FINE_LOCATION
         val permission2 = Manifest.permission.ACCESS_COARSE_LOCATION
         return TedPermission.create()
-            .setDeniedMessage("위치권한을 허용해주십시오!!~!~!")
+            .setDeniedMessage(R.string.location_permission_denied)
             .setPermissions(permission)
             .setPermissions(permission2)
             .check()

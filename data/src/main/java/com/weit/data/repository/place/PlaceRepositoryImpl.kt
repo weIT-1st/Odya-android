@@ -1,5 +1,6 @@
 package com.weit.data.repository.place
 
+import com.orhanobut.logger.Logger
 import com.weit.data.source.PlaceDateSource
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
@@ -31,5 +32,10 @@ class PlaceRepositoryImpl @Inject constructor(
             result.geometry?.location?.lat,
             result.geometry?.location?.lng,
         )
+    }
+
+    override suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double) {
+        val result = dataSource.getPlacesByCoordinate(latitude, longitude)
+        Logger.t("MainTest").i("결과\n${result.result.joinToString("\n")}")
     }
 }

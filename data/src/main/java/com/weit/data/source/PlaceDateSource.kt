@@ -21,6 +21,20 @@ class PlaceDateSource @Inject constructor(
     suspend fun getPlaceDetail(placeId: String): GeocodingResult =
         service.getPlaceDetail(BuildConfig.GOOGLE_MAP_KEY, placeId)
 
+    suspend fun getPlacesByCoordinate(
+        latitude: Double,
+        longitude: Double,
+        language: String = "ko",
+        resultTypes: List<String> = listOf("street_address"),
+    ): GeocodingResult {
+        return service.getPlacesByCoordinate(
+            apiKey = BuildConfig.GOOGLE_MAP_KEY,
+            latlng = "$latitude,$longitude",
+            lang = language,
+            resultType = resultTypes.joinToString("|"),
+        )
+    }
+
     suspend fun searchPlaces(query: String): Flow<List<AutocompletePrediction>> = callbackFlow {
         val newRequest = FindAutocompletePredictionsRequest.builder()
             .setCountries("KR")

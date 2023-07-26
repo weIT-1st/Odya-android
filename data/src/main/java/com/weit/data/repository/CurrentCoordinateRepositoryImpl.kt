@@ -6,17 +6,17 @@ import android.location.Location
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.R
-import com.weit.data.source.LocationDataSource
+import com.weit.data.source.CurrentCoordinateDataSource
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.exception.RequestDeniedException
-import com.weit.domain.repository.LocationRepository
+import com.weit.domain.repository.CurrentCoordinateRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class LocationRepositoryImpl @Inject constructor(
-    private val dataSource: LocationDataSource,
-) : LocationRepository {
+class CurrentCoordinateRepositoryImpl @Inject constructor(
+    private val dataSource: CurrentCoordinateDataSource,
+) : CurrentCoordinateRepository {
 
 
     override suspend fun getCurCoordinate(): Result<Flow<CoordinateInfo>> {

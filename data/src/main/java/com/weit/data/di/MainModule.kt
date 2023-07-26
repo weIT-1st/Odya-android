@@ -3,7 +3,7 @@ package com.weit.data.di
 import android.content.Context
 import androidx.room.Room
 import com.weit.data.db.CoordinateDatabase
-import com.weit.data.repository.LocationRepositoryImpl
+import com.weit.data.repository.CurrentCoordinateRepositoryImpl
 import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -13,10 +13,10 @@ import com.weit.data.service.PlaceReviewService
 import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.ImageDataSource
-import com.weit.data.source.LocationDataSource
+import com.weit.data.source.CurrentCoordinateDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.domain.repository.CoordinateRepository
-import com.weit.domain.repository.LocationRepository
+import com.weit.domain.repository.CurrentCoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository
@@ -93,12 +93,12 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideLocationRepository(dataSource: LocationDataSource): LocationRepository =
-        LocationRepositoryImpl(dataSource)
+    fun provideLocationRepository(dataSource: CurrentCoordinateDataSource): CurrentCoordinateRepository =
+        CurrentCoordinateRepositoryImpl(dataSource)
 
     @ActivityRetainedScoped
     @Provides
-    fun provideLocationDataSource(@ApplicationContext context: Context): LocationDataSource =
-        LocationDataSource(context)
+    fun provideLocationDataSource(@ApplicationContext context: Context): CurrentCoordinateDataSource =
+        CurrentCoordinateDataSource(context)
 
 }

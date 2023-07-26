@@ -5,12 +5,12 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
-import com.weit.domain.usecase.DeleteCoordinateUseCase
-import com.weit.domain.usecase.GetCoordinatesUseCase
-import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
-import com.weit.domain.usecase.GetLocationUseCase
+import com.weit.domain.usecase.DeleteCoordinateUseCase
+import com.weit.domain.usecase.GetCurrentCoordinateUseCase
+import com.weit.domain.usecase.GetRoomCoordinatesUseCase
+import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
@@ -23,7 +23,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.system.measureTimeMillis
@@ -34,12 +33,12 @@ class ExampleViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
     private val getImageCoordinatesUseCase: GetImageCoordinatesUseCase,
-    private val getCoordinatesUseCase: GetCoordinatesUseCase,
+    private val getRoomCoordinatesUseCase: GetRoomCoordinatesUseCase,
     private val insertCoordinateUseCase: InsertCoordinateUseCase,
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
-    private val getLocationUseCase: GetLocationUseCase
+    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase
 
 ) : ViewModel() {
 
@@ -76,7 +75,7 @@ class ExampleViewModel @Inject constructor(
     //get device location
     private fun getDeviceLocation() {
         viewModelScope.launch {
-            val result = getLocationUseCase()
+            val result = getCurrentCoordinateUseCase()
             if (result.isSuccess) {
                 val coordinate = result.getOrThrow()
                 coordinate.collect {
@@ -103,7 +102,7 @@ class ExampleViewModel @Inject constructor(
 
     private fun getCoordinates() {
         viewModelScope.launch {
-            val result = getCoordinatesUseCase(1689925493106, 1689925518186)
+            val result = getRoomCoordinatesUseCase(1689925493106, 1689925518186)
             for (location in result) {
                 Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }

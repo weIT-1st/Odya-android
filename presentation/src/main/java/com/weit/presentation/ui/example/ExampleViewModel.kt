@@ -70,7 +70,6 @@ class ExampleViewModel @Inject constructor(
         // addReview()
         //getReview()
 
-        //현재 위치를 수신받는 usecase test
         getDeviceLocation()
 
     }

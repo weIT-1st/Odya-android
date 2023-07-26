@@ -1,6 +1,9 @@
 package com.weit.presentation.ui
 
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
+import android.util.Log
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -11,13 +14,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
-
+    val br: CoordinateBroadcastReceiver = CoordinateBroadcastReceiver()
     private lateinit var navController: NavController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setupBottomNavigation()
+
     }
 
     private fun setupBottomNavigation() {
@@ -26,4 +28,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         navController = host.navController
         binding.bottomNavigationView.setupWithNavController(navController)
     }
+
+
 }

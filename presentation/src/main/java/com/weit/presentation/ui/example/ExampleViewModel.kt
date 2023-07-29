@@ -9,7 +9,7 @@ import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.DeleteCoordinateUseCase
 import com.weit.domain.usecase.GetCurrentCoordinateUseCase
-import com.weit.domain.usecase.GetRoomCoordinatesUseCase
+import com.weit.domain.usecase.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
@@ -33,7 +33,7 @@ class ExampleViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
     private val getImageCoordinatesUseCase: GetImageCoordinatesUseCase,
-    private val getRoomCoordinatesUseCase: GetRoomCoordinatesUseCase,
+    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase,
     private val insertCoordinateUseCase: InsertCoordinateUseCase,
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
@@ -102,7 +102,7 @@ class ExampleViewModel @Inject constructor(
 
     private fun getCoordinates() {
         viewModelScope.launch {
-            val result = getRoomCoordinatesUseCase(1689925493106, 1689925518186)
+            val result = getStoredCoordinatesUseCase(1689925493106, 1689925518186)
             for (location in result) {
                 Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }

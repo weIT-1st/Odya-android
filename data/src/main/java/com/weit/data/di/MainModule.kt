@@ -1,9 +1,9 @@
 package com.weit.data.di
 
 import android.content.Context
+import android.location.LocationManager
 import androidx.room.Room
 import com.weit.data.db.CoordinateDatabase
-import com.weit.data.repository.CurrentCoordinateRepositoryImpl
 import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -13,10 +13,8 @@ import com.weit.data.service.PlaceReviewService
 import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.ImageDataSource
-import com.weit.data.source.CurrentCoordinateDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.domain.repository.CoordinateRepository
-import com.weit.domain.repository.CurrentCoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository
@@ -27,6 +25,7 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -88,17 +87,15 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideCoordinateDataSource(database: CoordinateDatabase): CoordinateDataSource =
-        CoordinateDataSource(database)
+    fun provideCoordinateDataSource(
+        database: CoordinateDatabase,
+        locationManager: LocationManager
+    ): CoordinateDataSource =
+        CoordinateDataSource(database, locationManager)
 
     @ActivityRetainedScoped
     @Provides
-    fun provideLocationRepository(dataSource: CurrentCoordinateDataSource): CurrentCoordinateRepository =
-        CurrentCoordinateRepositoryImpl(dataSource)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideLocationDataSource(@ApplicationContext context: Context): CurrentCoordinateDataSource =
-        CurrentCoordinateDataSource(context)
+    fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
+        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
 }

@@ -5,7 +5,7 @@ import com.weit.domain.model.CoordinateTimeInfo
 import com.weit.domain.repository.CoordinateRepository
 import javax.inject.Inject
 
-class GetRoomCoordinatesUseCase @Inject constructor(
+class GetStoredCoordinatesUseCase @Inject constructor(
     private val repository: CoordinateRepository,
 ) {
     suspend operator fun invoke(startTime: Long, endTime: Long): List<CoordinateInfo> =

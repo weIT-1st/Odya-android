@@ -7,11 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.IBinder
-import android.util.Log
-import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.weit.presentation.R
 
@@ -23,13 +19,14 @@ class CoordinateForegroundService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         createNotificationChannel()
 
         val notificationIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(
             this,
-            0, notificationIntent, PendingIntent.FLAG_MUTABLE
+            0,
+            notificationIntent,
+            PendingIntent.FLAG_MUTABLE,
         )
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
@@ -52,7 +49,7 @@ class CoordinateForegroundService : Service() {
         val channel = NotificationChannel(
             CHANNEL_ID,
             "Odya Coordinate Channel",
-            NotificationManager.IMPORTANCE_DEFAULT
+            NotificationManager.IMPORTANCE_DEFAULT,
         )
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)

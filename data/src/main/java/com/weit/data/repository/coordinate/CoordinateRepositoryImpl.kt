@@ -41,7 +41,7 @@ class CoordinateRepositoryImpl @Inject constructor(
                 it.toCoordinateInfo()
             }
             Result.success(coordinate)
-        }else {
+        } else {
             Result.failure(RequestDeniedException(result.deniedPermissions.first()))
         }
     }
@@ -57,7 +57,8 @@ class CoordinateRepositoryImpl @Inject constructor(
             .setDeniedMessage(R.string.location_permission_denied)
             .setPermissions(
                 Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+            )
             .check()
     }
 

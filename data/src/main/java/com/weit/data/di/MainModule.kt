@@ -25,7 +25,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
@@ -89,7 +88,7 @@ class MainModule {
     @Provides
     fun provideCoordinateDataSource(
         database: CoordinateDatabase,
-        locationManager: LocationManager
+        locationManager: LocationManager,
     ): CoordinateDataSource =
         CoordinateDataSource(database, locationManager)
 
@@ -97,5 +96,4 @@ class MainModule {
     @Provides
     fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-
 }

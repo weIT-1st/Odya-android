@@ -38,7 +38,7 @@ class ExampleViewModel @Inject constructor(
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
-    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase
+    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
 
 ) : ViewModel() {
 
@@ -60,19 +60,19 @@ class ExampleViewModel @Inject constructor(
     init {
         // getImages()
 
-        //coordinate room test
+        // coordinate room test
         // insertCoordinate()
         // getCoordinates()
         // deleteCoordinate()
 
-        //place review test
+        // place review test
         // addReview()
-        //getReview()
+        // getReview()
 
         getDeviceLocation()
-
     }
-    //get device location
+
+    // get device location
     private fun getDeviceLocation() {
         viewModelScope.launch {
             val result = getCurrentCoordinateUseCase()
@@ -144,8 +144,8 @@ class ExampleViewModel @Inject constructor(
                 PlaceReviewRegistrationInfo(
                     placeId = "test",
                     rating = 8,
-                    review = "테스트"
-                )
+                    review = "테스트",
+                ),
             )
             if (result.isSuccess) {
                 Logger.t("MainTest").i("성공!")
@@ -161,7 +161,7 @@ class ExampleViewModel @Inject constructor(
                 PlaceReviewByPlaceIdInfo(
                     placeId = "test",
                     size = 2,
-                )
+                ),
             )
             if (result.isSuccess) {
                 val reviews = result.getOrThrow()

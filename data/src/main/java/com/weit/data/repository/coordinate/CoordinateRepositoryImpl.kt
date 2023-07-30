@@ -10,7 +10,7 @@ import com.weit.data.source.CoordinateDataSource
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.CoordinateTimeInfo
 import com.weit.domain.model.exception.RequestDeniedException
-import com.weit.domain.repository.CoordinateRepository
+import com.weit.domain.repository.coordinate.CoordinateRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

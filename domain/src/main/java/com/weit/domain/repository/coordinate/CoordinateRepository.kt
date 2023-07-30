@@ -1,4 +1,4 @@
-package com.weit.domain.repository
+package com.weit.domain.repository.coordinate
 
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.CoordinateTimeInfo

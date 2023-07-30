@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
-import com.weit.domain.usecase.DeleteCoordinateUseCase
-import com.weit.domain.usecase.GetCurrentCoordinateUseCase
-import com.weit.domain.usecase.GetStoredCoordinatesUseCase
-import com.weit.domain.usecase.InsertCoordinateUseCase
+import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
+import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
+import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
+import com.weit.domain.usecase.coordinate.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
@@ -40,7 +40,7 @@ class ExampleViewModel @Inject constructor(
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
     private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
 
-) : ViewModel() {
+    ) : ViewModel() {
 
     val query = MutableStateFlow("")
 

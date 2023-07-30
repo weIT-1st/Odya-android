@@ -14,7 +14,7 @@ import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceReviewDateSource
-import com.weit.domain.repository.CoordinateRepository
+import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository

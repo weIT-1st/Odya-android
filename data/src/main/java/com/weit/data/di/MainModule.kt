@@ -6,16 +6,20 @@ import androidx.room.Room
 import com.weit.data.db.CoordinateDatabase
 import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
+import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.service.ExampleService
+import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
+import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
+import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository
 import dagger.Module
@@ -96,4 +100,19 @@ class MainModule {
     @Provides
     fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideFavoritePlaceService(@AuthNetworkObject retrofit: Retrofit): FavoritePlaceService =
+        retrofit.create(FavoritePlaceService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideFavoritePlaceDataSource(service: FavoritePlaceService): FavoritePlaceDateSource =
+        FavoritePlaceDateSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideFavoritePlaceRepository(dataSource: FavoritePlaceDateSource): FavoritePlaceRepository =
+        FavoritePlaceRepositoryImpl(dataSource)
 }

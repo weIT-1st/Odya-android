@@ -4,9 +4,12 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.exception.auth.TokenNotFoundException
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
+import com.weit.domain.usecase.auth.LogoutUseCase
 import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
 import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
 import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
@@ -39,6 +42,7 @@ class ExampleViewModel @Inject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
     private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
+    private val logoutUseCase: LogoutUseCase
 
     ) : ViewModel() {
 
@@ -69,7 +73,22 @@ class ExampleViewModel @Inject constructor(
         // addReview()
         // getReview()
 
-        getDeviceLocation()
+        //getDeviceLocation()
+
+        logout()
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            val result = logoutUseCase()
+            if (result.isSuccess) {
+                FirebaseAuth.getInstance().signOut()
+                Logger.t("MainTest").i("로그아웃 성공!")
+            } else {
+                Logger.t("MainTest").i("로그아웃 실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+
     }
 
     // get device location

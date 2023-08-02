@@ -11,6 +11,9 @@
         <action
             android:id="@+id/action_loginFragment_to_userRegistrationFragment"
             app:destination="@id/userRegistrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_userLoginMainFragment"
+            app:destination="@+id/loginMainFragment"/>
     </fragment>
     <fragment
         android:id="@+id/userRegistrationFragment"
@@ -18,5 +21,11 @@
         android:label="UserRegistrationFragment" >
         <argument android:name="username"
             app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginMainFragment"
+        android:name="com.weit.presentation.ui.login.LoginMainFragment"
+        android:label="LoginMainFragment">
+
     </fragment>
 </navigation>

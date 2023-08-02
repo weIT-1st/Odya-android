@@ -2,6 +2,7 @@ package com.weit.presentation.ui.login.user.login
 
 import android.content.Intent
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
@@ -27,6 +28,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
         binding.btnToMain.setOnClickListener {
             moveToMain()
+        }
+        binding.btnToLoginStep.setOnClickListener{
+            val action = LoginFragmentDirections.actionLoginFragmentToUserLoginMainFragment()
+            it.findNavController().navigate(action)
         }
     }
 

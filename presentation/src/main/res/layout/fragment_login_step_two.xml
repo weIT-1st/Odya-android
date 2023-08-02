@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.login.LoginStepTwoViewModel"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.login.LoginStepTwoFragment">
+
+        <TextView
+            android:id="@+id/tv_login_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="길동아밥먹자"
+            style="@style/h3"
+            android:textColor="@color/primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_login_birth_gender"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="님이"
+            style="@style/h3"
+            app:layout_constraintStart_toEndOf="@+id/tv_login_nickname"
+            app:layout_constraintTop_toTopOf="@+id/tv_login_nickname"/>
+
+        <TextView
+            android:id="@+id/tv_login_birth_gender"
+            style="@style/h3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="21dp"
+            android:text="궁금해요!"
+            app:layout_constraintBottom_toTopOf="@+id/et_login_birth"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/et_login_birth"
+            style="@style/body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/elevation3"
+            android:drawableEnd="@drawable/ic_direrction_down"
+            android:hint="@string/login_birth_hint"
+            android:padding="12dp"
+            android:textColor="@color/label_normal"
+            android:textColorHint="@color/label_inactive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_login_gender"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_8"
+            app:boxBackgroundColor="@color/elevation3"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_login_birth">
+            <AutoCompleteTextView
+                android:id="@+id/tv_login_gender"
+                style="@style/body1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/ic_direrction_down"
+                android:inputType="none"
+                android:text="@string/login_gender_hint"
+                android:textColor="@color/label_inactive"
+                android:padding="12dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.login.LoginStepOneViewModel"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.login.LoginStepOneFragment">
+
+        <TextView
+            android:id="@+id/tv_login_what_name"
+            style="@style/h3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/login_what_name"
+            android:textColor="@color/label_normal"
+            app:layout_constraintBottom_toTopOf="@+id/et_login_name"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/et_login_name"
+            style="@style/body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/elevation3"
+            android:drawableRight="@drawable/ic_x_cirecle"
+            android:hint="@string/login_name_hint"
+            android:padding="12dp"
+            android:textColor="@color/label_normal"
+            android:textColorHint="@color/label_inactive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_random_name"
+            style="@style/detail2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="44dp"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@android:color/transparent"
+            android:drawableRight="@drawable/ic_random_dice"
+            android:text="@string/login_random_name"
+            android:textColor="@color/label_assistive"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_login_name" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

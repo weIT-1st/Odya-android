@@ -52,4 +52,11 @@ class AuthDataSource @Inject constructor(
 
     fun getFirebaseToken(): String =
         auth.currentUser?.getIdToken(false)?.result?.token ?: throw TokenNotFoundException()
+
+    fun checkLogin(): Boolean {
+        val user = auth.currentUser
+        return user != null
+    }
+
+
 }

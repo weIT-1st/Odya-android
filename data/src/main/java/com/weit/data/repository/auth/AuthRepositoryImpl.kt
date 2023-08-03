@@ -69,4 +69,7 @@ class AuthRepositoryImpl @Inject constructor(
             gender = gender,
             birthday = listOf(birthday.year, birthday.monthValue, birthday.dayOfMonth),
         )
+
+    override suspend fun verifyCurrentUser(): Boolean =
+        authDataSource.checkLogin()
 }

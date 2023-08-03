@@ -8,4 +8,6 @@ interface AuthRepository {
     suspend fun register(
         info: UserRegistrationInfo,
     ): Result<Unit>
+
+    suspend fun verifyCurrentUser(): Boolean
 }

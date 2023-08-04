@@ -1,5 +1,6 @@
 package com.weit.domain.usecase.place
 
+import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.repository.place.PlaceRepository
 import javax.inject.Inject
 
@@ -9,5 +10,5 @@ class GetPlacesByCoordinateUseCase @Inject constructor(
     suspend operator fun invoke(
         latitude: Double,
         longitude: Double,
-    ) = repository.getPlacesByCoordinate(latitude, longitude)
+    ): List<PlacePrediction> = repository.getPlacesByCoordinate(latitude, longitude)
 }

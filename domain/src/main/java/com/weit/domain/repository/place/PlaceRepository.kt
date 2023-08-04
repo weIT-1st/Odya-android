@@ -8,5 +8,5 @@ interface PlaceRepository {
 
     suspend fun getPlaceDetail(placeId: String): PlaceDetail
 
-    suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double)
+    suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): List<PlacePrediction>
 }

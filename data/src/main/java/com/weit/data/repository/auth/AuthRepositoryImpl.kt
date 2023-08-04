@@ -1,6 +1,7 @@
 package com.weit.data.repository.auth
 
 import com.kakao.sdk.user.UserApiClient
+import com.weit.data.model.auth.IsDuplicateDTO
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
 import com.weit.domain.model.auth.UserRegistrationInfo
@@ -58,6 +59,24 @@ class AuthRepositoryImpl @Inject constructor(
             }
         }
         awaitClose { /* Do Nothing */ }
+    }
+
+    private suspend fun isDuplicateNickname(nickname: String): Result<IsDuplicateDTO?>{
+        return runCatching{
+            authDataSource.isDuplicateNickname(nickname)
+        }
+    }
+
+    private suspend fun isDuplicateEmail(eamil: String): Result<IsDuplicateDTO?>{
+        return runCatching{
+            authDataSource.isDuplicateEmail(eamil)
+        }
+    }
+
+    private suspend fun isDuplicatePhonNum(phoneNum: String): Result<IsDuplicateDTO?>{
+        return runCatching {
+            authDataSource.isDuplicatePhoneNum(phoneNum)
+        }
     }
 
     private fun UserRegistrationInfo.toUserRegistration(): UserRegistration =

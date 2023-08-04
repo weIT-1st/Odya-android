@@ -70,6 +70,6 @@ class AuthRepositoryImpl @Inject constructor(
             birthday = listOf(birthday.year, birthday.monthValue, birthday.dayOfMonth),
         )
 
-    override suspend fun verifyCurrentUser(): Boolean =
+    override fun verifyCurrentUser(): Boolean =
         authDataSource.checkLogin()
 }

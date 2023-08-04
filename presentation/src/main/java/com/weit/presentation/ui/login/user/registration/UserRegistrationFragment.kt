@@ -42,7 +42,7 @@ class UserRegistrationFragment : BaseFragment<FragmentUserRegistrationBinding>(
         val dateSetListener = OnDateSetListener { _, year, month, dayOfMonth ->
             viewModel.setBirth(year, month, dayOfMonth)
             binding.etUserRegistrationBirth.setText(
-                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth),
+                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth)
             )
         }
         DatePickerDialog(requireContext(), dateSetListener, DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY)

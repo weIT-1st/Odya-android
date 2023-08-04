@@ -7,10 +7,15 @@
     <!-- login -->
     <string name="go_back_step">뒤로가기</string>
     <string name="go_next_step">건너뛰기</string>
+    <string name="login_consent_app">앱 수집 권한 동의</string>
+    <string name="login_consent_privacy">개인정보 이용 동의</string>
+    <string name="login_consent_all">전체 동의</string>
+    <string name="login_start_odya">오댜 시작하기</string>
     <string name="text_login_kakao">카카오로 로그인</string>
     <string name="login_what_name">오댜에서 활동할\n이름을 알려주세요!</string>
     <string name="login_name_hint">홍길동</string>
     <string name="login_random_name">랜덤 닉네임</string>
+    <string name="login_who_you">님이\n궁금해요!</string>
     <string name="login_birth_gender"></string>
     <string name="login_birth_hint">생년월일</string>
     <string name="login_gender_hint">성별</string>

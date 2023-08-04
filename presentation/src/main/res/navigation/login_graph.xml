@@ -12,9 +12,11 @@
             android:id="@+id/action_loginFragment_to_userRegistrationFragment"
             app:destination="@id/userRegistrationFragment" />
         <action
-            android:id="@+id/action_loginFragment_to_userLoginMainFragment"
-            app:destination="@+id/loginMainFragment"/>
+            android:id="@+id/action_loginFragment_to_LoginSteopZeroFragment"
+            app:destination="@+id/loginStepZeorFragment"/>
     </fragment>
+
+
     <fragment
         android:id="@+id/userRegistrationFragment"
         android:name="com.weit.presentation.ui.login.user.registration.UserRegistrationFragment"
@@ -22,10 +24,32 @@
         <argument android:name="username"
             app:argType="string" />
     </fragment>
-    <fragment
-        android:id="@+id/loginMainFragment"
-        android:name="com.weit.presentation.ui.login.LoginMainFragment"
-        android:label="LoginMainFragment">
 
+    <fragment
+        android:id="@+id/loginStepZeorFragment"
+        android:name="com.weit.presentation.ui.login.LoginStepZeroFragment"
+        android:label="LoginStepZeroFragment">
+        <action
+            android:id="@+id/action_loginStepZeroFragment_to_loginStepOneFragment"
+            app:destination="@+id/loginStepOneFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/loginStepOneFragment"
+        android:name="com.weit.presentation.ui.login.LoginStepOneFragment"
+        android:label="LoginStepOneFragment">
+        <action
+            android:id="@+id/acteion_loginStepOneFragment_to_loginStepTwoFragment"
+            app:destination="@+id/loginStepTwoFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginStepTwoFragment"
+        android:name="com.weit.presentation.ui.login.LoginStepTwoFragment"
+        android:label="LoginSteioTwoFragment">
+        <argument android:name="nickname"
+            app:argType="string" />
+    </fragment>
+
+
 </navigation>

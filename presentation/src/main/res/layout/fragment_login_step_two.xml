@@ -14,25 +14,81 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         tools:context=".ui.login.LoginStepTwoFragment">
 
-        <TextView
-            android:id="@+id/tv_login_nickname"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login_two_go_back_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="길동아밥먹자"
-            style="@style/h3"
+            android:background="@color/background_normal"
+            android:text="@string/go_back_step"
             android:textColor="@color/primary"
+            android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/tv_login_birth_gender"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_login_two_go_next_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="님이"
-            style="@style/h3"
-            app:layout_constraintStart_toEndOf="@+id/tv_login_nickname"
-            app:layout_constraintTop_toTopOf="@+id/tv_login_nickname"/>
+            android:background="@color/background_normal"
+            android:text="@string/go_next_step"
+            android:textColor="@color/primary"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_dot_indicator_first"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:background="@drawable/ic_dot_yellow"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
+            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_second"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/btn_login_two_go_back_step"
+            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+
+
+        <ImageView
+            android:id="@+id/iv_dot_indicator_second"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_dot_yellow"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
+            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_third"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_first"
+            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+
+        <ImageView
+            android:id="@+id/iv_dot_indicator_third"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_dot_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
+            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_fourth"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_second"
+            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+
+        <ImageView
+            android:id="@+id/iv_dot_indicator_fourth"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/ic_dot_gray"
+            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
+            app:layout_constraintEnd_toStartOf="@+id/btn_login_two_go_next_step"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_third"
+            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+
+
 
         <TextView
             android:id="@+id/tv_login_birth_gender"
@@ -40,40 +96,58 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="21dp"
-            android:text="궁금해요!"
-            app:layout_constraintBottom_toTopOf="@+id/et_login_birth"
+            android:text="@string/login_who_you"
+            app:layout_constraintBottom_toTopOf="@+id/ti_login_birth"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <EditText
-            android:id="@+id/et_login_birth"
-            style="@style/body1"
-            android:layout_width="match_parent"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ti_login_birth"
+            style="@style/edit_text_box"
+            android:theme="@style/edit_text_box"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:background="@drawable/corners_all_8"
-            android:backgroundTint="@color/elevation3"
+            app:boxBackgroundColor="@color/elevation3"
             android:drawableEnd="@drawable/ic_direrction_down"
+            android:padding="0dp"
             android:hint="@string/login_birth_hint"
-            android:padding="12dp"
-            android:textColor="@color/label_normal"
             android:textColorHint="@color/label_inactive"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_login_birth"
+                style="@style/body1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:drawableEnd="@drawable/ic_direrction_down"
+                android:padding="12dp"
+                android:textColorHint="@color/label_inactive"
+                android:textColor="@color/label_inactive"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/ti_login_gender"
+            style="@style/edit_text_box"
+            android:theme="@style/edit_text_box"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:focusable="false"
             android:background="@drawable/corners_all_8"
             app:boxBackgroundColor="@color/elevation3"
             android:layout_marginTop="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_login_birth">
+            app:layout_constraintTop_toBottomOf="@+id/ti_login_birth">
             <AutoCompleteTextView
                 android:id="@+id/tv_login_gender"
                 style="@style/body1"
+                android:theme="@style/edit_text_box"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:drawableEnd="@drawable/ic_direrction_down"
@@ -82,7 +156,6 @@
                 android:textColor="@color/label_inactive"
                 android:padding="12dp" />
         </com.google.android.material.textfield.TextInputLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

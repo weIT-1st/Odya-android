@@ -83,5 +83,10 @@
         <item name="cornerSize">50%</item>
     </style>
 
+    <style name="edit_text_box" parent="Widget.Design.TextInputLayout">
+        <item name="colorControlNormal">@color/elevation3</item>  // unFocus 상태일때 밑줄 색.
+        <item name="boxStrokeColor">@color/elevation3</item> // Focus 상태일때 밑줄 색.
+    </style>
+
 </resources>
 

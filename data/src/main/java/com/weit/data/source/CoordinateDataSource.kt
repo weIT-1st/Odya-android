@@ -5,7 +5,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import com.weit.data.db.CoordinateDatabase
-import com.weit.data.model.Coordinate
+import com.weit.data.model.coordinate.Coordinate
 import com.weit.domain.model.CoordinateTimeInfo
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow

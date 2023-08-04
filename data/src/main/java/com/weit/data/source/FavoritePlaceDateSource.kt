@@ -1,14 +1,10 @@
 package com.weit.data.source
 
-import com.weit.data.model.favoritePlace.FavoritePlaceListDTO
+import com.weit.data.model.ListResponse
+import com.weit.data.model.favoritePlace.FavoritePlaceDTO
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
-import com.weit.data.model.place.PlaceReviewListDTO
-import com.weit.data.model.place.PlaceReviewModification
-import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.FavoritePlaceService
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
-import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import javax.inject.Inject
 
 class FavoritePlaceDateSource @Inject constructor(
@@ -28,7 +24,7 @@ class FavoritePlaceDateSource @Inject constructor(
     suspend fun getFavoritePlaceCount(): Int =
         service.getFavoritePlaceCount()
 
-    suspend fun getFavoritePlaces(info: FavoritePlaceInfo): FavoritePlaceListDTO =
+    suspend fun getFavoritePlaces(info: FavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFavoirtePlaces(
            size = info.size,
            sortType = info.sortType,

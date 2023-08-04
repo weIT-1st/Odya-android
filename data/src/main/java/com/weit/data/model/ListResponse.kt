@@ -1,10 +1,10 @@
-package com.weit.data.model.favoritePlace
+package com.weit.data.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FavoritePlaceListDTO(
-    @field:Json(name = "content") val reviews: List<FavoritePlaceDTO>,
+data class ListResponse<T>(
+    @field:Json(name = "content") val content : List<T>,
     @field:Json(name = "hasNext") val hasNext: Boolean,
 )

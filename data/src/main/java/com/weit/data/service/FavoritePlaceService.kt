@@ -1,6 +1,7 @@
 package com.weit.data.service
 
-import com.weit.data.model.favoritePlace.FavoritePlaceListDTO
+import com.weit.data.model.ListResponse
+import com.weit.data.model.favoritePlace.FavoritePlaceDTO
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -34,5 +35,5 @@ interface FavoritePlaceService {
         @Query("size") size: Int?,
         @Query("sortType") sortType: String?,
         @Query("lastId") lastFavoritePlaceId: Long?,
-    ): FavoritePlaceListDTO
+    ): ListResponse<FavoritePlaceDTO>
 }

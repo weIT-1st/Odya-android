@@ -37,7 +37,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoritePlaces(favoritePlaceInfo: FavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
         return runCatching {
-            dataSource.getFavoritePlaces(favoritePlaceInfo).reviews.map{
+            dataSource.getFavoritePlaces(favoritePlaceInfo).content.map{
                 FavoritePlaceDetail(
                     favoritePlaceId = it.favoritePlaceId,
                     placeId = it.placeId,

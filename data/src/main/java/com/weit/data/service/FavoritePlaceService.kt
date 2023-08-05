@@ -31,7 +31,7 @@ interface FavoritePlaceService {
     suspend fun getFavoritePlaceCount(): Int
 
     @GET("/api/v1/favorite-places/list")
-    suspend fun getFavoirtePlaces(
+    suspend fun getFavoritePlaces(
         @Query("size") size: Int?,
         @Query("sortType") sortType: String?,
         @Query("lastId") lastFavoritePlaceId: Long?,

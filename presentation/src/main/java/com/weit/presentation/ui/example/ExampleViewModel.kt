@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.exception.favoritePlace.ExistedPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
@@ -27,8 +26,6 @@ import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
 import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
-import com.weit.presentation.ui.login.user.login.LoginViewModel
-import com.weit.presentation.ui.login.user.registration.UserRegistrationViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -53,8 +50,8 @@ class ExampleViewModel @Inject constructor(
     private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
-    private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase
-    ) : ViewModel() {
+    private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
+) : ViewModel() {
 
     val query = MutableStateFlow("")
 
@@ -84,9 +81,9 @@ class ExampleViewModel @Inject constructor(
 
         // place review test
 //        addReview()
-//         getReview()
+        getReview()
 
-        //getDeviceLocation()
+        // getDeviceLocation()
 
 //        addFavoritePlace()
 //        getFavoritePlaces()
@@ -163,7 +160,7 @@ class ExampleViewModel @Inject constructor(
         viewModelScope.launch {
             val result = registerPlaceReviewUseCase(
                 PlaceReviewRegistrationInfo(
-                    placeId = "test1",
+                    placeId = "test5",
                     rating = 8,
                     review = "테스트",
                 ),
@@ -180,7 +177,7 @@ class ExampleViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getPlaceReviewByPlaceIdUseCase(
                 PlaceReviewByPlaceIdInfo(
-                    placeId = "test1",
+                    placeId = "test5",
                     size = 2,
                 ),
             )
@@ -229,7 +226,7 @@ class ExampleViewModel @Inject constructor(
     private fun addFavoritePlace() {
         viewModelScope.launch {
             val result = registerFavoritePlaceUseCase(
-                "test1"
+                "test5",
             )
             if (result.isSuccess) {
                 _event.emit(Event.FavoritePlaceRegistrationSuccess)
@@ -266,7 +263,7 @@ class ExampleViewModel @Inject constructor(
     private fun getFavoritePlaces() {
         viewModelScope.launch {
             val result = getFavoritePlacesUseCase(
-                FavoritePlaceInfo()
+                FavoritePlaceInfo(),
             )
             if (result.isSuccess) {
                 val favoritePlaces = result.getOrThrow()
@@ -285,6 +282,5 @@ class ExampleViewModel @Inject constructor(
         object InvalidTokenException : Event()
         object NotExistPlaceIdException : Event()
         object UnknownException : Event()
-
     }
 }

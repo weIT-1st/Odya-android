@@ -3,16 +3,12 @@ package com.weit.data.repository.favoritePlace
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.auth.DuplicatedSomethingException
-import com.weit.domain.model.exception.auth.InvalidSomethingException
-import com.weit.domain.model.exception.auth.NeedUserRegistrationException
 import com.weit.domain.model.exception.favoritePlace.ExistedPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.favoritePlace.FavoritePlaceDetail
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
-import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
@@ -28,7 +24,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         val result = runCatching {
             dataSource.register(FavoritePlaceRegistration(placeId))
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(Unit)
         } else {
             Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
@@ -39,7 +35,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         val result = runCatching {
             dataSource.delete(favoritePlaceId)
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(Unit)
         } else {
             Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
@@ -50,7 +46,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         val result = runCatching {
             dataSource.isFavoritePlace(placeId)
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
@@ -61,7 +57,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         val result = runCatching {
             dataSource.getFavoritePlaceCount()
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
@@ -70,15 +66,15 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
 
     override suspend fun getFavoritePlaces(favoritePlaceInfo: FavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
         val result = runCatching {
-            dataSource.getFavoritePlaces(favoritePlaceInfo).content.map{
+            dataSource.getFavoritePlaces(favoritePlaceInfo).content.map {
                 FavoritePlaceDetail(
                     favoritePlaceId = it.favoritePlaceId,
                     placeId = it.placeId,
-                    userId = it.userId
+                    userId = it.userId,
                 )
             }
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
@@ -98,5 +94,4 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
             t
         }
     }
-
 }

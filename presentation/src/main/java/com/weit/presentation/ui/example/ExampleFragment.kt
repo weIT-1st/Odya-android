@@ -8,7 +8,6 @@ import androidx.fragment.app.viewModels
 import com.weit.domain.model.exception.RequestDeniedException
 import com.weit.presentation.databinding.FragmentExampleBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.user.registration.UserRegistrationViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

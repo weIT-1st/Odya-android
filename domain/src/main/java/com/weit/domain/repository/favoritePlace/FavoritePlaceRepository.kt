@@ -16,11 +16,9 @@ interface FavoritePlaceRepository {
         placeId: String,
     ): Result<Boolean>
 
-    suspend fun getFavoritePlaceCount() : Result<Int>
+    suspend fun getFavoritePlaceCount(): Result<Int>
 
     suspend fun getFavoritePlaces(
         favoritePlaceInfo: FavoritePlaceInfo,
     ): Result<List<FavoritePlaceDetail>>
-
-
 }

@@ -26,8 +26,8 @@ class FavoritePlaceDateSource @Inject constructor(
 
     suspend fun getFavoritePlaces(info: FavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFavoritePlaces(
-           size = info.size,
-           sortType = info.sortType,
-           lastFavoritePlaceId = info.lastFavoritePlaceId
+            size = info.size,
+            sortType = info.sortType,
+            lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
 }

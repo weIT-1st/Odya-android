@@ -1,6 +1,7 @@
 package com.weit.presentation.ui
 
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -26,9 +27,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         binding.bottomNavigationView.setupWithNavController(navController)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStart() {
+        super.onStart()
         val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
-        startForegroundService(serviceIntent)
+        stopService(serviceIntent)
     }
 }

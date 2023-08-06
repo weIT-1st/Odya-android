@@ -30,8 +30,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val packageName = packageName
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            if (pm.isIgnoringBatteryOptimizations(packageName)) {
-            } else {
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 val intent = Intent()
                 intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                 intent.data = Uri.parse("package:$packageName")

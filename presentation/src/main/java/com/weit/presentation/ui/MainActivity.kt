@@ -1,7 +1,6 @@
 package com.weit.presentation.ui
 
 import android.content.Intent
-import android.content.IntentFilter
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -29,7 +28,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         val pm = getSystemService(POWER_SERVICE) as PowerManager
         val packageName = packageName
 
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 val intent = Intent()
                 intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS

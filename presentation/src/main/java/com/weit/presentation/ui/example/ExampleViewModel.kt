@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
-import com.weit.domain.model.exception.auth.TokenNotFoundException
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.auth.LogoutUseCase
@@ -42,9 +41,9 @@ class ExampleViewModel @Inject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
     private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
-    private val logoutUseCase: LogoutUseCase
+    private val logoutUseCase: LogoutUseCase,
 
-    ) : ViewModel() {
+) : ViewModel() {
 
     val query = MutableStateFlow("")
 
@@ -73,7 +72,7 @@ class ExampleViewModel @Inject constructor(
         // addReview()
         // getReview()
 
-        //getDeviceLocation()
+        // getDeviceLocation()
 
         logout()
     }
@@ -88,7 +87,6 @@ class ExampleViewModel @Inject constructor(
                 Logger.t("MainTest").i("로그아웃 실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
-
     }
 
     // get device location

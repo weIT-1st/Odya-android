@@ -57,6 +57,4 @@ class AuthDataSource @Inject constructor(
         val user = auth.currentUser
         return user != null
     }
-
-
 }

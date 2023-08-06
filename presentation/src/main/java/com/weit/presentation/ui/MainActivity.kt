@@ -2,7 +2,11 @@ package com.weit.presentation.ui
 
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -18,6 +22,22 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
+        setIgnoringBatteryOptimization()
+    }
+
+    private fun setIgnoringBatteryOptimization() {
+        val pm = getSystemService(POWER_SERVICE) as PowerManager
+        val packageName = packageName
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (pm.isIgnoringBatteryOptimizations(packageName)) {
+            } else {
+                val intent = Intent()
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivityForResult(intent, 0)
+            }
+        }
     }
 
     private fun setupBottomNavigation() {

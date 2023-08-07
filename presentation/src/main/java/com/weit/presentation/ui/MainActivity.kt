@@ -6,36 +6,32 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
+import com.weit.domain.usecase.auth.VerifyCurrentUserUseCase
+import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ActivityMainBinding
 import com.weit.presentation.ui.base.BaseActivity
+import com.weit.presentation.ui.login.user.login.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
+    private val vm: MainViewModel by viewModels()
     private lateinit var navController: NavController
+    @Inject
+    lateinit var verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
-        setIgnoringBatteryOptimization()
-    }
-
-    private fun setIgnoringBatteryOptimization() {
-        val pm = getSystemService(POWER_SERVICE) as PowerManager
-        val packageName = packageName
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
-                val intent = Intent()
-                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-                intent.data = Uri.parse("package:$packageName")
-                startActivityForResult(intent, 0)
-            }
-        }
+        vm.verifyIgnoringBatteryOptimization(verifyIgnoringBatteryOptimizationUseCase)
     }
 
     private fun setupBottomNavigation() {

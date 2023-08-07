@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.ExistedPlaceIdException
+import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
@@ -252,7 +252,7 @@ class ExampleViewModel @Inject constructor(
 
     private suspend fun handleRegistrationError(error: Throwable) {
         when (error) {
-            is ExistedPlaceIdException -> _event.emit(Event.ExistedPlaceIdException)
+            is RegisteredFavoritePlaceException -> _event.emit(Event.ExistedPlaceIdException)
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
             is NotExistPlaceIdException -> _event.emit(Event.NotExistPlaceIdException)

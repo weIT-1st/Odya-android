@@ -3,7 +3,7 @@ package com.weit.data.repository.favoritePlace
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.ExistedPlaceIdException
+import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
@@ -84,7 +84,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
     private fun handleFavoritePlaceError(t: Throwable): Throwable {
         return if (t is HttpException) {
             when (t.code()) {
-                HTTP_CONFLICT -> ExistedPlaceIdException()
+                HTTP_CONFLICT -> RegisteredFavoritePlaceException()
                 HTTP_BAD_REQUEST -> InvalidRequestException()
                 HTTP_UNAUTHORIZED -> InvalidTokenException()
                 HTTP_NOT_FOUND -> NotExistPlaceIdException()

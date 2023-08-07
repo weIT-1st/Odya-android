@@ -81,12 +81,12 @@ class ExampleViewModel @Inject constructor(
 
         // place review test
 //        addReview()
-        getReview()
+      //  getReview()
 
         // getDeviceLocation()
 
 //        addFavoritePlace()
-//        getFavoritePlaces()
+        getFavoritePlaces()
         getFavoritePlacesCount()
     }
 

@@ -21,51 +21,31 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
     private val dataSource: FavoritePlaceDateSource,
 ) : FavoritePlaceRepository {
     override suspend fun register(placeId: String): Result<Unit> {
-        val result = runCatching {
+        return handleFavoritePlaceResult{
             dataSource.register(FavoritePlaceRegistration(placeId))
-        }
-        return if (result.isSuccess) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
         }
     }
 
     override suspend fun delete(favoritePlaceId: Long): Result<Unit> {
-        val result = runCatching {
+        return handleFavoritePlaceResult{
             dataSource.delete(favoritePlaceId)
-        }
-        return if (result.isSuccess) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
         }
     }
 
     override suspend fun isFavoritePlace(placeId: String): Result<Boolean> {
-        val result = runCatching {
+        return handleFavoritePlaceResult{
             dataSource.isFavoritePlace(placeId)
-        }
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
-        } else {
-            Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
         }
     }
 
     override suspend fun getFavoritePlaceCount(): Result<Int> {
-        val result = runCatching {
+        return handleFavoritePlaceResult{
             dataSource.getFavoritePlaceCount()
-        }
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
-        } else {
-            Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
         }
     }
 
     override suspend fun getFavoritePlaces(favoritePlaceInfo: FavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
-        val result = runCatching {
+        return handleFavoritePlaceResult{
             dataSource.getFavoritePlaces(favoritePlaceInfo).content.map {
                 FavoritePlaceDetail(
                     favoritePlaceId = it.favoritePlaceId,
@@ -73,11 +53,6 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
                     userId = it.userId,
                 )
             }
-        }
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
-        } else {
-            Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
         }
     }
 
@@ -92,6 +67,21 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
             }
         } else {
             t
+        }
+    }
+
+    private inline fun <T> handleFavoritePlaceResult(
+        block: () -> T
+    ): Result<T> {
+        return try {
+            val result = runCatching(block)
+            if (result.isSuccess) {
+                Result.success(result.getOrThrow())
+            } else {
+                Result.failure(handleFavoritePlaceError(result.exceptionOrNull()!!))
+            }
+        } catch (t: Throwable) {
+            Result.failure(handleFavoritePlaceError(t))
         }
     }
 }

@@ -5,12 +5,6 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
-import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
-import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
-import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
-import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
-import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
@@ -18,9 +12,6 @@ import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
 import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.coordinate.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
-import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
-import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
-import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
@@ -48,10 +39,8 @@ class ExampleViewModel @Inject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
     private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
-    private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
-    private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
-    private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
-) : ViewModel() {
+
+    ) : ViewModel() {
 
     val query = MutableStateFlow("")
 
@@ -68,9 +57,6 @@ class ExampleViewModel @Inject constructor(
         cancel()
     }
 
-    private val _event = MutableEventFlow<ExampleViewModel.Event>()
-    val event = _event.asEventFlow()
-
     init {
         // getImages()
 
@@ -80,14 +66,10 @@ class ExampleViewModel @Inject constructor(
         // deleteCoordinate()
 
         // place review test
-//        addReview()
-      //  getReview()
+        // addReview()
+        // getReview()
 
-        // getDeviceLocation()
-
-//        addFavoritePlace()
-        getFavoritePlaces()
-        getFavoritePlacesCount()
+        getDeviceLocation()
     }
 
     // get device location
@@ -160,7 +142,7 @@ class ExampleViewModel @Inject constructor(
         viewModelScope.launch {
             val result = registerPlaceReviewUseCase(
                 PlaceReviewRegistrationInfo(
-                    placeId = "test5",
+                    placeId = "test",
                     rating = 8,
                     review = "테스트",
                 ),
@@ -168,7 +150,7 @@ class ExampleViewModel @Inject constructor(
             if (result.isSuccess) {
                 Logger.t("MainTest").i("성공!")
             } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.message}")
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
@@ -177,7 +159,7 @@ class ExampleViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getPlaceReviewByPlaceIdUseCase(
                 PlaceReviewByPlaceIdInfo(
-                    placeId = "test5",
+                    placeId = "test",
                     size = 2,
                 ),
             )
@@ -186,7 +168,7 @@ class ExampleViewModel @Inject constructor(
                 val review = reviews.firstOrNull()
                 Logger.t("MainTest").i("${reviews.size} ${review?.writerNickname} ${review?.review}")
             } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.message}")
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
@@ -221,66 +203,5 @@ class ExampleViewModel @Inject constructor(
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())
             }
         }
-    }
-
-    private fun addFavoritePlace() {
-        viewModelScope.launch {
-            val result = registerFavoritePlaceUseCase(
-                "test5",
-            )
-            if (result.isSuccess) {
-                _event.emit(Event.FavoritePlaceRegistrationSuccess)
-                Logger.t("MainTest").i("성공!")
-            } else {
-                handleRegistrationError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
-
-    private fun getFavoritePlacesCount() {
-        viewModelScope.launch {
-            val result = getFavoritePlaceCountUseCase()
-            if (result.isSuccess) {
-                Logger.t("MainTest").i("성공!")
-            } else {
-                handleRegistrationError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
-
-    private suspend fun handleRegistrationError(error: Throwable) {
-        when (error) {
-            is RegisteredFavoritePlaceException -> _event.emit(Event.ExistedPlaceIdException)
-            is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
-            is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
-            is NotExistPlaceIdException -> _event.emit(Event.NotExistPlaceIdException)
-            else -> _event.emit(Event.UnknownException)
-        }
-    }
-
-    private fun getFavoritePlaces() {
-        viewModelScope.launch {
-            val result = getFavoritePlacesUseCase(
-                FavoritePlaceInfo(),
-            )
-            if (result.isSuccess) {
-                val favoritePlaces = result.getOrThrow()
-                val favoritePlace = favoritePlaces.firstOrNull()
-                Logger.t("MainTest").i("${favoritePlace?.placeId} ${favoritePlace?.favoritePlaceId} ${favoritePlace?.userId}")
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
-
-    sealed class Event {
-        object FavoritePlaceRegistrationSuccess : Event()
-        object ExistedPlaceIdException : Event()
-        object InvalidRequestException : Event()
-        object InvalidTokenException : Event()
-        object NotExistPlaceIdException : Event()
-        object UnknownException : Event()
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
@@ -13,6 +14,7 @@ import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
+import com.weit.domain.usecase.auth.LogoutUseCase
 import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
 import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
 import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
@@ -51,6 +53,7 @@ class ExampleViewModel @Inject constructor(
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
+    private val logoutUseCase: LogoutUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -84,10 +87,26 @@ class ExampleViewModel @Inject constructor(
       //  getReview()
 
         // getDeviceLocation()
-
+      
 //        addFavoritePlace()
         getFavoritePlaces()
         getFavoritePlacesCount()
+
+        // getDeviceLocation()
+
+       // logout()
+    }
+
+    private fun logout() {
+        viewModelScope.launch {
+            val result = logoutUseCase()
+            if (result.isSuccess) {
+                FirebaseAuth.getInstance().signOut()
+                Logger.t("MainTest").i("로그아웃 성공!")
+            } else {
+                Logger.t("MainTest").i("로그아웃 실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
     }
 
     // get device location

@@ -1,11 +1,9 @@
 package com.weit.data.source
 
-import android.provider.ContactsContract.CommonDataKinds.Nickname
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.user.UserApiClient
-import com.weit.data.model.auth.IsDuplicateDTO
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
@@ -55,12 +53,12 @@ class AuthDataSource @Inject constructor(
     fun getFirebaseToken(): String =
         auth.currentUser?.getIdToken(false)?.result?.token ?: throw TokenNotFoundException()
 
-    suspend fun isDuplicateNickname(nickname: String) : IsDuplicateDTO? =
+    suspend fun isDuplicateNickname(nickname: String): Result<Unit> =
         service.isDuplicateNickname(nickname)
 
-    suspend fun isDuplicateEmail(email: String) : IsDuplicateDTO? =
+    suspend fun isDuplicateEmail(email: String): Result<Unit> =
         service.isDuplicateEmail(email)
 
-    suspend fun isDuplicatePhoneNum(phoneNum: String): IsDuplicateDTO? =
+    suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> =
         service.isDuplicatePhonNumber(phoneNum)
 }

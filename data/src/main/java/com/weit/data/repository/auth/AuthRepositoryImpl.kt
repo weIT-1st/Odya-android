@@ -1,7 +1,6 @@
 package com.weit.data.repository.auth
 
 import com.kakao.sdk.user.UserApiClient
-import com.weit.data.model.auth.IsDuplicateDTO
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
 import com.weit.domain.model.auth.UserRegistrationInfo
@@ -37,6 +36,26 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun isDuplicateNickname(nickname: String): Result<Unit> {
+        return runCatching {
+            authDataSource.isDuplicateNickname(nickname)
+        }
+    }
+
+    override suspend fun isDuplicateEmail(email: String): Result<Unit> {
+        return runCatching {
+            authDataSource.isDuplicateEmail(email)
+        }
+    }
+
+
+    override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> {
+        return runCatching {
+            authDataSource.isDuplicatePhoneNum(phoneNum)
+        }
+    }
+
+
     private fun handleRegistrationError(t: Throwable): Throwable {
         // TODO 에러 코드가 추가 되면 에러 처리 세분화
         return if (t is HttpException) {
@@ -61,23 +80,6 @@ class AuthRepositoryImpl @Inject constructor(
         awaitClose { /* Do Nothing */ }
     }
 
-    private suspend fun isDuplicateNickname(nickname: String): Result<IsDuplicateDTO?>{
-        return runCatching{
-            authDataSource.isDuplicateNickname(nickname)
-        }
-    }
-
-    private suspend fun isDuplicateEmail(eamil: String): Result<IsDuplicateDTO?>{
-        return runCatching{
-            authDataSource.isDuplicateEmail(eamil)
-        }
-    }
-
-    private suspend fun isDuplicatePhonNum(phoneNum: String): Result<IsDuplicateDTO?>{
-        return runCatching {
-            authDataSource.isDuplicatePhoneNum(phoneNum)
-        }
-    }
 
     private fun UserRegistrationInfo.toUserRegistration(): UserRegistration =
         UserRegistration(

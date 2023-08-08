@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.LoginStepOneViewModel"/>
+            type="com.weit.presentation.ui.login.nickname.LoginNicknameViewModel"/>
 
     </data>
 
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        tools:context=".ui.login.LoginStepOneFragment">
+        tools:context=".ui.login.nickname.LoginNicknameFragment">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login_one_go_back_step"
@@ -114,6 +114,9 @@
             android:padding="12dp"
             android:textColor="@color/label_normal"
             android:textColorHint="@color/label_inactive"
+            android:inputType="text"
+            android:text="@={vm.nickname}"
+            android:beforeTextChanged="@{() -> vm.setNickname()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

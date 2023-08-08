@@ -51,7 +51,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             is LoginViewModel.Event.UserRegistrationRequired -> {
                 findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
-                        username = event.username,
+                        username = event.username
+
                     ),
                 )
             }

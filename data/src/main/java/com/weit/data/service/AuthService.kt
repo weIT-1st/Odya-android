@@ -1,6 +1,5 @@
 package com.weit.data.service
 
-import com.weit.data.model.auth.IsDuplicateDTO
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
@@ -24,15 +23,15 @@ interface AuthService {
     @GET("/api/v1/auth/validate/nickname")
     suspend fun isDuplicateNickname(
         @Query("value") nickname: String
-    ): IsDuplicateDTO?
+    ): Result<Unit>
 
     @GET("/api/v1/auth/validate/email")
     suspend fun isDuplicateEmail(
         @Query("value") email: String
-    ): IsDuplicateDTO?
+    ): Result<Unit>
 
     @GET("/api/v1/auth/validate/phone-number")
     suspend fun isDuplicatePhonNumber(
         @Query("value") phoneNum: String
-    ): IsDuplicateDTO?
+    ): Result<Unit>
 }

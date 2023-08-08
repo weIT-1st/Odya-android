@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/loginStepZeorFragment"
-        android:name="com.weit.presentation.ui.login.LoginStepZeroFragment"
+        android:name="com.weit.presentation.ui.login.consent.LoginConsentFragment"
         android:label="LoginStepZeroFragment">
         <action
             android:id="@+id/action_loginStepZeroFragment_to_loginStepOneFragment"
@@ -36,7 +36,7 @@
 
     <fragment
         android:id="@+id/loginStepOneFragment"
-        android:name="com.weit.presentation.ui.login.LoginStepOneFragment"
+        android:name="com.weit.presentation.ui.login.nickname.LoginNicknameFragment"
         android:label="LoginStepOneFragment">
         <action
             android:id="@+id/acteion_loginStepOneFragment_to_loginStepTwoFragment"
@@ -45,7 +45,7 @@
 
     <fragment
         android:id="@+id/loginStepTwoFragment"
-        android:name="com.weit.presentation.ui.login.LoginStepTwoFragment"
+        android:name="com.weit.presentation.ui.login.genderbirth.LoginGenderBirthFragment"
         android:label="LoginSteioTwoFragment">
         <argument android:name="nickname"
             app:argType="string" />

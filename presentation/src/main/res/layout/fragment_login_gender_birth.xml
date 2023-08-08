@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.LoginStepTwoViewModel"/>
+            type="com.weit.presentation.ui.login.genderbirth.LoginGenderBirthViewModel"/>
 
     </data>
 
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        tools:context=".ui.login.LoginStepTwoFragment">
+        tools:context=".ui.login.genderbirth.LoginGenderBirthFragment">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login_two_go_back_step"

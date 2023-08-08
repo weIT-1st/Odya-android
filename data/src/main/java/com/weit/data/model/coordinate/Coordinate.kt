@@ -1,4 +1,4 @@
-package com.weit.data.model
+package com.weit.data.model.coordinate
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

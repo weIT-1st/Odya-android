@@ -37,6 +37,11 @@ class ExampleFragment : BaseFragment<FragmentExampleBinding>(
                 binding.ivExampleScaled.setImageBitmap(bitmap)
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
+                handleEvent(event)
+            }
+        }
     }
 
     private fun handleError(e: Throwable) {
@@ -45,6 +50,24 @@ class ExampleFragment : BaseFragment<FragmentExampleBinding>(
             sendSnackBar("이 일을 기억할 것 입니다.")
         } else {
             sendSnackBar(e.message.toString())
+        }
+    }
+
+    private fun handleEvent(event: ExampleViewModel.Event) {
+        when (event) {
+            ExampleViewModel.Event.ExistedPlaceIdException -> {
+                sendSnackBar("해당 장소는 이미 관심 장소입니다")
+            }
+            ExampleViewModel.Event.InvalidRequestException -> {
+                sendSnackBar("정보를 제대로 입력하십시오")
+            }
+            ExampleViewModel.Event.InvalidTokenException -> {
+                sendSnackBar("로그인을 다시 시도해보십시오")
+            }
+            ExampleViewModel.Event.NotExistPlaceIdException -> {
+                sendSnackBar("해당 장소는 관심 장소 등록되어있지 않습니다.")
+            }
+            else -> {}
         }
     }
 }

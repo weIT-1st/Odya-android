@@ -5,7 +5,7 @@ import android.location.Location
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.R
-import com.weit.data.model.Coordinate
+import com.weit.data.model.coordinate.Coordinate
 import com.weit.data.source.CoordinateDataSource
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.CoordinateTimeInfo

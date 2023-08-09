@@ -1,10 +1,9 @@
 package com.weit.presentation.ui.login.nickname
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.repository.login.GetUserNameRepository
+import com.weit.domain.repository.login.UserInfoRepository
 import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -12,15 +11,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.math.E
 
 @HiltViewModel
 class LoginNicknameViewModel @Inject constructor(
     private val isDuplicateNicknameUseCase: IsDuplicateNicknameUseCase,
-    private val getUserNameRepository: GetUserNameRepository
+    private val userInfoRepository: UserInfoRepository
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
@@ -30,11 +27,9 @@ class LoginNicknameViewModel @Inject constructor(
     val event = _event.asEventFlow()
 
     init {
-        CoroutineScope(Dispatchers.IO).launch {
-            username.emit(getUserNameRepository.getUsername().toString())
-            if (event.equals(Event.GoodNickname)){
-                nickname.emit(username.value)
-            }
+        viewModelScope.launch {
+            username.emit(userInfoRepository.getUsername().toString())
+            nickname.emit(username.value)
         }
     }
 
@@ -44,6 +39,7 @@ class LoginNicknameViewModel @Inject constructor(
             isGoodNickname(nickname.value)
             if (event.equals(Event.GoodNickname)) {
                 nickname.emit(nickname.value)
+                userInfoRepository.setNickname(nickname.value)
             }
         }
     }

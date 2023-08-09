@@ -8,7 +8,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO
 import com.weit.data.source.AuthDataSource
-import com.weit.data.source.UsernameDataSource
+import com.weit.data.source.UserinfoDataSource
 import com.weit.domain.model.auth.UserToken
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.NeedUserRegistrationException
@@ -31,7 +31,7 @@ import javax.inject.Inject
 class LoginRepositoryImpl @Inject constructor(
     private val context: Context,
     private val authDataSource: AuthDataSource,
-    private val userNameDataSource: UsernameDataSource
+    private val userNameDataSource: UserinfoDataSource
 ) : LoginRepository {
     override suspend fun loginWithKakao(): Result<Unit> {
         // TODO 유효 토큰 검사 후 자동 로그인

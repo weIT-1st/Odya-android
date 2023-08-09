@@ -1,7 +1,7 @@
 package com.weit.data.di
 
-import com.weit.data.repository.login.GetUsernameRepositoryImpl
-import com.weit.domain.repository.login.GetUserNameRepository
+import com.weit.data.repository.userdatastore.UserInfoRepositoryImpl
+import com.weit.domain.repository.login.UserInfoRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,7 +15,7 @@ abstract class LoginPreferencesModule{
     @Binds
     @Singleton
     abstract fun bindPreferencesModule(
-        getUsernameRepositoryImpl: GetUsernameRepositoryImpl
-    ): GetUserNameRepository
+        userInfoRepositoryImpl: UserInfoRepositoryImpl
+    ): UserInfoRepository
 
 }

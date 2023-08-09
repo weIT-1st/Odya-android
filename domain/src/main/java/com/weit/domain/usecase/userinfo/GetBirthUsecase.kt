@@ -1,11 +1,12 @@
 package com.weit.domain.usecase.userinfo
 
 import com.weit.domain.repository.userinfo.UserInfoRepository
+import java.time.LocalDate
 import javax.inject.Inject
 
-class SetNicknameUsecase @Inject constructor(
+class GetBirthUsecase @Inject constructor(
     private val userInfoRepository: UserInfoRepository
 ) {
-    suspend operator fun invoke(nickname: String) =
-        userInfoRepository.setNickname(nickname)
+    suspend operator fun invoke(): Result<LocalDate?> =
+        userInfoRepository.getBirth()
 }

@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import java.time.LocalDate
 import javax.inject.Inject
 
 class UserinfoDataSource @Inject constructor(
@@ -65,12 +66,26 @@ class UserinfoDataSource @Inject constructor(
         return value
     }
 
-    suspend fun setBirth(){
-
+    suspend fun setBirth(birth: LocalDate){
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_BIRTH] = birth.toString()
+        }
     }
 
-    suspend fun getBirth(){
-
+    suspend fun getBirth(): LocalDate?{
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if(exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preferences ->
+                preferences[KEY_BIRTH]
+            }
+        val value = flow.firstOrNull()
+        return LocalDate.parse(value)
     }
 
     suspend fun getGender(){

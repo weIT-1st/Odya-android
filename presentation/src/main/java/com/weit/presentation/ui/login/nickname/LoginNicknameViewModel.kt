@@ -1,15 +1,16 @@
 package com.weit.presentation.ui.login.nickname
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.repository.login.UserInfoRepository
 import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
+import com.weit.domain.usecase.userinfo.GetNicknameUsecase
+import com.weit.domain.usecase.userinfo.GetUsernameUsecase
+import com.weit.domain.usecase.userinfo.SetNicknameUsecase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,19 +18,25 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginNicknameViewModel @Inject constructor(
     private val isDuplicateNicknameUseCase: IsDuplicateNicknameUseCase,
-    private val userInfoRepository: UserInfoRepository
+    private val getUsernameUsecase: GetUsernameUsecase,
+    private val getNicknameUsecase: GetNicknameUsecase,
+    private val setNicknameUsecase: SetNicknameUsecase
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
-    val username = MutableStateFlow("")
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
     init {
         viewModelScope.launch {
-            username.emit(userInfoRepository.getUsername().toString())
-            nickname.emit(username.value)
+            getUsernameUsecase.invoke().onSuccess { it ->
+                if (it == null){
+                    nickname.emit("닉네임을 입력하세요!!")
+                } else {
+                    nickname.emit(it.toString())
+                }
+            }
         }
     }
 
@@ -39,7 +46,9 @@ class LoginNicknameViewModel @Inject constructor(
             isGoodNickname(nickname.value)
             if (event.equals(Event.GoodNickname)) {
                 nickname.emit(nickname.value)
-                userInfoRepository.setNickname(nickname.value)
+                setNicknameUsecase.invoke(nickname.value)
+            } else {
+                nickname.emit("닉네임을 입력하세요.")
             }
         }
     }

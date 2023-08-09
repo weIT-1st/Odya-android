@@ -3,7 +3,11 @@ package com.weit.presentation.ui.login.genderbirth
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -37,12 +41,23 @@ class LoginGenderBirthFragment : BaseFragment<FragmentLoginGenderBirthBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+        hilightNickname()
     }
 
     override fun initListener() {
         binding.etLoginBirth.setOnClickListener{
             datePicker.show()
         }
+    }
+
+    private fun hilightNickname(){
+        val nickname = viewModel.nickname
+        val mainText: String = nickname + resources.getString(R.string.login_who_you)
+        val spannableStringBuilder = SpannableStringBuilder(mainText)
+        spannableStringBuilder.apply {
+            setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary)), 0, nickname.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        binding.tvLoginBirthGender.text = spannableStringBuilder
     }
 
     companion object {

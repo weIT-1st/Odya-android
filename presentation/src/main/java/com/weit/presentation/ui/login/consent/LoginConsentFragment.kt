@@ -22,8 +22,7 @@ class LoginConsentFragment : BaseFragment<FragmentLoginConsentBinding>(
 
     override fun initListener() {
         binding.btnLoginStartOdya.setOnClickListener{
-            val action =
-                LoginConsentFragmentDirections.actionLoginStepZeroFragmentToLoginStepOneFragment()
+            val action = LoginConsentFragmentDirections.actionLoginContentFragmentToLoginNicknameFragment()
             it.findNavController().navigate(action)
         }
         

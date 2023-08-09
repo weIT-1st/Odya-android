@@ -3,8 +3,10 @@ package com.weit.presentation.ui.login.nickname
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.findNavController
 import com.weit.presentation.databinding.FragmentLoginNicknameBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.login.consent.LoginConsentFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -19,6 +21,13 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+    }
+
+    override fun initListener() {
+        binding.btnLoginOneGoNextStep.setOnClickListener {
+            val action = LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginGenderbirthFragment()
+            it.findNavController().navigate(action)
+        }
     }
 
     override fun initCollector() {

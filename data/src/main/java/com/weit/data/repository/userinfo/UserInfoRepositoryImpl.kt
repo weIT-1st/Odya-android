@@ -1,7 +1,8 @@
-package com.weit.data.repository.userdatastore
+package com.weit.data.repository.userinfo
 
 import com.weit.data.source.UserinfoDataSource
-import com.weit.domain.repository.login.UserInfoRepository
+import com.weit.domain.repository.userinfo.UserInfoRepository
+import java.time.LocalDate
 import javax.inject.Inject
 
 class UserInfoRepositoryImpl @Inject constructor(
@@ -31,6 +32,18 @@ class UserInfoRepositoryImpl @Inject constructor(
     override suspend fun getNickname(): Result<String?> {
         return runCatching{
             userinfoDataSource.getNickname()
+        }
+    }
+
+    override suspend fun setBirth(birth: LocalDate): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setBirth(birth)
+        }
+    }
+
+    override suspend fun getBirth(): Result<LocalDate?> {
+        return runCatching{
+            userinfoDataSource.getBirth()
         }
     }
 }

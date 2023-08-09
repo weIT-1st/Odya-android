@@ -30,7 +30,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             moveToMain()
         }
         binding.btnToLoginStep.setOnClickListener{
-            val action = LoginFragmentDirections.actionLoginFragmentToLoginSteopZeroFragment()
+            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
             it.findNavController().navigate(action)
         }
     }
@@ -52,7 +52,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
                         username = event.username
-
                     ),
                 )
             }

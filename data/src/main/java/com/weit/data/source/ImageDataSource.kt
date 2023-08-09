@@ -89,6 +89,12 @@ class ImageDataSource @Inject constructor(
             else -> width to height
         }
 
+    fun getMediaType(uri: String): String {
+        return contentResolver.getType(Uri.parse(uri)).toString()
+    }
+
+    fun createFileName() = "${System.currentTimeMillis()}"
+
     companion object {
         private const val DEFAULT_QUALITY = 90
         private const val DEFAULT_RESIZE = 1024

@@ -1,15 +1,17 @@
 package com.weit.data.repository.user
 
 import com.weit.data.model.user.UserDTO
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
-import com.weit.domain.model.exception.SomethingErrorException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.user.User
 import com.weit.domain.repository.user.UserRepository
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
-) : UserRepository {
+    private val imageDataSource: ImageDataSource,
+    ) : UserRepository {
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
@@ -50,12 +53,19 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateProfile(file: MultipartBody.Part): Result<Unit> {
+    override suspend fun updateProfile(uri: String): Result<Unit> {
         return handleUserResult {
+            val bitmap = imageDataSource.getBitmapByUri(uri)
+            val scaledBitmap = imageDataSource.getScaledBitmap(bitmap)
+            val byteArray = imageDataSource.getCompressedBytes(scaledBitmap)
+            val requestBody =
+                byteArray.toRequestBody(imageDataSource.getMediaType(uri).toMediaType())
+            val file = MultipartBody.Part.createFormData(
+                "profile", imageDataSource.createFileName(), requestBody
+            )
             userDataSource.updateProfile(file)
         }
     }
-
     private inline fun <T> handleUserResult(
         block: () -> T
     ): Result<T> {
@@ -75,7 +85,7 @@ class UserRepositoryImpl @Inject constructor(
         return if (t is HttpException) {
             when (t.code()) {
                 HTTP_BAD_REQUEST -> InvalidRequestException()
-                HTTP_INTERNAL_SERVER_ERROR -> SomethingErrorException()
+                HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
                 HTTP_UNAUTHORIZED -> InvalidTokenException()
                 else -> UnKnownException()
             }

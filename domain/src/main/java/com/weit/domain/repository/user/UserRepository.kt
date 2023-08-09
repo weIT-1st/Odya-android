@@ -1,7 +1,6 @@
 package com.weit.domain.repository.user
 
 import com.weit.domain.model.user.User
-import okhttp3.MultipartBody
 
 interface UserRepository {
 
@@ -13,5 +12,5 @@ interface UserRepository {
 
     suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
 
-    suspend fun updateProfile(file: MultipartBody.Part): Result<Unit>
+    suspend fun updateProfile(uri: String): Result<Unit>
 }

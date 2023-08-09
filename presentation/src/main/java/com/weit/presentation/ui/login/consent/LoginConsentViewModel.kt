@@ -1,13 +1,11 @@
 package com.weit.presentation.ui.login.consent
 
 import androidx.annotation.MainThread
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,26 +19,33 @@ class LoginConsentViewModel @Inject constructor(
     private var _isConsentPrivacy = MutableStateFlow(false)
     val isConsentPrivacy: StateFlow<Boolean> get() = _isConsentPrivacy
 
-    private val _isConsentAll : MediatorLiveData<Boolean> = MediatorLiveData(false)
-    val isConsentALl: MediatorLiveData<Boolean> = _isConsentAll
+    val isConsentAll: StateFlow<Boolean> get() = isConsentApp.combine(isConsentPrivacy){ app, privacy ->
+        app && privacy
+    }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
-    init {
-        if (_isConsentApp.value && _isConsentPrivacy.value) {
-            _isConsentAll.postValue(true)
-        } else {
-            _isConsentAll.postValue(false)
+
+    @MainThread
+    fun checkConsentApp(){
+        viewModelScope.launch(){
+            if (isConsentApp.value){_isConsentApp.emit(!isConsentApp.value)}
         }
     }
 
-
     @MainThread
-    fun setCheckApp(isCheck: Boolean){
-        _isConsentApp.value = isCheck
+    fun checkConsentPrivacy(){
+        viewModelScope.launch {
+            if(isConsentPrivacy.value){_isConsentPrivacy.emit(!isConsentPrivacy.value)}
+        }
     }
 
     @MainThread
-    fun setCheckPrivacy(isCheck: Boolean){
-        _isConsentPrivacy.value = isCheck
+    fun checkConsentAll(){
+        viewModelScope.launch {
+            if (isConsentAll.value) {
+                _isConsentApp.emit(!isConsentAll.value)
+                _isConsentPrivacy.emit(!isConsentAll.value)
+            }
+        }
     }
 
 }

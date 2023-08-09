@@ -21,15 +21,6 @@ class LoginConsentFragment : BaseFragment<FragmentLoginConsentBinding>(
     }
 
     override fun initListener() {
-        binding.checkboxLoginConsentApp.setOnClickListener{
-        }
-
-        binding.checkboxLoginConsentPrivacy.setOnClickListener {
-        }
-
-        binding.checkboxLoginConsentAll.setOnClickListener {
-        }
-
         binding.btnLoginStartOdya.setOnClickListener{
             val action =
                 LoginConsentFragmentDirections.actionLoginStepZeroFragmentToLoginStepOneFragment()

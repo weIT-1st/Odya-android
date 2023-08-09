@@ -4,15 +4,12 @@ import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
+import com.weit.domain.usecase.DeleteCoordinateUseCase
+import com.weit.domain.usecase.GetCoordinatesUseCase
+import com.weit.domain.usecase.InsertCoordinateUseCase
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
-import com.weit.domain.usecase.auth.LogoutUseCase
-import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
-import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
-import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
-import com.weit.domain.usecase.coordinate.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
@@ -35,13 +32,11 @@ class ExampleViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
     private val getImageCoordinatesUseCase: GetImageCoordinatesUseCase,
-    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase,
+    private val getCoordinatesUseCase: GetCoordinatesUseCase,
     private val insertCoordinateUseCase: InsertCoordinateUseCase,
     private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
-    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
-    private val logoutUseCase: LogoutUseCase,
 
 ) : ViewModel() {
 
@@ -62,46 +57,13 @@ class ExampleViewModel @Inject constructor(
 
     init {
         // getImages()
-
-        // coordinate room test
-        // insertCoordinate()
-        // getCoordinates()
+//        insertCoordinate()
+//        getCoordinates()
         // deleteCoordinate()
 
-        // place review test
         // addReview()
-        // getReview()
+        getReview()
 
-        // getDeviceLocation()
-
-        logout()
-    }
-
-    private fun logout() {
-        viewModelScope.launch {
-            val result = logoutUseCase()
-            if (result.isSuccess) {
-                FirebaseAuth.getInstance().signOut()
-                Logger.t("MainTest").i("로그아웃 성공!")
-            } else {
-                Logger.t("MainTest").i("로그아웃 실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
-
-    // get device location
-    private fun getDeviceLocation() {
-        viewModelScope.launch {
-            val result = getCurrentCoordinateUseCase()
-            if (result.isSuccess) {
-                val coordinate = result.getOrThrow()
-                coordinate.collect {
-                    Logger.t("MainTest").i("${it.lat} ${it.lng}")
-                }
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
     }
 
     // location room database test
@@ -119,7 +81,7 @@ class ExampleViewModel @Inject constructor(
 
     private fun getCoordinates() {
         viewModelScope.launch {
-            val result = getStoredCoordinatesUseCase(1689925493106, 1689925518186)
+            val result = getCoordinatesUseCase(1689925493106, 1689925518186)
             for (location in result) {
                 Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
             }
@@ -161,8 +123,8 @@ class ExampleViewModel @Inject constructor(
                 PlaceReviewRegistrationInfo(
                     placeId = "test",
                     rating = 8,
-                    review = "테스트",
-                ),
+                    review = "테스트"
+                )
             )
             if (result.isSuccess) {
                 Logger.t("MainTest").i("성공!")
@@ -178,7 +140,7 @@ class ExampleViewModel @Inject constructor(
                 PlaceReviewByPlaceIdInfo(
                     placeId = "test",
                     size = 2,
-                ),
+                )
             )
             if (result.isSuccess) {
                 val reviews = result.getOrThrow()

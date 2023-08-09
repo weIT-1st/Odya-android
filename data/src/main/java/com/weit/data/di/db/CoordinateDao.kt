@@ -1,4 +1,4 @@
-package com.weit.data.db
+package com.weit.data.di.db
 
 import androidx.room.Dao
 import androidx.room.Insert

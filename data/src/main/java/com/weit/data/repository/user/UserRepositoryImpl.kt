@@ -1,6 +1,7 @@
 package com.weit.data.repository.user
 
 import com.weit.data.model.user.UserDTO
+import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.domain.model.exception.InvalidRequestException
@@ -12,17 +13,15 @@ import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.internal.http.HTTP_BAD_REQUEST
-import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
-import okhttp3.internal.http.HTTP_UNAUTHORIZED
-import retrofit2.HttpException
+import org.json.JSONObject
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val imageDataSource: ImageDataSource,
-    ) : UserRepository {
+    private val imageRepositoryImpl: ImageRepositoryImpl,
+) : UserRepository {
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
@@ -54,46 +53,34 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateProfile(uri: String): Result<Unit> {
-        return handleUserResult {
-            val bitmap = imageDataSource.getBitmapByUri(uri)
-            val scaledBitmap = imageDataSource.getScaledBitmap(bitmap)
-            val byteArray = imageDataSource.getCompressedBytes(scaledBitmap)
-            val requestBody =
-                byteArray.toRequestBody(imageDataSource.getMediaType(uri).toMediaType())
-            val file = MultipartBody.Part.createFormData(
-                "profile", imageDataSource.createFileName(), requestBody
-            )
-            userDataSource.updateProfile(file)
-        }
-    }
-    private inline fun <T> handleUserResult(
-        block: () -> T
-    ): Result<T> {
-        return try {
-            val result = runCatching(block)
-            if (result.isSuccess) {
-                Result.success(result.getOrThrow())
-            } else {
-                Result.failure(handleUserError(result.exceptionOrNull()!!))
-            }
-        } catch (t: Throwable) {
-            Result.failure(handleUserError(t))
-        }
-    }
-
-    private fun handleUserError(t: Throwable): Throwable {
-        return if (t is HttpException) {
-            when (t.code()) {
-                HTTP_BAD_REQUEST -> InvalidRequestException()
-                HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
-                HTTP_UNAUTHORIZED -> InvalidTokenException()
-                else -> UnKnownException()
-            }
+        val bytes = imageRepositoryImpl.getImageBytes(uri)
+        val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+        val file = MultipartBody.Part.createFormData(
+            "profile",
+            createFileName(uri),
+            requestFile,
+        )
+        val result = userDataSource.updateProfile(file)
+        return if (result.isSuccessful) {
+            Result.success(Unit)
         } else {
-            t
+            Result.failure(handleUserError(result.code()))
         }
     }
 
+    private suspend fun createFileName(uri: String): String {
+        return imageDataSource.getImageName(uri) + ".webp"
+    }
+
+    private fun handleUserError(responseCode: Int): Throwable {
+        return when (responseCode) {
+            400 -> InvalidRequestException()
+            401 -> InvalidTokenException()
+            500 -> UnKnownException()
+            else -> UnKnownException()
+        }
+    }
+    private fun getErrorMessage(message: String): String = JSONObject(message)["code"].toString() + JSONObject(message)["errorMessage"].toString()
     private fun UserDTO.toUser() =
         User(
             userID = userID,

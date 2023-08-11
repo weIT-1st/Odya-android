@@ -47,7 +47,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
 
     private fun hilightNickname(){
         val nickname = viewModel.nickname
-        val mainText: String = nickname + resources.getString(R.string.login_who_you)
+        val mainText: String = String.format(resources.getString(R.string.login_who_you), nickname)
         val spannableStringBuilder = SpannableStringBuilder(mainText)
         spannableStringBuilder.apply {
             setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.primary)), 0, nickname.length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)

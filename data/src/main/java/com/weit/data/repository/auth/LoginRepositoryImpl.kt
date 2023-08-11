@@ -122,7 +122,6 @@ class LoginRepositoryImpl @Inject constructor(
     private fun setUsername(username: String){
         CoroutineScope(Dispatchers.IO).launch {
             userNameDataSource.setUsername(username)
-            Log.d("저장 되었을까", "username : " + userNameDataSource.getUsername())
         }
     }
     private fun getServerUsername(message: String): String = JSONObject(message)["username"].toString()

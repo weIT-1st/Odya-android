@@ -2,11 +2,11 @@ package com.weit.presentation.ui.login.nickname
 
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentLoginNicknameBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.consent.LoginConsentFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -26,7 +26,7 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
     override fun initListener() {
         binding.btnLoginOneGoNextStep.setOnClickListener {
             val action = LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginInputUserInfoFragment()
-            it.findNavController().navigate(action)
+            findNavController().navigate(action)
         }
     }
 
@@ -48,10 +48,16 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
                 sendSnackBar("중복된 닉네임 입니다. 다른 닉네임을 입력하세요")
             }
             LoginNicknameViewModel.Event.TooShortNickname -> {
-                sendSnackBar("너무 짧은 닉네임 입니다. 닉네임은 최소 2자, 최대 8자, 특숩문자 불가능")
+                sendSnackBar("너무 짧은 닉네임 입니다. 닉네임은 최소 2자, 최대 8자, 특수문자 불가능")
             }
             LoginNicknameViewModel.Event.TooLongNickname -> {
-                sendSnackBar("너무 긴 닉네임 입니다. 닉네임은 최소 2자, 최대 8자, 특숩문자 불가능")
+                sendSnackBar("너무 긴 닉네임 입니다. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
+            }
+            LoginNicknameViewModel.Event.HasSpecialChar -> {
+                sendSnackBar("특수문자가 포함되어 있는 닉네임 입니다. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
+            }
+            LoginNicknameViewModel.Event.NullDefaultNickname -> {
+                sendSnackBar("새로운 닉네임을 입력하세요. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
             }
         }
     }

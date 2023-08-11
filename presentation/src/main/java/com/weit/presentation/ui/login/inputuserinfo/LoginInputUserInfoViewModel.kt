@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.login.inputuserinfo
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

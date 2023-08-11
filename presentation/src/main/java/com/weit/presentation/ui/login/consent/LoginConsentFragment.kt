@@ -3,7 +3,7 @@ package com.weit.presentation.ui.login.consent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentLoginConsentBinding
 import com.weit.presentation.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +23,7 @@ class LoginConsentFragment : BaseFragment<FragmentLoginConsentBinding>(
     override fun initListener() {
         binding.btnLoginStartOdya.setOnClickListener{
             val action = LoginConsentFragmentDirections.actionLoginContentFragmentToLoginNicknameFragment()
-            it.findNavController().navigate(action)
+            findNavController().navigate(action)
         }
         
     }

@@ -6,7 +6,6 @@ plugins {
     id 'com.google.devtools.ksp' version '1.8.10-1.0.9'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
     id 'com.google.gms.google-services'
-    id "com.google.protobuf" version "0.8.17"
 }
 
 android {

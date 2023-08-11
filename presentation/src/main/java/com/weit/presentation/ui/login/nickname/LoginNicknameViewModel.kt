@@ -1,11 +1,9 @@
 package com.weit.presentation.ui.login.nickname
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
-import com.weit.domain.usecase.userinfo.GetNicknameUsecase
 import com.weit.domain.usecase.userinfo.GetUsernameUsecase
 import com.weit.domain.usecase.userinfo.SetNicknameUsecase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -13,13 +11,13 @@ import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginNicknameViewModel @Inject constructor(
     private val isDuplicateNicknameUseCase: IsDuplicateNicknameUseCase,
     private val getUsernameUsecase: GetUsernameUsecase,
-    private val getNicknameUsecase: GetNicknameUsecase,
     private val setNicknameUsecase: SetNicknameUsecase
 ) : ViewModel() {
 
@@ -32,7 +30,7 @@ class LoginNicknameViewModel @Inject constructor(
         viewModelScope.launch {
             getUsernameUsecase.invoke().onSuccess { it ->
                 if (it == null){
-                    nickname.emit("닉네임을 입력하세요!!")
+                    _event.emit(Event.NullDefaultNickname)
                 } else {
                     nickname.emit(it.toString())
                 }
@@ -47,8 +45,6 @@ class LoginNicknameViewModel @Inject constructor(
             if (event.equals(Event.GoodNickname)) {
                 nickname.emit(nickname.value)
                 setNicknameUsecase.invoke(nickname.value)
-            } else {
-                nickname.emit("닉네임을 입력하세요.")
             }
         }
     }
@@ -56,30 +52,44 @@ class LoginNicknameViewModel @Inject constructor(
     private fun isGoodNickname(newNickname: String){
         viewModelScope.launch {
             val result = isDuplicateNicknameUseCase(newNickname)
-            handleIsDuplicateNickname(newNickname, result)
+            handleIsGoodNickname(newNickname, result)
         }
     }
 
 
-    private suspend fun handleIsDuplicateNickname(newNickname: String, result: Result<Unit>){
-        if (newNickname.length < 2){
-            _event.emit(Event.TooShortNickname)
-        } else if (newNickname.length > 9) {
-            _event.emit(Event.TooLongNickname)
+    private suspend fun handleIsGoodNickname(newNickname: String, result: Result<Unit>){
+        if (!hasSpecialChar(newNickname)){
+            _event.emit(Event.HasSpecialChar)
         } else {
-            if (result.isSuccess) {
-                _event.emit(Event.GoodNickname)
+            if (newNickname.length < 2) {
+                _event.emit(Event.TooShortNickname)
+            } else if (newNickname.length > 9) {
+                _event.emit(Event.TooLongNickname)
             } else {
-                _event.emit(Event.DuplicateNickname)
+                if (result.isSuccess) {
+                    _event.emit(Event.GoodNickname)
+                } else {
+                    _event.emit(Event.DuplicateNickname)
+                }
             }
         }
     }
 
+    private fun hasSpecialChar(newNickname: String): Boolean{
+        return Pattern.matches(REGEX_SPECIALCHAR, newNickname)
+    }
+
 
     sealed class Event {
+        object NullDefaultNickname: Event()
         object TooShortNickname : Event()
         object TooLongNickname : Event()
+        object HasSpecialChar: Event()
         object DuplicateNickname : Event()
         object GoodNickname : Event()
+    }
+
+    companion object {
+        private const val REGEX_SPECIALCHAR = "/[`~!@#\$%^&*|\'\";:/?]/gi"
     }
 }

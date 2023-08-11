@@ -15,7 +15,7 @@
     <string name="login_what_name">오댜에서 활동할\n이름을 알려주세요!</string>
     <string name="login_name_hint">홍길동</string>
     <string name="login_random_name">랜덤 닉네임</string>
-    <string name="login_who_you">님이\n궁금해요!</string>
+    <string name="login_who_you">%s님이\n궁금해요!</string>
     <string name="login_birth_gender"></string>
     <string name="login_birth_hint">생년월일</string>
     <string name="login_gender_hint">성별</string>

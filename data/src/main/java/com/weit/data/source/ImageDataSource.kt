@@ -8,7 +8,6 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.image.ImageLatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -90,28 +89,19 @@ class ImageDataSource @Inject constructor(
             else -> width to height
         }
 
-    suspend fun getImageName(uri: String): String =
+    suspend fun getImageName(uri: String): String? =
         withContext(Dispatchers.IO) {
             val projection = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
             val cursor = contentResolver.query(Uri.parse(uri), projection, null, null, null)
-            var imageName: String = "profile"
+            var imageName: String? = null
             cursor?.use {
                 if (it.moveToFirst()) {
                     val nameColumnIndex = it.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
-                    imageName = removeExtension(it.getString(nameColumnIndex))
-                    Logger.t("MainTest").i(imageName)
+                    imageName = it.getString(nameColumnIndex).substringBeforeLast(".")
                 }
             }
             imageName
         }
-
-    private fun removeExtension(filename: String): String {
-        val lastDot = filename.lastIndexOf(".")
-        if (lastDot == -1) {
-            return filename
-        }
-        return filename.substring(0, lastDot)
-    }
 
     companion object {
         private const val DEFAULT_QUALITY = 90

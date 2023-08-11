@@ -13,7 +13,10 @@ import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.Response
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -64,23 +67,27 @@ class UserRepositoryImpl @Inject constructor(
         return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(handleUserError(result.code()))
+            Result.failure(handleUserError(result))
         }
     }
 
     private suspend fun createFileName(uri: String): String {
-        return imageDataSource.getImageName(uri) + ".webp"
+        val originalName = imageDataSource.getImageName(uri)
+        if (!originalName.isNullOrEmpty()) {
+            return "$originalName.webp"
+        }
+        return "${System.currentTimeMillis()}.webp"
     }
 
-    private fun handleUserError(responseCode: Int): Throwable {
-        return when (responseCode) {
-            400 -> InvalidRequestException()
-            401 -> InvalidTokenException()
-            500 -> UnKnownException()
+    private fun handleUserError(response: Response<Unit>): Throwable {
+        return when (response.code()) {
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
             else -> UnKnownException()
         }
     }
-    private fun getErrorMessage(message: String): String = JSONObject(message)["code"].toString() + JSONObject(message)["errorMessage"].toString()
+
     private fun UserDTO.toUser() =
         User(
             userID = userID,

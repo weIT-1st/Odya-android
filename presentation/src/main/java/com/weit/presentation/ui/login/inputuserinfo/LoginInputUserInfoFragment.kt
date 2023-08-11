@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.login.genderbirth
+package com.weit.presentation.ui.login.inputuserinfo
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
@@ -9,22 +9,17 @@ import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.navArgs
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentLoginGenderBirthBinding
+import com.weit.presentation.databinding.FragmentLoginInputUserInfoBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.user.registration.UserRegistrationFragment
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
-class LoginGenderBirthFragment : BaseFragment<FragmentLoginGenderBirthBinding>(
-    FragmentLoginGenderBirthBinding::inflate
+class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBinding>(
+    FragmentLoginInputUserInfoBinding::inflate
 ){
 
-    private val viewModel: LoginGenderBirthViewModel by viewModels()
+    private val viewModel: LoginInputUserInfoViewModel by viewModels()
 
 
     private val datePicker by lazy{

@@ -88,12 +88,26 @@ class UserinfoDataSource @Inject constructor(
         return LocalDate.parse(value)
     }
 
-    suspend fun getGender(){
-
+    suspend fun setGender(gender: String){
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_GENDER] = gender
+        }
     }
 
-    suspend fun setGender(){
-
+    suspend fun getGender() : String? {
+        val flow = context.userInfoDataStore.data
+            .catch{ exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_GENDER]
+            }
+        val value = flow.firstOrNull()
+        return value
     }
 
     private companion object{

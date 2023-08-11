@@ -25,7 +25,7 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
 
     override fun initListener() {
         binding.btnLoginOneGoNextStep.setOnClickListener {
-            val action = LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginGenderbirthFragment()
+            val action = LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginInputUserInfoFragment()
             it.findNavController().navigate(action)
         }
     }
@@ -55,5 +55,4 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
             }
         }
     }
-
 }

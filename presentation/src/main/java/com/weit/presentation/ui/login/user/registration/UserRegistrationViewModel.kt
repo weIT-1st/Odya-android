@@ -7,7 +7,7 @@ import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.usecase.auth.RegisterUserUseCase
-import com.weit.presentation.model.GenderType
+import com.weit.domain.model.GenderType
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted

@@ -20,4 +20,10 @@ interface UserInfoRepository {
         birth: LocalDate
     ): Result<Unit>
     suspend fun getBirth(): Result<LocalDate?>
+
+    suspend fun setGender(
+        gender: String
+    ): Result<Unit>
+
+    suspend fun getGender(): Result<String?>
 }

@@ -46,4 +46,16 @@ class UserInfoRepositoryImpl @Inject constructor(
             userinfoDataSource.getBirth()
         }
     }
+
+    override suspend fun setGender(gender: String): Result<Unit> {
+        return runCatching{
+            userinfoDataSource.setGender(gender)
+        }
+    }
+
+    override suspend fun getGender(): Result<String?> {
+        return runCatching {
+            userinfoDataSource.getGender()
+        }
+    }
 }

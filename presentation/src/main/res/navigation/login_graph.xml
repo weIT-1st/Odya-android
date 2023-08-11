@@ -39,14 +39,14 @@
         android:name="com.weit.presentation.ui.login.nickname.LoginNicknameFragment"
         android:label="LoginNicknameFragment">
         <action
-            android:id="@+id/action_loginNicknameFragment_to_loginGenderbirthFragment"
-            app:destination="@+id/loginGenderbirthFragment"/>
+            android:id="@+id/action_loginNicknameFragment_to_loginInputUserInfoFragment"
+            app:destination="@+id/loginInputUserInfoFragment"/>
     </fragment>
 
     <fragment
-        android:id="@+id/loginGenderbirthFragment"
-        android:name="com.weit.presentation.ui.login.genderbirth.LoginGenderBirthFragment"
-        android:label="LoginGenderbirthFragment">
+        android:id="@+id/loginInputUserInfoFragment"
+        android:name="com.weit.presentation.ui.login.inputuserinfo.LoginInputUserInfoFragment"
+        android:label="LoginInputUserInfoFragment">
     </fragment>
 
 </navigation>

@@ -12,7 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonCheckedListener
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUserRegistrationBinding
-import com.weit.presentation.model.GenderType
+import com.weit.domain.model.GenderType
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted

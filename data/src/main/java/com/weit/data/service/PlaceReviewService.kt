@@ -28,7 +28,7 @@ interface PlaceReviewService {
         @Path("id") id: Long,
     )
 
-    @GET("/api/v1/place-reviews/place/{id}")
+    @GET("/api/v1/place-reviews/places/{id}")
     suspend fun getReviewsByPlaceId(
         @Path("id") placeId: String,
         @Query("size") size: Int,
@@ -36,7 +36,7 @@ interface PlaceReviewService {
         @Query("lastId") lastPlaceReviewId: Long?,
     ): PlaceReviewListDTO
 
-    @GET("/api/v1/place-reviews/user/{id}")
+    @GET("/api/v1/place-reviews/users/{id}")
     suspend fun getReviewsByUserId(
         @Path("id") userId: Long,
         @Query("size") size: Int,

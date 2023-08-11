@@ -9,8 +9,12 @@ interface AuthRepository {
         info: UserRegistrationInfo,
     ): Result<Unit>
 
+<<<<<<< HEAD
     suspend fun isDuplicateNickname(nickname: String): Result<Unit>
     suspend fun isDuplicateEmail(email: String): Result<Unit>
     suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit>
 
+=======
+    fun verifyCurrentUser(): Boolean
+>>>>>>> origin/develop
 }

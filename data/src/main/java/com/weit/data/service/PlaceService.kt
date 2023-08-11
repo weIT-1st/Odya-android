@@ -12,4 +12,12 @@ interface PlaceService {
         @Query("key") apiKey: String,
         @Query("place_id") placeId: String,
     ): GeocodingResult
+
+    @GET(GEOCODE_URL)
+    suspend fun getPlacesByCoordinate(
+        @Query("key") apiKey: String,
+        @Query("latlng") latlng: String,
+        @Query("language") lang: String,
+        @Query("result_type") resultType: String,
+    ): GeocodingResult
 }

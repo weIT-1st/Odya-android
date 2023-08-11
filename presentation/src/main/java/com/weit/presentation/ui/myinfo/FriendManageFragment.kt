@@ -20,6 +20,3 @@ class FriendManageFragment : BaseFragment<FragmentFriendManageBinding>(
     }
 
 }
-=======
-class FriendManageFragment
->>>>>>> origin/develop

@@ -56,27 +56,29 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateProfile(uri: String): Result<Unit> {
-        val bytes = imageRepositoryImpl.getImageBytes(uri)
-        val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
-        val file = MultipartBody.Part.createFormData(
-            "profile",
-            createFileName(uri),
-            requestFile,
-        )
-        val result = userDataSource.updateProfile(file)
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleUserError(result))
-        }
-    }
+        return kotlin.runCatching {
+            val bytes = imageRepositoryImpl.getImageBytes(uri)
+            val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
 
-    private suspend fun createFileName(uri: String): String {
-        val originalName = imageDataSource.getImageName(uri)
-        if (!originalName.isNullOrEmpty()) {
-            return "$originalName.webp"
+            val fileName = try {
+                imageDataSource.getImageName(uri)
+            } catch (e: Exception) {
+                return Result.failure(e)
+            }
+
+            val file = MultipartBody.Part.createFormData(
+                "profile",
+                "$fileName.webp",
+                requestFile,
+            )
+
+            val result = userDataSource.updateProfile(file)
+            if (result.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(handleUserError(result))
+            }
         }
-        return "${System.currentTimeMillis()}.webp"
     }
 
     private fun handleUserError(response: Response<Unit>): Throwable {

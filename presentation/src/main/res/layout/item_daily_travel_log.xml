@@ -42,8 +42,23 @@
             android:maxLines="1"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="@id/gl_daily_travel_log_start"
-            app:layout_constraintEnd_toEndOf="@id/gl_daily_travel_log_end"
+            app:layout_constraintEnd_toStartOf="@id/btn_daily_travel_log_delete"
             tools:text="Day 1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_daily_travel_log_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/post_travel_log_daily_delete"
+            android:textColor="@color/label_assistive"
+            android:textAppearance="@style/detail2"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/gl_daily_travel_log_end"
+            app:layout_constraintBottom_toTopOf="@id/tl_daily_travel_log_contents" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tl_daily_travel_log_contents"
@@ -74,6 +89,7 @@
             android:id="@+id/btn_daily_travel_log_select_picture"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/elevation4"
             android:insetTop="0dp"
             android:insetBottom="0dp"
@@ -87,24 +103,25 @@
             app:iconTint="@color/label_assistive"
             app:cornerRadius="8dp"
             app:layout_constraintStart_toStartOf="@id/gl_daily_travel_log_start"
-            app:layout_constraintBottom_toBottomOf="@id/rv_daily_travel_log_pictures"
+            app:layout_constraintTop_toBottomOf="@id/tl_daily_travel_log_contents"
             tools:text="2 / 15"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_daily_travel_log_pictures"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:layout_marginStart="10dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/tl_daily_travel_log_contents"
             app:layout_constraintStart_toEndOf="@id/btn_daily_travel_log_select_picture"
             app:layout_constraintEnd_toEndOf="@id/gl_daily_travel_log_end"
+            app:layout_constraintBottom_toBottomOf="@id/btn_daily_travel_log_select_picture"
             tools:listitem="@layout/item_daily_travel_log_picture"
             tools:itemCount="5"/>
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_daily_travel_log_place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/elevation4"
@@ -116,6 +133,8 @@
             android:textAppearance="@style/detail1"
             android:textColor="@color/label_assistive"
             android:textAlignment="textStart"
+            android:maxLines="1"
+            android:ellipsize="end"
             app:strokeWidth="1dp"
             app:strokeColor="@color/line_alternative"
             app:cornerRadius="@dimen/button_large_radius"

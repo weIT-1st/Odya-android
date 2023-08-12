@@ -6,16 +6,19 @@
     android:layout_height="36dp"
     android:layout_marginTop="8dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_friend_profile"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:src="@drawable/ic_profile"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeableImageViewCircle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"/>
 
     <TextView
         android:id="@+id/tv_friend_name"

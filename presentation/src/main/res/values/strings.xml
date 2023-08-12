@@ -48,4 +48,9 @@
     <string name="post_travel_log_daily_post">등록하기</string>
     <string name="post_travel_log_upload_feed">피드 공개</string>
     <string name="post_travel_log_daily_picture_count">%d / %d</string>
+
+    <!-- travel friend search -->
+    <string name="travel_friend_title">함께 간 친구</string>
+    <string name="travel_friend_search">닉네임 검색</string>
+    <string name="travel_friend_complete">완료</string>
 </resources>

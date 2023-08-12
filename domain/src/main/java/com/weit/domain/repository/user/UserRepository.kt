@@ -11,4 +11,8 @@ interface UserRepository {
     suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit>
 
     suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
+
+    suspend fun setUserId(userId: Int)
+
+    suspend fun getUserId(): Int
 }

@@ -54,7 +54,7 @@ class FollowRepositoryImpl @Inject constructor(
 
     private fun FollowSearchDTO.toFollowSearchDetail() =
         FollowSearchDetail(
-            haseNext = hasNext,
+            hasNext = hasNext,
             content = content,
         )
 }

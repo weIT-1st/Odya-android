@@ -1,6 +1,6 @@
 package com.weit.data.repository.user
 
-import com.weit.data.model.user.UserDTO
+import android.content.res.Resources.NotFoundException
 import com.weit.data.source.UserDataSource
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.user.User
@@ -14,7 +14,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
-            userDataSource.getUser().toUser()
+            userDataSource.getUser()
         }
     }
 
@@ -41,16 +41,13 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun UserDTO.toUser() =
-        User(
-            userID = userID,
-            nickname = nickname,
-            email = email,
-            phoneNumber = phoneNumber,
-            gender = gender,
-            birthday = birthday,
-            socialType = socialType,
-        )
+    override suspend fun setUserId(userId: Int) {
+        userDataSource.setUserId(userId)
+    }
+
+    // 이걸 가져오지 못하면 자신의 UserId가 필요한 기능 수행이 불가능하므로 에러를 throw 함
+    override suspend fun getUserId(): Int =
+        userDataSource.getUserId() ?: throw NotFoundException()
 
     companion object {
         private const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"

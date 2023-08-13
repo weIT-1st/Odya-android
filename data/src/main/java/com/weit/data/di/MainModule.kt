@@ -2,9 +2,6 @@ package com.weit.data.di
 
 import android.content.Context
 import android.location.LocationManager
-import android.os.PowerManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.room.Room
 import com.weit.data.db.CoordinateDatabase
 import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
@@ -12,27 +9,27 @@ import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
-import com.weit.data.repository.setting.SettingRepositoryImpl
+import com.weit.data.repository.user.UserRepositoryImpl
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
+import com.weit.data.service.UserService
 import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceReviewDateSource
-import com.weit.data.source.SettingDataSource
+import com.weit.data.source.UserDataSource
 import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository
-import com.weit.domain.repository.setting.SettingRepository
+import com.weit.domain.repository.user.UserRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
-import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
@@ -108,7 +105,6 @@ class MainModule {
     fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
         context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-
     @ActivityRetainedScoped
     @Provides
     fun provideFavoritePlaceService(@AuthNetworkObject retrofit: Retrofit): FavoritePlaceService =
@@ -124,4 +120,22 @@ class MainModule {
     fun provideFavoritePlaceRepository(dataSource: FavoritePlaceDateSource): FavoritePlaceRepository =
         FavoritePlaceRepositoryImpl(dataSource)
 
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserDataSource(userService: UserService): UserDataSource =
+        UserDataSource(userService)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserRepository(
+        userDataSource: UserDataSource,
+        imageDataSource: ImageDataSource,
+        imageRepositoryImpl: ImageRepositoryImpl,
+    ): UserRepository =
+        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl)
 }

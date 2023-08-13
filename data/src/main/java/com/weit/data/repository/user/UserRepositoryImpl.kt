@@ -1,15 +1,29 @@
 package com.weit.data.repository.user
 
 import com.weit.data.model.user.UserDTO
+import com.weit.data.repository.image.ImageRepositoryImpl
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
+import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.user.User
 import com.weit.domain.repository.user.UserRepository
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.Response
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
+    private val imageDataSource: ImageDataSource,
+    private val imageRepositoryImpl: ImageRepositoryImpl,
 ) : UserRepository {
 
     override suspend fun getUser(): Result<User> {
@@ -38,6 +52,41 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun updateInformation(informationUpdateUser: User): Result<Unit> {
         return runCatching {
             userDataSource.updateInformation(informationUpdateUser)
+        }
+    }
+
+    override suspend fun updateProfile(uri: String): Result<Unit> {
+        return kotlin.runCatching {
+            val bytes = imageRepositoryImpl.getImageBytes(uri)
+            val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+
+            val fileName = try {
+                imageDataSource.getImageName(uri)
+            } catch (e: Exception) {
+                return Result.failure(e)
+            }
+
+            val file = MultipartBody.Part.createFormData(
+                "profile",
+                "$fileName.webp",
+                requestFile,
+            )
+
+            val result = userDataSource.updateProfile(file)
+            if (result.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(handleUserError(result))
+            }
+        }
+    }
+
+    private fun handleUserError(response: Response<Unit>): Throwable {
+        return when (response.code()) {
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
+            else -> UnKnownException()
         }
     }
 

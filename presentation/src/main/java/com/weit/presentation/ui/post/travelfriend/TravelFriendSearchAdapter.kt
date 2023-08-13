@@ -9,7 +9,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.presentation.databinding.ItemTravelFriendSearchBinding
 
 class TravelFriendSearchAdapter(
-    private val onAddFriend: (Int) -> Unit,
+    private val onAddFriend: (FollowUserContent) -> Unit,
 ) : ListAdapter<FollowUserContent, TravelFriendSearchAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
@@ -18,7 +18,7 @@ class TravelFriendSearchAdapter(
 
         init {
             binding.btnTravelFriendSearchAdd.setOnClickListener {
-                onAddFriend(absoluteAdapterPosition)
+                onAddFriend(getItem(absoluteAdapterPosition))
             }
         }
 

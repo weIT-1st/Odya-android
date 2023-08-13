@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.post.travelfriend.TravelFriendViewModel" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -91,6 +98,7 @@
                 android:drawableTint="?attr/colorOnSurface"
                 android:drawableEnd="@drawable/ic_search"
                 android:maxLines="1"
+                android:text="@={vm.query}"
                 android:textAppearance="@style/body1"
                 android:textColor="?attr/colorOnSurface"
                 android:hint="@string/travel_friend_search"

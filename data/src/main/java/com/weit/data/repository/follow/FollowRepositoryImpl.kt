@@ -17,8 +17,8 @@ class FollowRepositoryImpl @Inject constructor(
     private val followDataSource: FollowDataSource,
 ) : FollowRepository {
 
-    val hasNextFollower = AtomicBoolean(true)
-    val hasNextFollowing = AtomicBoolean(true)
+    private val hasNextFollower = AtomicBoolean(true)
+    private val hasNextFollowing = AtomicBoolean(true)
 
     override suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
         return runCatching {
@@ -89,6 +89,6 @@ class FollowRepositoryImpl @Inject constructor(
             this
         } else {
             val nonBlackQuery = query.replace("\\s".toRegex(), "")
-            filter { it.nickname.contains(nonBlackQuery) }
+            filter { it.nickname.contains(nonBlackQuery, true) }
         }
 }

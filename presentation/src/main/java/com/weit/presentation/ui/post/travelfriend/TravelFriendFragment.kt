@@ -60,6 +60,9 @@ class TravelFriendFragment : BaseFragment<FragmentTravelFriendBinding>(
             }
             true
         }
+        binding.tbTravelFriend.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     override fun initCollector() {

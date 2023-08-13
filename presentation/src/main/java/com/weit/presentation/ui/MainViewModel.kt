@@ -2,7 +2,6 @@ package com.weit.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.domain.usecase.user.SetUserIdUseCase
@@ -25,7 +24,6 @@ class MainViewModel @Inject constructor(
         // TODO 지금은 Id만 저장하는데 유저 정보 객체를 Proto DataStore로 저장하기
         viewModelScope.launch {
             val user = getUserUseCase().getOrThrow()
-            Logger.t("MainTest").i("$user")
             setUserIdUseCase(userId = user.userId)
         }
     }

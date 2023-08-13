@@ -2,9 +2,9 @@ package com.weit.data.repository.favoritePlace
 
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.source.FavoritePlaceDateSource
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
-import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceDetail

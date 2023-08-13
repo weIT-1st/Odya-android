@@ -128,8 +128,10 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideUserDataSource(userService: UserService): UserDataSource =
-        UserDataSource(userService)
+    fun provideUserDataSource(
+        @ApplicationContext context: Context,
+        userService: UserService,
+    ): UserDataSource = UserDataSource(context, userService)
 
     @ActivityRetainedScoped
     @Provides

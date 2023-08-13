@@ -2,8 +2,12 @@ package com.weit.presentation.ui.post.travellog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.model.post.travellog.DailyTravelLog
+import com.weit.presentation.model.post.travellog.FollowUserContentDTO
+import com.weit.presentation.model.post.travellog.toDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +24,32 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     private val dailyTravelLogs = CopyOnWriteArrayList<DailyTravelLog>().apply {
         add(DailyTravelLog(day = 1))
     }
+    private val friends = CopyOnWriteArrayList<FollowUserContent>()
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
-    init {
+    private val _changeTravelLogEvent = MutableEventFlow<List<DailyTravelLog>>()
+    val changeTravelLogEvent = _changeTravelLogEvent.asEventFlow()
+
+    fun initViewState(travelFriends: List<FollowUserContent>?) {
         updateDailyTravelLogs()
+        val updatedFriends = travelFriends ?: return
+        initTravelFriends(updatedFriends)
+    }
+
+    private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
+        friends.run {
+            clear()
+            addAll(travelFriends)
+        }
+        val friendsSummary = travelFriends
+            .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
+            .map { it.profile }
+        val remainingFriendsCount = travelFriends.size - friendsSummary.size
+        viewModelScope.launch {
+            _event.emit(Event.OnChangeTravelFriends(friendsSummary, remainingFriendsCount))
+        }
     }
 
     fun onAddDailyTravelLog() {
@@ -55,6 +79,13 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onEditTravelFriends() {
+        viewModelScope.launch {
+            val friendsDTO = friends.map { it.toDTO() }
+            _event.emit(Event.OnEditTravelFriends(friendsDTO))
+        }
+    }
+
     fun onDeletePicture(position: Int, imageIndex: Int) {
         val target = dailyTravelLogs.removeAt(position)
         val newTargetImages = target.images.toMutableList().apply {
@@ -68,7 +99,7 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     private fun updateDailyTravelLogs() {
         viewModelScope.launch {
-            _event.emit(Event.OnChangeTravelLog(dailyTravelLogs.toList()))
+            _changeTravelLogEvent.emit(dailyTravelLogs.toList())
         }
     }
 
@@ -76,6 +107,16 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
 
     sealed class Event {
-        data class OnChangeTravelLog(val logs: List<DailyTravelLog>) : Event()
+        data class OnChangeTravelFriends(
+            val friendsSummary: List<UserProfile>,
+            val remainingFriendsCount: Int,
+        ) : Event()
+        data class OnEditTravelFriends(
+            val travelFriends: List<FollowUserContentDTO>,
+        ) : Event()
+    }
+
+    companion object {
+        private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 3
     }
 }

@@ -91,6 +91,7 @@
                         android:id="@+id/et_post_travel_log_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:inputType="text"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="16dp"
                         android:background="@drawable/corners_all_4"
@@ -100,7 +101,7 @@
                         android:textColorHint="@color/label_assistive"
                         android:textColor="?attr/colorOnSurface"
                         android:textAppearance="@style/h6"
-                        android:maxLines="1" />
+                        android:maxLines="1"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
 

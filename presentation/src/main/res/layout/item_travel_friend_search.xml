@@ -2,6 +2,13 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="follower"
+            type="com.weit.domain.model.follow.FollowUserContent" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,32 +19,46 @@
             android:layout_height="32dp"
             android:layout_marginTop="2dp"
             android:layout_marginBottom="2dp"
-            android:src="@drawable/ic_profile"
             android:scaleType="centerCrop"
+            app:image_uri="@{follower.profile.url}"
+            app:profile_background="@{follower.profile}"
             app:shapeAppearance="@style/ShapeableImageViewCircle"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/avatars"/>
 
-        <TextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_travel_friend_search_name"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:drawablePadding="8dp"
             android:ellipsize="end"
             android:maxLines="1"
+            android:text="@{follower.nickname}"
             android:textAppearance="@style/body1"
             android:textColor="?attr/colorOnSurface"
-            app:drawableEndCompat="@drawable/ic_badge"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/btn_travel_friend_search_add"
-            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintEnd_toStartOf="@id/iv_travel_friend_search_badge"
             app:layout_constraintStart_toEndOf="@+id/iv_travel_friend_search_image"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="wrap"
             tools:text="김민성" />
+
+        <ImageView
+            android:id="@+id/iv_travel_friend_search_badge"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_badge"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toBottomOf="@id/tv_travel_friend_search_name"
+            app:layout_constraintEnd_toStartOf="@id/btn_travel_friend_search_add"
+            app:layout_constraintStart_toEndOf="@id/tv_travel_friend_search_name"
+            app:layout_constraintTop_toTopOf="@id/tv_travel_friend_search_name" />
 
         <ImageButton
             android:id="@+id/btn_travel_friend_search_add"

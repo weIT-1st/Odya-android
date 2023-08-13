@@ -25,11 +25,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="4dp"
+        android:paddingHorizontal="4dp"
+        android:clipToPadding="false"
         android:orientation="horizontal"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toTopOf="@id/tv_travel_friends_count"
         app:layout_constraintBottom_toBottomOf="@id/tv_travel_friends_count"
         app:layout_constraintEnd_toStartOf="@id/tv_travel_friends_count"
+        app:layout_constraintStart_toEndOf="@id/tv_travel_friends_title"
         tools:itemCount="3"
         tools:listitem="@layout/item_round_profile"/>
 
@@ -40,15 +43,16 @@
         android:layout_marginEnd="8dp"
         android:textAppearance="@style/detail2"
         android:textColor="?attr/colorOnSurface"
-        app:layout_constraintTop_toTopOf="@id/iv_travel_friends_add"
-        app:layout_constraintBottom_toBottomOf="@id/iv_travel_friends_add"
-        app:layout_constraintEnd_toStartOf="@id/iv_travel_friends_add"
+        app:layout_constraintTop_toTopOf="@id/btn_travel_friends_add"
+        app:layout_constraintBottom_toBottomOf="@id/btn_travel_friends_add"
+        app:layout_constraintEnd_toStartOf="@id/btn_travel_friends_add"
         tools:text="외 3명"/>
 
-    <ImageView
-        android:id="@+id/iv_travel_friends_add"
+    <ImageButton
+        android:id="@+id/btn_travel_friends_add"
         android:layout_width="24dp"
-        android:layout_height="24dp"
+        android:layout_height="0dp"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_plus"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

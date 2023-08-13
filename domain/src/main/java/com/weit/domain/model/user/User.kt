@@ -1,7 +1,7 @@
 package com.weit.domain.model.user
 
 interface User {
-    val userID: Int
+    val userId: Long
     val email: String?
     val nickname: String
     val phoneNumber: String?

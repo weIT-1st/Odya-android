@@ -41,12 +41,12 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun setUserId(userId: Int) {
+    override suspend fun setUserId(userId: Long) {
         userDataSource.setUserId(userId)
     }
 
     // 이걸 가져오지 못하면 자신의 UserId가 필요한 기능 수행이 불가능하므로 에러를 throw 함
-    override suspend fun getUserId(): Int =
+    override suspend fun getUserId(): Long =
         userDataSource.getUserId() ?: throw NotFoundException()
 
     companion object {

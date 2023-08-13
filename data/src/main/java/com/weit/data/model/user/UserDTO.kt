@@ -6,7 +6,7 @@ import com.weit.domain.model.user.User
 
 @JsonClass(generateAdapter = true)
 data class UserDTO(
-    @field:Json(name = "userId") override val userID: Int,
+    @field:Json(name = "userId") override val userId: Long,
     @field:Json(name = "email") override val email: String?,
     @field:Json(name = "nickname") override val nickname: String,
     @field:Json(name = "phoneNumber") override val phoneNumber: String?,

@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetUserIdUseCase @Inject constructor(
     private val repository: UserRepository,
 ) {
-    suspend operator fun invoke(): Int =
+    suspend operator fun invoke(): Long =
         repository.getUserId()
 }

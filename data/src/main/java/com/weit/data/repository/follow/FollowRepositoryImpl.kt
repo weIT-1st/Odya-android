@@ -1,7 +1,5 @@
 package com.weit.data.repository.follow
 
-import com.weit.data.model.follow.FollowNumDTO
-import com.weit.data.model.follow.FollowSearchDTO
 import com.weit.data.source.FollowDataSource
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
@@ -30,31 +28,19 @@ class FollowRepositoryImpl @Inject constructor(
 
     override suspend fun getFollowNumber(followUserIdInfo: FollowUserIdInfo): Result<FollowNumDetail> {
         return runCatching {
-            followDataSource.getFollowNumber(followUserIdInfo).toFollowNumDetail()
+            followDataSource.getFollowNumber(followUserIdInfo)
         }
     }
 
     override suspend fun getInfiniteFollowing(followingSearchInfo: FollowingSearchInfo): Result<FollowSearchDetail> {
         return runCatching {
-            followDataSource.getInfiniteFollowing(followingSearchInfo).toFollowSearchDetail()
+            followDataSource.getInfiniteFollowing(followingSearchInfo)
         }
     }
 
     override suspend fun getInfiniteFollower(followerSearchInfo: FollowerSearchInfo): Result<FollowSearchDetail> {
         return runCatching {
-            followDataSource.getInfiniteFollower(followerSearchInfo).toFollowSearchDetail()
+            followDataSource.getInfiniteFollower(followerSearchInfo)
         }
     }
-
-    private fun FollowNumDTO.toFollowNumDetail() =
-        FollowNumDetail(
-            followerCount = followerCount,
-            followingCount = followingCount,
-        )
-
-    private fun FollowSearchDTO.toFollowSearchDetail() =
-        FollowSearchDetail(
-            hasNext = hasNext,
-            content = content,
-        )
 }

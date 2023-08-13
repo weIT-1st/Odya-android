@@ -29,6 +29,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             setBottomNavigationVisibility(destination)
         }
 
+    private val exceptBottomNavigationSet = hashSetOf(
+        R.id.postTravelLogFragment,
+        R.id.travelFriendFragment,
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
@@ -44,11 +49,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     }
 
     private fun setBottomNavigationVisibility(destination: NavDestination) {
-        val isVisible = when (destination.id) {
-            R.id.postTravelLogFragment -> false
-            else -> true
-        }
-        binding.bottomNavigationView.isVisible = isVisible
+        binding.bottomNavigationView.isVisible = exceptBottomNavigationSet.contains(destination.id).not()
     }
 
     override fun onStart() {

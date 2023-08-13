@@ -26,7 +26,7 @@ class MainViewModel @Inject constructor(
         viewModelScope.launch {
             val user = getUserUseCase().getOrThrow()
             Logger.t("MainTest").i("$user")
-            setUserIdUseCase(userId = user.userID)
+            setUserIdUseCase(userId = user.userId)
         }
     }
 

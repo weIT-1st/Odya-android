@@ -2,7 +2,7 @@ package com.weit.data.source
 
 import android.content.Context
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
@@ -35,19 +35,19 @@ class UserDataSource @Inject constructor(
         userService.updateInformation(informationUpdateUser)
     }
 
-    suspend fun setUserId(userId: Int) {
+    suspend fun setUserId(userId: Long) {
         context.dataStore.edit { prefs ->
             prefs[USER_ID_KEY] = userId
         }
     }
 
-    suspend fun getUserId(): Int? =
+    suspend fun getUserId(): Long? =
         context.dataStore.data.map { prefs ->
             prefs[USER_ID_KEY]
         }.first()
 
     companion object {
         private const val USER_ID = "USER_ID"
-        private val USER_ID_KEY = intPreferencesKey(USER_ID)
+        private val USER_ID_KEY = longPreferencesKey(USER_ID)
     }
 }

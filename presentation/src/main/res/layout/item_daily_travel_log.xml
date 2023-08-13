@@ -52,6 +52,7 @@
             android:paddingHorizontal="8dp"
             android:minHeight="0dp"
             android:minWidth="0dp"
+            android:stateListAnimator="@null"
             android:backgroundTint="@android:color/transparent"
             android:text="@string/post_travel_log_daily_delete"
             android:textColor="@color/label_assistive"

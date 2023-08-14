@@ -18,7 +18,7 @@ import javax.inject.Inject
 class LoginNicknameViewModel @Inject constructor(
     private val isDuplicateNicknameUseCase: IsDuplicateNicknameUseCase,
     private val getUsernameUsecase: GetUsernameUsecase,
-    private val setNicknameUsecase: SetNicknameUsecase
+    private val setNicknameUsecase: SetNicknameUsecase,
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
@@ -29,7 +29,7 @@ class LoginNicknameViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUsernameUsecase.invoke().onSuccess { it ->
-                if (it == null){
+                if (it == null) {
                     _event.emit(Event.NullDefaultNickname)
                 } else {
                     nickname.emit(it.toString())
@@ -39,7 +39,7 @@ class LoginNicknameViewModel @Inject constructor(
     }
 
     @MainThread
-    fun setNickname(){
+    fun setNickname() {
         viewModelScope.launch {
             isGoodNickname(nickname.value)
             if (event.equals(Event.GoodNickname)) {
@@ -49,16 +49,15 @@ class LoginNicknameViewModel @Inject constructor(
         }
     }
 
-    private fun isGoodNickname(newNickname: String){
+    private fun isGoodNickname(newNickname: String) {
         viewModelScope.launch {
             val result = isDuplicateNicknameUseCase(newNickname)
             handleIsGoodNickname(newNickname, result)
         }
     }
 
-
-    private suspend fun handleIsGoodNickname(newNickname: String, isDuplicate: Boolean){
-        if (hasSpecialChar(newNickname)){
+    private suspend fun handleIsGoodNickname(newNickname: String, isDuplicate: Boolean) {
+        if (hasSpecialChar(newNickname)) {
             _event.emit(Event.HasSpecialChar)
         } else {
             if (newNickname.length < 2) {
@@ -75,16 +74,15 @@ class LoginNicknameViewModel @Inject constructor(
         }
     }
 
-    private fun hasSpecialChar(newNickname: String): Boolean{
+    private fun hasSpecialChar(newNickname: String): Boolean {
         return Pattern.matches(REGEX_SPECIALCHAR, newNickname)
     }
 
-
     sealed class Event {
-        object NullDefaultNickname: Event()
+        object NullDefaultNickname : Event()
         object TooShortNickname : Event()
         object TooLongNickname : Event()
-        object HasSpecialChar: Event()
+        object HasSpecialChar : Event()
         object DuplicateNickname : Event()
         object GoodNickname : Event()
     }

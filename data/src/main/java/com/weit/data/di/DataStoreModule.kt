@@ -10,12 +10,11 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class DataStoreModule{
+abstract class DataStoreModule {
 
     @Binds
     @Singleton
     abstract fun bindPreferencesModule(
-        userInfoRepositoryImpl: UserInfoRepositoryImpl
+        userInfoRepositoryImpl: UserInfoRepositoryImpl,
     ): UserInfoRepository
-
 }

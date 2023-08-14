@@ -2,24 +2,18 @@ package com.weit.domain.usecase.userinfo
 
 import com.weit.domain.model.GenderType
 import com.weit.domain.repository.userinfo.UserInfoRepository
-import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class GetGenderUsecase @Inject constructor(
-    private val userInfoRepository: UserInfoRepository
-){
+    private val userInfoRepository: UserInfoRepository,
+) {
     suspend operator fun invoke(): GenderType {
-        var genderType = GenderType.IDLE
+        val result = userInfoRepository.getGender()
 
-        val gottenGender = userInfoRepository.getGender()
-        if (gottenGender.equals("MALE")) {
-            genderType = GenderType.MALE
-        } else if (gottenGender.equals("FEMALE")) {
-            genderType = GenderType.FEMALE
+        return if (result.isSuccess) {
+            GenderType.values().find { it.type == result.getOrThrow() } ?: GenderType.IDLE
         } else {
-            genderType = GenderType.IDLE
+            GenderType.IDLE
         }
-
-        return genderType
     }
 }

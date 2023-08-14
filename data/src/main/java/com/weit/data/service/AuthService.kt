@@ -23,16 +23,16 @@ interface AuthService {
 
     @GET("/api/v1/auth/validate/nickname")
     suspend fun isDuplicateNickname(
-        @Query("value") nickname: String
+        @Query("value") nickname: String,
     ): Response<Unit>
 
     @GET("/api/v1/auth/validate/email")
     suspend fun isDuplicateEmail(
-        @Query("value") email: String
+        @Query("value") email: String,
     ): Response<Unit>
 
     @GET("/api/v1/auth/validate/phone-number")
     suspend fun isDuplicatePhonNumber(
-        @Query("value") phoneNum: String
+        @Query("value") phoneNum: String,
     ): Response<Unit>
 }

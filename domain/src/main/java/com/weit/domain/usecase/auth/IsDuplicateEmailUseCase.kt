@@ -4,7 +4,7 @@ import com.weit.domain.repository.auth.AuthRepository
 import javax.inject.Inject
 
 class IsDuplicateEmailUseCase @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(email: String): Boolean {
         var IsDuplicate = false

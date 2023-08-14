@@ -1,12 +1,11 @@
 package com.weit.presentation.ui.login.inputuserinfo
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.GenderType
 import com.weit.domain.usecase.userinfo.GetNicknameUsecase
 import com.weit.domain.usecase.userinfo.SetBirthUsecase
-import com.weit.domain.model.GenderType
 import com.weit.domain.usecase.userinfo.SetGenderUsecase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -19,8 +18,8 @@ import javax.inject.Inject
 class LoginInputUserInfoViewModel @Inject constructor(
     private val getNicknameUsecase: GetNicknameUsecase,
     private val setBirthUsecase: SetBirthUsecase,
-    private val setGenderUsecase: SetGenderUsecase
-): ViewModel() {
+    private val setGenderUsecase: SetGenderUsecase,
+) : ViewModel() {
     private var gender = GenderType.IDLE
     private lateinit var birth: LocalDate
 
@@ -51,17 +50,17 @@ class LoginInputUserInfoViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkInputGenderBirth(){
-        if (gender == GenderType.IDLE){
+    private suspend fun checkInputGenderBirth() {
+        if (gender == GenderType.IDLE) {
             _event.emit(Event.GenderNotSelected)
         }
 
-        if (::birth.isInitialized.not()){
+        if (::birth.isInitialized.not()) {
             _event.emit(Event.BirthNotSelected)
         }
     }
 
-    sealed class Event{
+    sealed class Event {
         object GenderNotSelected : Event()
         object BirthNotSelected : Event()
     }

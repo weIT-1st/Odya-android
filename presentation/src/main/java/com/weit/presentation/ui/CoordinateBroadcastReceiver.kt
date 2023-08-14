@@ -14,8 +14,8 @@ class CoordinateBroadcastReceiver : BroadcastReceiver() {
     lateinit var verifyCurrentUserUseCase: VerifyCurrentUserUseCase
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED && verifyCurrentUserUseCase()) {
-                val serviceIntent = Intent(context, CoordinateForegroundService::class.java)
-                context.startForegroundService(serviceIntent)
+            val serviceIntent = Intent(context, CoordinateForegroundService::class.java)
+            context.startForegroundService(serviceIntent)
         }
     }
 }

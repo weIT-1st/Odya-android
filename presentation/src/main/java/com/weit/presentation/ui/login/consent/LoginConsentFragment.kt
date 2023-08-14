@@ -10,22 +10,19 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginConsentFragment : BaseFragment<FragmentLoginConsentBinding>(
-    FragmentLoginConsentBinding::inflate
+    FragmentLoginConsentBinding::inflate,
 ) {
     private val viewModel: LoginConsentViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
     }
 
     override fun initListener() {
-        binding.btnLoginStartOdya.setOnClickListener{
+        binding.btnLoginStartOdya.setOnClickListener {
             val action = LoginConsentFragmentDirections.actionLoginContentFragmentToLoginNicknameFragment()
             findNavController().navigate(action)
         }
-        
     }
-
 }

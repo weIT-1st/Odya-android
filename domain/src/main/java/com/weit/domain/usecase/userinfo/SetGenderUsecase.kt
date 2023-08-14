@@ -5,15 +5,9 @@ import com.weit.domain.repository.userinfo.UserInfoRepository
 import javax.inject.Inject
 
 class SetGenderUsecase @Inject constructor(
-    private val userInfoRepository: UserInfoRepository
+    private val userInfoRepository: UserInfoRepository,
 ) {
-    suspend operator fun invoke(genderType: GenderType)  {
-        var gender = "IDLE"
-        if (genderType.equals(GenderType.FEMALE)){
-            gender = "FEMALE"
-        } else if (genderType.equals(GenderType.MALE)){
-            gender = "MALE"
-        }
-        userInfoRepository.setGender(gender)
+    suspend operator fun invoke(genderType: GenderType) {
+        userInfoRepository.setGender(genderType.type)
     }
 }

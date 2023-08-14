@@ -7,7 +7,7 @@ import com.weit.presentation.databinding.FragmentLoginStepFourBinding
 import com.weit.presentation.ui.base.BaseFragment
 
 class LoginStepFourFragment : BaseFragment<FragmentLoginStepFourBinding>(
-    FragmentLoginStepFourBinding::inflate
+    FragmentLoginStepFourBinding::inflate,
 ) {
     private val viewModel: LoginStepFourViewModel by viewModels()
 

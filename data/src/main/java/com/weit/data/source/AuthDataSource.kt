@@ -54,7 +54,6 @@ class AuthDataSource @Inject constructor(
     fun getFirebaseToken(): String =
         auth.currentUser?.getIdToken(false)?.result?.token ?: throw TokenNotFoundException()
 
-
     suspend fun isDuplicateNickname(nickname: String): Response<Unit> =
         service.isDuplicateNickname(nickname)
 

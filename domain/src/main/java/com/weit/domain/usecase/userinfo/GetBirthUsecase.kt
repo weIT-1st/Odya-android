@@ -5,7 +5,7 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class GetBirthUsecase @Inject constructor(
-    private val userInfoRepository: UserInfoRepository
+    private val userInfoRepository: UserInfoRepository,
 ) {
     suspend operator fun invoke(): Result<LocalDate?> =
         userInfoRepository.getBirth()

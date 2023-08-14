@@ -6,9 +6,8 @@ import androidx.fragment.app.viewModels
 import com.weit.presentation.databinding.FragmentLoginStepThreeBinding
 import com.weit.presentation.ui.base.BaseFragment
 
-
 class LoginStepThreeFragment : BaseFragment<FragmentLoginStepThreeBinding>(
-    FragmentLoginStepThreeBinding::inflate
+    FragmentLoginStepThreeBinding::inflate,
 ) {
     private val viewModel: LoginStepThreeViewModel by viewModels()
 

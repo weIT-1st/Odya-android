@@ -9,13 +9,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class FriendManageFragment : BaseFragment<FragmentFriendManageBinding>(
-    FragmentFriendManageBinding::inflate
+    FragmentFriendManageBinding::inflate,
 ) {
-    private val viewModel : FriendManageViewModel by viewModels()
+    private val viewModel: FriendManageViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
     }
-
 }

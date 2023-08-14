@@ -5,5 +5,4 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginStepFourViewModel @Inject constructor(): ViewModel() {
-}
+class LoginStepFourViewModel @Inject constructor() : ViewModel()

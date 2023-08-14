@@ -7,10 +7,10 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
+import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
@@ -84,17 +84,17 @@ class ExampleViewModel @Inject constructor(
 
         // place review test
 //        addReview()
-      //  getReview()
+        //  getReview()
 
         // getDeviceLocation()
-      
+
 //        addFavoritePlace()
         getFavoritePlaces()
         getFavoritePlacesCount()
 
         // getDeviceLocation()
 
-       // logout()
+        // logout()
     }
 
     private fun logout() {

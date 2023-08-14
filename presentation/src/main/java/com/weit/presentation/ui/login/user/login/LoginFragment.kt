@@ -28,7 +28,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnToMain.setOnClickListener {
             moveToMain()
         }
-        binding.btnToLoginStep.setOnClickListener{
+        binding.btnToLoginStep.setOnClickListener {
             val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
             findNavController().navigate(action)
         }
@@ -50,7 +50,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             is LoginViewModel.Event.UserRegistrationRequired -> {
                 findNavController().navigate(
                     LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
-                        username = event.username
+                        username = event.username,
                     ),
                 )
             }

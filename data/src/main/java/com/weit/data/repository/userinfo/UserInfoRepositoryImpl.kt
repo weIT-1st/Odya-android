@@ -6,31 +6,29 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class UserInfoRepositoryImpl @Inject constructor(
-    private val userinfoDataSource: UserInfoDataSource
-): UserInfoRepository {
-
+    private val userinfoDataSource: UserInfoDataSource,
+) : UserInfoRepository {
 
     override suspend fun setUsername(username: String): Result<Unit> {
-         return runCatching{
-             userinfoDataSource.setUsername(username)
+        return runCatching {
+            userinfoDataSource.setUsername(username)
         }
     }
 
     override suspend fun getUsername(): Result<String?> {
-        return runCatching{
+        return runCatching {
             userinfoDataSource.getUsername()
         }
     }
 
-
     override suspend fun setNickname(nickname: String): Result<Unit> {
-        return runCatching{
+        return runCatching {
             userinfoDataSource.setNickname(nickname)
         }
     }
 
     override suspend fun getNickname(): Result<String?> {
-        return runCatching{
+        return runCatching {
             userinfoDataSource.getNickname()
         }
     }
@@ -42,13 +40,13 @@ class UserInfoRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getBirth(): Result<LocalDate?> {
-        return runCatching{
+        return runCatching {
             userinfoDataSource.getBirth()
         }
     }
 
     override suspend fun setGender(gender: String): Result<Unit> {
-        return runCatching{
+        return runCatching {
             userinfoDataSource.setGender(gender)
         }
     }

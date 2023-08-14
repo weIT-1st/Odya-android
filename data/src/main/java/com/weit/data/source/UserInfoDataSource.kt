@@ -16,10 +16,10 @@ import java.time.LocalDate
 import javax.inject.Inject
 
 class UserInfoDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
     val Context.userInfoDataStore: DataStore<Preferences> by preferencesDataStore(
-        name = "com.weit.odya.username"
+        name = "com.weit.odya.username",
     )
 
     suspend fun setUsername(username: String) {
@@ -30,8 +30,8 @@ class UserInfoDataSource @Inject constructor(
 
     suspend fun getUsername(): String? {
         val flow = context.userInfoDataStore.data
-            .catch{exception ->
-                if (exception is IOException){
+            .catch { exception ->
+                if (exception is IOException) {
                     emit(emptyPreferences())
                 } else {
                     throw exception
@@ -43,16 +43,16 @@ class UserInfoDataSource @Inject constructor(
         return flow.firstOrNull()
     }
 
-    suspend fun setNickname(nickcame: String){
-        context.userInfoDataStore.edit {preference ->
+    suspend fun setNickname(nickcame: String) {
+        context.userInfoDataStore.edit { preference ->
             preference[KEY_NICKNAME] = nickcame
         }
     }
 
-    suspend fun getNickname(): String?{
+    suspend fun getNickname(): String? {
         val flow = context.userInfoDataStore.data
             .catch { exception ->
-                if(exception is IOException) {
+                if (exception is IOException) {
                     emit(emptyPreferences())
                 } else {
                     throw exception
@@ -64,16 +64,16 @@ class UserInfoDataSource @Inject constructor(
         return flow.firstOrNull()
     }
 
-    suspend fun setBirth(birth: LocalDate){
+    suspend fun setBirth(birth: LocalDate) {
         context.userInfoDataStore.edit { preference ->
             preference[KEY_BIRTH] = birth.toString()
         }
     }
 
-    suspend fun getBirth(): LocalDate?{
+    suspend fun getBirth(): LocalDate? {
         val flow = context.userInfoDataStore.data
             .catch { exception ->
-                if(exception is IOException) {
+                if (exception is IOException) {
                     emit(emptyPreferences())
                 } else {
                     throw exception
@@ -85,15 +85,15 @@ class UserInfoDataSource @Inject constructor(
         return LocalDate.parse(flow.firstOrNull())
     }
 
-    suspend fun setGender(gender: String){
+    suspend fun setGender(gender: String) {
         context.userInfoDataStore.edit { preference ->
             preference[KEY_GENDER] = gender
         }
     }
 
-    suspend fun getGender() : String? {
+    suspend fun getGender(): String? {
         val flow = context.userInfoDataStore.data
-            .catch{ exception ->
+            .catch { exception ->
                 if (exception is IOException) {
                     emit(emptyPreferences())
                 } else {
@@ -106,7 +106,7 @@ class UserInfoDataSource @Inject constructor(
         return flow.firstOrNull()
     }
 
-    private companion object{
+    private companion object {
         val KEY_USERNAME = stringPreferencesKey(name = "username")
         val KEY_NICKNAME = stringPreferencesKey(name = "nickname")
         val KEY_BIRTH = stringPreferencesKey(name = "birth")

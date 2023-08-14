@@ -20,10 +20,10 @@ class LoginModule {
     fun provideLoginRepository(
         @ActivityContext context: Context,
         authDataSource: AuthDataSource,
-        userInfoDataSource: UserInfoDataSource
+        userInfoDataSource: UserInfoDataSource,
     ): LoginRepository = LoginRepositoryImpl(
         context,
         authDataSource,
-        userInfoDataSource
+        userInfoDataSource,
     )
 }

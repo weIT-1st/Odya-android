@@ -3,11 +3,11 @@ package com.weit.presentation.ui.login.user.registration
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.GenderType
 import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.usecase.auth.RegisterUserUseCase
-import com.weit.domain.model.GenderType
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted

@@ -5,5 +5,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
-class FriendManageViewModel @Inject constructor() : ViewModel(){
+class FriendManageViewModel @Inject constructor() : ViewModel() {
+    //
 }

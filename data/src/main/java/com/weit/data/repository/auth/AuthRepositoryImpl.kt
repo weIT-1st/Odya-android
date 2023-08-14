@@ -59,7 +59,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> {
         val result = runCatching {
             authDataSource.isDuplicatePhoneNum(phoneNum)
@@ -73,7 +72,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     private fun handleIsDuplicateError(t: Throwable): Throwable {
         return if (t is HttpException) {
-            when (t.code()){
+            when (t.code()) {
                 HTTP_BAD_REQUEST -> InvalidRequestException()
                 else -> UnKnownException()
             }
@@ -81,7 +80,6 @@ class AuthRepositoryImpl @Inject constructor(
             t
         }
     }
-
 
     private fun handleRegistrationError(t: Throwable): Throwable {
         // TODO 에러 코드가 추가 되면 에러 처리 세분화
@@ -106,7 +104,6 @@ class AuthRepositoryImpl @Inject constructor(
         }
         awaitClose { /* Do Nothing */ }
     }
-
 
     private fun UserRegistrationInfo.toUserRegistration(): UserRegistration =
         UserRegistration(

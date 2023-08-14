@@ -16,21 +16,25 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBinding>(
-    FragmentLoginInputUserInfoBinding::inflate
-){
+    FragmentLoginInputUserInfoBinding::inflate,
+) {
 
     private val viewModel: LoginInputUserInfoViewModel by viewModels()
 
-
-    private val datePicker by lazy{
-        val dateSetListener = OnDateSetListener{_, year, month, dayOfMonth ->
+    private val datePicker by lazy {
+        val dateSetListener = OnDateSetListener { _, year, month, dayOfMonth ->
             viewModel.setBirth(year, month, dayOfMonth)
             binding.etLoginBirth.setText(
-                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth)
+                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth),
             )
         }
-        DatePickerDialog(requireContext(), dateSetListener,
-            DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY)
+        DatePickerDialog(
+            requireContext(),
+            dateSetListener,
+            DEFAULT_YEAR,
+            DEFAULT_MONTH,
+            DEFAULT_DAY,
+        )
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,12 +44,12 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
     }
 
     override fun initListener() {
-        binding.etLoginBirth.setOnClickListener{
+        binding.etLoginBirth.setOnClickListener {
             datePicker.show()
         }
     }
 
-    private fun hilightNickname(){
+    private fun hilightNickname() {
         val nickname = viewModel.nickname
         val mainText: String = String.format(resources.getString(R.string.login_who_you), nickname)
         val spannableStringBuilder = SpannableStringBuilder(mainText)

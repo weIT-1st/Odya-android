@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.button.MaterialButtonToggleGroup.OnButtonCheckedListener
+import com.weit.domain.model.GenderType
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUserRegistrationBinding
-import com.weit.domain.model.GenderType
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -42,7 +42,7 @@ class UserRegistrationFragment : BaseFragment<FragmentUserRegistrationBinding>(
         val dateSetListener = OnDateSetListener { _, year, month, dayOfMonth ->
             viewModel.setBirth(year, month, dayOfMonth)
             binding.etUserRegistrationBirth.setText(
-                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth)
+                requireContext().getString(R.string.edit_text_birth, year, month + 1, dayOfMonth),
             )
         }
         DatePickerDialog(requireContext(), dateSetListener, DEFAULT_YEAR, DEFAULT_MONTH, DEFAULT_DAY)

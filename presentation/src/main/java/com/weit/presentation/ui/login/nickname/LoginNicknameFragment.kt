@@ -2,7 +2,6 @@ package com.weit.presentation.ui.login.nickname
 
 import android.os.Bundle
 import android.view.View
-import android.widget.EditText
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentLoginNicknameBinding
@@ -13,7 +12,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
-    FragmentLoginNicknameBinding::inflate
+    FragmentLoginNicknameBinding::inflate,
 ) {
 
     val viewModel: LoginNicknameViewModel by viewModels()
@@ -31,16 +30,15 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
     }
 
     override fun initCollector() {
-        repeatOnStarted(viewLifecycleOwner){
-            viewModel.event.collectLatest{ event ->
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
                 handleEvent(event)
             }
         }
     }
 
-
-    private fun handleEvent(event: LoginNicknameViewModel.Event){
-        when(event){
+    private fun handleEvent(event: LoginNicknameViewModel.Event) {
+        when (event) {
             LoginNicknameViewModel.Event.GoodNickname -> {
                 sendSnackBar("사용가능한 닉네임입니다.")
             }

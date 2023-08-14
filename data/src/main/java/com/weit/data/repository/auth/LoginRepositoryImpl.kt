@@ -1,9 +1,12 @@
 package com.weit.data.repository.auth
 
 import android.content.Context
+import android.util.Log
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
+import com.orhanobut.logger.Logger
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO
 import com.weit.data.source.AuthDataSource
@@ -30,6 +33,7 @@ class LoginRepositoryImpl @Inject constructor(
     private val context: Context,
     private val authDataSource: AuthDataSource,
 ) : LoginRepository {
+
     override suspend fun loginWithKakao(): Result<Unit> {
         // TODO 유효 토큰 검사 후 자동 로그인
         // 카카오 로그인 -> 서버 로그인 -> 파이어베이스 로그인
@@ -114,7 +118,7 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun getUsername(message: String): String = JSONObject(message)["username"].toString()
+    private fun getUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
 
     private fun UserTokenDTO.toUserToken() = UserToken(token)
 }

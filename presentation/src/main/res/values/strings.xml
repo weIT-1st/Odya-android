@@ -32,4 +32,12 @@
     <!-- maykonw_friend -->
     <string name="mayknow_friend_title">알 수도 있는 친구</string>
 
+    <!--  review  -->
+    <string name="create_review_title">리뷰 작성</string>
+    <string name="create_review_star">별점 등록(%d/5)</string>
+    <string name="create_review_detail">리뷰 내용(%d/30)</string>
+    <string name="create_review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
+    <string name="create_review_cancel">취소</string>
+    <string name="create_review_register">등록하기</string>
+
 </resources>

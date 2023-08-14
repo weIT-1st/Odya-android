@@ -3,7 +3,7 @@ package com.weit.data.di
 import android.content.Context
 import com.weit.data.repository.auth.LoginRepositoryImpl
 import com.weit.data.source.AuthDataSource
-import com.weit.data.source.UserinfoDataSource
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.auth.LoginRepository
 import dagger.Module
 import dagger.Provides
@@ -20,10 +20,10 @@ class LoginModule {
     fun provideLoginRepository(
         @ActivityContext context: Context,
         authDataSource: AuthDataSource,
-        userNameDataSource: UserinfoDataSource
+        userInfoDataSource: UserInfoDataSource
     ): LoginRepository = LoginRepositoryImpl(
         context,
         authDataSource,
-        userNameDataSource
+        userInfoDataSource
     )
 }

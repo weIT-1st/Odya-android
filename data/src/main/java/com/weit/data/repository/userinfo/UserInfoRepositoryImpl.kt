@@ -1,12 +1,12 @@
 package com.weit.data.repository.userinfo
 
-import com.weit.data.source.UserinfoDataSource
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.userinfo.UserInfoRepository
 import java.time.LocalDate
 import javax.inject.Inject
 
 class UserInfoRepositoryImpl @Inject constructor(
-    private val userinfoDataSource: UserinfoDataSource
+    private val userinfoDataSource: UserInfoDataSource
 ): UserInfoRepository {
 
 

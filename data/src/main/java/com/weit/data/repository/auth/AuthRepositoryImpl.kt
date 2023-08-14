@@ -7,6 +7,7 @@ import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.exception.auth.InvalidSomethingException
+import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -37,21 +38,47 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isDuplicateNickname(nickname: String): Result<Unit> {
-        return runCatching {
+        val result = runCatching {
             authDataSource.isDuplicateNickname(nickname)
+        }
+        return if (result.isSuccess) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
         }
     }
 
     override suspend fun isDuplicateEmail(email: String): Result<Unit> {
-        return runCatching {
+        val result = runCatching {
             authDataSource.isDuplicateEmail(email)
+        }
+        return if (result.isSuccess) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
         }
     }
 
 
     override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> {
-        return runCatching {
+        val result = runCatching {
             authDataSource.isDuplicatePhoneNum(phoneNum)
+        }
+        return if (result.isSuccess) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
+        }
+    }
+
+    private fun handleIsDuplicateError(t: Throwable): Throwable {
+        return if (t is HttpException) {
+            when (t.code()){
+                HTTP_BAD_REQUEST -> InvalidRequestException()
+                else -> UnKnownException()
+            }
+        } else {
+            t
         }
     }
 

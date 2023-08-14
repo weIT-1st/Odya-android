@@ -3,6 +3,7 @@ package com.weit.data.service
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -23,15 +24,15 @@ interface AuthService {
     @GET("/api/v1/auth/validate/nickname")
     suspend fun isDuplicateNickname(
         @Query("value") nickname: String
-    ): Result<Unit>
+    ): Response<Unit>
 
     @GET("/api/v1/auth/validate/email")
     suspend fun isDuplicateEmail(
         @Query("value") email: String
-    ): Result<Unit>
+    ): Response<Unit>
 
     @GET("/api/v1/auth/validate/phone-number")
     suspend fun isDuplicatePhonNumber(
         @Query("value") phoneNum: String
-    ): Result<Unit>
+    ): Response<Unit>
 }

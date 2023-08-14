@@ -15,7 +15,7 @@ import java.io.IOException
 import java.time.LocalDate
 import javax.inject.Inject
 
-class UserinfoDataSource @Inject constructor(
+class UserInfoDataSource @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
     val Context.userInfoDataStore: DataStore<Preferences> by preferencesDataStore(
@@ -40,8 +40,7 @@ class UserinfoDataSource @Inject constructor(
             .map { preferences ->
                 preferences[KEY_USERNAME]
             }
-        val value = flow.firstOrNull()
-        return value
+        return flow.firstOrNull()
     }
 
     suspend fun setNickname(nickcame: String){
@@ -62,8 +61,7 @@ class UserinfoDataSource @Inject constructor(
             .map { preference ->
                 preference[KEY_NICKNAME]
             }
-        val value = flow.firstOrNull()
-        return value
+        return flow.firstOrNull()
     }
 
     suspend fun setBirth(birth: LocalDate){
@@ -84,8 +82,7 @@ class UserinfoDataSource @Inject constructor(
             .map { preferences ->
                 preferences[KEY_BIRTH]
             }
-        val value = flow.firstOrNull()
-        return LocalDate.parse(value)
+        return LocalDate.parse(flow.firstOrNull())
     }
 
     suspend fun setGender(gender: String){
@@ -106,8 +103,7 @@ class UserinfoDataSource @Inject constructor(
             .map { preference ->
                 preference[KEY_GENDER]
             }
-        val value = flow.firstOrNull()
-        return value
+        return flow.firstOrNull()
     }
 
     private companion object{

@@ -11,16 +11,14 @@ class GetGenderUsecase @Inject constructor(
     suspend operator fun invoke(): GenderType {
         var genderType = GenderType.IDLE
 
-        CoroutineScope(Dispatchers.IO).async {
-            val gottenGender = userInfoRepository.getGender()
-            if (gottenGender.equals("MALE")) {
-                genderType = GenderType.MALE
-            } else if (gottenGender.equals("FEMALE")) {
-                genderType = GenderType.FEMALE
-            } else {
-                genderType = GenderType.IDLE
-            }
-        }.await()
+        val gottenGender = userInfoRepository.getGender()
+        if (gottenGender.equals("MALE")) {
+            genderType = GenderType.MALE
+        } else if (gottenGender.equals("FEMALE")) {
+            genderType = GenderType.FEMALE
+        } else {
+            genderType = GenderType.IDLE
+        }
 
         return genderType
     }

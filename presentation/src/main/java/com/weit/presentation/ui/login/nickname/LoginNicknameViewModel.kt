@@ -57,8 +57,8 @@ class LoginNicknameViewModel @Inject constructor(
     }
 
 
-    private suspend fun handleIsGoodNickname(newNickname: String, result: Result<Unit>){
-        if (!hasSpecialChar(newNickname)){
+    private suspend fun handleIsGoodNickname(newNickname: String, isDuplicate: Boolean){
+        if (hasSpecialChar(newNickname)){
             _event.emit(Event.HasSpecialChar)
         } else {
             if (newNickname.length < 2) {
@@ -66,7 +66,7 @@ class LoginNicknameViewModel @Inject constructor(
             } else if (newNickname.length > 9) {
                 _event.emit(Event.TooLongNickname)
             } else {
-                if (result.isSuccess) {
+                if (isDuplicate) {
                     _event.emit(Event.GoodNickname)
                 } else {
                     _event.emit(Event.DuplicateNickname)

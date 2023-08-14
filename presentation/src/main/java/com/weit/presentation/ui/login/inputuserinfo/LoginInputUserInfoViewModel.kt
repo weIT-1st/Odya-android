@@ -24,15 +24,14 @@ class LoginInputUserInfoViewModel @Inject constructor(
     private var gender = GenderType.IDLE
     private lateinit var birth: LocalDate
 
-    lateinit var nickname: String
+    var nickname: String = ""
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
     init {
         viewModelScope.launch {
-            getNicknameUsecase.invoke().onSuccess { it
-            nickname = it.toString()}
+            getNicknameUsecase().onSuccess { nickname = it.toString() }
         }
     }
 

@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.myinfo
 
-<<<<<<< HEAD
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels

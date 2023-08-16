@@ -1,8 +1,8 @@
 package com.weit.data.repository.follow
 
 import com.weit.data.source.FollowDataSource
+import com.weit.data.util.exception
 import com.weit.domain.model.exception.NoMoreItemException
-import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
 import com.weit.domain.model.follow.FollowUserContent
@@ -51,9 +51,9 @@ class FollowRepositoryImpl @Inject constructor(
         return if (result.isSuccess) {
             val followSearch = result.getOrThrow()
             hasNextFollowing.set(followSearch.hasNext)
-            Result.success(result.getOrThrow().content.filterByNickname(query))
+            Result.success(followSearch.content.filterByNickname(query))
         } else {
-            Result.failure(result.exceptionOrNull() ?: UnKnownException())
+            Result.failure(result.exception())
         }
     }
 
@@ -72,7 +72,7 @@ class FollowRepositoryImpl @Inject constructor(
             hasNextFollower.set(followSearch.hasNext)
             Result.success(followSearch.content.filterByNickname(query))
         } else {
-            Result.failure(result.exceptionOrNull() ?: UnKnownException())
+            Result.failure(result.exception())
         }
     }
 

@@ -17,6 +17,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -28,7 +29,9 @@ class TravelFriendViewModel @Inject constructor(
 ) : ViewModel() {
 
     // userId는 반드시 초기화가 선행되어야 함
-    private var userId: Long = -1
+    private val userId: Long = runBlocking {
+        getUserIdUseCase()
+    }
     private val friends = CopyOnWriteArrayList<FollowUserContent>()
     private var followerPage = 0
 
@@ -43,10 +46,7 @@ class TravelFriendViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch {
-            userId = getUserIdUseCase()
-            updateTravelFriends()
-        }
+        updateTravelFriends()
         loadNextFollowers(followerPage, query.value)
     }
 

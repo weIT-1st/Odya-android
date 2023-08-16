@@ -13,4 +13,8 @@ interface UserRepository {
     suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
 
     suspend fun updateProfile(uri: String): Result<Unit>
+
+    suspend fun setUserId(userId: Long)
+
+    suspend fun getUserId(): Long
 }

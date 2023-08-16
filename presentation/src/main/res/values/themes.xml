@@ -18,6 +18,8 @@
         <item name="colorOnSurface">@color/label_normal</item>
         <item name="colorError">@color/warning</item>
         <item name="android:datePickerStyle">@style/defaultDatePicker</item>
+        <item name="actionMenuTextColor">@color/label_assistive</item>
+        <item name="android:actionMenuTextColor">@color/label_assistive</item>
     </style>
     <style name="Theme.Splash" parent="Theme.Odya">
         <item name="android:windowFullscreen">true</item>
@@ -25,5 +27,4 @@
     <style name="defaultDatePicker">
         <item name="android:datePickerMode">spinner</item>
     </style>
-
 </resources>

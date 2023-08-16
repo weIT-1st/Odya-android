@@ -3,8 +3,8 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.follow.FollowFollowingIdDTO
 import com.weit.data.model.follow.FollowNumDTO
+import com.weit.data.model.follow.FollowUserContentDTO
 import com.weit.domain.model.follow.FollowFollowingIdInfo
-import com.weit.domain.model.follow.FollowUserContent
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -35,7 +35,7 @@ interface FollowService {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("sortType") sortType: String,
-    ): ListResponse<FollowUserContent>
+    ): ListResponse<FollowUserContentDTO>
 
     @GET("/api/v1/follows/{userId}/followers")
     suspend fun getInfiniteFollower(
@@ -43,5 +43,5 @@ interface FollowService {
         @Query("page") page: Int,
         @Query("size") size: Int,
         @Query("sortType") sortType: String,
-    ): ListResponse<FollowUserContent>
+    ): ListResponse<FollowUserContentDTO>
 }

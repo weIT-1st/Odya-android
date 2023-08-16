@@ -2,6 +2,7 @@ package com.weit.data.source
 
 import com.weit.data.model.ListResponse
 import com.weit.data.model.follow.FollowNumDTO
+import com.weit.data.model.follow.FollowUserContentDTO
 import com.weit.data.service.FollowService
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowUserContent
@@ -35,7 +36,7 @@ class FollowDataSource @Inject constructor(
 
     suspend fun getInfiniteFollowing(
         followingSearchInfo: FollowingSearchInfo,
-    ): ListResponse<FollowUserContent> {
+    ): ListResponse<FollowUserContentDTO> {
         val result = followService.getInfiniteFollowing(
             userId = followingSearchInfo.userId,
             page = followingSearchInfo.page,
@@ -51,7 +52,7 @@ class FollowDataSource @Inject constructor(
 
     suspend fun getInfiniteFollower(
         followerSearchInfo: FollowerSearchInfo,
-    ): ListResponse<FollowUserContent> {
+    ): ListResponse<FollowUserContentDTO> {
         val result = followService.getInfiniteFollower(
             userId = followerSearchInfo.userId,
             page = followerSearchInfo.page,

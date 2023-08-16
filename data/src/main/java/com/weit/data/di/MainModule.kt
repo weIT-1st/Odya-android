@@ -1,10 +1,6 @@
 package com.weit.data.di
 
 import android.content.Context
-import android.location.LocationManager
-import androidx.room.Room
-import com.weit.data.db.CoordinateDatabase
-import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -14,13 +10,11 @@ import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.UserService
-import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.UserDataSource
-import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -77,33 +71,6 @@ class MainModule {
     @Provides
     fun providePlaceReviewRepository(dataSource: PlaceReviewDateSource): PlaceReviewRepository =
         PlaceReviewRepositoryImpl(dataSource)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideCoordinateDatabase(@ApplicationContext context: Context): CoordinateDatabase =
-        Room.databaseBuilder(
-            context.applicationContext,
-            CoordinateDatabase::class.java,
-            "coordinate-database",
-        ).build()
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideCoordinateRepository(dataSource: CoordinateDataSource): CoordinateRepository =
-        CoordinateRepositoryImpl(dataSource)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideCoordinateDataSource(
-        database: CoordinateDatabase,
-        locationManager: LocationManager,
-    ): CoordinateDataSource =
-        CoordinateDataSource(database, locationManager)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideLocationManager(@ApplicationContext context: Context): LocationManager =
-        context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
     @ActivityRetainedScoped
     @Provides

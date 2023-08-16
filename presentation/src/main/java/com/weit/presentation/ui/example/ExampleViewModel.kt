@@ -15,10 +15,6 @@ import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.auth.LogoutUseCase
-import com.weit.domain.usecase.coordinate.DeleteCoordinateUseCase
-import com.weit.domain.usecase.coordinate.GetCurrentCoordinateUseCase
-import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
-import com.weit.domain.usecase.coordinate.InsertCoordinateUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
@@ -45,12 +41,12 @@ class ExampleViewModel @Inject constructor(
     private val getImagesUseCase: GetImagesUseCase,
     private val getScaledImageBytesByUrisUseCase: GetScaledImageBytesByUrisUseCase,
     private val getImageCoordinatesUseCase: GetImageCoordinatesUseCase,
-    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase,
-    private val insertCoordinateUseCase: InsertCoordinateUseCase,
-    private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
+//    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase,
+//    private val insertCoordinateUseCase: InsertCoordinateUseCase,
+//    private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
-    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
+//    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
@@ -77,16 +73,16 @@ class ExampleViewModel @Inject constructor(
     val event = _event.asEventFlow()
 
     init {
-        getImages()
+        // getImages()
 
         // insertCoordinate()
         // getCoordinates()
         // deleteCoordinate()
 
         // addReview()
-        // getReview()
+//         getReview()
 
-        // getDeviceLocation()
+//         getDeviceLocation()
 
         // addFavoritePlace()
         // getFavoritePlaces()
@@ -121,47 +117,47 @@ class ExampleViewModel @Inject constructor(
     }
 
     // get device location
-    private fun getDeviceLocation() {
-        viewModelScope.launch {
-            val result = getCurrentCoordinateUseCase()
-            if (result.isSuccess) {
-                val coordinate = result.getOrThrow()
-                coordinate.collect {
-                    Logger.t("MainTest").i("${it.lat} ${it.lng}")
-                }
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
+//    private fun getDeviceLocation() {
+//        viewModelScope.launch {
+//            val result = getCurrentCoordinateUseCase()
+//            if (result.isSuccess) {
+//                val coordinate = result.getOrThrow()
+//                coordinate.collect {
+//                    Logger.t("MainTest").i("${it.lat} ${it.lng}")
+//                }
+//            } else {
+//                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+//            }
+//        }
+//    }
 
     // location room database test
-    private fun insertCoordinate() {
-        val lat: Float = 0.2343f
-        val lng: Float = 0.2343f
-
-        viewModelScope.launch {
-            for (i in 0..5) {
-                insertCoordinateUseCase(lat, lng)
-                Thread.sleep(5000)
-            }
-        }
-    }
-
-    private fun getCoordinates() {
-        viewModelScope.launch {
-            val result = getStoredCoordinatesUseCase(1689925493106, 1689925518186)
-            for (location in result) {
-                Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
-            }
-        }
-    }
-
-    private fun deleteCoordinate() {
-        viewModelScope.launch {
-            deleteCoordinateUseCase(1)
-        }
-    }
+//    private fun insertCoordinate() {
+//        val lat: Float = 0.2343f
+//        val lng: Float = 0.2343f
+//
+//        viewModelScope.launch {
+//            for (i in 0..5) {
+//                insertCoordinateUseCase(lat, lng)
+//                Thread.sleep(5000)
+//            }
+//        }
+//    }
+//
+//    private fun getCoordinates() {
+//        viewModelScope.launch {
+//            val result = getStoredCoordinatesUseCase(1689925493106, 1689925518186)
+//            for (location in result) {
+//                Log.d("LocationInfo", "lat ${location.lat} lng ${location.lng}")
+//            }
+//        }
+//    }
+//
+//    private fun deleteCoordinate() {
+//        viewModelScope.launch {
+//            deleteCoordinateUseCase(1)
+//        }
+//    }
 
     private fun getImageCoordinates(uri: String) {
         viewModelScope.launch {

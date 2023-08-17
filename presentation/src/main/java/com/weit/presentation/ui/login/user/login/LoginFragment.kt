@@ -7,6 +7,7 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.review.ReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -27,6 +28,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
         binding.btnToMain.setOnClickListener {
             moveToMain()
+        }
+        binding.btnReview.setOnClickListener {
+            showReviewDialog()
         }
     }
 
@@ -61,5 +65,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+    }
+
+    private fun showReviewDialog(){
+        activity?.supportFragmentManager?.let { ReviewFragment().show(it, "tag") }
     }
 }

@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.review.ReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,74 +35,26 @@
             android:layout_marginTop="16dp"
             android:text="@string/create_review_star"/>
 
-        <ToggleButton
-            android:id="@+id/create_review_first_star"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_star"
-            android:textOff=""
-            android:textOn=""
+        <RatingBar
+            android:id="@+id/rating_bar_create_review_star"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:isIndicator="false"
             android:layout_marginTop="16dp"
             android:layout_marginStart="20dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <ToggleButton
-            android:id="@+id/create_review_second_star"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_star"
-            android:textOff=""
-            android:textOn=""
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"
-            app:layout_constraintStart_toEndOf="@+id/create_review_first_star"/>
-
-        <ToggleButton
-            android:id="@+id/create_review_third_star"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_star"
-            android:textOff=""
-            android:textOn=""
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"
-            app:layout_constraintStart_toEndOf="@+id/create_review_second_star"/>
-
-        <ToggleButton
-            android:id="@+id/create_review_fourth_star"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_star"
-            android:textOff=""
-            android:textOn=""
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"
-            app:layout_constraintStart_toEndOf="@+id/create_review_third_star"/>
-
-        <ToggleButton
-            android:id="@+id/create_review_fifth_star"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/selector_star"
-            android:textOff=""
-            android:textOn=""
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"
-            app:layout_constraintStart_toEndOf="@+id/create_review_fourth_star"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:layout_marginEnd="20dp"
+            android:numStars="5"
+            android:rating="@={vm.rating}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"/>
 
         <TextView
             android:id="@+id/tv_create_review_detial"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/detail2"
-            app:layout_constraintTop_toBottomOf="@+id/create_review_first_star"
+            app:layout_constraintTop_toBottomOf="@+id/rating_bar_create_review_star"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp"
             android:text="@string/create_review_detail"/>
@@ -110,10 +64,14 @@
             android:layout_width="0dp"
             android:layout_height="140dp"
             style="@style/body2"
-            android:background="@drawable/corners_all_8"
+            android:background="@drawable/corners_all_8_stroke_yellow"
             android:hint="@string/create_review_detail_hint"
             android:textColorHint="@color/label_alternative"
             android:layout_marginTop="16dp"
+            android:gravity="top"
+            android:padding="8dp"
+            android:maxLength="30"
+            android:text="@={vm.review}"
             app:layout_constraintTop_toBottomOf="@+id/tv_create_review_detial"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +79,7 @@
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_create_review_cancel"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/h6"
             android:text="@string/create_review_cancel"
@@ -129,12 +87,14 @@
             android:background="@drawable/corners_all_8"
             android:backgroundTint="@color/interaction_inactive"
             android:layout_marginTop="18dp"
+            android:layout_marginEnd="6dp"
             app:layout_constraintTop_toBottomOf="@+id/et_create_review_detail"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_create_review_register"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_create_review_register"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/h6"
             android:text="@string/create_review_register"
@@ -142,8 +102,10 @@
             android:background="@drawable/corners_all_8"
             android:backgroundTint="@color/primary"
             android:layout_marginTop="18dp"
+            android:layout_marginStart="6dp"
             app:layout_constraintTop_toBottomOf="@+id/et_create_review_detail"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_create_review_cancel"
             />
 
 

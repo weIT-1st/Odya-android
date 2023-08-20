@@ -9,7 +9,7 @@
     >
     
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_mayknow_firend_summary_profile"
+        android:id="@+id/iv_mayknow_friend_summary_profile"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:scaleType="centerCrop"
@@ -31,13 +31,13 @@
         android:layout_marginTop="16dp"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintWidth_max="wrap"
-        app:layout_constraintTop_toBottomOf="@+id/iv_mayknow_firend_summary_profile"
-        app:layout_constraintStart_toStartOf="@+id/tv_maykonw_friend_summary_feature"
-        app:layout_constraintEnd_toEndOf="@+id/tv_maykonw_friend_summary_feature"
+        app:layout_constraintTop_toBottomOf="@+id/iv_mayknow_friend_summary_profile"
+        app:layout_constraintStart_toStartOf="@+id/tv_mayknow_friend_summary_feature"
+        app:layout_constraintEnd_toEndOf="@+id/tv_mayknow_friend_summary_feature"
         />
 
     <TextView
-        android:id="@+id/tv_maykonw_friend_summary_feature"
+        android:id="@+id/tv_mayknow_friend_summary_feature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="함께 아는 친구 2명"
@@ -59,7 +59,7 @@
         android:textColor="@drawable/selector_follow_color"
         android:layout_marginTop="16dp"
         style="@style/detail1"
-        app:layout_constraintTop_toBottomOf="@+id/tv_maykonw_friend_summary_feature"
+        app:layout_constraintTop_toBottomOf="@+id/tv_mayknow_friend_summary_feature"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

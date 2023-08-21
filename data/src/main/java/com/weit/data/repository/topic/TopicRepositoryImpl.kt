@@ -48,7 +48,7 @@ class TopicRepositoryImpl @Inject constructor(
     override suspend fun getTopicList(): Result<List<TopicDetail>> {
         return handleTopicResult{
             dataSource.getTopicList().map {
-                TopicDetail(it.topicWord)
+                TopicDetail(it.topicId,it.topicWord)
             }
         }
     }
@@ -56,7 +56,7 @@ class TopicRepositoryImpl @Inject constructor(
     override suspend fun getFavoriteTopicList(): Result<List<TopicDetail>> {
         return handleTopicResult{
             dataSource.getFavoriteTopicList().map {
-                TopicDetail(it.topicWord)
+                TopicDetail(it.topicId,it.topicWord)
             }
         }
     }

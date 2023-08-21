@@ -32,7 +32,8 @@ class FeedViewModel @Inject constructor(
     val favoriteTopics = _favoriteTopics.asEventFlow()
 
     init {
-        getTopicList()
+        //getTopicList()
+//        addFavoriteTopic()
         getFavoriteTopicList()
     }
     private fun getTopicList() {

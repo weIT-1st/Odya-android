@@ -1,5 +1,6 @@
 package com.weit.domain.model.topic
 
 data class TopicDetail(
-    val topicWord: String
+    val topicId: Long,
+    val topicWord: String,
 )

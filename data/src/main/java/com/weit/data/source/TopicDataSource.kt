@@ -3,6 +3,7 @@ package com.weit.data.source
 import com.weit.data.model.place.PlaceReviewListDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
+import com.weit.data.model.topic.FavoriteTopicDTO
 import com.weit.data.model.topic.TopicDTO
 import com.weit.data.model.topic.TopicRegistration
 import com.weit.data.service.PlaceReviewService
@@ -29,6 +30,6 @@ class TopicDataSource @Inject constructor(
     suspend fun getTopicList(): List<TopicDTO> =
         service.getTopicList()
 
-    suspend fun getFavoriteTopicList(): List<TopicDTO> =
+    suspend fun getFavoriteTopicList(): List<FavoriteTopicDTO> =
         service.getFavoriteTopicList()
 }

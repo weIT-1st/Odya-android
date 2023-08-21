@@ -6,6 +6,6 @@ sealed class FeedItem {
     data class MayknowFriendItem(var mayKnowFriendList: List<MayKnowFriend>) : FeedItem()
 }
 
-data class MayKnowFriend(var nickname: String,var feature: String)
+data class MayKnowFriend(var nickname: String, var feature: String)
 data class PopularSpot(var title: String, var nickname: String)
 data class Community(var title: String, var nickname: String)

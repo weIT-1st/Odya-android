@@ -3,11 +3,11 @@ package com.weit.presentation.ui.feed
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.model.Community
 import com.weit.presentation.model.FeedItem
 import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.model.PopularSpot
-import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,45 +29,46 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         initCommunityRecyclerView()
     }
 
-    private fun initTopicRecyclerView(){
+    private fun initTopicRecyclerView() {
         binding.rvTopic.adapter = topicAdapter
     }
     private fun initCommunityRecyclerView() {
         val items = mutableListOf<FeedItem>()
 
-        val communityList = listOf(Community("yes","no"), Community("yes","no"))
+        val communityList = listOf(Community("yes", "no"), Community("yes", "no"))
         val communityItem = communityList.map {
-            FeedItem.CommunityItem(it.title,it.nickname)
+            FeedItem.CommunityItem(it.title, it.nickname)
         }
-        for(c in communityItem){
+        for (c in communityItem) {
             items.add(c)
         }
         feedAdapter.items = items
         binding.rvCommunity.adapter = feedAdapter
 
-        val popularSpotList = listOf(PopularSpot("ddd","Ddd"), PopularSpot("ddd","Ddd"))
+        val popularSpotList = listOf(PopularSpot("ddd", "Ddd"), PopularSpot("ddd", "Ddd"))
         val popularSpotItem = FeedItem.PopularSpotItem(popularSpotList)
         items.add(popularSpotItem)
 
-        val communityList2 = listOf(Community("yes","no"), Community("yes","no"))
+        val communityList2 = listOf(Community("yes", "no"), Community("yes", "no"))
         val communityItem2 = communityList2.map {
-            FeedItem.CommunityItem(it.title,it.nickname)
+            FeedItem.CommunityItem(it.title, it.nickname)
         }
-        for(c in communityItem2){
+        for (c in communityItem2) {
             items.add(c)
         }
         val mayKnowFriendList = listOf(
-            MayKnowFriend("swe","함께 아는 친구 2명"), MayKnowFriend("ddd","함께 아는 친구 1명"),
-            MayKnowFriend("wef","yghggg")
+            MayKnowFriend("swe", "함께 아는 친구 2명"),
+            MayKnowFriend("ddd", "함께 아는 친구 1명"),
+            MayKnowFriend("wef", "yghggg"),
         )
         val mayKnowFriendItem = FeedItem.MayknowFriendItem(mayKnowFriendList)
         items.add(mayKnowFriendItem)
 
-        val communityList3 = listOf(Community("yes","no"), Community("yes","no"))
+        val communityList3 = listOf(Community("yes", "no"), Community("yes", "no"))
         val communityItem3 = communityList3.map {
-            FeedItem.CommunityItem(it.title,it.nickname)
+            FeedItem.CommunityItem(it.title, it.nickname)
         }
-        for(c in communityItem3){
+        for (c in communityItem3) {
             items.add(c)
         }
     }

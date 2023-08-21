@@ -5,11 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.presentation.model.PopularSpot
 import com.weit.presentation.databinding.ItemPopularSpotSummaryBinding
+import com.weit.presentation.model.PopularSpot
 
-class PopularSpotAdapter(
-) : ListAdapter<PopularSpot, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
+class PopularSpotAdapter() : ListAdapter<PopularSpot, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularSpotViewHolder {
         return PopularSpotViewHolder(
@@ -28,7 +27,6 @@ class PopularSpotAdapter(
         fun bind(popularSpot: PopularSpot) {
             binding.tvPopularSpotSummaryTitle.text = popularSpot.title
             binding.tvPopularSpotSummaryNickname.text = popularSpot.nickname
-
         }
     }
     companion object {

@@ -5,11 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.databinding.ItemMayknowFriendSummaryBinding
+import com.weit.presentation.model.MayKnowFriend
 
-class MayKnowFriendAdapter(
-) : ListAdapter<MayKnowFriend, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {
+class MayKnowFriendAdapter() : ListAdapter<MayKnowFriend, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MayKnowFriendViewHolder {
         return MayKnowFriendViewHolder(

@@ -1,19 +1,17 @@
 package com.weit.presentation.ui.feed
 
-
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.presentation.model.FeedItem
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
+import com.weit.presentation.model.FeedItem
 
-class FeedAdapter(
-    ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class FeedAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var items : List<FeedItem> = ArrayList()
+    var items: List<FeedItem> = ArrayList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -43,7 +41,6 @@ class FeedAdapter(
         items[position] is FeedItem.CommunityItem -> R.layout.item_community
         else -> throw IllegalArgumentException("Unknown view type")
     }
-
 
     class PopularSpotViewHolder(
         private val binding: ItemPopularSpotBinding,
@@ -77,5 +74,4 @@ class FeedAdapter(
             binding.tvCommunityNickname.text = community.nickname
         }
     }
-
 }

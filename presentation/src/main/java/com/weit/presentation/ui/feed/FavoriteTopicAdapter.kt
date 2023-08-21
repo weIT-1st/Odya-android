@@ -9,7 +9,7 @@ import com.weit.presentation.databinding.ItemTopicBinding
 
 class FavoriteTopicAdapter() :
     androidx.recyclerview.widget.ListAdapter<TopicDetail, FavoriteTopicAdapter.FavoriteTopicViewHolder>(
-        FavoriteTopicDiffCallback
+        FavoriteTopicDiffCallback,
     ) {
 
     class FavoriteTopicViewHolder(
@@ -20,7 +20,6 @@ class FavoriteTopicAdapter() :
                 binding.tvTopic.text = topic.topicWord
             }
         }
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoriteTopicViewHolder {
@@ -37,7 +36,7 @@ class FavoriteTopicAdapter() :
         private val FavoriteTopicDiffCallback: DiffUtil.ItemCallback<TopicDetail> =
             object : DiffUtil.ItemCallback<TopicDetail>() {
                 override fun areItemsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
-                    return oldItem.topicWord== newItem.topicWord
+                    return oldItem.topicWord == newItem.topicWord
                 }
 
                 override fun areContentsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
@@ -45,6 +44,4 @@ class FavoriteTopicAdapter() :
                 }
             }
     }
-
-
 }

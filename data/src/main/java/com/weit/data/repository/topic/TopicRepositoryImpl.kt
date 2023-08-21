@@ -1,25 +1,16 @@
 package com.weit.data.repository.topic
 
-import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.model.topic.TopicRegistration
-import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.TopicDataSource
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
-import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.exception.topic.NotHavePermissionException
-import com.weit.domain.model.favoritePlace.FavoritePlaceDetail
-import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.topic.TopicDetail
-import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.topic.TopicRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
-import okhttp3.internal.http.HTTP_CONFLICT
 import okhttp3.internal.http.HTTP_FORBIDDEN
-import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
@@ -31,7 +22,7 @@ class TopicRepositoryImpl @Inject constructor(
 ) : TopicRepository {
 
     override suspend fun registerFavoriteTopic(topicIdList: List<Long>): Result<Unit> {
-        return handleTopicResult{
+        return handleTopicResult {
             dataSource.registerFavoriteTopic(TopicRegistration(topicIdList))
         }
     }
@@ -46,22 +37,22 @@ class TopicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getTopicList(): Result<List<TopicDetail>> {
-        return handleTopicResult{
+        return handleTopicResult {
             dataSource.getTopicList().map {
-                TopicDetail(it.topicId,it.topicWord)
+                TopicDetail(it.topicId, it.topicWord)
             }
         }
     }
 
     override suspend fun getFavoriteTopicList(): Result<List<TopicDetail>> {
-        return handleTopicResult{
+        return handleTopicResult {
             dataSource.getFavoriteTopicList().map {
-                TopicDetail(it.topicId,it.topicWord)
+                TopicDetail(it.topicId, it.topicWord)
             }
         }
     }
 
-    //이렇게 함수를 두개 만들어야 하는것인가..
+    // 이렇게 함수를 두개 만들어야 하는것인가..
     private fun handleDeleteTopicError(response: Response<*>): Throwable {
         return when (response.code()) {
             HTTP_BAD_REQUEST -> InvalidRequestException()

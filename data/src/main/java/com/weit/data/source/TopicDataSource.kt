@@ -1,17 +1,9 @@
 package com.weit.data.source
 
-import com.weit.data.model.place.PlaceReviewListDTO
-import com.weit.data.model.place.PlaceReviewModification
-import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.model.topic.FavoriteTopicDTO
 import com.weit.data.model.topic.TopicDTO
 import com.weit.data.model.topic.TopicRegistration
-import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.TopicService
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
-import com.weit.domain.model.place.PlaceReviewByUserIdInfo
-import com.weit.domain.model.user.User
-import okhttp3.MultipartBody
 import retrofit2.Response
 import javax.inject.Inject
 

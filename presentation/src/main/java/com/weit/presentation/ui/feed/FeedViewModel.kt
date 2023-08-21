@@ -23,7 +23,7 @@ class FeedViewModel @Inject constructor(
     private val getTopicListUseCase: GetTopicListUseCase,
     private val registerFavoriteTopicUseCase: RegisterFavoriteTopicUseCase,
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
-)  : ViewModel() {
+) : ViewModel() {
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -32,10 +32,22 @@ class FeedViewModel @Inject constructor(
     val favoriteTopics = _favoriteTopics.asEventFlow()
 
     init {
-        //getTopicList()
-//        addFavoriteTopic()
         getFavoriteTopicList()
     }
+
+    fun getFavoriteTopicList() {
+        viewModelScope.launch {
+            val result = getFavoriteTopicListUseCase()
+            if (result.isSuccess) {
+                val topic = result.getOrThrow()
+                _favoriteTopics.emit(topic)
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    // feedFragment에서는 필요없지만 다른 곳에서 쓰일테니 여기둠
     private fun getTopicList() {
         viewModelScope.launch {
             val result = getTopicListUseCase()
@@ -47,24 +59,10 @@ class FeedViewModel @Inject constructor(
             }
         }
     }
-
-    private fun getFavoriteTopicList() {
-        viewModelScope.launch {
-            val result = getFavoriteTopicListUseCase()
-            if (result.isSuccess) {
-                val topic = result.getOrThrow()
-                Logger.t("MainTest").i("$topic")
-                _favoriteTopics.emit(topic)
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
-
     private fun addFavoriteTopic() {
         viewModelScope.launch {
             val result = registerFavoriteTopicUseCase(
-                listOf(1,2),
+                listOf(1, 2),
             )
             if (result.isSuccess) {
                 Logger.t("MainTest").i("성공!")

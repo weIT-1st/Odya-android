@@ -1,4 +1,4 @@
-package com.weit.domain.model.exception.favoritePlace
+package com.weit.domain.model.exception
 
 import java.lang.Exception
 

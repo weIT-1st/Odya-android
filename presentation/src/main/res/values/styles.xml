@@ -88,5 +88,9 @@
         <item name="boxStrokeColor">@color/elevation3</item> // Focus 상태일때 밑줄 색.
     </style>
 
+    <style name="ShapeableImageView8dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
 </resources>
 

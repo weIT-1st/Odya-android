@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
-import com.weit.domain.model.exception.favoritePlace.InvalidTokenException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
@@ -28,6 +28,7 @@ import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
 import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
+import com.weit.domain.usecase.user.UpdateProfileUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -54,6 +55,7 @@ class ExampleViewModel @Inject constructor(
     private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
     private val logoutUseCase: LogoutUseCase,
+    private val updateProfileUseCase: UpdateProfileUseCase,
 ) : ViewModel() {
 
     val query = MutableStateFlow("")
@@ -75,26 +77,34 @@ class ExampleViewModel @Inject constructor(
     val event = _event.asEventFlow()
 
     init {
-        // getImages()
+        getImages()
 
-        // coordinate room test
         // insertCoordinate()
         // getCoordinates()
         // deleteCoordinate()
-
-        // place review test
-//        addReview()
-        //  getReview()
+        // addReview()
+        // getReview()
 
         // getDeviceLocation()
 
-//        addFavoritePlace()
-        getFavoritePlaces()
-        getFavoritePlacesCount()
-
-        // getDeviceLocation()
+        // addFavoritePlace()
+        // getFavoritePlaces()
+        // getFavoritePlacesCount()
 
         // logout()
+
+        // updateProfile()
+    }
+
+    private fun updateProfile(uris: List<String>) {
+        viewModelScope.launch {
+            val result = updateProfileUseCase(uris.first())
+            if (result.isSuccess) {
+                Logger.t("MainTest").i("프로필 변경 성공")
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()}")
+            }
+        }
     }
 
     private fun logout() {
@@ -162,13 +172,14 @@ class ExampleViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getImagesUseCase()
             if (result.isSuccess) {
-                val uris = result.getOrThrow().subList(0, 100)
+                val uris = result.getOrThrow().subList(0, 1)
                 // Test to get coordinates
-                for (x in uris) {
-                    Log.d("LatLong", x)
-                    getImageCoordinates(x)
-                }
-                convertUrisToImageBytes(uris)
+//                for (x in uris) {
+//                    Log.d("LatLong", x)
+//                    getImageCoordinates(x)
+//                }
+                updateProfile(uris)
+                //   convertUrisToImageBytes(uris)
             } else {
                 _errorEvent.emit(result.exceptionOrNull() ?: Exception())
             }

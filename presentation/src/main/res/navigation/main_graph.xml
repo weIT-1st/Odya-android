@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/fragment_map">
+    app:startDestination="@id/post_graph">
 
     <fragment
         android:id="@+id/fragment_memory"
@@ -21,4 +21,36 @@
         android:id="@+id/fragment_mypage"
         android:name="com.weit.presentation.ui.mypage.MyPageFragment"
         android:label="MyPageFragment" />
+    <navigation android:id="@+id/post_graph"
+        app:startDestination="@id/postTravelLogFragment">
+        <fragment
+            android:id="@+id/postTravelLogFragment"
+            android:name="com.weit.presentation.ui.post.travellog.PostTravelLogFragment"
+            android:label="PostTravelLogFragment">
+            <action
+                android:id="@+id/action_postTravelLogFragment_to_travelFriendFragment"
+                app:destination="@id/travelFriendFragment" />
+            <argument
+                android:name="followers"
+                app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </fragment>
+
+        <fragment
+            android:id="@+id/travelFriendFragment"
+            android:name="com.weit.presentation.ui.post.travelfriend.TravelFriendFragment"
+            android:label="TravelFriendFragment" >
+            <action
+                android:id="@+id/action_travelFriendFragment_to_postTravelLogFragment"
+                app:destination="@id/postTravelLogFragment"
+                app:popUpTo="@id/travelFriendFragment"
+                app:popUpToInclusive="true" />
+            <argument
+                android:name="followers"
+                app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </fragment>
+    </navigation>
 </navigation>

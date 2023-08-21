@@ -8,10 +8,12 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import com.weit.domain.model.exception.ImageNotFoundException
 import com.weit.domain.model.image.ImageLatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
+import java.io.File
 import javax.inject.Inject
 
 class ImageDataSource @Inject constructor(
@@ -87,6 +89,20 @@ class ImageDataSource @Inject constructor(
             width in DEFAULT_RESIZE until height -> DEFAULT_RESIZE to (DEFAULT_RESIZE / width.toFloat() * height).toInt()
             height in DEFAULT_RESIZE until width -> (DEFAULT_RESIZE / height.toFloat() * height).toInt() to DEFAULT_RESIZE
             else -> width to height
+        }
+
+    suspend fun getImageName(uri: String): String =
+        withContext(Dispatchers.IO) {
+            val projection = arrayOf(MediaStore.Images.Media.DISPLAY_NAME)
+            val cursor = contentResolver.query(Uri.parse(uri), projection, null, null, null)
+            var imageName: String? = null
+            cursor?.use {
+                if (it.moveToFirst()) {
+                    val nameColumnIndex = it.getColumnIndex(MediaStore.Images.Media.DISPLAY_NAME)
+                    imageName = File(it.getString(nameColumnIndex)).nameWithoutExtension
+                }
+            }
+            imageName ?: throw ImageNotFoundException()
         }
 
     companion object {

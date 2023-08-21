@@ -2,7 +2,7 @@ package com.weit.domain.repository.follow
 
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
-import com.weit.domain.model.follow.FollowSearchDetail
+import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
@@ -23,9 +23,19 @@ interface FollowRepository {
 
     suspend fun getInfiniteFollowing(
         followingSearchInfo: FollowingSearchInfo,
-    ): Result<FollowSearchDetail>
+        query: String,
+    ): Result<List<FollowUserContent>>
 
     suspend fun getInfiniteFollower(
         followerSearchInfo: FollowerSearchInfo,
-    ): Result<FollowSearchDetail>
+        query: String,
+    ): Result<List<FollowUserContent>>
+
+    fun getCachedFollower(
+        query: String,
+    ): List<FollowUserContent>
+
+    fun getCachedFollowing(
+        query: String,
+    ): List<FollowUserContent>
 }

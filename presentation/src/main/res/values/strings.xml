@@ -49,4 +49,25 @@
     <!-- maykonw_friend -->
     <string name="mayknow_friend_title">알 수도 있는 친구</string>
 
+    <!-- post travel log -->
+    <string name="post_travel_log_title">여행일지 작성하기</string>
+    <string name="post_travel_log_info">여행정보</string>
+    <string name="post_travel_log_name_hint">여행일지 이름</string>
+    <string name="post_travel_log_friends">함께 간 친구</string>
+    <string name="post_travel_log_friends_count">외 %d명</string>
+    <string name="post_travel_log_daily">여행일지 및 사진</string>
+    <string name="post_travel_log_daily_day">Day %d</string>
+    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요!</string>
+    <string name="post_travel_log_daily_delete"><u>삭제하기</u></string>
+    <string name="post_travel_log_daily_place">장소 태그하기</string>
+    <string name="post_travel_log_daily_add">일정 추가하기</string>
+    <string name="post_travel_log_daily_save">임시저장</string>
+    <string name="post_travel_log_daily_post">등록하기</string>
+    <string name="post_travel_log_upload_feed">피드 공개</string>
+    <string name="post_travel_log_daily_picture_count">%d / %d</string>
+
+    <!-- travel friend search -->
+    <string name="travel_friend_title">함께 간 친구</string>
+    <string name="travel_friend_search">닉네임 검색</string>
+    <string name="travel_friend_complete">완료</string>
 </resources>

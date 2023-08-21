@@ -6,16 +6,19 @@
     android:layout_height="36dp"
     android:layout_marginTop="8dp">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/iv_friend_profile"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         android:src="@drawable/ic_profile"
+        android:scaleType="centerCrop"
+        app:shapeAppearance="@style/ShapeableImageViewCircle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@tools:sample/avatars"/>
 
     <TextView
         android:id="@+id/tv_friend_name"
@@ -32,7 +35,6 @@
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/iv_friend_profile"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.307"
         tools:text="이름은 알아서 잘 딱 깔끔하게 센스있게 하지만 짧게" />
 
     <ImageView

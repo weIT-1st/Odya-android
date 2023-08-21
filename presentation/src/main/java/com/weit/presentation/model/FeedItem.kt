@@ -1,4 +1,4 @@
-package com.weit.domain.model
+package com.weit.presentation.model
 
 sealed class FeedItem {
     data class CommunityItem(var title: String, var nickname: String) : FeedItem()

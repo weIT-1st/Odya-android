@@ -5,8 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.orhanobut.logger.Logger
-import com.weit.domain.model.MayKnowFriend
+import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.databinding.ItemMayknowFriendSummaryBinding
 
 class MayKnowFriendAdapter(

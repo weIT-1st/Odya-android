@@ -5,11 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.PopularSpot
-import com.weit.domain.model.place.PlacePrediction
+import com.weit.presentation.model.PopularSpot
 import com.weit.presentation.databinding.ItemPopularSpotSummaryBinding
-import com.weit.presentation.databinding.PlacePredictionItemBinding
-import java.util.*
 
 class PopularSpotAdapter(
 ) : ListAdapter<PopularSpot, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {

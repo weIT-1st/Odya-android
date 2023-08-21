@@ -61,7 +61,7 @@ class TopicRepositoryImpl @Inject constructor(
         }
     }
 
-    //이렇게 함수를 두개 만들어야 하나..
+    //이렇게 함수를 두개 만들어야 하는것인가..
     private fun handleDeleteTopicError(response: Response<*>): Throwable {
         return when (response.code()) {
             HTTP_BAD_REQUEST -> InvalidRequestException()

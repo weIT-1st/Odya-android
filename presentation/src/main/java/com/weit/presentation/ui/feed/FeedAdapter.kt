@@ -4,7 +4,7 @@ package com.weit.presentation.ui.feed
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.FeedItem
+import com.weit.presentation.model.FeedItem
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding

@@ -1,26 +1,21 @@
 package com.weit.presentation.ui.review
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentDialogCreateReviewBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ReviewFragment: DialogFragment() {
+class ReviewFragment : DialogFragment() {
 
     private val viewModel: ReviewViewModel by viewModels()
     private var _binding: FragmentDialogCreateReviewBinding? = null
@@ -34,21 +29,18 @@ class ReviewFragment: DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentDialogCreateReviewBinding.inflate(inflater, container, false)
-        return binding.run{
+        return binding.run {
             lifecycleOwner = viewLifecycleOwner
+            vm = viewModel
             root
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = viewModel
-        binding.lifecycleOwner = this
-        val tvCreateReviewStar = binding.tvCreateReviewStar
-        val tvCreateReviewDetail = binding.tvCreateReviewDetial
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
@@ -58,28 +50,30 @@ class ReviewFragment: DialogFragment() {
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.review.collectLatest { review ->
-                tvCreateReviewDetail.text = String.format(
-                    getString(R.string.create_review_detail), review.length
+                binding.tvCreateReviewDetial.text = String.format(
+                    getString(R.string.create_review_detail),
+                    review.length,
                 )
             }
         }
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.rating.collectLatest { rating ->
-                tvCreateReviewStar.text = String.format(
-                    getString(R.string.create_review_star), rating)
+                viewModel.setStar()
+                binding.tvCreateReviewStar.text = String.format(
+                    getString(R.string.create_review_star),
+                    rating,
+                )
             }
         }
 
-
-        binding.btnCreateReviewRegister.setOnClickListener{
+        binding.btnCreateReviewRegister.setOnClickListener {
             viewModel.registerPlaceReview()
         }
 
         binding.btnCreateReviewCancel.setOnClickListener {
             dismiss()
         }
-
     }
 
     override fun onDestroyView() {
@@ -87,8 +81,8 @@ class ReviewFragment: DialogFragment() {
         _binding = null
     }
 
-    private fun handleEvent(event: ReviewViewModel.Event){
-        when(event){
+    private fun handleEvent(event: ReviewViewModel.Event) {
+        when (event) {
             ReviewViewModel.Event.RegisrtationScuccess -> {
                 sendSnackBar("한줄 리뷰 성공")
             }
@@ -107,7 +101,7 @@ class ReviewFragment: DialogFragment() {
             ReviewViewModel.Event.TooManyStarError -> {
                 sendSnackBar("별점이 너무 커요")
             }
-            ReviewViewModel.Event.InvalidTokenError-> {
+            ReviewViewModel.Event.InvalidTokenError -> {
                 sendSnackBar("권한이 없어요")
             }
             ReviewViewModel.Event.UnregisteredError -> {

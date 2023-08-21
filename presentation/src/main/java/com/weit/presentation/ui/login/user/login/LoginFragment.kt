@@ -67,7 +67,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
     }
 
-    private fun showReviewDialog(){
-        activity?.supportFragmentManager?.let { ReviewFragment().show(it, "tag") }
+    private fun showReviewDialog() {
+        if (ReviewFragment().showsDialog) {
+            activity?.supportFragmentManager?.let { ReviewFragment().show(it, "tag") }
+        }
     }
 }

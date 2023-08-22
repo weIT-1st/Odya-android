@@ -38,7 +38,7 @@ class LoginInputUserInfoViewModel @Inject constructor(
     fun setBirth(year: Int, month: Int, day: Int) {
         viewModelScope.launch {
             birth = LocalDate.of(year, month + 1, day)
-            setBirthUsecase.invoke(birth)
+            setBirthUsecase(birth)
         }
     }
 
@@ -46,7 +46,7 @@ class LoginInputUserInfoViewModel @Inject constructor(
     fun setGender(genderType: GenderType) {
         viewModelScope.launch {
             gender = genderType
-            setGenderUsecase.invoke(gender)
+            setGenderUsecase(gender)
         }
     }
 

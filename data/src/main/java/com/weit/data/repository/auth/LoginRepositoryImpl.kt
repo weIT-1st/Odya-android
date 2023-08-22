@@ -126,8 +126,6 @@ class LoginRepositoryImpl @Inject constructor(
     }
     private fun getServerUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
 
-    private fun getUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
-
 
     private fun UserTokenDTO.toUserToken() = UserToken(token)
 }

@@ -116,7 +116,7 @@
             android:textColorHint="@color/label_inactive"
             android:inputType="text"
             android:text="@={vm.nickname}"
-            android:beforeTextChanged="@{() -> vm.setNickname()}"
+            android:onTextChanged="@{() -> vm.setNickname()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

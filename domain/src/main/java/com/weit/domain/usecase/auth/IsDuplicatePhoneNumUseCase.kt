@@ -7,13 +7,7 @@ class IsDuplicatePhoneNumUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
     suspend operator fun invoke(phoneNum: String): Boolean {
-        var IsDuplicate = false
 
-        authRepository.isDuplicatePhoneNum(phoneNum).onSuccess {
-            IsDuplicate = true
-        }.onFailure {
-            IsDuplicate = false
-        }
-        return IsDuplicate
+        return authRepository.isDuplicatePhoneNum(phoneNum).isFailure
     }
 }

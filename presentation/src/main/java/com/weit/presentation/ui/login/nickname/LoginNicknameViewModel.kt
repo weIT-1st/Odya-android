@@ -1,11 +1,15 @@
 package com.weit.presentation.ui.login.nickname
 
+import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.InvalidNicknameReason
 import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
+import com.weit.domain.usecase.userinfo.GetNicknameUsecase
 import com.weit.domain.usecase.userinfo.GetUsernameUsecase
 import com.weit.domain.usecase.userinfo.SetNicknameUsecase
+import com.weit.domain.usecase.userinfo.ValidateNicknameUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,9 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginNicknameViewModel @Inject constructor(
-    private val isDuplicateNicknameUseCase: IsDuplicateNicknameUseCase,
-    private val getUsernameUsecase: GetUsernameUsecase,
-    private val setNicknameUsecase: SetNicknameUsecase,
+    private val getUsernameUseCase: GetUsernameUsecase,
+    private val setNicknameUseCase: SetNicknameUsecase,
+    private val validateNicknameUseCase: ValidateNicknameUseCase
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
@@ -28,7 +32,7 @@ class LoginNicknameViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            getUsernameUsecase.invoke().onSuccess { it ->
+            getUsernameUseCase().onSuccess { it ->
                 if (it == null) {
                     _event.emit(Event.NullDefaultNickname)
                 } else {
@@ -41,42 +45,30 @@ class LoginNicknameViewModel @Inject constructor(
     @MainThread
     fun setNickname() {
         viewModelScope.launch {
-            isGoodNickname(nickname.value)
-            if (event.equals(Event.GoodNickname)) {
-                nickname.emit(nickname.value)
-                setNicknameUsecase.invoke(nickname.value)
+            val newNickname = nickname.value
+            if (handleIsGoodNickname(newNickname)){
+                setNicknameUseCase(newNickname)
             }
         }
     }
 
-    private fun isGoodNickname(newNickname: String) {
-        viewModelScope.launch {
-            val result = isDuplicateNicknameUseCase(newNickname)
-            handleIsGoodNickname(newNickname, result)
-        }
-    }
+    private suspend fun handleIsGoodNickname(newNickname: String): Boolean {
+        var result = false
 
-    private suspend fun handleIsGoodNickname(newNickname: String, isDuplicate: Boolean) {
-        if (hasSpecialChar(newNickname)) {
-            _event.emit(Event.HasSpecialChar)
-        } else {
-            if (newNickname.length < 2) {
-                _event.emit(Event.TooShortNickname)
-            } else if (newNickname.length > 9) {
-                _event.emit(Event.TooLongNickname)
-            } else {
-                if (isDuplicate) {
-                    _event.emit(Event.GoodNickname)
-                } else {
-                    _event.emit(Event.DuplicateNickname)
-                }
+        when (validateNicknameUseCase(newNickname)){
+            InvalidNicknameReason.GoodNickname -> { _event.emit(Event.GoodNickname)
+                result = true
             }
+            InvalidNicknameReason.IsDuplicateNickname -> _event.emit(Event.DuplicateNickname)
+            InvalidNicknameReason.TooLongNickname -> _event.emit(Event.TooLongNickname)
+            InvalidNicknameReason.TooShortNickname -> _event.emit(Event.TooShortNickname)
+            InvalidNicknameReason.HasSpecialChar -> _event.emit(Event.HasSpecialChar)
+            InvalidNicknameReason.UnknownReason -> _event.emit(Event.UnknownNickcname)
         }
+
+        return result
     }
 
-    private fun hasSpecialChar(newNickname: String): Boolean {
-        return Pattern.matches(REGEX_SPECIALCHAR, newNickname)
-    }
 
     sealed class Event {
         object NullDefaultNickname : Event()
@@ -85,9 +77,7 @@ class LoginNicknameViewModel @Inject constructor(
         object HasSpecialChar : Event()
         object DuplicateNickname : Event()
         object GoodNickname : Event()
+        object UnknownNickcname : Event()
     }
 
-    companion object {
-        private const val REGEX_SPECIALCHAR = "/[`~!@#\$%^&*|\'\";:/?]/gi"
-    }
 }

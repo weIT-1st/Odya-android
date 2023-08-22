@@ -57,6 +57,9 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
             LoginNicknameViewModel.Event.NullDefaultNickname -> {
                 sendSnackBar("새로운 닉네임을 입력하세요. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
             }
+            else -> {
+                sendSnackBar("새로운 닉네임을 입력하세요. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
+            }
         }
     }
 }

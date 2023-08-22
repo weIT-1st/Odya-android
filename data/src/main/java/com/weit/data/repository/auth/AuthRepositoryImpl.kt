@@ -3,11 +3,13 @@ package com.weit.data.repository.auth
 import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
+import com.weit.data.util.exception
 import com.weit.domain.model.auth.UserRegistrationInfo
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.exception.auth.InvalidSomethingException
-import com.weit.domain.model.exception.favoritePlace.InvalidRequestException
 import com.weit.domain.repository.auth.AuthRepository
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -15,7 +17,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
+import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -38,46 +43,41 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun isDuplicateNickname(nickname: String): Result<Unit> {
-        val result = runCatching {
-            authDataSource.isDuplicateNickname(nickname)
-        }
-        return if (result.isSuccess) {
+        val result = authDataSource.isDuplicateNickname(nickname)
+
+        return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
+            Result.failure(handleIsDuplicateError(result))
         }
     }
 
     override suspend fun isDuplicateEmail(email: String): Result<Unit> {
-        val result = runCatching {
-            authDataSource.isDuplicateEmail(email)
-        }
-        return if (result.isSuccess) {
+        val result = authDataSource.isDuplicateEmail(email)
+
+        return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
+            Result.failure(handleIsDuplicateError(result))
         }
     }
 
     override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> {
-        val result = runCatching {
-            authDataSource.isDuplicatePhoneNum(phoneNum)
-        }
-        return if (result.isSuccess) {
+        val result = authDataSource.isDuplicatePhoneNum(phoneNum)
+
+        return if (result.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(handleIsDuplicateError(result.exceptionOrNull()!!))
+            Result.failure(handleIsDuplicateError(result))
         }
     }
 
-    private fun handleIsDuplicateError(t: Throwable): Throwable {
-        return if (t is HttpException) {
-            when (t.code()) {
-                HTTP_BAD_REQUEST -> InvalidRequestException()
-                else -> UnKnownException()
-            }
-        } else {
-            t
+    private fun handleIsDuplicateError(response: Response<Unit>): Throwable {
+        return when(response.code()){
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
+            else -> UnKnownException()
         }
     }
 

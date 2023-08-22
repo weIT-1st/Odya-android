@@ -9,9 +9,10 @@ class GetGenderUsecase @Inject constructor(
 ) {
     suspend operator fun invoke(): GenderType {
         val result = userInfoRepository.getGender()
+        val genderType = result.getOrThrow()
 
         return if (result.isSuccess) {
-            GenderType.values().find { it.type == result.getOrThrow() } ?: GenderType.IDLE
+            GenderType.values().find { it.type == genderType } ?: GenderType.IDLE
         } else {
             GenderType.IDLE
         }

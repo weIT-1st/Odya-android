@@ -46,30 +46,45 @@ class AuthRepositoryImpl @Inject constructor(
     override suspend fun isDuplicateNickname(nickname: String): Result<Boolean> {
         val result = authDataSource.isDuplicateNickname(nickname)
 
-        return when{
-            result.isSuccessful -> Result.success(true)
-            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
-            else -> Result.failure(handleIsDuplicateError(result))
+        return if (result.isSuccessful) {
+            Result.success(true)
+        } else {
+            val handelError = handleIsDuplicateError(result)
+            if (handelError.equals(DuplicatedSomethingException())) {
+                Result.success(false)
+            } else {
+                Result.failure(handelError)
+            }
         }
     }
 
     override suspend fun isDuplicateEmail(email: String): Result<Boolean> {
         val result = authDataSource.isDuplicateEmail(email)
 
-        return when{
-            result.isSuccessful -> Result.success(true)
-            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
-            else -> Result.failure(handleIsDuplicateError(result))
+        return if (result.isSuccessful) {
+            Result.success(true)
+        } else {
+            val handelError = handleIsDuplicateError(result)
+            if (handelError.equals(DuplicatedSomethingException())) {
+                Result.success(false)
+            } else {
+                Result.failure(handelError)
+            }
         }
     }
 
     override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Boolean> {
         val result = authDataSource.isDuplicatePhoneNum(phoneNum)
 
-        return when{
-            result.isSuccessful -> Result.success(true)
-            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
-            else -> Result.failure(handleIsDuplicateError(result))
+        return if (result.isSuccessful) {
+            Result.success(true)
+        } else {
+            val handelError = handleIsDuplicateError(result)
+            if (handelError.equals(DuplicatedSomethingException())) {
+                Result.success(false)
+            } else {
+                Result.failure(handelError)
+            }
         }
     }
 

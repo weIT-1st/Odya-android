@@ -6,8 +6,6 @@ import javax.inject.Inject
 class IsDuplicateNicknameUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(nickname: String): Boolean {
-
-        return authRepository.isDuplicateNickname(nickname).isFailure
-    }
+    suspend operator fun invoke(nickname: String): Result<Unit> =
+        authRepository.isDuplicateNickname(nickname)
 }

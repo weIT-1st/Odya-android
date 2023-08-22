@@ -6,8 +6,6 @@ import javax.inject.Inject
 class IsDuplicatePhoneNumUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(phoneNum: String): Boolean {
-
-        return authRepository.isDuplicatePhoneNum(phoneNum).isFailure
-    }
+    suspend operator fun invoke(phoneNum: String): Result<Unit> =
+        authRepository.isDuplicatePhoneNum(phoneNum)
 }

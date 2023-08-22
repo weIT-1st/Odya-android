@@ -74,6 +74,7 @@ class AuthRepositoryImpl @Inject constructor(
 
     private fun handleIsDuplicateError(response: Response<Unit>): Throwable {
         return when(response.code()){
+            HTTP_CONFLICT -> DuplicatedSomethingException()
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()

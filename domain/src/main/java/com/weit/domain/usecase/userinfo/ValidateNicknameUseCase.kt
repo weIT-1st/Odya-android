@@ -1,6 +1,6 @@
 package com.weit.domain.usecase.userinfo
 
-import com.weit.domain.model.InvalidNicknameReason
+import com.weit.domain.model.NicknameState
 import com.weit.domain.repository.auth.AuthRepository
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -10,27 +10,18 @@ class ValidateNicknameUseCase @Inject constructor(
 ){
 
 
-    suspend operator fun invoke(nickname: String): InvalidNicknameReason {
+    suspend operator fun invoke(nickname: String): NicknameState {
         val isDuplicate = authRepository.isDuplicateNickname(nickname)
-        var invalidNicknameReason: InvalidNicknameReason = InvalidNicknameReason.UnknownReason
+        NicknameState.UnknownReason
 
-        if (hasSpecialChar(nickname)){
-            invalidNicknameReason = InvalidNicknameReason.HasSpecialChar
-        } else {
-            if (nickname.length < 2) {
-                invalidNicknameReason = InvalidNicknameReason.TooShortNickname
-            } else if (nickname.length > 9){
-                invalidNicknameReason = InvalidNicknameReason.TooLongNickname
-            } else {
-                if (isDuplicate.isSuccess){
-                    invalidNicknameReason = InvalidNicknameReason.GoodNickname
-                } else {
-                    invalidNicknameReason = InvalidNicknameReason.IsDuplicateNickname
-                }
-            }
+        return when {
+            hasSpecialChar((nickname)) -> NicknameState.HasSpecialChar
+            nickname.length < 2 -> NicknameState.TooShortNickname
+            nickname.length > 9 -> NicknameState.TooLongNickname
+            isDuplicate.isSuccess -> NicknameState.GoodNickname
+            isDuplicate.isFailure -> NicknameState.IsDuplicateNickname
+            else -> NicknameState.UnknownReason
         }
-
-        return invalidNicknameReason
     }
 
     private fun hasSpecialChar(newNickname: String): Boolean {

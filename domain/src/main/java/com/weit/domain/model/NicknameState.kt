@@ -1,6 +1,6 @@
 package com.weit.domain.model
 
-enum class InvalidNicknameReason {
+enum class NicknameState {
     HasSpecialChar,
     TooShortNickname,
     TooLongNickname,

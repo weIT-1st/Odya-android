@@ -1,12 +1,9 @@
 package com.weit.presentation.ui.login.nickname
 
-import android.util.Log
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.model.InvalidNicknameReason
-import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
-import com.weit.domain.usecase.userinfo.GetNicknameUsecase
+import com.weit.domain.model.NicknameState
 import com.weit.domain.usecase.userinfo.GetUsernameUsecase
 import com.weit.domain.usecase.userinfo.SetNicknameUsecase
 import com.weit.domain.usecase.userinfo.ValidateNicknameUseCase
@@ -15,7 +12,6 @@ import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,20 +49,18 @@ class LoginNicknameViewModel @Inject constructor(
     }
 
     private suspend fun handleIsGoodNickname(newNickname: String): Boolean {
-        var result = false
-
-        when (validateNicknameUseCase(newNickname)){
-            InvalidNicknameReason.GoodNickname -> { _event.emit(Event.GoodNickname)
-                result = true
-            }
-            InvalidNicknameReason.IsDuplicateNickname -> _event.emit(Event.DuplicateNickname)
-            InvalidNicknameReason.TooLongNickname -> _event.emit(Event.TooLongNickname)
-            InvalidNicknameReason.TooShortNickname -> _event.emit(Event.TooShortNickname)
-            InvalidNicknameReason.HasSpecialChar -> _event.emit(Event.HasSpecialChar)
-            InvalidNicknameReason.UnknownReason -> _event.emit(Event.UnknownNickcname)
+        val nicknameEvent = when (validateNicknameUseCase(newNickname)){
+            NicknameState.GoodNickname -> Event.GoodNickname
+            NicknameState.IsDuplicateNickname -> Event.DuplicateNickname
+            NicknameState.TooLongNickname -> Event.TooLongNickname
+            NicknameState.TooShortNickname -> Event.TooShortNickname
+            NicknameState.HasSpecialChar -> Event.HasSpecialChar
+            NicknameState.UnknownReason -> Event.UnknownNickname
         }
 
-        return result
+        _event.emit(nicknameEvent)
+
+        return event.equals(Event.GoodNickname)
     }
 
 
@@ -77,7 +71,7 @@ class LoginNicknameViewModel @Inject constructor(
         object HasSpecialChar : Event()
         object DuplicateNickname : Event()
         object GoodNickname : Event()
-        object UnknownNickcname : Event()
+        object UnknownNickname : Event()
     }
 
 }

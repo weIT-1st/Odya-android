@@ -4,6 +4,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
 import com.weit.data.util.exception
+import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
@@ -42,33 +43,33 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun isDuplicateNickname(nickname: String): Result<Unit> {
+    override suspend fun isDuplicateNickname(nickname: String): Result<Boolean> {
         val result = authDataSource.isDuplicateNickname(nickname)
 
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleIsDuplicateError(result))
+        return when{
+            result.isSuccessful -> Result.success(true)
+            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
+            else -> Result.failure(handleIsDuplicateError(result))
         }
     }
 
-    override suspend fun isDuplicateEmail(email: String): Result<Unit> {
+    override suspend fun isDuplicateEmail(email: String): Result<Boolean> {
         val result = authDataSource.isDuplicateEmail(email)
 
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleIsDuplicateError(result))
+        return when{
+            result.isSuccessful -> Result.success(true)
+            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
+            else -> Result.failure(handleIsDuplicateError(result))
         }
     }
 
-    override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Unit> {
+    override suspend fun isDuplicatePhoneNum(phoneNum: String): Result<Boolean> {
         val result = authDataSource.isDuplicatePhoneNum(phoneNum)
 
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleIsDuplicateError(result))
+        return when{
+            result.isSuccessful -> Result.success(true)
+            handleIsDuplicateError(result) == DuplicatedSomethingException() -> Result.success(false)
+            else -> Result.failure(handleIsDuplicateError(result))
         }
     }
 

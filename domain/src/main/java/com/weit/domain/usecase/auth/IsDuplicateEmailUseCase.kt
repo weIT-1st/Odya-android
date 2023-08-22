@@ -6,6 +6,6 @@ import javax.inject.Inject
 class IsDuplicateEmailUseCase @Inject constructor(
     private val authRepository: AuthRepository,
 ) {
-    suspend operator fun invoke(email: String): Result<Unit> =
+    suspend operator fun invoke(email: String): Result<Boolean> =
         authRepository.isDuplicateEmail(email)
 }

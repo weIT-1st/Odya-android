@@ -3,8 +3,6 @@ package com.weit.data.repository.auth
 import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.source.AuthDataSource
-import com.weit.data.util.exception
-import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
@@ -89,7 +87,7 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     private fun handleIsDuplicateError(response: Response<Unit>): Throwable {
-        return when(response.code()){
+        return when (response.code()) {
             HTTP_CONFLICT -> DuplicatedSomethingException()
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()

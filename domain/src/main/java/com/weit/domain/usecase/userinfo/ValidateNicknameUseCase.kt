@@ -6,9 +6,8 @@ import java.util.regex.Pattern
 import javax.inject.Inject
 
 class ValidateNicknameUseCase @Inject constructor(
-    private val authRepository: AuthRepository
-){
-
+    private val authRepository: AuthRepository,
+) {
 
     suspend operator fun invoke(nickname: String): NicknameState {
         val isDuplicate = authRepository.isDuplicateNickname(nickname)

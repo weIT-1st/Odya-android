@@ -7,9 +7,7 @@ import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.weit.presentation.R
@@ -64,7 +62,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
         binding.tvLoginBirthGender.text = spannableStringBuilder
     }
 
-    private fun genderDropbox(){
+    private fun genderDropbox() {
         val genders = resources.getStringArray(R.array.login_gender)
         val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_login_gender, genders)
         adapter.setDropDownViewResource(R.layout.dropdown_login_gender)

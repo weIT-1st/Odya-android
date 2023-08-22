@@ -118,14 +118,12 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-
     private fun setUsername(username: String) {
         CoroutineScope(Dispatchers.IO).launch {
             userNameDataSource.setUsername(username)
         }
     }
     private fun getServerUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
-
 
     private fun UserTokenDTO.toUserToken() = UserToken(token)
 }

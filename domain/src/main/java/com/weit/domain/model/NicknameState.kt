@@ -6,5 +6,5 @@ enum class NicknameState {
     TooLongNickname,
     IsDuplicateNickname,
     GoodNickname,
-    UnknownReason
+    UnknownReason,
 }

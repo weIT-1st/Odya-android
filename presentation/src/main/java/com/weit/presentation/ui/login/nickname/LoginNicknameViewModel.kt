@@ -18,7 +18,7 @@ import javax.inject.Inject
 class LoginNicknameViewModel @Inject constructor(
     private val getUsernameUseCase: GetUsernameUsecase,
     private val setNicknameUseCase: SetNicknameUsecase,
-    private val validateNicknameUseCase: ValidateNicknameUseCase
+    private val validateNicknameUseCase: ValidateNicknameUseCase,
 ) : ViewModel() {
 
     val nickname = MutableStateFlow("")
@@ -42,14 +42,14 @@ class LoginNicknameViewModel @Inject constructor(
     fun setNickname() {
         viewModelScope.launch {
             val newNickname = nickname.value
-            if (handleIsGoodNickname(newNickname)){
+            if (handleIsGoodNickname(newNickname)) {
                 setNicknameUseCase(newNickname)
             }
         }
     }
 
     private suspend fun handleIsGoodNickname(newNickname: String): Boolean {
-        val nicknameEvent = when (validateNicknameUseCase(newNickname)){
+        val nicknameEvent = when (validateNicknameUseCase(newNickname)) {
             NicknameState.GoodNickname -> Event.GoodNickname
             NicknameState.IsDuplicateNickname -> Event.DuplicateNickname
             NicknameState.TooLongNickname -> Event.TooLongNickname
@@ -63,7 +63,6 @@ class LoginNicknameViewModel @Inject constructor(
         return event.equals(Event.GoodNickname)
     }
 
-
     sealed class Event {
         object NullDefaultNickname : Event()
         object TooShortNickname : Event()
@@ -73,5 +72,4 @@ class LoginNicknameViewModel @Inject constructor(
         object GoodNickname : Event()
         object UnknownNickname : Event()
     }
-
 }

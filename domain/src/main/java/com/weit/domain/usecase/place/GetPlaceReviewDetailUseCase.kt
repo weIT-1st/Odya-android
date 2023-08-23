@@ -13,7 +13,7 @@ class GetPlaceReviewDetailUseCase @Inject constructor(
 
     suspend operator fun invoke(placeId: String): String {
         val isExistReview = placeReviewRepository.isExistReview(placeId).getOrNull()
-        val getUserId = userRepository.getUser().getOrNull()?.userID
+        val getUserId = userRepository.getUser().getOrNull()?.userId
         var result = ""
 
         if (isExistReview == true && getUserId != null) {

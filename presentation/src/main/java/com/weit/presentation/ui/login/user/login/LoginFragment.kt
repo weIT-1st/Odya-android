@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.login.user.login
 
 import android.content.Intent
+import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
@@ -37,9 +38,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnEditReview.setOnClickListener {
             editReviewDialog()
 
-        binding.btnToLoginStep.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
-            findNavController().navigate(action)
+            binding.btnToLoginStep.setOnClickListener {
+                val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -77,16 +79,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     }
 
     private fun createReviewDialog() {
-        val createReview = CreatePlaceReviewFragment()
-        if (createReview.showsDialog) {
-            createReview.show(childFragmentManager, "CreateReview")
+        val dialog = CreatePlaceReviewFragment()
+        if (!(dialog.dialog != null && dialog.dialog!!.isShowing && !dialog.isRemoving)) {
+            dialog.show(childFragmentManager, "CreateReview")
         }
     }
 
     private fun editReviewDialog() {
-        val editReview = EditPlaceReviewFragment()
-        if (editReview.showsDialog) {
-            editReview.show(childFragmentManager, "EditReview")
+        val dialog = EditPlaceReviewFragment()
+        if ((dialog.dialog != null && dialog.dialog!!.isShowing && !dialog.isRemoving)
+        ) {
+            dialog.show(childFragmentManager, "EditReview")
         }
     }
 }

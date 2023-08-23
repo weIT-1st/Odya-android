@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="profile"
+            type="com.weit.domain.model.user.UserProfile" />
+    </data>
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        app:image_uri="@{profile.url}"
+        app:profile_background="@{profile}"
+        app:shapeAppearance="@style/ShapeableImageViewCircle"
+        tools:src="@tools:sample/avatars"/>
+</layout>

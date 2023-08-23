@@ -18,6 +18,7 @@ import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
+import com.weit.data.source.PermissionDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.UserDataSource
 import com.weit.domain.repository.coordinate.CoordinateRepository
@@ -127,8 +128,10 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideUserDataSource(userService: UserService): UserDataSource =
-        UserDataSource(userService)
+    fun provideUserDataSource(
+        @ApplicationContext context: Context,
+        userService: UserService,
+    ): UserDataSource = UserDataSource(context, userService)
 
     @ActivityRetainedScoped
     @Provides
@@ -138,4 +141,9 @@ class MainModule {
         imageRepositoryImpl: ImageRepositoryImpl,
     ): UserRepository =
         UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun providePermissionDataSource(): PermissionDataSource =
+        PermissionDataSource()
 }

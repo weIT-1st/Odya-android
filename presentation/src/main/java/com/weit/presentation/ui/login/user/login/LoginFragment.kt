@@ -30,11 +30,16 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnToMain.setOnClickListener {
             moveToMain()
         }
+
         binding.btnCreateReview.setOnClickListener {
             createReviewDialog()
         }
         binding.btnEditReview.setOnClickListener {
             editReviewDialog()
+
+        binding.btnToLoginStep.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
+            findNavController().navigate(action)
         }
     }
 

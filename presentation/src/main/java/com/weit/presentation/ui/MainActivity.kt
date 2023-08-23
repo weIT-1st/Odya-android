@@ -3,8 +3,9 @@ package com.weit.presentation.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
@@ -22,6 +23,17 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     @Inject
     lateinit var verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase
+
+    private val destinationChangedListener =
+        NavController.OnDestinationChangedListener { _, destination, _ ->
+            setBottomNavigationVisibility(destination)
+        }
+
+    private val exceptBottomNavigationSet = hashSetOf(
+        R.id.postTravelLogFragment,
+        R.id.travelFriendFragment,
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
@@ -33,11 +45,21 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .findFragmentById(R.id.navigation_main) as NavHostFragment? ?: return
         navController = host.navController
         binding.bottomNavigationView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener(destinationChangedListener)
+    }
+
+    private fun setBottomNavigationVisibility(destination: NavDestination) {
+        binding.bottomNavigationView.isVisible = exceptBottomNavigationSet.contains(destination.id).not()
     }
 
     override fun onStart() {
         super.onStart()
         val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
         stopService(serviceIntent)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navController.removeOnDestinationChangedListener(destinationChangedListener)
     }
 }

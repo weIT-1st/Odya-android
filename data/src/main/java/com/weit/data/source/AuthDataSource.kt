@@ -14,6 +14,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import retrofit2.Response
 import javax.inject.Inject
 
 class AuthDataSource @Inject constructor(
@@ -53,6 +54,14 @@ class AuthDataSource @Inject constructor(
     fun getFirebaseToken(): String =
         auth.currentUser?.getIdToken(false)?.result?.token ?: throw TokenNotFoundException()
 
+    suspend fun isDuplicateNickname(nickname: String): Response<Unit> =
+        service.isDuplicateNickname(nickname)
+
+    suspend fun isDuplicateEmail(email: String): Response<Unit> =
+        service.isDuplicateEmail(email)
+
+    suspend fun isDuplicatePhoneNum(phoneNum: String): Response<Unit> =
+        service.isDuplicatePhonNumber(phoneNum)
     fun checkLogin(): Boolean {
         val user = auth.currentUser
         return user != null

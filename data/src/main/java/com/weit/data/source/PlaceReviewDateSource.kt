@@ -6,18 +6,19 @@ import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.PlaceReviewService
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
+import retrofit2.Response
 import javax.inject.Inject
 
 class PlaceReviewDateSource @Inject constructor(
     private val service: PlaceReviewService,
 ) {
 
-    suspend fun register(placeReviewRegistration: PlaceReviewRegistration) {
-        service.register(placeReviewRegistration)
+    suspend fun register(placeReviewRegistration: PlaceReviewRegistration): Response<Unit> {
+        return service.register(placeReviewRegistration)
     }
 
-    suspend fun update(placeReviewModification: PlaceReviewModification) {
-        service.update(placeReviewModification)
+    suspend fun update(placeReviewModification: PlaceReviewModification): Response<Unit> {
+        return service.update(placeReviewModification)
     }
 
     suspend fun delete(placeReviewId: Long) {

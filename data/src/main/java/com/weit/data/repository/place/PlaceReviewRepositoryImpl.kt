@@ -3,12 +3,21 @@ package com.weit.data.repository.place
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
+import okhttp3.internal.http.HTTP_ALREADY_REPORTED
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_FORBIDDEN
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.Response
 import javax.inject.Inject
 
 class PlaceReviewRepositoryImpl @Inject constructor(
@@ -16,14 +25,20 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 ) : PlaceReviewRepository {
 
     override suspend fun register(info: PlaceReviewRegistrationInfo): Result<Unit> {
-        return runCatching {
-            dataSource.register(info.toPlaceReviewRegistraion())
+        val response = dataSource.register(info.toPlaceReviewRegistraion())
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleReviewError(response))
         }
     }
 
     override suspend fun update(info: PlaceReviewUpdateInfo): Result<Unit> {
-        return runCatching {
-            dataSource.update(info.toPlaceReviewModification())
+        val response = dataSource.update(info.toPlaceReviewModification())
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleReviewError(response))
         }
     }
 
@@ -76,4 +91,14 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             rating = rating,
             review = review,
         )
+
+    private fun handleReviewError(response: Response<*>): Throwable {
+        return when (response.code()) {
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_ALREADY_REPORTED -> DuplicatedSomethingException()
+//            HTTP_FORBIDDEN -> NotHavePermissionException()
+            else -> UnKnownException()
+        }
+    }
 }

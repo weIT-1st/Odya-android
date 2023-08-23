@@ -2,12 +2,16 @@ package com.weit.presentation.ui.review
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
@@ -27,37 +31,42 @@ class ReviewViewModel @Inject constructor(
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
-    fun registerPlaceReview() {
-        val job = viewModelScope.launch {
+    private var job: Job = Job().apply { cancel() }
+
+    fun registerPlaceReview(){
+        if (job.isCompleted){
+            registerReview()
+        }
+    }
+
+    private fun registerReview() {
+        var job = viewModelScope.launch {
             if (checkRegistrationCondition()) {
                 val placeReviewRegistrationInfo = PlaceReviewRegistrationInfo(placeId, (rating.value * 2).toInt(), review.value)
                 val result = registerPlaceReviewUseCase(placeReviewRegistrationInfo)
                 handleRegistrationResult(result)
             }
         }
-
-        runBlocking {
-            job.join()
-        }
     }
 
     private suspend fun handleRegistrationResult(result: Result<Unit>) {
         if (result.isSuccess) {
-            _event.emit(Event.RegisrtationScuccess)
+            _event.emit(Event.RegistrationSuccess)
         } else {
             handleRegistrationError(result.exceptionOrNull() ?: UnKnownException())
         }
     }
 
     private suspend fun handleRegistrationError(error: Throwable) {
-        when (error.message) {
-            "-10006" -> _event.emit(Event.IsDuplicatedReviewError)
-            "-11000" -> _event.emit(Event.InvalidTokenError)
+        when (error) {
+            is InvalidTokenException -> _event.emit(Event.InvalidTokenError)
+            is DuplicatedSomethingException -> _event.emit(Event.IsDuplicatedReviewError)
+            else -> _event.emit(Event.UnknownError)
         }
     }
 
-    suspend fun setStar() {
-        if (rating.value < 0.5F) {
+    suspend fun setStar(newRating: Float) {
+        if (newRating < 0.5F) {
             rating.emit(0.5F)
         }
     }
@@ -87,7 +96,7 @@ class ReviewViewModel @Inject constructor(
     }
 
     sealed class Event {
-        object RegisrtationScuccess : Event()
+        object RegistrationSuccess : Event()
         object NotEnoughStarError : Event()
         object TooManyStarError : Event()
         object TooShortReviewError : Event()
@@ -95,5 +104,6 @@ class ReviewViewModel @Inject constructor(
         object UnregisteredError : Event()
         object IsDuplicatedReviewError : Event()
         object InvalidTokenError : Event()
+        object UnknownError : Event()
     }
 }

@@ -19,7 +19,7 @@
             android:id="@+id/tv_create_review_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
+            style="@style/h5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:text="@string/create_review_title"
@@ -51,7 +51,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_create_review_star"/>
 
         <TextView
-            android:id="@+id/tv_create_review_detial"
+            android:id="@+id/tv_create_review_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/detail2"
@@ -73,7 +73,7 @@
             android:padding="8dp"
             android:maxLength="30"
             android:text="@={vm.review}"
-            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_detial"
+            app:layout_constraintTop_toBottomOf="@+id/tv_create_review_detail"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             />
@@ -108,7 +108,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_create_review_cancel"
             />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

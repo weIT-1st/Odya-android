@@ -59,7 +59,7 @@ class ReviewFragment : DialogFragment() {
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.rating.collectLatest { rating ->
-                viewModel.setStar()
+                viewModel.setStar(rating)
                 binding.tvCreateReviewStar.text = String.format(
                     getString(R.string.create_review_star),
                     rating,
@@ -83,7 +83,7 @@ class ReviewFragment : DialogFragment() {
 
     private fun handleEvent(event: ReviewViewModel.Event) {
         when (event) {
-            ReviewViewModel.Event.RegisrtationScuccess -> {
+            ReviewViewModel.Event.RegistrationSuccess -> {
                 sendSnackBar("한줄 리뷰 성공")
             }
             ReviewViewModel.Event.TooLongReviewError -> {
@@ -107,6 +107,7 @@ class ReviewFragment : DialogFragment() {
             ReviewViewModel.Event.UnregisteredError -> {
                 sendSnackBar("로그인 하세요")
             }
+            else -> {}
         }
     }
 

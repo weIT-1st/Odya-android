@@ -3,6 +3,7 @@ package com.weit.data.service
 import com.weit.data.model.place.PlaceReviewListDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -16,12 +17,12 @@ interface PlaceReviewService {
     @POST("/api/v1/place-reviews")
     suspend fun register(
         @Body placeReviewRegistration: PlaceReviewRegistration,
-    )
+    ): Response<Unit>
 
     @PATCH("/api/v1/place-reviews")
     suspend fun update(
         @Body placeReviewModification: PlaceReviewModification,
-    )
+    ): Response<Unit>
 
     @DELETE("/api/v1/place-reviews/{id}")
     suspend fun delete(

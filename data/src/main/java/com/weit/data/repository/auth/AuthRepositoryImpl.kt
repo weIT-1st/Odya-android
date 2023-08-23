@@ -48,7 +48,7 @@ class AuthRepositoryImpl @Inject constructor(
             Result.success(true)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
+            if (handelError is DuplicatedSomethingException) {
                 Result.success(false)
             } else {
                 Result.failure(handelError)
@@ -63,7 +63,7 @@ class AuthRepositoryImpl @Inject constructor(
             Result.success(true)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
+            if (handelError is DuplicatedSomethingException) {
                 Result.success(false)
             } else {
                 Result.failure(handelError)
@@ -78,7 +78,7 @@ class AuthRepositoryImpl @Inject constructor(
             Result.success(true)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
+            if (handelError is DuplicatedSomethingException) {
                 Result.success(false)
             } else {
                 Result.failure(handelError)

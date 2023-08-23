@@ -1,5 +1,7 @@
 package com.weit.data.source
 
+import com.weit.data.model.place.IsExistPlaceReviewDTO
+import com.weit.data.model.place.PlaceReviewCountDTO
 import com.weit.data.model.place.PlaceReviewListDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
@@ -40,4 +42,11 @@ class PlaceReviewDateSource @Inject constructor(
             sortType = info.sortType,
             lastPlaceReviewId = info.lastPlaceReviewId,
         )
+    suspend fun isExistReview(placeId: String): Response<IsExistPlaceReviewDTO> {
+        return service.isExistReview(placeId)
+    }
+
+    suspend fun getReviewCount(placeId: String): Response<PlaceReviewCountDTO> {
+        return service.getReviewCount(placeId)
+    }
 }

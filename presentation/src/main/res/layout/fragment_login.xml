@@ -27,11 +27,20 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <Button
-            android:id="@+id/btn_review"
+            android:id="@+id/btn_create_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="한줄리뷰"
-            tools:layout_editor_absoluteX="138dp"
-            tools:layout_editor_absoluteY="431dp" />
+            android:text="리뷰생성"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <Button
+            android:id="@+id/btn_edit_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="한줄수정"
+            app:layout_constraintStart_toEndOf="@+id/btn_create_review"
+            app:layout_constraintTop_toTopOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

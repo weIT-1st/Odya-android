@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.review
+package com.weit.presentation.ui.placereview.create
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,9 +15,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class ReviewFragment : DialogFragment() {
+class CreatePlaceReviewFragment : DialogFragment() {
 
-    private val viewModel: ReviewViewModel by viewModels()
+    private val viewModel: CreatePlaceReviewViewModel by viewModels()
     private var _binding: FragmentDialogCreateReviewBinding? = null
     private val binding get() = _binding!!
 
@@ -50,9 +50,9 @@ class ReviewFragment : DialogFragment() {
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.review.collectLatest { review ->
-                binding.tvCreateReviewDetial.text = String.format(
-                    getString(R.string.create_review_detail),
-                    review.length,
+                binding.tvCreateReviewDetail.text = String.format(
+                    getString(R.string.review_detail),
+                    review.length
                 )
             }
         }
@@ -61,7 +61,7 @@ class ReviewFragment : DialogFragment() {
             viewModel.rating.collectLatest { rating ->
                 viewModel.setStar(rating)
                 binding.tvCreateReviewStar.text = String.format(
-                    getString(R.string.create_review_star),
+                    getString(R.string.review_star),
                     rating,
                 )
             }
@@ -81,30 +81,30 @@ class ReviewFragment : DialogFragment() {
         _binding = null
     }
 
-    private fun handleEvent(event: ReviewViewModel.Event) {
+    private fun handleEvent(event: CreatePlaceReviewViewModel.Event) {
         when (event) {
-            ReviewViewModel.Event.RegistrationSuccess -> {
+            CreatePlaceReviewViewModel.Event.RegistrationSuccess -> {
                 sendSnackBar("한줄 리뷰 성공")
             }
-            ReviewViewModel.Event.TooLongReviewError -> {
+            CreatePlaceReviewViewModel.Event.TooLongReviewError -> {
                 sendSnackBar("리뷰가 너무 길어요")
             }
-            ReviewViewModel.Event.TooShortReviewError -> {
+            CreatePlaceReviewViewModel.Event.TooShortReviewError -> {
                 sendSnackBar("리뷰를 입력하세요")
             }
-            ReviewViewModel.Event.IsDuplicatedReviewError -> {
+            CreatePlaceReviewViewModel.Event.IsDuplicatedReviewError -> {
                 sendSnackBar("중복된 리뷰 이빈다.")
             }
-            ReviewViewModel.Event.NotEnoughStarError -> {
+            CreatePlaceReviewViewModel.Event.NotEnoughStarError -> {
                 sendSnackBar("별점을 입력하세요")
             }
-            ReviewViewModel.Event.TooManyStarError -> {
+            CreatePlaceReviewViewModel.Event.TooManyStarError -> {
                 sendSnackBar("별점이 너무 커요")
             }
-            ReviewViewModel.Event.InvalidTokenError -> {
+            CreatePlaceReviewViewModel.Event.InvalidTokenError -> {
                 sendSnackBar("권한이 없어요")
             }
-            ReviewViewModel.Event.UnregisteredError -> {
+            CreatePlaceReviewViewModel.Event.UnregisteredError -> {
                 sendSnackBar("로그인 하세요")
             }
             else -> {}

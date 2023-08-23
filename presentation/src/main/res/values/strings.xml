@@ -34,10 +34,12 @@
 
     <!--  review  -->
     <string name="create_review_title">리뷰 작성</string>
-    <string name="create_review_star">별점 등록(%.1f/5)</string>
-    <string name="create_review_detail">리뷰 내용(%d/30)</string>
-    <string name="create_review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
-    <string name="create_review_cancel">취소</string>
+    <string name="edit_review_title">리뷰 수정</string>
+    <string name="review_star">별점 등록(%.1f/5)</string>
+    <string name="review_detail">리뷰 내용(%d/30)</string>
+    <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
+    <string name="review_cancel">취소</string>
     <string name="create_review_register">등록하기</string>
+    <string name="edit_review_register">수정하기</string>
 
 </resources>

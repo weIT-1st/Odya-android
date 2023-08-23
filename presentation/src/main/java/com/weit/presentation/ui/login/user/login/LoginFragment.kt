@@ -7,7 +7,8 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.review.ReviewFragment
+import com.weit.presentation.ui.placereview.create.CreatePlaceReviewFragment
+import com.weit.presentation.ui.placereview.edit.EditPlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -29,8 +30,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnToMain.setOnClickListener {
             moveToMain()
         }
-        binding.btnReview.setOnClickListener {
-            showReviewDialog()
+        binding.btnCreateReview.setOnClickListener {
+            createReviewDialog()
+        }
+        binding.btnEditReview.setOnClickListener {
+            editReviewDialog()
         }
     }
 
@@ -67,9 +71,17 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
     }
 
-    private fun showReviewDialog() {
-        if (ReviewFragment().showsDialog) {
-            activity?.supportFragmentManager?.let { ReviewFragment().show(it, "tag") }
+    private fun createReviewDialog() {
+        val createReview = CreatePlaceReviewFragment()
+        if (createReview.showsDialog) {
+            createReview.show(childFragmentManager, "CreateReview")
+        }
+    }
+
+    private fun editReviewDialog() {
+        val editReview = EditPlaceReviewFragment()
+        if (editReview.showsDialog) {
+            editReview.show(childFragmentManager, "EditReview")
         }
     }
 }

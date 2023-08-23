@@ -78,6 +78,27 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun isExistReview(placeId: String): Result<Boolean> {
+        val response = dataSource.isExistReview(placeId)
+
+         return if (response.isSuccessful){
+            Result.success(response.body()!!.isExist)
+        } else {
+            Result.failure(handleReviewError(response))
+        }
+    }
+
+    override suspend fun getReviewCount(placeId: String): Result<Int> {
+        val response = dataSource.getReviewCount(placeId)
+
+        return if (response.isSuccessful){
+            Result.success(response.body()!!.count)
+        } else {
+            Result.failure(handleReviewError(response))
+        }
+    }
+
+
     private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
         PlaceReviewRegistration(
             placeId = placeId,

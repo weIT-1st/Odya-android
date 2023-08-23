@@ -1,28 +1,31 @@
-package com.weit.presentation.ui.review
+package com.weit.presentation.ui.placereview.edit
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
+import com.weit.domain.model.place.PlaceReviewUpdateInfo
+import com.weit.domain.usecase.place.GetPlaceReviewDetailUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
+import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class ReviewViewModel @Inject constructor(
-    private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
+class EditPlaceReviewViewModel @Inject constructor(
+    private val updatePlaceReviewUseCase: UpdatePlaceReviewUseCase,
+    private val getPlaceReviewDetailUseCase: GetPlaceReviewDetailUseCase
 ) : ViewModel() {
-    private val placeId: String = ""
+    private var placeReviewId: Long = 0L
+    private var placeId: String = ""
+    var existReview: String = ""
 
     val rating = MutableStateFlow(0F)
 
@@ -33,17 +36,33 @@ class ReviewViewModel @Inject constructor(
 
     private var job: Job = Job().apply { cancel() }
 
-    fun registerPlaceReview(){
-        if (job.isCompleted){
-            registerReview()
+    init {
+        getPlaceId()
+        getPlaceReviewId()
+        viewModelScope.launch {
+            existReview = getPlaceReviewDetailUseCase(placeId)
         }
     }
 
-    private fun registerReview() {
-        var job = viewModelScope.launch {
+    private fun getPlaceId(){
+
+    }
+
+    private fun getPlaceReviewId(){
+
+    }
+
+    fun updatePlaceReview(){
+        if (job.isCompleted){
+            updateReview()
+        }
+    }
+
+    private fun updateReview() {
+        job = viewModelScope.launch {
             if (checkRegistrationCondition()) {
-                val placeReviewRegistrationInfo = PlaceReviewRegistrationInfo(placeId, (rating.value * 2).toInt(), review.value)
-                val result = registerPlaceReviewUseCase(placeReviewRegistrationInfo)
+                val placeReviewRegistrationInfo = PlaceReviewUpdateInfo(placeReviewId, (rating.value * 2).toInt(), review.value)
+                val result = updatePlaceReviewUseCase(placeReviewRegistrationInfo)
                 handleRegistrationResult(result)
             }
         }

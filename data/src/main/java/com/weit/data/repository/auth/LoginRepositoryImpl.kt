@@ -7,6 +7,7 @@ import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO
 import com.weit.data.source.AuthDataSource
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.model.auth.UserToken
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.NeedUserRegistrationException
@@ -29,6 +30,7 @@ import javax.inject.Inject
 class LoginRepositoryImpl @Inject constructor(
     private val context: Context,
     private val authDataSource: AuthDataSource,
+    private val userNameDataSource: UserInfoDataSource,
 ) : LoginRepository {
     override suspend fun loginWithKakao(): Result<Unit> {
         // TODO 유효 토큰 검사 후 자동 로그인
@@ -104,7 +106,9 @@ class LoginRepositoryImpl @Inject constructor(
             when (t.code()) {
                 HTTP_UNAUTHORIZED -> {
                     val message = t.response()?.errorBody()?.string().toString()
-                    NeedUserRegistrationException(getUsername(message))
+                    val username = getServerUsername(message)
+                    setUsername(username)
+                    NeedUserRegistrationException(username)
                 }
                 HTTP_INTERNAL_SERVER_ERROR -> ServerLoginFailedException()
                 else -> UnKnownException()
@@ -114,7 +118,12 @@ class LoginRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun getUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
+    private fun setUsername(username: String) {
+        CoroutineScope(Dispatchers.IO).launch {
+            userNameDataSource.setUsername(username)
+        }
+    }
+    private fun getServerUsername(message: String): String = JSONObject(message).getJSONObject("data")["username"].toString()
 
     private fun UserTokenDTO.toUserToken() = UserToken(token)
 }

@@ -4,8 +4,25 @@
     <string name="error_api_key" translatable="false">No API key</string>
     <string name="search_a_place">Search for a Place</string>
 
-    <!-- login_activity -->
+    <!-- login -->
+    <string name="go_back_step">뒤로가기</string>
+    <string name="go_next_step">건너뛰기</string>
+    <string name="login_consent_app">앱 수집 권한 동의</string>
+    <string name="login_consent_privacy">개인정보 이용 동의</string>
+    <string name="login_consent_all">전체 동의</string>
+    <string name="login_start_odya">오댜 시작하기</string>
     <string name="text_login_kakao">카카오로 로그인</string>
+    <string name="login_what_name">오댜에서 활동할\n이름을 알려주세요!</string>
+    <string name="login_name_hint">홍길동</string>
+    <string name="login_random_name">랜덤 닉네임</string>
+    <string name="login_who_you">%s님이\n궁금해요!</string>
+    <string name="login_birth_gender"></string>
+    <string name="login_birth_hint">생년월일</string>
+    <string name="login_gender_hint">성별</string>
+    <string-array name="login_gender">
+        <item>남성</item>
+        <item>여성</item>
+    </string-array>
 
 
     <string name="text_home">홈</string>
@@ -16,7 +33,7 @@
     <string name="edit_text_birth">%1d년 %2d월 %3d일</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    
+
     <!-- myinfo_friend -->
     <string name="myinfo_friend_title">친구 관리</string>
     <string name="follower">팔로워</string>

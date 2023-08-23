@@ -92,7 +92,6 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 viewModel.onSelectPictures(action.position, pickImageUseCase)
             }
             is DailyTravelLogAction.OnSelectPlace -> {
-
             }
             is DailyTravelLogAction.OnDeleteDailyTravelLog -> {
                 viewModel.onDeleteDailyTravelLog(action.position)

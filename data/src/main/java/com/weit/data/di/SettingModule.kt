@@ -27,8 +27,7 @@ class SettingModule {
     fun provideSettingDataSource(
         powermanager: PowerManager,
         @ActivityContext context: Context,
-    ): SettingDataSource =
-        SettingDataSource(powermanager, context)
+    ): SettingDataSource = SettingDataSource(powermanager, context)
 
     @ActivityScoped
     @Provides

@@ -59,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="13dp"
-        android:src="@drawable/ic_direction"
+        android:src="@drawable/ic_direction_right"
         app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
         app:layout_constraintEnd_toEndOf="@+id/view_community_title"
         app:layout_constraintTop_toTopOf="@+id/view_community_title" />
@@ -92,17 +92,17 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_community_nickname"
         style="@style/body1"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textColor="?attr/colorOnSurface"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
         app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
         app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        app:layout_constraintWidth_max="wrap"
         tools:text="닉네임을 최대한 짧게 하도록 하세요 알겠습니까?" />
 
     <ImageView
@@ -122,15 +122,15 @@
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
         android:textColor="@color/label_assistive"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
         app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        app:layout_constraintWidth_max="wrap"
         tools:text="·" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_community_datetime"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="20dp"
         android:layout_marginStart="4dp"
         android:ellipsize="end"
@@ -138,12 +138,12 @@
         android:textColor="@color/label_assistive"
         android:textSize="12dp"
         android:textStyle="bold"
+        app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
         app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
         app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        app:layout_constraintWidth_max="wrap"
         tools:text="2일전" />
 
     <ToggleButton

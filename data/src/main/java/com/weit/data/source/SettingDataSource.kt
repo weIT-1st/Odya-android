@@ -15,8 +15,10 @@ class SettingDataSource @Inject constructor(
         val packageName = context.packageName
         if (!pm.isIgnoringBatteryOptimizations(packageName)) {
             val intent = Intent()
-            intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
-            intent.data = Uri.parse("package:$packageName")
+            intent.apply {
+                action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                data = Uri.parse("package:$packageName")
+            }
             context.startActivity(intent)
         }
     }

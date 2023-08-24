@@ -6,5 +6,5 @@ import javax.inject.Inject
 class VerifyNotificationSettingUseCase @Inject constructor(
     private val settingRepository: SettingRepository,
 ) {
-    operator fun invoke() = settingRepository.verifyNotificationSetting()
+    suspend operator fun invoke() = settingRepository.verifyNotificationSetting()
 }

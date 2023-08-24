@@ -7,4 +7,6 @@ interface PlaceRepository {
     suspend fun searchPlace(query: String): List<PlacePrediction>
 
     suspend fun getPlaceDetail(placeId: String): PlaceDetail
+
+    suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): List<PlacePrediction>
 }

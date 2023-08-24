@@ -17,7 +17,7 @@ object FollowModule {
 
     @Singleton
     @Provides
-    fun provideFollowService(retrofit: Retrofit): FollowService =
+    fun provideFollowService(@AuthNetworkObject retrofit: Retrofit): FollowService =
         retrofit.create(FollowService::class.java)
 
     @Singleton

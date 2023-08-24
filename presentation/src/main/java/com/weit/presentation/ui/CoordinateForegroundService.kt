@@ -18,6 +18,7 @@ import com.weit.presentation.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -30,12 +31,16 @@ class CoordinateForegroundService : Service() {
     @Inject
     lateinit var insertCoordinateUseCase: InsertCoordinateUseCase
 
+    private var traceJob: Job = Job()
+    private var insertJob: Job = Job()
+
     companion object {
         private const val NOTIFICATION_ID = 123
         private const val CHANNEL_ID = "CoordinateChannel"
         private const val MIN_TIME_BETWEEN_UPDATES: Long = 5000
         private const val MIN_DISTANCE_CHANGE_FOR_UPDATES: Float = 2f
     }
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         createNotificationChannel()
@@ -57,19 +62,18 @@ class CoordinateForegroundService : Service() {
 
         startForeground(NOTIFICATION_ID, notification)
 
-        CoroutineScope(Dispatchers.Main).launch {
-            val result = trackLocation()
+        traceJob = CoroutineScope(Dispatchers.Main).launch {
+            val result = trackLocation(this@CoordinateForegroundService)
             result.collect {
-                insertCoordinateUseCase(it.latitude.toFloat(), it.longitude.toFloat())
+                insertCoordinateDB(it)
             }
         }
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
-    private fun trackLocation(): Flow<Location> = callbackFlow {
-        val locationManager: LocationManager by lazy {
+    private fun trackLocation(context: Context): Flow<Location> = callbackFlow {
+        val locationManager: LocationManager =
             getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        }
 
         val locationListener: LocationListener = object : LocationListener {
             override fun onLocationChanged(location: Location) {
@@ -99,6 +103,12 @@ class CoordinateForegroundService : Service() {
         awaitClose { locationManager.removeUpdates(locationListener) }
     }
 
+    private fun insertCoordinateDB(location: Location) {
+        insertJob = CoroutineScope(Dispatchers.IO).launch {
+            insertCoordinateUseCase(location.latitude.toFloat(), location.longitude.toFloat())
+        }
+    }
+
     override fun onBind(intent: Intent): IBinder? {
         return null
     }
@@ -111,5 +121,11 @@ class CoordinateForegroundService : Service() {
         )
         val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(channel)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        traceJob.cancel()
+        insertJob.cancel()
     }
 }

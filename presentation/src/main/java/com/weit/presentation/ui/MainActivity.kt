@@ -1,16 +1,15 @@
 package com.weit.presentation.ui
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
+import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
 import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ActivityMainBinding
@@ -27,15 +26,30 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @Inject
     lateinit var verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase
 
+
     @Inject
     lateinit var verifyNotificationSettingUseCase: VerifyNotificationSettingUseCase
+
+    @Inject
+    lateinit var verifyLocationPermissionUseCase: VerifyLocationPermissionUseCase
+
+    private val destinationChangedListener =
+        NavController.OnDestinationChangedListener { _, destination, _ ->
+            setBottomNavigationVisibility(destination)
+        }
+
+    private val exceptBottomNavigationSet = hashSetOf(
+        R.id.postTravelLogFragment,
+        R.id.travelFriendFragment,
+    )
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
-
         viewModel.verifyIgnoringBatteryOptimization(verifyIgnoringBatteryOptimizationUseCase)
         viewModel.verifyNotificationSetting(verifyNotificationSettingUseCase)
-        checkLocationPermission()
+        viewModel.verifyLocationPermission(verifyLocationPermissionUseCase)
     }
 
     private fun setupBottomNavigation() {
@@ -43,16 +57,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
             .findFragmentById(R.id.navigation_main) as NavHostFragment? ?: return
         navController = host.navController
         binding.bottomNavigationView.setupWithNavController(navController)
+        navController.addOnDestinationChangedListener(destinationChangedListener)
     }
 
-    private fun checkLocationPermission() {
-        val finePermission = Manifest.permission.ACCESS_FINE_LOCATION
-        val granted = PackageManager.PERMISSION_GRANTED
-
-        if (ContextCompat.checkSelfPermission(this, finePermission) != granted) {
-            // 이 코드 때문에 mainactivity에서 작업하는데 더 좋은 방법이 없나...
-            ActivityCompat.requestPermissions(this, arrayOf(finePermission), 101)
-        }
+    private fun setBottomNavigationVisibility(destination: NavDestination) {
+        binding.bottomNavigationView.isVisible = exceptBottomNavigationSet.contains(destination.id).not()
     }
 
     override fun onStart() {
@@ -61,9 +70,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         stopService(serviceIntent)
     }
 
+
     override fun onStop() {
         super.onStop()
         val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
         startForegroundService(serviceIntent)
+
+    override fun onDestroy() {
+        super.onDestroy()
+        navController.removeOnDestinationChangedListener(destinationChangedListener)
     }
 }

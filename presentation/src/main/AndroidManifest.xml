@@ -13,6 +13,8 @@
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -54,6 +56,10 @@
             </intent-filter>
         </receiver>
         <service android:name=".ui.CoordinateForegroundService" />
+        <service
+            android:name=".ui.LocationForegroundService"
+            android:enabled="true"
+            android:exported="false" />
     </application>
 
 </manifest>

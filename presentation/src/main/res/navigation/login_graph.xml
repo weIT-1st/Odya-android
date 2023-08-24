@@ -11,7 +11,12 @@
         <action
             android:id="@+id/action_loginFragment_to_userRegistrationFragment"
             app:destination="@id/userRegistrationFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_LoginContentFragment"
+            app:destination="@+id/loginContentFragment"/>
     </fragment>
+
+
     <fragment
         android:id="@+id/userRegistrationFragment"
         android:name="com.weit.presentation.ui.login.user.registration.UserRegistrationFragment"
@@ -19,4 +24,29 @@
         <argument android:name="username"
             app:argType="string" />
     </fragment>
+
+    <fragment
+        android:id="@+id/loginContentFragment"
+        android:name="com.weit.presentation.ui.login.consent.LoginConsentFragment"
+        android:label="LoginContentFragment">
+        <action
+            android:id="@+id/action_loginContentFragment_to_loginNicknameFragment"
+            app:destination="@+id/loginNicknameFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginNicknameFragment"
+        android:name="com.weit.presentation.ui.login.nickname.LoginNicknameFragment"
+        android:label="LoginNicknameFragment">
+        <action
+            android:id="@+id/action_loginNicknameFragment_to_loginInputUserInfoFragment"
+            app:destination="@+id/loginInputUserInfoFragment"/>
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginInputUserInfoFragment"
+        android:name="com.weit.presentation.ui.login.inputuserinfo.LoginInputUserInfoFragment"
+        android:label="LoginInputUserInfoFragment">
+    </fragment>
+
 </navigation>

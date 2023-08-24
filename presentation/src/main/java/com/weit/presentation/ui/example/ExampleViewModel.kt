@@ -78,7 +78,6 @@ class ExampleViewModel @Inject constructor(
         // insertCoordinate()
         // getCoordinates()
         // deleteCoordinate()
-
         // addReview()
 //         getReview()
 

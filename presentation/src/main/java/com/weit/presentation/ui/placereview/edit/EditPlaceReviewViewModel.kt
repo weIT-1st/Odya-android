@@ -26,7 +26,6 @@ import javax.inject.Inject
 class EditPlaceReviewViewModel @Inject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val updatePlaceReviewUseCase: UpdatePlaceReviewUseCase,
-    private val getPlaceReviewContentUseCase: GetPlaceReviewContentUseCase,
 ) : ViewModel() {
 
     private var placeReviewId: Long = 0L
@@ -40,25 +39,20 @@ class EditPlaceReviewViewModel @Inject constructor(
     private var job: Job = Job().apply { cancel() }
 
     fun initReviewSetting(
-        placeId: String,
-        title: TextView,
-        button: AppCompatButton,
-        myReview: EditText,
+        reviewId: Long?, myReview: String?, myRating: Int?,
+        title: TextView, button: AppCompatButton, etReview: EditText,
     ) {
         viewModelScope.launch {
-            val result = getPlaceReviewContentUseCase(placeId)
-            if (result.isSuccess) {
+            if (reviewId != null){
                 title.setText(R.string.edit_review_title)
                 button.setText(R.string.edit_review_register)
                 reviewState = update
 
-                result.getOrNull().apply {
-                    placeReviewId = this!!.placeReviewId
-                    rating.emit((this!!.placeRating / 2).toFloat())
-                    review.emit(this!!.placeReview)
-                    myReview.hint = this!!.placeReview
-                }
-            }
+                placeReviewId = reviewId
+                rating.emit((myRating!!/2).toFloat())
+                review.emit(myReview!!)
+                etReview.hint = myReview
+           }
         }
     }
 

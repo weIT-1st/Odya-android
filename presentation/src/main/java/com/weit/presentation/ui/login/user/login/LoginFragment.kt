@@ -22,7 +22,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     private val viewModel: LoginViewModel by viewModels()
     // 서울시청으로 테스트 장소 Id 세팅
-    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment("ChIJzz_R5fKifDURJSTIFbslRp0")
+    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment(
+        "ChIJzz_R5fKifDURJSTIFbslRp0", null, null, null)
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)

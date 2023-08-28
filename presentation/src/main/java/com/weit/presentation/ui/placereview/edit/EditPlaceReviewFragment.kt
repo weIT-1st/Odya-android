@@ -3,7 +3,6 @@ package com.weit.presentation.ui.placereview.edit
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +20,9 @@ import kotlinx.coroutines.flow.collectLatest
 @AndroidEntryPoint
 class EditPlaceReviewFragment(
     private val placeId: String,
+    private val placeReviewId: Long?,
+    private val myReview: String?,
+    private val myRating: Int?
 ) : DialogFragment() {
 
     private val viewModel: EditPlaceReviewViewModel by viewModels()
@@ -49,7 +51,9 @@ class EditPlaceReviewFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.initReviewSetting(placeId, binding.tvEditReviewTitle, binding.btnEditReviewRegister, binding.etEditReviewDetail)
+        viewModel.initReviewSetting(placeReviewId, myReview, myRating,
+        binding.tvEditReviewTitle, binding.btnEditReviewRegister, binding.etEditReviewDetail)
+
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)

@@ -5,5 +5,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class IsExistPlaceReviewDTO(
-    @field:Json(name = "exist") val isExist: Boolean
+    @field:Json(name = "exist") val isExist: Boolean,
 )

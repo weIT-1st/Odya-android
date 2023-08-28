@@ -1,22 +1,27 @@
 package com.weit.presentation.ui.placereview.edit
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.annotation.IntRange
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentDialogCreateReviewBinding
 import com.weit.presentation.databinding.FragmentDialogEditReviewBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class EditPlaceReviewFragment : DialogFragment() {
+class EditPlaceReviewFragment(
+    private val placeId: String,
+) : DialogFragment() {
 
     private val viewModel: EditPlaceReviewViewModel by viewModels()
     private var _binding: FragmentDialogEditReviewBinding? = null
@@ -32,6 +37,8 @@ class EditPlaceReviewFragment : DialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         _binding = FragmentDialogEditReviewBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
@@ -42,7 +49,7 @@ class EditPlaceReviewFragment : DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        viewModel.initReviewSetting(placeId, binding.tvEditReviewTitle, binding.btnEditReviewRegister, binding.etEditReviewDetail)
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
@@ -53,7 +60,7 @@ class EditPlaceReviewFragment : DialogFragment() {
             viewModel.review.collectLatest { review ->
                 binding.tvEditReviewDetail.text = String.format(
                     getString(R.string.review_detail),
-                    review.length
+                    review.length,
                 )
             }
         }
@@ -62,22 +69,19 @@ class EditPlaceReviewFragment : DialogFragment() {
             viewModel.rating.collectLatest { rating ->
                 viewModel.setStar(rating)
                 binding.tvEditReviewStar.text = String.format(
-                   getString(R.string.review_star),
-                    rating
-               )
+                    getString(R.string.review_star),
+                    rating,
+                )
             }
         }
 
         binding.btnEditReviewRegister.setOnClickListener {
-            viewModel.updatePlaceReview()
+            viewModel.updatePlaceReview(placeId)
         }
 
         binding.btnEditReviewCancel.setOnClickListener {
             dismiss()
         }
-
-        binding.etEditReviewDetail.hint = viewModel.existReview
-
     }
 
     override fun onDestroyView() {

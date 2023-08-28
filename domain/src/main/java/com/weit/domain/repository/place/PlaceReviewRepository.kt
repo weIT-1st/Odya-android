@@ -28,10 +28,10 @@ interface PlaceReviewRepository {
     ): Result<List<PlaceReviewDetail>>
 
     suspend fun isExistReview(
-        placeId: String
+        placeId: String,
     ): Result<Boolean>
 
     suspend fun getReviewCount(
-        placeId: String
+        placeId: String,
     ): Result<Int>
 }

@@ -1,5 +1,8 @@
 package com.weit.presentation.ui.placereview.edit
 
+import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.exception.InvalidTokenException
@@ -7,9 +10,10 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
-import com.weit.domain.usecase.place.GetPlaceReviewDetailUseCase
+import com.weit.domain.usecase.place.GetPlaceReviewContentUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
+import com.weit.presentation.R
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,15 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class EditPlaceReviewViewModel @Inject constructor(
+    private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val updatePlaceReviewUseCase: UpdatePlaceReviewUseCase,
-    private val getPlaceReviewDetailUseCase: GetPlaceReviewDetailUseCase
+    private val getPlaceReviewContentUseCase: GetPlaceReviewContentUseCase,
 ) : ViewModel() {
+
     private var placeReviewId: Long = 0L
-    private var placeId: String = ""
-    var existReview: String = ""
-
-    val rating = MutableStateFlow(0F)
-
+    private var reviewState = register
+    val rating = MutableStateFlow(initRating)
     val review = MutableStateFlow("")
 
     private val _event = MutableEventFlow<Event>()
@@ -36,34 +39,59 @@ class EditPlaceReviewViewModel @Inject constructor(
 
     private var job: Job = Job().apply { cancel() }
 
-    init {
-        getPlaceId()
-        getPlaceReviewId()
+    fun initReviewSetting(
+        placeId: String,
+        title: TextView,
+        button: AppCompatButton,
+        myReview: EditText,
+    ) {
         viewModelScope.launch {
-            existReview = getPlaceReviewDetailUseCase(placeId)
+            val result = getPlaceReviewContentUseCase(placeId)
+            if (result.isSuccess) {
+                title.setText(R.string.edit_review_title)
+                button.setText(R.string.edit_review_register)
+                reviewState = update
+
+                result.getOrNull().apply {
+                    placeReviewId = this!!.placeReviewId
+                    rating.emit((this!!.placeRating / 2).toFloat())
+                    review.emit(this!!.placeReview)
+                    myReview.hint = this!!.placeReview
+                }
+            }
         }
     }
 
-    private fun getPlaceId(){
-
-    }
-
-    private fun getPlaceReviewId(){
-
-    }
-
-    fun updatePlaceReview(){
-        if (job.isCompleted){
-            updateReview()
+    fun updatePlaceReview(placeId: String) {
+        if (job.isCompleted) {
+            updateReview(placeId)
         }
     }
 
-    private fun updateReview() {
+    private fun updateReview(placeId: String) {
         job = viewModelScope.launch {
             if (checkRegistrationCondition()) {
-                val placeReviewRegistrationInfo = PlaceReviewUpdateInfo(placeReviewId, (rating.value * 2).toInt(), review.value)
-                val result = updatePlaceReviewUseCase(placeReviewRegistrationInfo)
-                handleRegistrationResult(result)
+                when (reviewState) {
+                    register -> {
+                        val placeReviewRegistrationInfo = PlaceReviewRegistrationInfo(
+                            placeId,
+                            (rating.value * 2).toInt(),
+                            review.value
+                        )
+                        val result = registerPlaceReviewUseCase(placeReviewRegistrationInfo)
+                        handleRegistrationResult(result)
+                    }
+
+                    update -> {
+                        val placeReviewUpdateInfo = PlaceReviewUpdateInfo(
+                            placeReviewId,
+                            (rating.value * 2).toInt(),
+                            review.value
+                        )
+                        val result = updatePlaceReviewUseCase(placeReviewUpdateInfo)
+                        handleRegistrationResult(result)
+                    }
+                }
             }
         }
     }
@@ -124,5 +152,11 @@ class EditPlaceReviewViewModel @Inject constructor(
         object IsDuplicatedReviewError : Event()
         object InvalidTokenError : Event()
         object UnknownError : Event()
+    }
+
+    companion object {
+        const val initRating = 3.0F
+        const val register = "register"
+        const val update = "update"
     }
 }

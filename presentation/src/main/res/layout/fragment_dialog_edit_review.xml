@@ -22,7 +22,7 @@
             style="@style/h5"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/edit_review_title"
+            android:text="@string/create_review_title"
             android:textColor="@color/label_normal"/>
 
         <TextView
@@ -98,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             style="@style/h6"
-            android:text="@string/edit_review_register"
+            android:text="@string/create_review_register"
             android:textColor="@color/label_reversed"
             android:background="@drawable/corners_all_8"
             android:backgroundTint="@color/primary"

@@ -1,14 +1,12 @@
 package com.weit.presentation.ui.login.user.login
 
 import android.content.Intent
-import android.util.Log
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.placereview.create.CreatePlaceReviewFragment
 import com.weit.presentation.ui.placereview.edit.EditPlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,7 +21,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
-
+    // 서울시청으로 테스트 장소 Id 세팅
+    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment("ChIJzz_R5fKifDURJSTIFbslRp0")
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -32,9 +31,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             moveToMain()
         }
 
-        binding.btnCreateReview.setOnClickListener {
-            createReviewDialog()
-        }
         binding.btnEditReview.setOnClickListener {
             editReviewDialog()
 
@@ -51,6 +47,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 handleEvent(event)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        editPlaceReviewFragment = null
+        super.onDestroyView()
     }
 
     private fun handleEvent(event: LoginViewModel.Event) {
@@ -78,18 +79,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
     }
 
-    private fun createReviewDialog() {
-        val dialog = CreatePlaceReviewFragment()
-        if (!(dialog.dialog != null && dialog.dialog!!.isShowing && !dialog.isRemoving)) {
-            dialog.show(childFragmentManager, "CreateReview")
-        }
-    }
-
     private fun editReviewDialog() {
-        val dialog = EditPlaceReviewFragment()
-        if ((dialog.dialog != null && dialog.dialog!!.isShowing && !dialog.isRemoving)
-        ) {
-            dialog.show(childFragmentManager, "EditReview")
+        if (!(editPlaceReviewFragment!!.dialog != null && editPlaceReviewFragment!!.dialog!!.isShowing && !editPlaceReviewFragment!!.isRemoving)) {
+            editPlaceReviewFragment!!.show(childFragmentManager, "EditReview")
         }
     }
 }

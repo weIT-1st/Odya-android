@@ -15,7 +15,6 @@ import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
 import okhttp3.internal.http.HTTP_ALREADY_REPORTED
 import okhttp3.internal.http.HTTP_BAD_REQUEST
-import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.Response
 import javax.inject.Inject
@@ -81,7 +80,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     override suspend fun isExistReview(placeId: String): Result<Boolean> {
         val response = dataSource.isExistReview(placeId)
 
-         return if (response.isSuccessful){
+        return if (response.isSuccessful) {
             Result.success(response.body()!!.isExist)
         } else {
             Result.failure(handleReviewError(response))
@@ -91,13 +90,12 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     override suspend fun getReviewCount(placeId: String): Result<Int> {
         val response = dataSource.getReviewCount(placeId)
 
-        return if (response.isSuccessful){
+        return if (response.isSuccessful) {
             Result.success(response.body()!!.count)
         } else {
             Result.failure(handleReviewError(response))
         }
     }
-
 
     private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
         PlaceReviewRegistration(

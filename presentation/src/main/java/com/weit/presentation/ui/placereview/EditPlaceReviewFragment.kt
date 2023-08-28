@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.placereview.edit
+package com.weit.presentation.ui.placereview
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -14,15 +14,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentDialogEditReviewBinding
 import com.weit.presentation.ui.util.repeatOnStarted
+import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class EditPlaceReviewFragment(
     private val placeId: String,
-    private val placeReviewId: Long?,
-    private val myReview: String?,
-    private val myRating: Int?
+    private val placeReviewContentData: PlaceReviewContentData?,
 ) : DialogFragment() {
 
     private val viewModel: EditPlaceReviewViewModel by viewModels()
@@ -51,8 +50,16 @@ class EditPlaceReviewFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.initReviewSetting(placeReviewId, myReview, myRating,
-        binding.tvEditReviewTitle, binding.btnEditReviewRegister, binding.etEditReviewDetail)
+
+        if (placeReviewContentData != null) {
+            binding.tvEditReviewTitle.setText(R.string.edit_review_title)
+            binding.btnEditReviewRegister.setText(R.string.edit_review_register)
+            viewModel.changeReviewState()
+            placeReviewContentData.apply {
+                binding.etEditReviewDetail.hint = this.myReview
+                viewModel.initReviewData(this.placeReviewId, this.myReview, this.myRating)
+            }
+        }
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
@@ -119,7 +126,6 @@ class EditPlaceReviewFragment(
             EditPlaceReviewViewModel.Event.UnregisteredError -> {
                 sendSnackBar("로그인 하세요")
             }
-            else -> {}
         }
     }
 

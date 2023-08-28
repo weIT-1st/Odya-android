@@ -7,7 +7,7 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.placereview.edit.EditPlaceReviewFragment
+import com.weit.presentation.ui.placereview.EditPlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -21,9 +21,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
-    // 서울시청으로 테스트 장소 Id 세팅
-    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment(
-        "ChIJzz_R5fKifDURJSTIFbslRp0", null, null, null)
+    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment("", null)
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -34,11 +32,11 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
         binding.btnEditReview.setOnClickListener {
             editReviewDialog()
+        }
 
-            binding.btnToLoginStep.setOnClickListener {
-                val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
-                findNavController().navigate(action)
-            }
+        binding.btnToLoginStep.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
+            findNavController().navigate(action)
         }
     }
 

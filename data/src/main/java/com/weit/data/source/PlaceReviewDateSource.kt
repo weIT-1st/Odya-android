@@ -42,11 +42,11 @@ class PlaceReviewDateSource @Inject constructor(
             sortType = info.sortType,
             lastPlaceReviewId = info.lastPlaceReviewId,
         )
-    suspend fun isExistReview(placeId: String): Response<IsExistPlaceReviewDTO> {
+    suspend fun isExistReview(placeId: String): IsExistPlaceReviewDTO {
         return service.isExistReview(placeId)
     }
 
-    suspend fun getReviewCount(placeId: String): Response<PlaceReviewCountDTO> {
+    suspend fun getReviewCount(placeId: String): PlaceReviewCountDTO {
         return service.getReviewCount(placeId)
     }
 }

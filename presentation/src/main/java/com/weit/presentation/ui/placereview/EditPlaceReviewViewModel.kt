@@ -1,8 +1,5 @@
-package com.weit.presentation.ui.placereview.edit
+package com.weit.presentation.ui.placereview
 
-import android.widget.EditText
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.exception.InvalidTokenException
@@ -10,10 +7,8 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
-import com.weit.domain.usecase.place.GetPlaceReviewContentUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
-import com.weit.presentation.R
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,22 +33,20 @@ class EditPlaceReviewViewModel @Inject constructor(
 
     private var job: Job = Job().apply { cancel() }
 
-    fun initReviewSetting(
-        reviewId: Long?, myReview: String?, myRating: Int?,
-        title: TextView, button: AppCompatButton, etReview: EditText,
+    fun initReviewData(
+        reviewId: Long,
+        myReview: String,
+        myRating: Int,
     ) {
         viewModelScope.launch {
-            if (reviewId != null){
-                title.setText(R.string.edit_review_title)
-                button.setText(R.string.edit_review_register)
-                reviewState = update
-
-                placeReviewId = reviewId
-                rating.emit((myRating!!/2).toFloat())
-                review.emit(myReview!!)
-                etReview.hint = myReview
-           }
+            placeReviewId = reviewId
+            rating.emit((myRating / 2).toFloat())
+            review.emit(myReview)
         }
+    }
+
+    fun changeReviewState() {
+        reviewState = update
     }
 
     fun updatePlaceReview(placeId: String) {
@@ -70,7 +63,7 @@ class EditPlaceReviewViewModel @Inject constructor(
                         val placeReviewRegistrationInfo = PlaceReviewRegistrationInfo(
                             placeId,
                             (rating.value * 2).toInt(),
-                            review.value
+                            review.value,
                         )
                         val result = registerPlaceReviewUseCase(placeReviewRegistrationInfo)
                         handleRegistrationResult(result)
@@ -80,7 +73,7 @@ class EditPlaceReviewViewModel @Inject constructor(
                         val placeReviewUpdateInfo = PlaceReviewUpdateInfo(
                             placeReviewId,
                             (rating.value * 2).toInt(),
-                            review.value
+                            review.value,
                         )
                         val result = updatePlaceReviewUseCase(placeReviewUpdateInfo)
                         handleRegistrationResult(result)
@@ -102,7 +95,7 @@ class EditPlaceReviewViewModel @Inject constructor(
         when (error) {
             is InvalidTokenException -> _event.emit(Event.InvalidTokenError)
             is DuplicatedSomethingException -> _event.emit(Event.IsDuplicatedReviewError)
-            else -> _event.emit(Event.UnknownError)
+            else -> error
         }
     }
 
@@ -145,7 +138,6 @@ class EditPlaceReviewViewModel @Inject constructor(
         object UnregisteredError : Event()
         object IsDuplicatedReviewError : Event()
         object InvalidTokenError : Event()
-        object UnknownError : Event()
     }
 
     companion object {

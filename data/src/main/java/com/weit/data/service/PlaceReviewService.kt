@@ -50,10 +50,10 @@ interface PlaceReviewService {
     @GET("/api/v1/place-reviews/{id}")
     suspend fun isExistReview(
         @Path("id") placeId: String,
-    ): Response<IsExistPlaceReviewDTO>
+    ): IsExistPlaceReviewDTO
 
     @GET("/api/v1/place-reviews/count/{id}")
     suspend fun getReviewCount(
         @Path("id") placeId: String,
-    ): Response<PlaceReviewCountDTO>
+    ): PlaceReviewCountDTO
 }

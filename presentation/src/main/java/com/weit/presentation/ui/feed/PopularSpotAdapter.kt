@@ -9,7 +9,7 @@ import com.weit.presentation.databinding.ItemPopularSpotSummaryBinding
 import com.weit.presentation.model.PopularTravelLog
 
 class PopularSpotAdapter(
-    private val goToTravelLog: (Long) -> Unit,
+    private val navigateTravelLog: (Long) -> Unit,
 ) : ListAdapter<PopularTravelLog, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularSpotViewHolder {
@@ -25,22 +25,17 @@ class PopularSpotAdapter(
     override fun onBindViewHolder(holder: PopularSpotViewHolder, position: Int) {
         val spot = getItem(position)
         holder.bind(spot)
-        holder.spot.setOnClickListener {
-            goToTravelLog(spot.travelLogId)
-        }
     }
 
     inner class PopularSpotViewHolder(
         private val binding: ItemPopularSpotSummaryBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        val spot = binding.layoutPopularSpotSummary
         fun bind(popularTravelLog: PopularTravelLog) {
-//             Glide.with(binding.root)
-//                .load(popularTravelLog.userProfile)
-//                .into(binding.ivPopularSpotSummaryProfile)
-            binding.tvPopularSpotSummaryTitle.text = popularTravelLog.travelLogTitle
-            binding.tvPopularSpotSummaryNickname.text = popularTravelLog.userNickname
+            binding.log = popularTravelLog
+            binding.layoutPopularSpotSummary.setOnClickListener {
+                navigateTravelLog(popularTravelLog.travelLogId)
+            }
         }
     }
 

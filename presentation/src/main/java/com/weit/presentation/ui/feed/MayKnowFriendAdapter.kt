@@ -24,23 +24,17 @@ class MayKnowFriendAdapter(private val onFollowChanged: (Long, Boolean) -> Unit)
     override fun onBindViewHolder(holder: MayKnowFriendViewHolder, position: Int) {
         val friend = getItem(position)
         holder.bind(friend)
-        holder.follow.setOnClickListener {
-            onFollowChanged(friend.userId, friend.followState)
-        }
     }
 
     inner class MayKnowFriendViewHolder(
         private val binding: ItemMayknowFriendSummaryBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        val follow = binding.btnMayknowFriendSummaryFollow
         fun bind(mayKnowFriend: MayKnowFriend) {
-            binding.tvMayknowFriendSummaryNickname.text = mayKnowFriend.userNickname
-            binding.tvMayknowFriendSummaryFeature.text = mayKnowFriend.userFeature
-//                        Glide.with(binding.root)
-//                .load(mayKnowFriend.userProfile)
-//                .into(binding.ivMayknowFriendSummaryProfile)
-            binding.btnMayknowFriendSummaryFollow.isChecked = mayKnowFriend.followState
+            binding.friend = mayKnowFriend
+            binding.btnMayknowFriendSummaryFollow.setOnClickListener {
+                onFollowChanged(mayKnowFriend.userId, mayKnowFriend.followState)
+            }
         }
     }
 

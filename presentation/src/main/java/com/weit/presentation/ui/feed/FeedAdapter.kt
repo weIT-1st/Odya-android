@@ -28,24 +28,24 @@ class FeedAdapter(
                 ItemPopularSpotBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
 
             R.layout.item_mayknow_friend -> MayKnowFriendViewHolder(
                 ItemMayknowFriendBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
 
             R.layout.item_community -> CommunityViewHolder(
                 ItemCommunityBinding.inflate(
                     inflater,
                     parent,
-                    false
-                )
+                    false,
+                ),
             )
 
             else -> throw IllegalArgumentException("Unknown view type")
@@ -57,19 +57,7 @@ class FeedAdapter(
         when (holder) {
             is PopularSpotViewHolder -> holder.bind(item as Feed.PopularTravelLogItem)
             is MayKnowFriendViewHolder -> holder.bind(item as Feed.MayknowFriendItem)
-            is CommunityViewHolder -> {
-                val feed = item as Feed.FeedItem
-                holder.bind(feed)
-                holder.content.setOnClickListener {
-                    navigateFeedDetail(item.feedId)
-                }
-                holder.follow.setOnClickListener {
-                    onFollowChanged(feed.userId, feed.followState)
-                }
-                holder.travelLog.setOnClickListener {
-                    feed.travelLogId?.let { id -> navigateTravelLog(id) }
-                }
-            }
+            is CommunityViewHolder -> holder.bind(item as Feed.FeedItem)
         }
     }
 
@@ -112,44 +100,38 @@ class FeedAdapter(
         private val binding: ItemCommunityBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        val travelLog = binding.viewCommunityTitle
-        val follow = binding.btCommunityFollow
-        val content = binding.viewCommunityContent
-
         fun bind(feed: Feed.FeedItem) {
-            if (feed.travelLogId == null) {
-                travelLog.visibility = View.INVISIBLE
+            binding.feed = feed
+            if (feed.travelLog == null) {
+                binding.viewCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityBookmark.visibility = View.INVISIBLE
                 binding.tvCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityDirection.visibility = View.INVISIBLE
             }
-            // !!을 써도 되나..
-            if (feed.commentNum!! > DEFAULT_REACTION_COUNT) {
+
+            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
                 binding.tvCommunityReply.text =
                     binding.root.context.getString(R.string.feed_reaction_count)
             } else {
                 binding.tvCommunityReply.text = feed.commentNum.toString()
             }
 
-            if (feed.commentNum!! > DEFAULT_REACTION_COUNT) {
+            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
                 binding.tvCommunityHeart.text =
                     binding.root.context.getString(R.string.feed_reaction_count)
             } else {
                 binding.tvCommunityHeart.text = feed.likeNum.toString()
             }
 
-            binding.tvCommunityContent.text = feed.content
-            binding.tvCommunityTitle.text = feed.travelLogTitle
-            binding.tvCommunityNickname.text = feed.userNickname
-            binding.btCommunityFollow.isChecked = feed.followState
-            binding.tvCommunityLocation.text = feed.place
-            binding.tvCommunityDatetime.text = feed.date
-//            Glide.with(binding.root)
-//                .load(feed.feedImage)
-//                .into(binding.ivCommunityBg)
-//            Glide.with(binding.root)
-//                .load(feed.userProfile)
-//                .into(binding.ivCommunityProfile)
+            binding.viewCommunityContent.setOnClickListener {
+                navigateFeedDetail(feed.feedId)
+            }
+            binding.btCommunityFollow.setOnClickListener {
+                onFollowChanged(feed.userId, feed.followState)
+            }
+            binding.viewCommunityTitle.setOnClickListener {
+                feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }
+            }
         }
     }
 
@@ -158,7 +140,7 @@ class FeedAdapter(
             object : DiffUtil.ItemCallback<Feed>() {
                 override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
                     return oldItem is Feed.FeedItem && newItem is Feed.FeedItem &&
-                            oldItem.feedId == newItem.feedId
+                        oldItem.feedId == newItem.feedId
                 }
 
                 override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {

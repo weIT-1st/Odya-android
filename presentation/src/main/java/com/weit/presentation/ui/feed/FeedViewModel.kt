@@ -3,12 +3,12 @@ package com.weit.presentation.ui.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
-import com.weit.domain.model.exception.topic.NotHavePermissionException
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
@@ -20,6 +20,9 @@ import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDTO
 import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.model.PopularTravelLog
+import com.weit.presentation.model.TravelLogInFeed
+import com.weit.presentation.model.user.UserProfileColorDTO
+import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -97,23 +100,24 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun getFeeds(): List<Feed.FeedItem> {
+        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
+        val travelLog = TravelLogInFeed(1, "ddd")
         val feedList = listOf(
-            FeedDTO(1, 1, null, "dd", true, "dd", null, "Dd", "dd", "ddddddddd", 100, 100, "dd"),
-            FeedDTO(2, 2, null, "dd", false, "dd", 1253, "Dd", "dd", "dddddddddd", 10, 9, "dd"),
-            FeedDTO(2, 2, null, "dd", true, "dd", 1253, "Dd", "dd", "dsfdfsdfd", 10, 9, "dd"),
-            FeedDTO(2, 2, null, "dd", true, "dd", 1253, "Dd", "dd", "dsfdfsdfd", 10, 9, "dd"),
-            FeedDTO(2, 2, null, "dd", true, "dd", 1253, "Dd", "dd", "dsfdfsdfd", 10, 9, "dd"),
+            FeedDTO(1, 1, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
+            FeedDTO(2, 2, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
         )
         val feeds = feedList.map {
             Feed.FeedItem(
                 it.feedId,
                 it.userId,
-                null,
+                it.userProfile,
                 it.userNickname,
                 it.followState,
                 it.feedImage,
-                it.travelLogId,
-                it.travelLogTitle,
+                it.travelLog,
                 it.date,
                 it.content,
                 it.likeNum,
@@ -126,19 +130,21 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun getPopularTravelLogs(): Feed.PopularTravelLogItem {
+        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
         val popularSpotList = listOf(
-            PopularTravelLog(12, 1, null, "dd", "dd", "dd"),
-            PopularTravelLog(13, 2, null, "dd", "dd", "dd"),
+            PopularTravelLog(12, 1, profile, "dd", "dd", "dd"),
+            PopularTravelLog(13, 2, profile, "dd", "dd", "dd"),
         )
 
         return Feed.PopularTravelLogItem(popularSpotList)
     }
 
     private fun getMayknowFriends(): Feed.MayknowFriendItem {
+        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
         val mayKnowFriendList = listOf(
-            MayKnowFriend(1, null, "ari", "함께 아는 친구 2명", true),
-            MayKnowFriend(2, null, "ari", "함께 아는 친구 2명", true),
-            MayKnowFriend(3, null, "ari", "함께 아는 친구 2명", true),
+            MayKnowFriend(1, profile, "ari", "함께 아는 친구 2명", true),
+            MayKnowFriend(2, profile, "ari", "함께 아는 친구 2명", true),
+            MayKnowFriend(3, profile, "ari", "함께 아는 친구 2명", true),
         )
         return Feed.MayknowFriendItem(mayKnowFriendList)
     }
@@ -172,7 +178,7 @@ class FeedViewModel @Inject constructor(
             is NotExistTopicIdException -> _event.emit(Event.NotExistTopicIdException)
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
-            is NotHavePermissionException -> _event.emit(Event.NotHavePermissionException)
+            is InvalidPermissionException -> _event.emit(Event.NotHavePermissionException)
             else -> _event.emit(Event.UnknownException)
         }
     }

@@ -3,11 +3,11 @@ package com.weit.data.repository.topic
 import com.weit.data.model.topic.TopicRegistration
 import com.weit.data.source.TopicDataSource
 import com.weit.data.util.exception
+import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
-import com.weit.domain.model.exception.topic.NotHavePermissionException
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.repository.topic.TopicRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
@@ -29,11 +29,11 @@ class TopicRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteFavoriteTopic(topicId: Long): Result<Unit> {
-        val result = dataSource.deleteFavoriteTopic(topicId)
-        return if (result.isSuccessful) {
+        val response = dataSource.deleteFavoriteTopic(topicId)
+        return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
-            Result.failure(handleDeleteTopicError(result))
+            Result.failure(handleDeleteTopicError(response))
         }
     }
 
@@ -65,7 +65,7 @@ class TopicRepositoryImpl @Inject constructor(
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_NOT_FOUND -> NotExistTopicIdException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
-            HTTP_FORBIDDEN -> NotHavePermissionException()
+            HTTP_FORBIDDEN -> InvalidPermissionException()
             else -> UnKnownException()
         }
     }

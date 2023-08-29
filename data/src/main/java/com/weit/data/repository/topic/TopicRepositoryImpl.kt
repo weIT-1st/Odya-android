@@ -2,6 +2,7 @@ package com.weit.data.repository.topic
 
 import com.weit.data.model.topic.TopicRegistration
 import com.weit.data.source.TopicDataSource
+import com.weit.data.util.exception
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
@@ -38,40 +39,34 @@ class TopicRepositoryImpl @Inject constructor(
 
     override suspend fun getTopicList(): Result<List<TopicDetail>> {
         return handleTopicResult {
-            dataSource.getTopicList().map {
-                TopicDetail(it.topicId, it.topicWord)
-            }
+            dataSource.getTopicList()
         }
     }
 
     override suspend fun getFavoriteTopicList(): Result<List<TopicDetail>> {
         return handleTopicResult {
-            dataSource.getFavoriteTopicList().map {
-                TopicDetail(it.topicId, it.topicWord)
-            }
+            dataSource.getFavoriteTopicList()
         }
     }
 
-    // 이렇게 함수를 두개 만들어야 하는것인가..
     private fun handleDeleteTopicError(response: Response<*>): Throwable {
-        return when (response.code()) {
+        return handleCode(response.code())
+    }
+    private fun handleTopicError(t: Throwable): Throwable {
+        return if (t is HttpException) {
+            handleCode(t.code())
+        } else {
+            t
+        }
+    }
+
+    private fun handleCode(code: Int): Throwable {
+        return when (code) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_NOT_FOUND -> NotExistTopicIdException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             HTTP_FORBIDDEN -> NotHavePermissionException()
             else -> UnKnownException()
-        }
-    }
-    private fun handleTopicError(t: Throwable): Throwable {
-        return if (t is HttpException) {
-            when (t.code()) {
-                HTTP_BAD_REQUEST -> InvalidRequestException()
-                HTTP_UNAUTHORIZED -> InvalidTokenException()
-                HTTP_NOT_FOUND -> NotExistTopicIdException()
-                else -> UnKnownException()
-            }
-        } else {
-            t
         }
     }
 
@@ -83,7 +78,7 @@ class TopicRepositoryImpl @Inject constructor(
             if (result.isSuccess) {
                 Result.success(result.getOrThrow())
             } else {
-                Result.failure(handleTopicError(result.exceptionOrNull()!!))
+                Result.failure(handleTopicError(result.exception()))
             }
         } catch (t: Throwable) {
             Result.failure(handleTopicError(t))

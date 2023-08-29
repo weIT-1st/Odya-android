@@ -6,37 +6,58 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.databinding.ItemPopularSpotSummaryBinding
-import com.weit.presentation.model.PopularSpot
+import com.weit.presentation.model.PopularTravelLog
 
-class PopularSpotAdapter() : ListAdapter<PopularSpot, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
+class PopularSpotAdapter(
+    private val goToTravelLog: (Long) -> Unit,
+) : ListAdapter<PopularTravelLog, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularSpotViewHolder {
         return PopularSpotViewHolder(
-            ItemPopularSpotSummaryBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemPopularSpotSummaryBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false,
+            ),
         )
     }
 
     override fun onBindViewHolder(holder: PopularSpotViewHolder, position: Int) {
         val spot = getItem(position)
         holder.bind(spot)
-    }
-
-    class PopularSpotViewHolder(
-        private val binding: ItemPopularSpotSummaryBinding,
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(popularSpot: PopularSpot) {
-            binding.tvPopularSpotSummaryTitle.text = popularSpot.title
-            binding.tvPopularSpotSummaryNickname.text = popularSpot.nickname
+        holder.spot.setOnClickListener {
+            goToTravelLog(spot.travelLogId)
         }
     }
+
+    inner class PopularSpotViewHolder(
+        private val binding: ItemPopularSpotSummaryBinding,
+    ) : RecyclerView.ViewHolder(binding.root) {
+
+        val spot = binding.layoutPopularSpotSummary
+        fun bind(popularTravelLog: PopularTravelLog) {
+//             Glide.with(binding.root)
+//                .load(popularTravelLog.userProfile)
+//                .into(binding.ivPopularSpotSummaryProfile)
+            binding.tvPopularSpotSummaryTitle.text = popularTravelLog.travelLogTitle
+            binding.tvPopularSpotSummaryNickname.text = popularTravelLog.userNickname
+        }
+    }
+
     companion object {
-        private val PopularSpotCallback: DiffUtil.ItemCallback<PopularSpot> =
-            object : DiffUtil.ItemCallback<PopularSpot>() {
-                override fun areItemsTheSame(oldItem: PopularSpot, newItem: PopularSpot): Boolean {
-                    return oldItem.title == newItem.title
+        private val PopularSpotCallback: DiffUtil.ItemCallback<PopularTravelLog> =
+            object : DiffUtil.ItemCallback<PopularTravelLog>() {
+                override fun areItemsTheSame(
+                    oldItem: PopularTravelLog,
+                    newItem: PopularTravelLog,
+                ): Boolean {
+                    return oldItem.travelLogId == newItem.travelLogId
                 }
 
-                override fun areContentsTheSame(oldItem: PopularSpot, newItem: PopularSpot): Boolean {
+                override fun areContentsTheSame(
+                    oldItem: PopularTravelLog,
+                    newItem: PopularTravelLog,
+                ): Boolean {
                     return oldItem == newItem
                 }
             }

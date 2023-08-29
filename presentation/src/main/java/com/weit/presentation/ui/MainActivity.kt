@@ -26,7 +26,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @Inject
     lateinit var verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase
 
-
     @Inject
     lateinit var verifyNotificationSettingUseCase: VerifyNotificationSettingUseCase
 
@@ -42,7 +41,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         R.id.postTravelLogFragment,
         R.id.travelFriendFragment,
     )
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,11 +68,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         stopService(serviceIntent)
     }
 
-
     override fun onStop() {
         super.onStop()
         val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
         startForegroundService(serviceIntent)
+    }
 
     override fun onDestroy() {
         super.onDestroy()

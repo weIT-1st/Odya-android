@@ -1,11 +1,55 @@
 package com.weit.presentation.model
 
-sealed class FeedItem {
-    data class CommunityItem(var title: String, var nickname: String) : FeedItem()
-    data class PopularSpotItem(var popularSpotList: List<PopularSpot>) : FeedItem()
-    data class MayknowFriendItem(var mayKnowFriendList: List<MayKnowFriend>) : FeedItem()
+import com.weit.domain.model.user.UserProfile
+
+sealed class Feed {
+    data class FeedItem(
+        val feedId: Long,
+        val userId: Long,
+        val userProfile: UserProfile? = null,
+        val userNickname: String,
+        val followState: Boolean,
+        val feedImage: String?,
+        val travelLogId: Long?,
+        val travelLogTitle: String?,
+        val date: String?,
+        val content: String?,
+        val likeNum: Int?,
+        val commentNum: Int?,
+        val place: String?,
+    ) : Feed()
+    data class PopularTravelLogItem(val popularTravelLogList: List<PopularTravelLog>) : Feed()
+    data class MayknowFriendItem(val mayKnowFriendList: List<MayKnowFriend>) : Feed()
 }
 
-data class MayKnowFriend(var nickname: String, var feature: String)
-data class PopularSpot(var title: String, var nickname: String)
-data class Community(var title: String, var nickname: String)
+data class MayKnowFriend(
+    val userId: Long,
+    val userProfile: UserProfile? = null,
+    val userNickname: String,
+    val userFeature: String,
+    val followState: Boolean,
+)
+data class PopularTravelLog(
+    val travelLogId: Long,
+    val userId: Long,
+    val userProfile: UserProfile? = null,
+    val userNickname: String,
+    val travelLogTitle: String,
+    val travelLogImage: String,
+)
+
+data class FeedDTO(
+    val feedId: Long,
+    val userId: Long,
+    val userProfile: UserProfile? = null,
+    val userNickname: String,
+    val followState: Boolean,
+    val feedImage: String?,
+    val travelLogId: Long?,
+    val travelLogTitle: String?,
+    val date: String?,
+    val content: String?,
+    val likeNum: Int?,
+    val commentNum: Int?,
+    val place: String?,
+)

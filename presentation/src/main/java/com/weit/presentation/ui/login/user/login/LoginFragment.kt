@@ -21,7 +21,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
-    private var editPlaceReviewFragment: EditPlaceReviewFragment? = EditPlaceReviewFragment("", null)
+    private var editPlaceReviewFragment: EditPlaceReviewFragment? = null
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -79,6 +79,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     }
 
     private fun editReviewDialog() {
+        editPlaceReviewFragment = EditPlaceReviewFragment("", null)
         if (!(editPlaceReviewFragment!!.dialog != null && editPlaceReviewFragment!!.dialog!!.isShowing && !editPlaceReviewFragment!!.isRemoving)) {
             editPlaceReviewFragment!!.show(childFragmentManager, "EditReview")
         }

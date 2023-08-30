@@ -26,20 +26,14 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 ) : PlaceReviewRepository {
 
     override suspend fun register(info: PlaceReviewRegistrationInfo): Result<Unit> {
-        val response = dataSource.register(info.toPlaceReviewRegistraion())
-        return if (response.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleReviewError(response))
+        return runCatching{
+            dataSource.register(info.toPlaceReviewRegistraion())
         }
     }
 
     override suspend fun update(info: PlaceReviewUpdateInfo): Result<Unit> {
-        val response = dataSource.update(info.toPlaceReviewModification())
-        return if (response.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleReviewError(response))
+        return runCatching{
+            dataSource.update(info.toPlaceReviewModification())
         }
     }
 
@@ -85,7 +79,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
         return if (result.isSuccess) {
             val isExist = result.getOrNull()?.isExist
-            if (isExist != null && isExist) {
+            if (isExist == true) {
                 Result.success(isExist)
             } else {
                 Result.failure(NotExistPlaceReviewException())
@@ -124,14 +118,4 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             rating = rating,
             review = review,
         )
-
-    private fun handleReviewError(response: Response<*>): Throwable {
-        return when (response.code()) {
-            HTTP_UNAUTHORIZED -> InvalidTokenException()
-            HTTP_BAD_REQUEST -> InvalidRequestException()
-            HTTP_ALREADY_REPORTED -> DuplicatedSomethingException()
-//            HTTP_FORBIDDEN -> NotHavePermissionException()
-            else -> UnKnownException()
-        }
-    }
 }

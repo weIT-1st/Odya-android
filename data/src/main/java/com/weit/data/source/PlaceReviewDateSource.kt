@@ -15,11 +15,11 @@ class PlaceReviewDateSource @Inject constructor(
     private val service: PlaceReviewService,
 ) {
 
-    suspend fun register(placeReviewRegistration: PlaceReviewRegistration): Response<Unit> {
+    suspend fun register(placeReviewRegistration: PlaceReviewRegistration): Unit {
         return service.register(placeReviewRegistration)
     }
 
-    suspend fun update(placeReviewModification: PlaceReviewModification): Response<Unit> {
+    suspend fun update(placeReviewModification: PlaceReviewModification): Unit {
         return service.update(placeReviewModification)
     }
 

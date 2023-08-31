@@ -16,17 +16,14 @@ import com.weit.presentation.util.PlaceReviewContentData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-
 
 class EditPlaceReviewViewModel @AssistedInject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val updatePlaceReviewUseCase: UpdatePlaceReviewUseCase,
-    @Assisted private val placeReviewContentData: PlaceReviewContentData?
+    @Assisted private val placeReviewContentData: PlaceReviewContentData?,
 ) : ViewModel() {
 
     private var placeReviewId: Long? = null
@@ -40,13 +37,13 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
     private var job: Job = Job().apply { cancel() }
 
     @AssistedFactory
-    interface PlaceReviewContentFactory{
+    interface PlaceReviewContentFactory {
         fun create(placeReviewContentData: PlaceReviewContentData?): EditPlaceReviewViewModel
     }
 
     init {
         viewModelScope.launch {
-            if (placeReviewContentData != null){
+            if (placeReviewContentData != null) {
                 reviewState = update
                 placeReviewId = placeReviewContentData.placeReviewId
                 rating.emit((placeReviewContentData.myRating / 2).toFloat())
@@ -153,8 +150,8 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
 
         fun provideFactory(
             assistedFactory: PlaceReviewContentFactory,
-            placeReviewContentData: PlaceReviewContentData?
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory{
+            placeReviewContentData: PlaceReviewContentData?,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(placeReviewContentData) as T
             }

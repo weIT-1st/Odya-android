@@ -10,8 +10,6 @@ import android.view.Window
 import androidx.annotation.IntRange
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentDialogEditReviewBinding
@@ -30,7 +28,7 @@ class EditPlaceReviewFragment(
     @Inject
     lateinit var viewModelFactory: EditPlaceReviewViewModel.PlaceReviewContentFactory
 
-    private val viewModel: EditPlaceReviewViewModel by viewModels{
+    private val viewModel: EditPlaceReviewViewModel by viewModels {
         EditPlaceReviewViewModel.provideFactory(viewModelFactory, placeReviewContentData)
     }
 

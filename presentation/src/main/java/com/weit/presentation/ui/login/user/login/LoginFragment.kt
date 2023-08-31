@@ -9,6 +9,7 @@ import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.placereview.EditPlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
+import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -80,7 +81,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     private fun editReviewDialog() {
         editPlaceReviewFragment = EditPlaceReviewFragment("", null)
-        if (!(editPlaceReviewFragment!!.dialog != null && editPlaceReviewFragment!!.dialog!!.isShowing && !editPlaceReviewFragment!!.isRemoving)) {
+        if (!editPlaceReviewFragment!!.dialog!!.isShowing) {
             editPlaceReviewFragment!!.show(childFragmentManager, "EditReview")
         }
     }

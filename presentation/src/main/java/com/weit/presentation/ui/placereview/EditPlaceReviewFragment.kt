@@ -10,6 +10,8 @@ import android.view.Window
 import androidx.annotation.IntRange
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentDialogEditReviewBinding
@@ -17,6 +19,7 @@ import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditPlaceReviewFragment(
@@ -24,7 +27,13 @@ class EditPlaceReviewFragment(
     private val placeReviewContentData: PlaceReviewContentData?,
 ) : DialogFragment() {
 
-    private val viewModel: EditPlaceReviewViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: EditPlaceReviewViewModel.PlaceReviewContentFactory
+
+    private val viewModel: EditPlaceReviewViewModel by viewModels{
+        EditPlaceReviewViewModel.provideFactory(viewModelFactory, placeReviewContentData)
+    }
+
     private var _binding: FragmentDialogEditReviewBinding? = null
     private val binding get() = _binding!!
 
@@ -54,11 +63,8 @@ class EditPlaceReviewFragment(
         if (placeReviewContentData != null) {
             binding.tvEditReviewTitle.setText(R.string.edit_review_title)
             binding.btnEditReviewRegister.setText(R.string.edit_review_register)
+            binding.etEditReviewDetail.hint = placeReviewContentData.myReview
             viewModel.changeReviewState()
-            placeReviewContentData.apply {
-                binding.etEditReviewDetail.hint = this.myReview
-                viewModel.initReviewData(this.placeReviewId, this.myReview, this.myRating)
-            }
         }
 
         repeatOnStarted(viewLifecycleOwner) {

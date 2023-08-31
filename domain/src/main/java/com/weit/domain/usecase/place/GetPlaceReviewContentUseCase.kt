@@ -23,12 +23,12 @@ class GetPlaceReviewContentUseCase @Inject constructor(
         }
 
         val info = PlaceReviewByPlaceIdInfo(placeId)
-        val getReviewByPlaceId = placeReviewRepository.getByPlaceId(info).getOrNull()
+        val getReviewByPlaceId = placeReviewRepository.getByPlaceId(info)
 
-        val myReview = getReviewByPlaceId?.find { it.userId == getUserId }
+        val myReview = getReviewByPlaceId.getOrNull()?.find { it.userId == getUserId }
 
         return if (myReview == null) {
-            Result.failure(UnknownError())
+            Result.failure(getReviewByPlaceId.exceptionOrNull()!!)
         } else {
             Result.success(PlaceReviewContentInfo(myReview.id, myReview.review, myReview.starRating))
         }

@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.placereview
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
@@ -11,19 +12,24 @@ import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
+import com.weit.presentation.util.PlaceReviewContentData
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class EditPlaceReviewViewModel @Inject constructor(
+
+class EditPlaceReviewViewModel @AssistedInject constructor(
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
     private val updatePlaceReviewUseCase: UpdatePlaceReviewUseCase,
+    @Assisted private val placeReviewContentData: PlaceReviewContentData?
 ) : ViewModel() {
 
-    private var placeReviewId: Long = 0L
+    private var placeReviewId: Long? = null
     private var reviewState = register
     val rating = MutableStateFlow(initRating)
     val review = MutableStateFlow("")
@@ -33,15 +39,18 @@ class EditPlaceReviewViewModel @Inject constructor(
 
     private var job: Job = Job().apply { cancel() }
 
-    fun initReviewData(
-        reviewId: Long,
-        myReview: String,
-        myRating: Int,
-    ) {
+    @AssistedFactory
+    interface PlaceReviewContentFactory{
+        fun create(placeReviewContentData: PlaceReviewContentData?): EditPlaceReviewViewModel
+    }
+
+    init {
         viewModelScope.launch {
-            placeReviewId = reviewId
-            rating.emit((myRating / 2).toFloat())
-            review.emit(myReview)
+            if (placeReviewContentData != null){
+                placeReviewId = placeReviewContentData.placeReviewId
+                rating.emit((placeReviewContentData.myRating / 2).toFloat())
+                review.emit(placeReviewContentData.myReview)
+            }
         }
     }
 
@@ -71,7 +80,7 @@ class EditPlaceReviewViewModel @Inject constructor(
 
                     update -> {
                         val placeReviewUpdateInfo = PlaceReviewUpdateInfo(
-                            placeReviewId,
+                            placeReviewId!!,
                             (rating.value * 2).toInt(),
                             review.value,
                         )
@@ -144,5 +153,14 @@ class EditPlaceReviewViewModel @Inject constructor(
         const val initRating = 3.0F
         const val register = "register"
         const val update = "update"
+
+        fun provideFactory(
+            assistedFactory: PlaceReviewContentFactory,
+            placeReviewContentData: PlaceReviewContentData?
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory{
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(placeReviewContentData) as T
+            }
+        }
     }
 }

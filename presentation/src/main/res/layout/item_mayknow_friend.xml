@@ -20,12 +20,12 @@
         style="@style/h4"
         android:textColor="@color/label_normal"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/rv_popular_spot_summary"
+        app:layout_constraintBottom_toTopOf="@+id/rv_mayknow_friend_summary"
         app:layout_constraintStart_toStartOf="parent"
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_popular_spot_summary"
+        android:id="@+id/rv_mayknow_friend_summary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -39,7 +39,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_popular_spot_title"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_maykonw_friend_summary"
+        tools:listitem="@layout/item_mayknow_friend_summary"
         tools:itemCount="10"
         />
 

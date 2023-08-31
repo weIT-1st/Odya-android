@@ -49,6 +49,17 @@
     <!-- maykonw_friend -->
     <string name="mayknow_friend_title">알 수도 있는 친구</string>
 
+    <!--  review  -->
+    <string name="create_review_title">리뷰 작성</string>
+    <string name="edit_review_title">리뷰 수정</string>
+    <string name="review_star">별점 등록(%.1f/5)</string>
+    <string name="review_detail">리뷰 내용(%d/30)</string>
+    <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
+    <string name="review_cancel">취소</string>
+    <string name="create_review_register">등록하기</string>
+    <string name="edit_review_register">수정하기</string>
+
+
     <!-- post travel log -->
     <string name="post_travel_log_title">여행일지 작성하기</string>
     <string name="post_travel_log_info">여행정보</string>
@@ -86,4 +97,6 @@
     <string name="place_friend_journal">👀친구의 여행일지</string>
 
     <string name="place_community">커뮤니티</string>
+
+    <string name="feed_reaction_count">99+</string>
 </resources>

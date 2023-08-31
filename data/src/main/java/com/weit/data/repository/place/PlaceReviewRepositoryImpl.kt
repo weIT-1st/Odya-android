@@ -3,6 +3,8 @@ package com.weit.data.repository.place
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
+import com.weit.data.util.exception
+import com.weit.domain.model.exception.NotExistPlaceReviewException
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import com.weit.domain.model.place.PlaceReviewDetail
@@ -60,6 +62,38 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.review,
                 )
             }
+        }
+    }
+
+    override suspend fun isExistReview(placeId: String): Result<Boolean> {
+        val result = runCatching {
+            dataSource.isExistReview(placeId)
+        }
+        return if (result.isSuccess) {
+            val isExist = result.getOrNull()?.isExist
+            if (isExist == true) {
+                Result.success(isExist)
+            } else {
+                Result.failure(NotExistPlaceReviewException())
+            }
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
+    override suspend fun getReviewCount(placeId: String): Result<Int> {
+        val result = runCatching {
+            dataSource.getReviewCount(placeId)
+        }
+        return if (result.isSuccess) {
+            val count = result.getOrNull()?.count
+            if (count != null) {
+                Result.success(count)
+            } else {
+                Result.failure(result.exception())
+            }
+        } else {
+            Result.failure(result.exception())
         }
     }
 

@@ -32,4 +32,6 @@
     <dimen name="item_travel_friend_profile_space">8dp</dimen>
     <dimen name="item_travel_friend_search_space">16dp</dimen>
     <dimen name="item_travel_friends_space">-4dp</dimen>
+
+    <dimen name="item_topic_spacing">8dp</dimen>
 </resources>

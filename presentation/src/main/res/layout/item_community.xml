@@ -1,274 +1,287 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="feed"
+            type="com.weit.presentation.model.Feed.FeedItem" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
 
-    <ImageView
-        android:id="@+id/iv_community_bg"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:background="@drawable/corners_top_8"
-        android:scaleType="centerCrop"
-        android:src="@drawable/background"
-        app:layout_constraintDimensionRatio="1.2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/iv_community_bg"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/corners_top_8"
+            android:scaleType="centerCrop"
+            android:src="@drawable/background"
+            app:image_uri="@{feed.feedImage}"
+            app:layout_constraintDimensionRatio="1.2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view_community_title"
-        android:layout_width="0dp"
-        android:layout_height="46dp"
-        android:background="@drawable/corners_top_8"
-        android:backgroundTint="@color/background_dim"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_bg"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <View
+            android:id="@+id/view_community_title"
+            android:layout_width="0dp"
+            android:layout_height="46dp"
+            android:background="@drawable/corners_top_8"
+            android:backgroundTint="@color/background_dim"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <ImageView
-        android:id="@+id/iv_community_bookmark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="17dp"
-        android:src="@drawable/ic_diary"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
-        app:layout_constraintStart_toStartOf="@id/view_community_title"
-        app:layout_constraintTop_toTopOf="@+id/view_community_title" />
+        <ImageView
+            android:id="@+id/iv_community_bookmark"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="17dp"
+            android:src="@drawable/ic_diary"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
+            app:layout_constraintStart_toStartOf="@id/view_community_title"
+            app:layout_constraintTop_toTopOf="@+id/view_community_title" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_title"
-        style="@style/detail1"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_bookmark"
-        app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
-        app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
-        tools:text="2020 컴공과 졸업여행" />
-
-
-    <ImageView
-        android:id="@+id/iv_community_direction"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
-        android:src="@drawable/ic_direction_right"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_title"
-        app:layout_constraintTop_toTopOf="@+id/view_community_title" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_title"
+            style="@style/detail1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_bookmark"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
+            app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
+            tools:text="@{feed.travelLog.travelLogTitle}" />
 
 
-    <View
-        android:id="@+id/view_community_content"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/corners_bottom_8"
-        android:backgroundTint="@color/elevation2"
-        app:layout_constraintDimensionRatio="2.3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_community_title" />
+        <ImageView
+            android:id="@+id/iv_community_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="13dp"
+            android:src="@drawable/ic_direction_right"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_title"
+            app:layout_constraintEnd_toEndOf="@+id/view_community_title"
+            app:layout_constraintTop_toTopOf="@+id/view_community_title" />
 
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_community_profile"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintStart_toStartOf="@+id/view_community_content"
-        app:layout_constraintTop_toTopOf="@+id/view_community_content" />
+        <View
+            android:id="@+id/view_community_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corners_bottom_8"
+            android:backgroundTint="@color/elevation2"
+            app:layout_constraintDimensionRatio="2.3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_community_title" />
 
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_nickname"
-        style="@style/body1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
-        app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        tools:text="닉네임을 최대한 짧게 하도록 하세요 알겠습니까?" />
-
-    <ImageView
-        android:id="@+id/iv_community_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:src="@drawable/ic_badge"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintStart_toEndOf="@+id/tv_community_nickname"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_community_profile"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:src="@drawable/ic_profile"
+            app:image_uri="@{feed.userProfile.url}"
+            app:profile_background="@{feed.userProfile}"
+            app:layout_constraintStart_toStartOf="@+id/view_community_content"
+            app:layout_constraintTop_toTopOf="@+id/view_community_content" />
 
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_dot"
-        android:layout_width="8dp"
-        android:layout_height="20dp"
-        android:layout_marginStart="4dp"
-        android:textColor="@color/label_assistive"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        tools:text="·" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_nickname"
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
+            app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+            tools:text="@{feed.userNickname}" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_datetime"
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"
-        android:layout_marginStart="4dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textColor="@color/label_assistive"
-        android:textSize="12dp"
-        android:textStyle="bold"
-        app:layout_constrainedWidth="true"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-        tools:text="2일전" />
-
-    <ToggleButton
-        android:id="@+id/bt_community_follow"
-        android:layout_width="54dp"
-        android:layout_height="29dp"
-        android:layout_marginEnd="20dp"
-        android:background="@drawable/selector_bt_follow"
-        android:textOff=""
-        android:textOn=""
-        app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
-        app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_content"
-        style="@style/detail2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="20dp"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:textColor="?attr/colorOnSurface"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
-        app:layout_constraintStart_toStartOf="@+id/view_community_content"
-        app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
-        tools:text="컴공과 졸업여행으로 제주도를 갔다왔습니다. 푸른밤 제주 어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구어쩌구저쩌구" />
+        <ImageView
+            android:id="@+id/iv_community_badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_badge"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+            app:layout_constraintStart_toEndOf="@+id/tv_community_nickname"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
 
 
-    <View
-        android:id="@+id/view_community_reply"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="18.5dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="18.5dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/corners_all_8"
-        android:backgroundTint="@color/elevation3"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_content"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_content"
-        app:layout_constraintStart_toStartOf="@+id/view_community_content"
-        app:layout_constraintTop_toBottomOf="@+id/tv_community_content" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_dot"
+            android:layout_width="8dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="4dp"
+            android:textColor="@color/label_assistive"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+            app:layout_constraintStart_toEndOf="@+id/iv_community_badge"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+            tools:text="·" />
 
-    <ImageView
-        android:id="@+id/iv_community_location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:src="@drawable/ic_location"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintStart_toStartOf="@+id/view_community_reply"
-        app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_datetime"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/label_assistive"
+            android:textSize="12dp"
+            android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+            app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
+            tools:text="@{feed.date}" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_location"
-        style="@style/detail2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="12dp"
-        android:ellipsize="end"
-        android:maxLines="1"
-        app:layout_constraintHorizontal_bias="0.0"
-        android:textColor="@color/label_assistive"
-        app:layout_constraintEnd_toStartOf="@+id/iv_community_heart"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintStart_toEndOf="@+id/iv_community_location"
-        app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        tools:text="오이도jfffffffffffffffffffffffffoooooodddddddffffff" />
+        <ToggleButton
+            android:id="@+id/bt_community_follow"
+            android:layout_width="54dp"
+            android:layout_height="29dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/selector_bt_follow"
+            android:textOff=""
+            android:textOn=""
+            android:checked="@{feed.followState}"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
+            app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+            app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
 
-
-    <ToggleButton
-        android:id="@+id/iv_community_heart"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="4dp"
-        android:background="@drawable/selector_bt_heart"
-        android:textOff=""
-        android:textOn=""
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
-        app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_heart"
-        style="@style/detail1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="12dp"
-        android:textColor="@color/label_assistive"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
-        app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
-        app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        tools:text="99+" />
-
-    <ImageView
-        android:id="@+id/iv_community_reply"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginEnd="4dp"
-        android:src="@drawable/ic_reply"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintEnd_toStartOf="@+id/tv_community_reply"
-        app:layout_constraintLeft_toRightOf="@+id/tv_community_heart"
-        app:layout_constraintTop_toTopOf="@id/view_community_reply" />
-
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_community_reply"
-        style="@style/detail1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="8dp"
-        android:textColor="@color/label_assistive"
-        app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-        app:layout_constraintEnd_toEndOf="@+id/view_community_reply"
-        app:layout_constraintLeft_toRightOf="@+id/iv_community_reply"
-        app:layout_constraintTop_toTopOf="@id/view_community_reply"
-        tools:text="99+" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_content"
+            style="@style/detail2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+            app:layout_constraintStart_toStartOf="@+id/view_community_content"
+            app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
+            tools:text="@{feed.content}" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <View
+            android:id="@+id/view_community_reply"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="18.5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="18.5dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/elevation3"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_content"
+            app:layout_constraintEnd_toEndOf="@+id/view_community_content"
+            app:layout_constraintStart_toStartOf="@+id/view_community_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_community_content" />
+
+        <ImageView
+            android:id="@+id/iv_community_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_location"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintStart_toStartOf="@+id/view_community_reply"
+            app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_location"
+            style="@style/detail2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/label_assistive"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_heart"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/iv_community_location"
+            app:layout_constraintTop_toTopOf="@id/view_community_reply"
+            tools:text="@{feed.place}" />
+
+
+        <ToggleButton
+            android:id="@+id/iv_community_heart"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/selector_bt_heart"
+            android:textOff=""
+            android:textOn=""
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
+            app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_heart"
+            style="@style/detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp"
+            android:textColor="@color/label_assistive"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
+            app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
+            app:layout_constraintTop_toTopOf="@id/view_community_reply"
+            tools:text="99" />
+
+        <ImageView
+            android:id="@+id/iv_community_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="36dp"
+            android:layout_marginEnd="4dp"
+            android:src="@drawable/ic_reply"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintEnd_toStartOf="@+id/tv_community_reply"
+            app:layout_constraintLeft_toRightOf="@+id/tv_community_heart"
+            app:layout_constraintTop_toTopOf="@id/view_community_reply" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_community_reply"
+            style="@style/detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/label_assistive"
+            app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
+            app:layout_constraintEnd_toEndOf="@+id/view_community_reply"
+            app:layout_constraintLeft_toRightOf="@+id/iv_community_reply"
+            app:layout_constraintTop_toTopOf="@id/view_community_reply"
+            tools:text="99" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

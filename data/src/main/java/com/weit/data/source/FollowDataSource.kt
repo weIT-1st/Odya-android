@@ -1,14 +1,15 @@
 package com.weit.data.source
 
 import com.weit.data.model.ListResponse
+import com.weit.data.model.follow.FollowFollowingId
 import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
 import com.weit.data.service.FollowService
-import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
+import retrofit2.Response
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -19,12 +20,12 @@ class FollowDataSource @Inject constructor(
     private val followers = CopyOnWriteArrayList<FollowUserContent>()
     private val followings = CopyOnWriteArrayList<FollowUserContent>()
 
-    suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo) {
-        followService.createFollow(followFollowingIdInfo)
+    suspend fun createFollow(followFollowingId: FollowFollowingId) {
+        followService.createFollow(followFollowingId)
     }
 
-    suspend fun deleteFollow(followFollowingIdInfo: FollowFollowingIdInfo) {
-        followService.createFollow(followFollowingIdInfo)
+    suspend fun deleteFollow(followFollowingId: FollowFollowingId): Response<Unit> {
+        return followService.deleteFollow(followFollowingId)
     }
 
     suspend fun getFollowNumber(

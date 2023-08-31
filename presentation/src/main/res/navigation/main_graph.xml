@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/post_graph">
+    app:startDestination="@id/fragment_map">
 
     <fragment
         android:id="@+id/fragment_memory"
@@ -16,7 +16,17 @@
     <fragment
         android:id="@+id/fragment_feed"
         android:name="com.weit.presentation.ui.feed.FeedFragment"
-        android:label="FeedFragment" />
+        android:label="FeedFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_travellog"
+            app:destination="@id/fragment_travellog" />
+        <action
+            android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+        <action
+            android:id="@+id/action_fragment_feed_to_feedPostFragment"
+            app:destination="@id/fragment_feed_post" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
         android:name="com.weit.presentation.ui.mypage.MyPageFragment"
@@ -53,4 +63,24 @@
                 android:defaultValue="@null" />
         </fragment>
     </navigation>
+    <fragment
+        android:id="@+id/fragment_travellog"
+        android:name="com.weit.presentation.ui.travellog.TravelLogFragment"
+        android:label="TravelLogFragment" >
+        <argument
+            android:name="travelLogId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_feed_detail"
+        android:name="com.weit.presentation.ui.feed.FeedDetailFragment"
+        android:label="FeedDetailFragment" >
+        <argument
+            android:name="feedId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_feed_post"
+        android:name="com.weit.presentation.ui.feed.FeedPostFragment"
+        android:label="FeedPostFragment" />
 </navigation>

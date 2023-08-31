@@ -47,15 +47,12 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             if (placeReviewContentData != null){
+                reviewState = update
                 placeReviewId = placeReviewContentData.placeReviewId
                 rating.emit((placeReviewContentData.myRating / 2).toFloat())
                 review.emit(placeReviewContentData.myReview)
             }
         }
-    }
-
-    fun changeReviewState() {
-        reviewState = update
     }
 
     fun updatePlaceReview(placeId: String) {

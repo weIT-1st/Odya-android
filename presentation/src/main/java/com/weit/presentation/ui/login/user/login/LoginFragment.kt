@@ -81,7 +81,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
 
     private fun editReviewDialog() {
         editPlaceReviewFragment = EditPlaceReviewFragment("", null)
-        if (!editPlaceReviewFragment!!.dialog!!.isShowing) {
+
+        if (editPlaceReviewFragment?.dialog == null){
             editPlaceReviewFragment!!.show(childFragmentManager, "EditReview")
         }
     }

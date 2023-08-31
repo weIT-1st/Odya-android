@@ -39,7 +39,7 @@ class EditPlaceReviewFragment(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isCancelable = true
+        isCancelable = false
     }
 
     override fun onCreateView(
@@ -64,7 +64,6 @@ class EditPlaceReviewFragment(
             binding.tvEditReviewTitle.setText(R.string.edit_review_title)
             binding.btnEditReviewRegister.setText(R.string.edit_review_register)
             binding.etEditReviewDetail.hint = placeReviewContentData.myReview
-            viewModel.changeReviewState()
         }
 
         repeatOnStarted(viewLifecycleOwner) {

@@ -12,12 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor() : ViewModel() {
 class MainViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val setUserIdUseCase: SetUserIdUseCase,
 ) : ViewModel() {
-
 
     init {
         setUserId()
@@ -37,7 +35,6 @@ class MainViewModel @Inject constructor(
     ) {
         verifyIgnoringBatteryOptimizationUseCase()
     }
-
 
     fun verifyNotificationSetting(
         verifyNotificationSettingUseCase: VerifyNotificationSettingUseCase,

@@ -70,4 +70,6 @@
     <string name="travel_friend_title">함께 간 친구</string>
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
+
+    <string name="feed_reaction_count">99+</string>
 </resources>

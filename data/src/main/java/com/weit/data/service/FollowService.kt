@@ -1,10 +1,10 @@
 package com.weit.data.service
 
 import com.weit.data.model.ListResponse
-import com.weit.data.model.follow.FollowFollowingIdDTO
+import com.weit.data.model.follow.FollowFollowingId
 import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
-import com.weit.domain.model.follow.FollowFollowingIdInfo
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -16,13 +16,13 @@ interface FollowService {
 
     @POST("/api/v1/follows")
     suspend fun createFollow(
-        @Body followFollowingIdInfo: FollowFollowingIdInfo,
+        @Body followFollowingId: FollowFollowingId,
     )
 
     @DELETE("/api/v1/follows")
     suspend fun deleteFollow(
-        @Body followFollowingIdDTO: FollowFollowingIdDTO,
-    )
+        @Body followFollowingId: FollowFollowingId,
+    ): Response<Unit>
 
     @GET("/api/v1/follows/{userId}}/counts")
     suspend fun getFollowNumber(

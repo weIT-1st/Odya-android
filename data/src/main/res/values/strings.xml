@@ -2,4 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="read_permission_denied">사진을 가져오기 위해서 권한이 필요해요!\n신사답게 행동하십쇼</string>
     <string name="location_permission_denied" tools:ignore="ExtraTranslation">위치권한이 필요해요</string>
+    <string name="background_location_permission_denied" tools:ignore="ExtraTranslation">위치권한을 항상 허용으로 바꿔주세요</string>
+    <string name="notification_permission_denied" tools:ignore="ExtraTranslation">알람 권한을 허용해주세요</string>
 </resources>

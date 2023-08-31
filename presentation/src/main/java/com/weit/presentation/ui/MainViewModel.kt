@@ -3,6 +3,8 @@ package com.weit.presentation.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
+import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
+import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.domain.usecase.user.SetUserIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,5 +34,21 @@ class MainViewModel @Inject constructor(
         verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase,
     ) {
         verifyIgnoringBatteryOptimizationUseCase()
+    }
+
+    fun verifyNotificationSetting(
+        verifyNotificationSettingUseCase: VerifyNotificationSettingUseCase,
+    ) {
+        viewModelScope.launch {
+            verifyNotificationSettingUseCase()
+        }
+    }
+
+    fun verifyLocationPermission(
+        verifyLocationPermissionUseCase: VerifyLocationPermissionUseCase,
+    ) {
+        viewModelScope.launch {
+            verifyLocationPermissionUseCase()
+        }
     }
 }

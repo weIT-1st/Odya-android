@@ -9,6 +9,8 @@ import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
+import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
+import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ActivityMainBinding
 import com.weit.presentation.ui.base.BaseActivity
@@ -18,11 +20,17 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::inflate) {
 
-    private val vm: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var navController: NavController
 
     @Inject
     lateinit var verifyIgnoringBatteryOptimizationUseCase: VerifyIgnoringBatteryOptimizationUseCase
+
+    @Inject
+    lateinit var verifyNotificationSettingUseCase: VerifyNotificationSettingUseCase
+
+    @Inject
+    lateinit var verifyLocationPermissionUseCase: VerifyLocationPermissionUseCase
 
     private val destinationChangedListener =
         NavController.OnDestinationChangedListener { _, destination, _ ->
@@ -37,7 +45,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setupBottomNavigation()
-        vm.verifyIgnoringBatteryOptimization(verifyIgnoringBatteryOptimizationUseCase)
+        viewModel.verifyIgnoringBatteryOptimization(verifyIgnoringBatteryOptimizationUseCase)
+        viewModel.verifyNotificationSetting(verifyNotificationSettingUseCase)
+        viewModel.verifyLocationPermission(verifyLocationPermissionUseCase)
     }
 
     private fun setupBottomNavigation() {
@@ -56,6 +66,12 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         super.onStart()
         val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
         stopService(serviceIntent)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        val serviceIntent = Intent(this, CoordinateForegroundService::class.java)
+        startForegroundService(serviceIntent)
     }
 
     override fun onDestroy() {

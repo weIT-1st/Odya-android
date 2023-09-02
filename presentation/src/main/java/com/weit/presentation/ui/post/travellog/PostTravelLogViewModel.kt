@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.presentation.model.post.place.PlacePredictionDTO
 import com.weit.presentation.model.post.travellog.DailyTravelLog
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
 import com.weit.presentation.model.post.travellog.toDTO
@@ -79,6 +80,14 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun onSelectPlace() {
+        // 장소 빼오기
+        val imagePlaces = emptyList<PlacePredictionDTO>()
+        viewModelScope.launch {
+            _event.emit(Event.OnSelectPlace(imagePlaces))
+        }
+    }
+
     fun onEditTravelFriends() {
         viewModelScope.launch {
             val friendsDTO = friends.map { it.toDTO() }
@@ -113,6 +122,10 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         ) : Event()
         data class OnEditTravelFriends(
             val travelFriends: List<FollowUserContentDTO>,
+        ) : Event()
+
+        data class OnSelectPlace(
+            val imagePlaces: List<PlacePredictionDTO>,
         ) : Event()
     }
 

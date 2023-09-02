@@ -80,6 +80,12 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                         getString(R.string.post_travel_log_friends_count, event.remainingFriendsCount)
                 }
             }
+            is PostTravelLogViewModel.Event.OnSelectPlace -> {
+                val action = PostTravelLogFragmentDirections.actionPostTravelLogFragmentToSelectPlaceFragment(
+                    event.imagePlaces.toTypedArray(),
+                )
+                findNavController().navigate(action)
+            }
         }
     }
 
@@ -92,10 +98,16 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 viewModel.onSelectPictures(action.position, pickImageUseCase)
             }
             is DailyTravelLogAction.OnSelectPlace -> {
+                viewModel.onSelectPlace()
             }
             is DailyTravelLogAction.OnDeleteDailyTravelLog -> {
                 viewModel.onDeleteDailyTravelLog(action.position)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvPostTravelLogDaily.adapter = null
+        super.onDestroyView()
     }
 }

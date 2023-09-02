@@ -82,5 +82,9 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
+    <!-- select place -->
+    <string name="select_place_title">장소 태그하기</string>
+    <string name="select_place_search">장소를 검색해보세요</string>
+
     <string name="feed_reaction_count">99+</string>
 </resources>

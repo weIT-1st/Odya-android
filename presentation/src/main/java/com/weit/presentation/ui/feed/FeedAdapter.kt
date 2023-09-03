@@ -111,16 +111,24 @@ class FeedAdapter(
 
             if (feed.commentNum > DEFAULT_REACTION_COUNT) {
                 binding.tvCommunityReply.text =
-                    binding.root.context.getString(R.string.feed_reaction_count)
+                    binding.root.context.getString(
+                        R.string.feed_reaction_over_count,
+                        DEFAULT_REACTION_COUNT
+                    )
             } else {
-                binding.tvCommunityReply.text = feed.commentNum.toString()
+                binding.tvCommunityReply.text =
+                    binding.root.context.getString(R.string.feed_reaction_count, feed.commentNum)
             }
 
             if (feed.commentNum > DEFAULT_REACTION_COUNT) {
                 binding.tvCommunityHeart.text =
-                    binding.root.context.getString(R.string.feed_reaction_count)
+                    binding.root.context.getString(
+                        R.string.feed_reaction_over_count,
+                        DEFAULT_REACTION_COUNT
+                    )
             } else {
-                binding.tvCommunityHeart.text = feed.likeNum.toString()
+                binding.tvCommunityHeart.text =
+                    binding.root.context.getString(R.string.feed_reaction_count, feed.likeNum)
             }
 
             binding.viewCommunityContent.setOnClickListener {
@@ -140,7 +148,7 @@ class FeedAdapter(
             object : DiffUtil.ItemCallback<Feed>() {
                 override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
                     return oldItem is Feed.FeedItem && newItem is Feed.FeedItem &&
-                        oldItem.feedId == newItem.feedId
+                            oldItem.feedId == newItem.feedId
                 }
 
                 override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {

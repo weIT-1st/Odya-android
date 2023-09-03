@@ -71,5 +71,9 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
-    <string name="feed_reaction_count">99+</string>
+    <!-- feed -->
+    <string name="feed_reaction_count">%d</string>
+    <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
 </resources>

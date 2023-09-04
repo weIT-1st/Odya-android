@@ -10,7 +10,6 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.weit.domain.model.place.PlacePrediction
 import com.weit.presentation.databinding.FragmentSelectPlaceBinding
 import com.weit.presentation.ui.base.BaseMapFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -46,30 +45,16 @@ class SelectPlaceFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        sheetBehavior.isHideable = true
-        sheetBehavior.peekHeight = 50
-        sheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        val list = listOf(
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-            PlacePrediction("", "ㅇㅣ이이", "이이이ㅣ이"),
-        )
         binding.rvSelectPlacePredictions.adapter = adapter
-        adapter.submitList(list)
+        initBottomSheet()
+    }
+
+    private fun initBottomSheet() {
+        sheetBehavior.run {
+            isHideable = true
+            peekHeight = 50
+            state = BottomSheetBehavior.STATE_EXPANDED
+        }
     }
 
     override fun initCollector() {
@@ -106,6 +91,10 @@ class SelectPlaceFragment :
                     position(event.latLng)
                 }
                 map?.addMarker(marker)
+            }
+            is SelectPlaceViewModel.Event.MoveMap -> {
+                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(event.latLng, 15f)
+                map?.moveCamera(cameraUpdate)
             }
         }
     }

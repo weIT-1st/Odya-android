@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
@@ -17,7 +16,7 @@ class PlaceRepositoryImpl @Inject constructor(
 ) : PlaceRepository {
 
     override suspend fun searchPlace(query: String): List<PlacePrediction> {
-        val result = dataSource.searchPlaces(query).first()
+        val result = dataSource.searchPlaces(query)
         return result.map {
             PlacePrediction(
                 it.placeId,

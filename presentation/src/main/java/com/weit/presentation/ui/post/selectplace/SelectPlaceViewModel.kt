@@ -6,18 +6,23 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.weit.domain.model.place.PlacePrediction
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.place.GetSearchPlaceUseCase
 import com.weit.presentation.model.post.place.PlacePredictionDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class SelectPlaceViewModel @AssistedInject constructor(
     @Assisted imagePlacesDTO: List<PlacePredictionDTO>,
+    private val getSearchPlaceUseCase: GetSearchPlaceUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
 ) : ViewModel() {
 
     private val _event = MutableEventFlow<Event>()
@@ -29,6 +34,10 @@ class SelectPlaceViewModel @AssistedInject constructor(
     val places: StateFlow<List<PlacePrediction>> get() = _places
 
     val query = MutableStateFlow("")
+
+    private var searchJob: Job = Job().apply {
+        complete()
+    }
 
     @AssistedFactory
     interface SelectPlaceFactory {
@@ -42,16 +51,29 @@ class SelectPlaceViewModel @AssistedInject constructor(
     }
 
     fun onClickSearchedPlace(place: PlacePrediction) {
-
+        viewModelScope.launch {
+            val placeDetail = getPlaceDetailUseCase(place.placeId)
+            val latitude = placeDetail.latitude ?: return@launch
+            val longitude = placeDetail.longitude ?: return@launch
+            val latlng = LatLng(latitude, longitude)
+            _event.emit(Event.SetMarker(latlng))
+            _event.emit(Event.MoveMap(latlng))
+        }
     }
 
     fun onSearch(query: String) {
-        viewModelScope.launch {
-            if (query.isBlank()) {
-                _places.emit(imagePlaces.toList())
+        searchJob.cancel()
+        searchPlace(query)
+    }
+
+    private fun searchPlace(query: String) {
+        searchJob = viewModelScope.launch {
+            val searchedPlaces = if (query.isBlank()) {
+                imagePlaces.toList()
             } else {
-                // 검색 결과
+                getSearchPlaceUseCase(query)
             }
+            _places.emit(searchedPlaces)
         }
     }
 
@@ -61,6 +83,7 @@ class SelectPlaceViewModel @AssistedInject constructor(
 
     sealed class Event {
         data class SetMarker(val latLng: LatLng) : Event()
+        data class MoveMap(val latLng: LatLng) : Event()
     }
 
     companion object {

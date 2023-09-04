@@ -7,6 +7,11 @@ import javax.inject.Inject
 class GetSearchPlaceUseCase @Inject constructor(
     private val repository: PlaceRepository,
 ) {
-    suspend operator fun invoke(query: String): List<PlacePrediction> =
-        repository.searchPlace(query)
+    suspend operator fun invoke(query: String): List<PlacePrediction> {
+        return if (query.isBlank()) {
+            emptyList()
+        } else {
+            repository.searchPlace(query)
+        }
+    }
 }

@@ -7,13 +7,14 @@ import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.orhanobut.logger.Logger
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
 import com.weit.data.service.PlaceService
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import java.util.Locale
 import javax.inject.Inject
 
 class PlaceDateSource @Inject constructor(
@@ -63,10 +64,22 @@ class PlaceDateSource @Inject constructor(
         )
     }
 
-    suspend fun searchPlaces(query: String): Flow<List<AutocompletePrediction>> = callbackFlow {
+    suspend fun searchPlaces(
+        query: String,
+        language: String = "ko",
+        types: List<String> = defaultResultTypes
+    ): List<AutocompletePrediction> = callbackFlow<List<AutocompletePrediction>> {
+        val result = service.getPlacesByQuery(
+            apiKey = BuildConfig.GOOGLE_MAP_KEY,
+            query = query,
+            lang = language,
+            types = PlaceTypes.POINT_OF_INTEREST,
+        )
+        result.predictions.joinToString("\n") { it.structuredFormatting.mainText }
+        Logger.t("MainTest").i("결과 $result")
         val newRequest = FindAutocompletePredictionsRequest.builder()
-            .setCountries("KR")
-            .setTypesFilter(listOf(PlaceTypes.ESTABLISHMENT))
+            .setCountries(Locale.getDefault().country)
+            .setTypesFilter(listOf(PlaceTypes.POINT_OF_INTEREST))
             .setSessionToken(sessionToken)
             .setQuery(query)
             .build()
@@ -78,5 +91,5 @@ class PlaceDateSource @Inject constructor(
                 trySend(emptyList())
             }
         awaitClose { }
-    }
+    }.first()
 }

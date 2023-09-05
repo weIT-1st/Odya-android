@@ -65,7 +65,7 @@ data class FeedDetail(
     val likeNum: Int,
     val commentNum: Int,
     val place: String?,
-    val comments : List<FeedComment>?
+    val comments: List<FeedComment>?,
 )
 
 data class FeedComment(

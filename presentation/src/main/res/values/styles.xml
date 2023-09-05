@@ -92,13 +92,15 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">8dp</item>
     </style>
-
-    <style name="RoundCornerBottomSheetDialogTheme" parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/RoundCornerModalStyle</item>
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
-    <style name="RoundCornerModalStyle" parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/corners_top_12</item>
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/corners_top_12_in_bottom_sheet</item>
     </style>
 
 </resources>

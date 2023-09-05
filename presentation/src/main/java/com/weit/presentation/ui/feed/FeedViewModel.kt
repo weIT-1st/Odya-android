@@ -101,7 +101,7 @@ class FeedViewModel @Inject constructor(
 
     private fun getFeeds(): List<Feed.FeedItem> {
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val travelLog = TravelLogInFeed(1, "ddd","")
+        val travelLog = TravelLogInFeed(1, "ddd", "")
         val feedList = listOf(
             FeedDTO(1, 1, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
             FeedDTO(2, 2, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),

@@ -8,8 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.databinding.ItemFeedCommentBinding
 import com.weit.presentation.model.FeedComment
 
-class FeedCommentAdapter(
-) : ListAdapter<FeedComment, FeedCommentAdapter.FeedCommentViewHolder>(DiffCallback) {
+class FeedCommentAdapter() : ListAdapter<FeedComment, FeedCommentAdapter.FeedCommentViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedCommentViewHolder {
         return FeedCommentViewHolder(

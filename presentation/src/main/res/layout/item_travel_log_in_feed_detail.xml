@@ -12,8 +12,7 @@
         android:background="@drawable/corners_all_8"
         android:id="@+id/layout_travel_log"
         android:layout_width="match_parent"
-        android:clipToOutline="true"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         >
 
         <ImageView

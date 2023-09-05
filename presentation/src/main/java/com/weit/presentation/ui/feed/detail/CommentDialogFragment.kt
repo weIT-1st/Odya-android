@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
 import com.weit.presentation.model.FeedComment
@@ -16,21 +15,20 @@ import com.weit.presentation.ui.util.SpaceDecoration
 class CommentDialogFragment() : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
-    private val feedCommentAdapter  =FeedCommentAdapter()
+    private val feedCommentAdapter = FeedCommentAdapter()
     var comments = listOf<FeedComment>()
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
     ): View {
-        Logger.t("MainTest").i("들어왔다")
         _binding = BottomSheetFeedCommentBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, 600)
         binding.rvFeedComments.run {
             addItemDecoration(
                 SpaceDecoration(resources, bottomDP = R.dimen.item_travel_friend_search_space),
@@ -42,7 +40,6 @@ class CommentDialogFragment() : BottomSheetDialogFragment() {
             adapter = feedCommentAdapter
         }
         feedCommentAdapter.submitList(comments)
-
     }
     override fun onDestroyView() {
         super.onDestroyView()

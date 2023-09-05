@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.feed
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
@@ -8,27 +7,18 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.orhanobut.logger.Logger
 import com.weit.presentation.R
-import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
-import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDetail
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
-import com.weit.presentation.ui.post.travellog.PostTravelLogViewModel
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import kotlin.concurrent.fixedRateTimer
 
 @AndroidEntryPoint
 class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
@@ -42,7 +32,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        Logger.t("MainTest").i("feedDetail에서 args${args.feedId}")
+//        Logger.t("MainTest").i("feedDetail에서 args${args.feedId}")
         initCommentRecyclerView()
         initCommentBottomSheet()
         binding.btnWriteComment.setOnClickListener {
@@ -52,23 +42,18 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
         }
 
-        //TODO 바텀시트 안올라옴
-        //TODO toolbar 뒤로가기,공유버튼
-        //TODO content view 모서리 둥글게
-        //TODO 여행일지 더보기 IMAGE 없을 때 LAYOUT 조정
-        //TODO PROFILE BACKGROUND 얜 왜 안되냐
+        // TODO 좋아요
     }
     private fun initCommentBottomSheet() {
         bottomSheetDialog.setStyle(
             DialogFragment.STYLE_NORMAL,
-            R.style.RoundCornerBottomSheetDialogTheme
+            R.style.AppBottomSheetDialogTheme,
         )
-        binding.btnFeedCommentMore.setOnClickListener {
-            Logger.t("MainTest").i("클ㄹ릭함")
 
+        binding.btnFeedCommentMore.setOnClickListener {
             bottomSheetDialog.show(
                 requireActivity().supportFragmentManager,
-                CommentDialogFragment.TAG
+                CommentDialogFragment.TAG,
             )
         }
     }
@@ -78,14 +63,14 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             addItemDecoration(
                 SpaceDecoration(
                     resources,
-                    bottomDP = R.dimen.item_travel_friend_search_space
-                )
+                    bottomDP = R.dimen.item_travel_friend_search_space,
+                ),
             )
             addItemDecoration(
                 SpaceDecoration(
                     resources,
-                    topDP = R.dimen.item_travel_friend_search_space
-                )
+                    topDP = R.dimen.item_travel_friend_search_space,
+                ),
             )
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
             adapter = feedCommentAdapter
@@ -105,23 +90,29 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         }
     }
 
-    private fun setFeedDetail(feed : FeedDetail){
+    private fun setFeedDetail(feed: FeedDetail) {
         binding.feed = feed
-        binding.includeTravelLog.log = feed.travelLog
-        binding.includeTravelLog.layoutTravelLog.setOnClickListener {
-            feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }
+
+        if (feed.travelLog == null) {
+            binding.includeTravelLog.layoutTravelLog.visibility = View.GONE
+        } else {
+            binding.includeTravelLog.log = feed.travelLog
+            binding.includeTravelLog.layoutTravelLog.setOnClickListener {
+                navigateTravelLog(feed.travelLog.travelLogId)
+            }
         }
+
         if (feed.commentNum > DEFAULT_REACTION_COUNT) {
             binding.tvCommunityReply.text =
                 binding.root.context.getString(
                     R.string.feed_reaction_over_count,
-                    DEFAULT_REACTION_COUNT
+                    DEFAULT_REACTION_COUNT,
                 )
         } else {
             binding.tvCommunityReply.text =
                 binding.root.context.getString(
                     R.string.feed_reaction_count,
-                    feed.commentNum
+                    feed.commentNum,
                 )
         }
 
@@ -129,7 +120,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             binding.tvCommunityHeart.text =
                 binding.root.context.getString(
                     R.string.feed_reaction_over_count,
-                    DEFAULT_REACTION_COUNT
+                    DEFAULT_REACTION_COUNT,
                 )
         } else {
             binding.tvCommunityHeart.text =

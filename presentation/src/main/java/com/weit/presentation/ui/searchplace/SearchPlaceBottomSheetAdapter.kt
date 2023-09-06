@@ -8,23 +8,10 @@ import com.weit.presentation.ui.searchplace.journey.PlaceJourneyFragment
 import com.weit.presentation.ui.searchplace.review.PlaceReviewFragment
 
 class SearchPlaceBottomSheetAdapter(
-    fragmentActivity: BottomSheetDialogFragment
-): FragmentStateAdapter(fragmentActivity) {
+    fragment: BottomSheetDialogFragment,
+    private val tabItem: ArrayList<Fragment>
+): FragmentStateAdapter(fragment) {
 
-    override fun getItemCount(): Int {
-        return  ITEM_COUNT
-    }
-
-    override fun createFragment(position: Int): Fragment {
-        return when(position){
-            0 -> PlaceJourneyFragment()
-            1 -> PlaceReviewFragment()
-            2 -> PlaceCommunityFragment()
-            else -> PlaceReviewFragment()
-        }
-    }
-
-    companion object{
-        const val ITEM_COUNT = 3
-    }
+    override fun getItemCount(): Int = tabItem.size
+    override fun createFragment(position: Int): Fragment = tabItem[position]
 }

@@ -8,6 +8,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
+import com.weit.domain.model.follow.ExperiencedFriendInfo
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
 import com.weit.domain.model.follow.FollowUserContent
@@ -102,6 +103,23 @@ class FollowRepositoryImpl @Inject constructor(
     override fun getCachedFollowing(query: String): List<FollowUserContent> {
         return followDataSource.getCachedFollowings().filterByNickname(query)
     }
+
+    override suspend fun getExperiencedFriend(placeId: String): Result<List<ExperiencedFriendInfo>> {
+        return runCatching {
+            followDataSource.getExperiencedFriend(placeId).followings.map {
+                ExperiencedFriendInfo(
+                    it.userId,
+                    it.nickname,
+                    it.profile
+                )
+            }
+        }
+    }
+
+    override suspend fun getExperiencedFriendNum(placeId: String): Result<Int> =
+        runCatching { followDataSource.getExperiencedFriend(placeId).count }
+
+
 
     private fun List<FollowUserContent>.filterByNickname(query: String) =
         if (query.isBlank()) {

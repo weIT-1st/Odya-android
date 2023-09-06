@@ -1,6 +1,8 @@
 package com.weit.domain.repository.user
 
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserByNicknameInfo
+import com.weit.domain.model.user.UserContent
 
 interface UserRepository {
 
@@ -17,4 +19,6 @@ interface UserRepository {
     suspend fun setUserId(userId: Long)
 
     suspend fun getUserId(): Long
+
+    suspend fun getUserByNickname(userByNicknameInfo: UserByNicknameInfo): Result<List<UserContent>>
 }

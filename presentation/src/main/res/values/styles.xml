@@ -89,6 +89,9 @@
         <item name="android:maxHeight">47dip</item>
     </style>
 
+    <style name="CustomSmallRatingBar" parent="Widget.AppCompat.RatingBar.Indicator">
+        <item name="android:progressDrawable">@drawable/selector_star</item>
+    </style>
 
     <style name="edit_text_box" parent="Widget.Design.TextInputLayout">
         <item name="colorControlNormal">@color/elevation3</item>  // unFocus 상태일때 밑줄 색.

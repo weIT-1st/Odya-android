@@ -11,4 +11,5 @@ data class PlaceReviewDTO(
     @field:Json(name = "writerNickname") val writerNickname: String,
     @field:Json(name = "starRating") val starRating: Int,
     @field:Json(name = "review") val review: String,
+    @field:Json(name = "createdAt") val createdAt: String,
 )

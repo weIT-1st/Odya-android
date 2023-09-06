@@ -83,7 +83,7 @@
     <string name="travel_friend_complete">완료</string>
     
     <!-- place bottom sheet   -->
-    <string name="place_score">%f</string>
+    <string name="place_score">%.1f</string>
     <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
 
     <string name="place_review">한줄리뷰</string>
@@ -91,10 +91,12 @@
     <string name="place_recent_review">최근 리뷰 %d개</string>
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
+    <string name="place_my_review">내가 작성한 리뷰</string>
 
     <string name="place_journey">여행일지</string>
-    <string name="place_my_journal">📍나의 여행일지</string>
-    <string name="place_friend_journal">👀친구의 여행일지</string>
+    <string name="place_my_journal">나의 여행일지</string>
+    <string name="place_friend_journal">친구의 여행일지</string>
+    <string name="place_recommend_journal">추천 여행일지</string>
 
     <string name="place_community">커뮤니티</string>
 

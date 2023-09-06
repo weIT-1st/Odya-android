@@ -7,4 +7,5 @@ data class PlaceReviewDetail(
     val writerNickname: String,
     val starRating: Int,
     val review: String,
+    val createdAt: String
 )

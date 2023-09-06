@@ -45,6 +45,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.writerNickname,
                     it.starRating,
                     it.review,
+                    it.createdAt
                 )
             }
         }
@@ -60,6 +61,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.writerNickname,
                     it.starRating,
                     it.review,
+                    it.createdAt
                 )
             }
         }
@@ -96,6 +98,9 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             Result.failure(result.exception())
         }
     }
+
+    override suspend fun getAverageRating(info: PlaceReviewByPlaceIdInfo): Result<Int> =
+        runCatching { dataSource.getByPlaceId(info).averageRating }
 
     private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
         PlaceReviewRegistration(

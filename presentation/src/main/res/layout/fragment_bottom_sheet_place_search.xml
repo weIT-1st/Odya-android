@@ -4,163 +4,176 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="vm"
             type="com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetViewModel" />
 
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/corners_top_8"
+        android:backgroundTint="@color/background_normal">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
-            <ImageView
-                android:id="@+id/iv_bs_place_thumbnail"
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintDimensionRatio="16:9"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:src="@drawable/haeundae"/>
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_bs_place_thumbnail"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:src="@drawable/haeundae"
+                    app:layout_constraintDimensionRatio="16:9"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/haeundae" />
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_place_experienced_friend_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:clipToPadding="false"
-                android:elevation="5dp"
-                android:paddingEnd="16dp"
-                app:layout_constraintEnd_toEndOf="@+id/tv_bs_place_experienced_friend"
-                app:layout_constraintTop_toTopOf="@+id/tv_bs_place_experienced_friend"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_experienced_friend"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_round_profile_32dp"/>
-
-
-            <TextView
-                android:id="@+id/tv_bs_place_experienced_friend"
-                style="@style/detail1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@drawable/corners_all_8"
-                android:backgroundTint="@color/system_inactive"
-                android:drawablePadding="16dp"
-                android:paddingStart="16dp"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:text="@string/place_experienced_friend_count"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:drawableStartCompat="@drawable/ic_odya_logo" />
-
-            <TextView
-                android:id="@+id/tv_bs_place_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/h4"
-                android:textColor="@color/label_normal"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="64dp"
-                app:layout_constraintBottom_toTopOf="@+id/tv_bs_place_locate"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_bs_place_book_mark"
-                tools:text="해운대해운대해운대해운대 해수욕장"/>
-
-            <TextView
-                android:id="@+id/tv_bs_place_locate"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                style="@style/detail2"
-                android:textColor="@color/label_assistive"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:gravity="center"
-                android:layout_marginBottom="22dp"
-                android:layout_marginStart="64dp"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_bs_place_thumbnail"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_bs_place_book_mark"
-                tools:text="부산광역시 해운대구부산광역시 해운대구부산광역시 해운대구"/>
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_bs_place_book_mark"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:background="@drawable/ic_book_mark"
-                android:layout_marginEnd="40dp"
-                app:layout_constraintTop_toTopOf="@+id/tv_bs_place_title"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_locate"
-                app:layout_constraintEnd_toEndOf="parent"
-                />
-
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/tl_bs_place"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_marginTop="30dp"
-                android:background="@drawable/corners_all_61"
-                app:tabBackground="@drawable/selector_tl_place_background"
-                app:tabTextColor="@color/label_inactive"
-                app:tabSelectedTextColor="@color/label_reversed_normal"
-                app:tabIndicatorHeight="0dp"
-                android:layout_marginStart="44dp"
-                android:layout_marginEnd="44dp"
-                android:layout_marginBottom="40dp"
-                app:layout_constraintTop_toBottomOf="@+id/iv_bs_place_thumbnail"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
-
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_bs_place_journey"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_place_experienced_friend_profile"
                     android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:elevation="5dp"
+                    android:orientation="horizontal"
+                    android:paddingEnd="16dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_experienced_friend"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_bs_place_experienced_friend"
+                    app:layout_constraintTop_toTopOf="@+id/tv_bs_place_experienced_friend"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_round_profile_32dp" />
+
+
+                <TextView
+                    android:id="@+id/tv_bs_place_experienced_friend"
+                    style="@style/detail1"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/body1"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/system_inactive"
+                    android:drawablePadding="16dp"
+                    android:gravity="center_vertical"
+                    android:paddingStart="16dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="@string/place_experienced_friend_count"
+                    app:drawableStartCompat="@drawable/ic_odya_logo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_bs_place_title"
+                    style="@style/h4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="64dp"
+                    android:layout_marginBottom="8dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_bs_place_locate"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_bs_place_book_mark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="해운대해운대해운대해운대 해수욕장" />
+
+                <TextView
+                    android:id="@+id/tv_bs_place_locate"
+                    style="@style/detail2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="64dp"
+                    android:layout_marginBottom="22dp"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:textColor="@color/label_assistive"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_bs_place_thumbnail"
+                    app:layout_constraintEnd_toStartOf="@+id/btn_bs_place_book_mark"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:text="부산광역시 해운대구부산광역시 해운대구부산광역시 해운대구" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/btn_bs_place_book_mark"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="40dp"
+                    android:background="@drawable/ic_book_mark"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_locate"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/tv_bs_place_title" />
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tl_bs_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="44dp"
                     android:background="@drawable/corners_all_61"
-                    android:text="@string/place_journey" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_bs_place_thumbnail"
+                    app:tabBackground="@drawable/selector_tl_place_background"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabSelectedTextColor="@color/label_reversed_normal"
+                    app:tabTextColor="@color/label_inactive">
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_bs_place_review"
-                    android:layout_width="wrap_content"
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_bs_place_journey"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_61"
+                        android:text="@string/place_journey" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_bs_place_review"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_33"
+                        android:text="@string/place_review" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_bs_place_community"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_61"
+                        android:text="@string/place_community" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/view_pager_bs_place"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    style="@style/body1"
-                    android:background="@drawable/corners_all_33"
-                    android:text="@string/place_review" />
+                    android:layout_marginTop="90dp"
+                    android:nestedScrollingEnabled="false"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tl_bs_place" />
 
-                <com.google.android.material.tabs.TabItem
-                    android:id="@+id/tab_bs_place_community"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@style/body1"
-                    android:background="@drawable/corners_all_61"
-                    android:text="@string/place_community"/>
-            </com.google.android.material.tabs.TabLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/vp_bs_place"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tl_bs_place"
-                app:layout_constraintBottom_toBottomOf="parent" />
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
 </layout>

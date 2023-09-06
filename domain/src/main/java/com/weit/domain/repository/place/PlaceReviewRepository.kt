@@ -34,4 +34,8 @@ interface PlaceReviewRepository {
     suspend fun getReviewCount(
         placeId: String,
     ): Result<Int>
+
+    suspend fun getAverageRating(
+        info: PlaceReviewByPlaceIdInfo
+    ): Result<Int>
 }

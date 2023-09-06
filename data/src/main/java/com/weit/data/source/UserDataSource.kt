@@ -4,9 +4,12 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.weit.data.model.user.UserByNicknameDTO
+import com.weit.data.model.user.UserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserByNicknameInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -51,6 +54,14 @@ class UserDataSource @Inject constructor(
         context.dataStore.data.map { prefs ->
             prefs[USER_ID_KEY]
         }.first()
+
+    suspend fun getUserByNickname(userByNicknameInfo: UserByNicknameInfo): UserByNicknameDTO =
+        userService.getUserByNickname(
+            size =  userByNicknameInfo.size,
+            lastId = userByNicknameInfo.lastId,
+            nickname = userByNicknameInfo.nickname
+        )
+
 
     companion object {
         private const val USER_ID = "USER_ID"

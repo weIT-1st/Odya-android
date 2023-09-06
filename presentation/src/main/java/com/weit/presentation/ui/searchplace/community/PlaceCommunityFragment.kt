@@ -6,9 +6,10 @@ import androidx.fragment.app.viewModels
 import com.weit.presentation.databinding.FragmentTabPlaceCommunityBinding
 import com.weit.presentation.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlaceCommunityFragment: BaseFragment<FragmentTabPlaceCommunityBinding>(
+class PlaceCommunityFragment(): BaseFragment<FragmentTabPlaceCommunityBinding>(
     FragmentTabPlaceCommunityBinding::inflate
 ) {
     private val viewModel: PlaceCommunityViewModel by viewModels()

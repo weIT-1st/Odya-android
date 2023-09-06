@@ -74,7 +74,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     }
 
     private fun openBottomSheet(){
-        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment()
+        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment("ChIJzz_R5fKifDURJSTIFbslRp0")
         searchPlaceBottomSheetFragment?.show(childFragmentManager, "SearchPlace")
     }
 }

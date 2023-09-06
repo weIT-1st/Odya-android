@@ -31,10 +31,11 @@ class CommentDialogFragment() : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.rvFeedComments.run {
             addItemDecoration(
-                SpaceDecoration(resources, bottomDP = R.dimen.item_travel_friend_search_space),
-            )
-            addItemDecoration(
-                SpaceDecoration(resources, topDP = R.dimen.item_travel_friend_search_space),
+                SpaceDecoration(
+                    resources,
+                    topDP = R.dimen.item_feed_comment_space,
+                    bottomDP = R.dimen.item_feed_comment_space,
+                ),
             )
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
             adapter = feedCommentAdapter
@@ -43,6 +44,7 @@ class CommentDialogFragment() : BottomSheetDialogFragment() {
     }
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.rvFeedComments.adapter = null
         _binding = null
     }
     companion object {

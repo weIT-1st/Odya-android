@@ -11,6 +11,7 @@ import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
 import com.weit.presentation.model.Feed
+import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
@@ -155,6 +156,5 @@ class FeedAdapter(
                     return oldItem == newItem
                 }
             }
-        private const val DEFAULT_REACTION_COUNT = 99
     }
 }

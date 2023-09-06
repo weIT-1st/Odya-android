@@ -15,6 +15,7 @@ import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
+import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,13 +64,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             addItemDecoration(
                 SpaceDecoration(
                     resources,
-                    bottomDP = R.dimen.item_travel_friend_search_space,
-                ),
-            )
-            addItemDecoration(
-                SpaceDecoration(
-                    resources,
-                    topDP = R.dimen.item_travel_friend_search_space,
+                    topDP = R.dimen.item_feed_comment_space,
+                    bottomDP = R.dimen.item_feed_comment_space,
                 ),
             )
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
@@ -172,7 +168,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         }
     }
 
-    companion object {
-        private const val DEFAULT_REACTION_COUNT = 99
+    override fun onDestroyView() {
+        super.onDestroyView()
     }
 }

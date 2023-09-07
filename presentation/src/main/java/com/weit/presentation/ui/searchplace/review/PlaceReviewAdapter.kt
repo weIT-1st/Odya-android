@@ -83,13 +83,10 @@ class PlaceReviewAdapter(
                     setOnMenuItemClickListener {
                         when(it.itemId){
                             R.id.item_update_review -> {
-                                Log.d("item", "update1")
-                                updateItem
-                                Log.d("item", "update2")
+                                 updateItem()
                             }
                             R.id.item_delete_review -> {
-                                Log.d("item", "delete")
-                                deleteItem
+                                deleteItem()
                             }
                         }
                         false

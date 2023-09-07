@@ -110,28 +110,6 @@ class FeedAdapter(
                 binding.ivCommunityDirection.visibility = View.INVISIBLE
             }
 
-            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.commentNum)
-            }
-
-            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.likeNum)
-            }
-
             binding.viewCommunityContent.setOnClickListener {
                 navigateFeedDetail(feed.feedId)
             }

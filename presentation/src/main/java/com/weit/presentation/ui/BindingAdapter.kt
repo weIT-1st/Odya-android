@@ -33,9 +33,6 @@ fun bindReactionCount(textView: TextView, count: Int?) {
                 DEFAULT_REACTION_COUNT,
             )
         } else {
-            textView.resources.getString(
-                R.string.feed_reaction_count,
-                count,
-            )
+            count.toString()
         }
 }

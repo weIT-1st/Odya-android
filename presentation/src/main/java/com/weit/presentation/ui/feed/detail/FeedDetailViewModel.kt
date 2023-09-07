@@ -41,7 +41,7 @@ class FeedDetailViewModel @Inject constructor(
 
     private val _event = MutableEventFlow<FeedDetailViewModel.Event>()
     val event = _event.asEventFlow()
-    var userId: Long = 0
+    private var userId: Long = 0
     init {
         getFeed()
     }

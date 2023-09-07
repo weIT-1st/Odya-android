@@ -33,7 +33,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
 
-//        Logger.t("MainTest").i("feedDetail에서 args${args.feedId}")
         initCommentRecyclerView()
         initCommentBottomSheet()
         binding.btnWriteComment.setOnClickListener {
@@ -46,6 +45,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         // TODO 좋아요
     }
     private fun initCommentBottomSheet() {
+        bottomSheetDialog = CommentDialogFragment()
         bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,
@@ -143,6 +143,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottomSheetDialog?.dismiss()
         bottomSheetDialog = null
     }
 }

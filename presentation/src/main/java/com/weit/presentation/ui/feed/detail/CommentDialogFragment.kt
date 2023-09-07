@@ -46,7 +46,6 @@ class CommentDialogFragment() : BottomSheetDialogFragment() {
         super.onDestroyView()
         binding.rvFeedComments.adapter = null
         _binding = null
-        this.dismiss()
     }
     companion object {
         const val TAG = "CommentDialog"

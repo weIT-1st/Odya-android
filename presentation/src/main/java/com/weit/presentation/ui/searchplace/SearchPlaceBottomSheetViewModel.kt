@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.searchplace
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -29,65 +30,59 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getExperiencedFriendNumUseCase: GetExperiencedFriendNumUseCase,
     private val getUserIdUseCase: GetUserIdUseCase,
     @Assisted private val placeId: String
-): ViewModel() {
+) : ViewModel() {
 
     var experiencedFriendNum = initExperiencedFriendNum
     var friendProfile = ArrayList<ExperiencedFriendInfo>()
 
-    private val _myId = MutableStateFlow<Long>(0L)
-    val myId: StateFlow<Long> get() = _myId
-
     @AssistedFactory
-    interface PlaceIdFactory{
+    interface PlaceIdFactory {
         fun create(placeId: String): SearchPlaceBottomSheetViewModel
     }
 
     init {
         viewModelScope.launch {
             initExperiencedFriendNum()
-//            initExperiencedFriendProfile()
-            initMyId()
+            initExperiencedFriendProfile()
         }
     }
 
-    private suspend fun initMyId(){
-        _myId.emit(getUserIdUseCase())
-    }
-
-    private suspend fun initExperiencedFriendNum(){
+    private suspend fun initExperiencedFriendNum() {
         val result = getExperiencedFriendNumUseCase(placeId)
-        if (result.isSuccess){
+        if (result.isSuccess) {
             val num = result.getOrNull()
-            if (num != null){
+            if (num != null) {
                 experiencedFriendNum = num
             }
         }
     }
 
-//    private suspend fun initExperiencedFriendProfile(){
-//        val result = getExperiencedFriendUseCase(placeId)
-//        if (result.isSuccess){
-//            val profile = result.getOrNull()
-//            if (profile != null){
-//                when (profile.size){
-//                    0 -> {}
-//                    1 -> { friendProfile.add(profile[0])
-//                        }
-//                    2 -> { friendProfile.add(profile[0])
-//                        friendProfile.add(profile[1])
-//                        }
-//                    else -> { friendProfile.add(profile[0])
-//                        friendProfile.add(profile[1])
-//                        friendProfile.add(profile[2])
-//                        }
-//                }
-//            }
-//        }
-//    }
+    private suspend fun initExperiencedFriendProfile() {
+        val result = getExperiencedFriendUseCase(placeId)
+        if (result.isSuccess) {
+            val profile = result.getOrNull()
+            if (profile != null) {
+                when (profile.size) {
+                    0 -> {}
+                    1 -> {
+                        friendProfile.add(profile[0])
+                    }
+                    2 -> {
+                        friendProfile.add(profile[0])
+                        friendProfile.add(profile[1])
+                    }
+                    else -> {
+                        friendProfile.add(profile[0])
+                        friendProfile.add(profile[1])
+                        friendProfile.add(profile[2])
+                    }
+                }
+            }
+        }
+    }
 
 
-
-    companion object{
+    companion object {
         const val initExperiencedFriendNum = 0
         fun provideFactory(
             assistedFactory: PlaceIdFactory,

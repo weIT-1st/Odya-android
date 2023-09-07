@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
@@ -34,8 +35,10 @@ class SearchPlaceBottomSheetFragment(
     private var _binding: FragmentBottomSheetPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
-    private var searchPlaceBottomSheetAdapter: SearchPlaceBottomSheetAdapter? = null
-    private var myId = 0L
+//    private var searchPlaceBottomSheetAdapter: SearchPlaceBottomSheetAdapter? = null
+    private val experiencedFriendAdapter: ExperiencedFriendAdapter by lazy{
+        ExperiencedFriendAdapter()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,7 +56,9 @@ class SearchPlaceBottomSheetFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initTabViewPager()
+        initExperiencedFriendRV()
 
         binding.tvBsPlaceExperiencedFriend.text = String.format(
             getString(R.string.place_experienced_friend_count),
@@ -63,18 +68,11 @@ class SearchPlaceBottomSheetFragment(
         binding.btnBsPlaceBookMark.setOnClickListener {
             EditPlaceReviewFragment(placeId, null).show(childFragmentManager, "edit")
         }
-
-        repeatOnStarted(viewLifecycleOwner){
-            viewModel.myId.collectLatest {
-                myId = it
-            }
-        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        searchPlaceBottomSheetAdapter = null
     }
 
     private fun initTabViewPager(){
@@ -83,13 +81,11 @@ class SearchPlaceBottomSheetFragment(
 
         val tabItem = ArrayList<Fragment>()
         tabItem.add(PlaceJourneyFragment())
-        tabItem.add(PlaceReviewFragment(placeId, myId))
+        tabItem.add(PlaceReviewFragment(placeId))
         tabItem.add(PlaceCommunityFragment())
 
-        searchPlaceBottomSheetAdapter = SearchPlaceBottomSheetAdapter(this, tabItem)
-
         viewPager.apply {
-            adapter = searchPlaceBottomSheetAdapter
+            adapter = SearchPlaceBottomSheetAdapter(this.findFragment(), tabItem)
             isUserInputEnabled = false
         }
 
@@ -100,5 +96,9 @@ class SearchPlaceBottomSheetFragment(
                 2 -> tab.text = getString(R.string.place_community)
             }
         }.attach()
+    }
+
+    private fun initExperiencedFriendRV(){
+        binding.rvPlaceExperiencedFriendProfile.adapter = experiencedFriendAdapter
     }
 }

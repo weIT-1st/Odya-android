@@ -99,7 +99,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAverageRating(info: PlaceReviewByPlaceIdInfo): Result<Int> =
+    override suspend fun getAverageRating(info: PlaceReviewByPlaceIdInfo): Result<Float> =
         runCatching { dataSource.getByPlaceId(info).averageRating }
 
     private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =

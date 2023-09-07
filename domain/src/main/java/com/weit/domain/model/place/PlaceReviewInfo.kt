@@ -8,5 +8,7 @@ data class PlaceReviewInfo (
     val review: String,
     val createAt: String,
     val userId: Long,
+    var isMine: Boolean,
+    val placeReviewId : Long,
     val profile: UserProfile
         )

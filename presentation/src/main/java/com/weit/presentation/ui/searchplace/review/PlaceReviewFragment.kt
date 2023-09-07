@@ -3,11 +3,14 @@ package com.weit.presentation.ui.searchplace.review
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceReviewBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.placereview.EditPlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
+import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
@@ -15,7 +18,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaceReviewFragment(
     private val placeId: String,
-    private val myId: Long
 ) : BaseFragment<FragmentTabPlaceReviewBinding>(
     FragmentTabPlaceReviewBinding::inflate
 ) {
@@ -26,7 +28,12 @@ class PlaceReviewFragment(
         PlaceReviewViewModel.provideFactory(viewModelFactory, placeId)
     }
 
-    private val placeReviewAdapter:PlaceReviewAdapter by lazy { PlaceReviewAdapter(myId) }
+    private var editPlaceReviewFragment: EditPlaceReviewFragment? = null
+    private val placeReviewAdapter:PlaceReviewAdapter by lazy {
+        PlaceReviewAdapter(
+        context, { updateMyReview() }, { viewModel.deleteMyReview() }
+        )
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -50,9 +57,24 @@ class PlaceReviewFragment(
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        editPlaceReviewFragment = null
+        binding.rvTabPlaceReview.adapter = null
+    }
+
     private fun initPlaceReviewRV(){
-        viewModel.getPlaceReview()
-        Log.d("myId", "$myId")
         binding.rvTabPlaceReview.adapter = placeReviewAdapter
+    }
+
+    private fun updateMyReview(){
+        Log.d("UpdateReview", "operation~")
+        if(editPlaceReviewFragment == null){
+            editPlaceReviewFragment = EditPlaceReviewFragment(placeId, PlaceReviewContentData(viewModel.myPlaceReviewID.value, viewModel.myReview.value, (viewModel.myRating.value*2).toInt()))
+        }
+
+        if (!editPlaceReviewFragment!!.isAdded){
+            editPlaceReviewFragment!!.show(childFragmentManager, "Edit Dialog")
+        }
     }
 }

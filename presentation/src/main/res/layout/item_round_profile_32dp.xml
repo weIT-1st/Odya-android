@@ -6,7 +6,7 @@
     <data>
         <variable
             name="profile"
-            type="com.weit.domain.model.user.UserProfile" />
+            type="com.weit.domain.model.follow.ExperiencedFriendInfo" />
     </data>
 
     <com.google.android.material.imageview.ShapeableImageView
@@ -14,8 +14,8 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:scaleType="centerCrop"
-        app:image_uri="@{profile.url}"
-        app:profile_background="@{profile}"
+        app:image_uri="@{profile.profile.url}"
+        app:profile_background="@{profile.profile}"
         app:shapeAppearance="@style/ShapeableImageViewCircle"
         tools:src="@tools:sample/avatars"/>
 </layout>

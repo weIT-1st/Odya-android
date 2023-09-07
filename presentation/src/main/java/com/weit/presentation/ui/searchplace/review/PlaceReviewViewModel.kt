@@ -5,44 +5,45 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
-import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.domain.model.user.UserByNicknameInfo
+import com.weit.domain.model.user.UserProfile
+import com.weit.domain.usecase.place.DeletePlaceReviewUseCase
 import com.weit.domain.usecase.place.GetAverageRatingUseCase
 import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
-import com.weit.domain.usecase.place.GetPlaceReviewListUseCase
+import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
 import com.weit.domain.usecase.user.GetUserByNicknameUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
-import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetViewModel
-import com.weit.presentation.ui.util.MutableEventFlow
-import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class PlaceReviewViewModel @AssistedInject constructor(
     private val getAverageRatingUseCase: GetAverageRatingUseCase,
     private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
     private val getUserByNicknameUseCase: GetUserByNicknameUseCase,
-    private val getPlaceReviewListUseCase: GetPlaceReviewListUseCase,
+    private val getUserIdUseCase: GetUserIdUseCase,
+    private val deletePlaceReviewUseCase: DeletePlaceReviewUseCase,
     @Assisted private val placeId: String
 ) : ViewModel() {
 
     val reviewRating = MutableStateFlow(initRating)
     val reviewNum = reviewCount
+
     private val _placeReviewList = MutableStateFlow<List<PlaceReviewInfo>>(emptyList())
     val placeReviewList: StateFlow<List<PlaceReviewInfo>> get() = _placeReviewList
 
-    private val _myId = MutableStateFlow<Long>(0L)
-    val myId: StateFlow<Long> get() = _myId
+    private val _myPlaceReviewID = MutableStateFlow(0L)
+    val myPlaceReviewID : StateFlow<Long> get() = _myPlaceReviewID
 
-    private val _event = MutableEventFlow<Event>()
-    val event = _event.asEventFlow()
+    private val _myReview = MutableStateFlow("")
+    val myReview : StateFlow<String> get() = _myReview
+
+    private val _myRating = MutableStateFlow(initRating)
+    val myRating : StateFlow<Float> get() = _myRating
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -52,20 +53,9 @@ class PlaceReviewViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             getAverageRating()
+            getPlaceReview()
         }
     }
-
-//    fun initMyId(){
-//        viewModelScope.launch {
-//            val result = getUserIdUseCase()
-//            if (result.isSuccess){
-//                val getId = result.getOrNull()
-//                if (getId != null){
-//                    _myId.emit(getId)
-//                }
-//            }
-//        }
-//    }
 
     private suspend fun getAverageRating() {
         val result = getAverageRatingUseCase(placeId)
@@ -77,46 +67,54 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-//    fun getPlaceReview() {
-//        viewModelScope.launch {
-//            val result = getPlaceReviewListUseCase(placeId)
-//            if (result.isSuccess) {
-//                var placeReview = result.getOrNull()
-//                if (placeReview != null) {
-//                    _placeReviewList.emit(placeReview)
-//                }
-//            }
-//            Log.d("placeReview", result.exceptionOrNull().toString())
-//            Log.d("placeReview", "${result.isSuccess}")
-//        }
-//    }
-
     fun getPlaceReview() {
         viewModelScope.launch {
-            val tempList: List<PlaceReviewInfo> = emptyList()
             val placeReviewResult =
                 getPlaceReviewByPlaceIdUseCase(PlaceReviewByPlaceIdInfo(placeId, 20))
             if (placeReviewResult.isSuccess) {
                 val review = placeReviewResult.getOrNull()
                 if (review != null) {
-                    _placeReviewList.emit(
-(                   review.map {
+                    val list = (review.map {
                         PlaceReviewInfo(
                             it.writerNickname,
                             (it.starRating / 2).toFloat(),
                             it.review,
-                            it.createdAt.substring(0,9),
+                            it.createdAt.substring(0,10),
                             it.userId,
+                            false,
+                            it.id,
                             getUserByNicknameUseCase(UserByNicknameInfo(null,null, it.writerNickname)).getOrNull()?.firstOrNull()!!.profile
                         )
-                    }))
+                    })
+                    val myReview = list.find { it.userId == getUserIdUseCase() }
+                    if (myReview != null){
+                        myReview.isMine = true
+                        val mutableList = list.toMutableList()
+                        mutableList.remove(myReview)
+                        mutableList.add(0, myReview)
+                        _placeReviewList.emit(mutableList)
+                        _myPlaceReviewID.emit(myReview.placeReviewId)
+                        _myReview.emit(myReview.review)
+                        _myRating.emit(myReview.rating)
+                    } else {
+                        _placeReviewList.emit(list)
+                    }
                 }
             }
         }
     }
 
-    sealed class Event {
 
+    fun deleteMyReview(){
+        viewModelScope.launch {
+            val result = deletePlaceReviewUseCase(myPlaceReviewID.value)
+            Log.d("delete review", "id : ${myPlaceReviewID.value}")
+            if (result.isSuccess){
+                Log.d("delete review", "isSuccess : ${result.isSuccess}")
+            } else {
+                Log.d("delete review", "isSuccess : ${result.isSuccess}")
+            }
+        }
     }
 
     companion object {

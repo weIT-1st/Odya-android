@@ -19,6 +19,8 @@ import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,6 +29,15 @@ class FeedDetailViewModel @Inject constructor(
     private val createFollowCreateUseCase: CreateFollowCreateUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
 ) : ViewModel() {
+
+    private val _feed = MutableStateFlow<FeedDetail?>(null)
+    val feed: StateFlow<FeedDetail?> get() = _feed
+
+    private val _likeNum = MutableStateFlow<Int?>(null)
+    val likeNum: StateFlow<Int?> get() = _likeNum
+
+    private val _commentNum = MutableStateFlow<Int?>(null)
+    val commentNum: StateFlow<Int?> get() = _commentNum
 
     private val _event = MutableEventFlow<FeedDetailViewModel.Event>()
     val event = _event.asEventFlow()
@@ -53,8 +64,15 @@ class FeedDetailViewModel @Inject constructor(
             val defaultComments = comments
                 .slice(0 until commentCount)
             val remainingCommentsCount = comments.size - defaultComments.size
-            _event.emit(Event.OnChangeFeed(feed, defaultComments, remainingCommentsCount, comments))
+            setFeedDetail(feed)
+            _event.emit(Event.OnChangeFeed(feed.travelLog, defaultComments, remainingCommentsCount, comments))
         }
+    }
+
+    private fun setFeedDetail(feed: FeedDetail) {
+        _feed.value = feed
+        _likeNum.value = feed.likeNum
+        _commentNum.value = feed.commentNum
     }
 
     fun registerComment() {
@@ -98,7 +116,7 @@ class FeedDetailViewModel @Inject constructor(
 
     sealed class Event {
         data class OnChangeFeed(
-            val feed: FeedDetail,
+            val travelLog: TravelLogInFeed?,
             val defaultComments: List<FeedComment>,
             val remainingCommentsCount: Int,
             val comments: List<FeedComment>,

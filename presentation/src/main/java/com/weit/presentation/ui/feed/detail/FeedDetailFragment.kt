@@ -10,12 +10,11 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
-import com.weit.presentation.model.FeedDetail
+import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
-import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,10 +28,11 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val viewModel: FeedDetailViewModel by viewModels()
     private val args: FeedDetailFragmentArgs by navArgs()
     private val feedCommentAdapter = FeedCommentAdapter()
-    private val bottomSheetDialog = CommentDialogFragment()
+    private var bottomSheetDialog: CommentDialogFragment? = CommentDialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+
 //        Logger.t("MainTest").i("feedDetail에서 args${args.feedId}")
         initCommentRecyclerView()
         initCommentBottomSheet()
@@ -46,13 +46,13 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         // TODO 좋아요
     }
     private fun initCommentBottomSheet() {
-        bottomSheetDialog.setStyle(
+        bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,
         )
 
         binding.btnFeedCommentMore.setOnClickListener {
-            bottomSheetDialog.show(
+            bottomSheetDialog?.show(
                 requireActivity().supportFragmentManager,
                 CommentDialogFragment.TAG,
             )
@@ -86,54 +86,27 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         }
     }
 
-    private fun setFeedDetail(feed: FeedDetail) {
-        binding.feed = feed
-
-        if (feed.travelLog == null) {
+    private fun setTravelLog(log: TravelLogInFeed?) {
+        if (log == null) {
             binding.includeTravelLog.layoutTravelLog.visibility = View.GONE
         } else {
-            binding.includeTravelLog.log = feed.travelLog
+            binding.includeTravelLog.log = log
             binding.includeTravelLog.layoutTravelLog.setOnClickListener {
-                navigateTravelLog(feed.travelLog.travelLogId)
+                navigateTravelLog(log.travelLogId)
             }
-        }
-
-        if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-            binding.tvCommunityReply.text =
-                binding.root.context.getString(
-                    R.string.feed_reaction_over_count,
-                    DEFAULT_REACTION_COUNT,
-                )
-        } else {
-            binding.tvCommunityReply.text =
-                binding.root.context.getString(
-                    R.string.feed_reaction_count,
-                    feed.commentNum,
-                )
-        }
-
-        if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-            binding.tvCommunityHeart.text =
-                binding.root.context.getString(
-                    R.string.feed_reaction_over_count,
-                    DEFAULT_REACTION_COUNT,
-                )
-        } else {
-            binding.tvCommunityHeart.text =
-                binding.root.context.getString(R.string.feed_reaction_count, feed.likeNum)
         }
     }
 
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
-                setFeedDetail(event.feed)
+                setTravelLog(event.travelLog)
                 feedCommentAdapter.submitList(event.defaultComments)
                 if (event.remainingCommentsCount > 0) {
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
-                bottomSheetDialog.comments = event.comments
+                bottomSheetDialog?.comments = event.comments
             }
 
             is FeedDetailViewModel.Event.InvalidRequestException -> {
@@ -170,5 +143,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottomSheetDialog = null
     }
 }

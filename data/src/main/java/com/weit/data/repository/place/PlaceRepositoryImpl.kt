@@ -27,13 +27,13 @@ class PlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPlaceDetail(placeId: String): PlaceDetail {
-        val result = dataSource.getPlaceDetail(placeId).result[0]
+        val result = dataSource.getPlace(placeId)
         return PlaceDetail(
-            result.placeId,
-            result.name,
-            result.adrAddress,
-            result.geometry?.location?.lat,
-            result.geometry?.location?.lng,
+            result?.id ?: "",
+            result?.name,
+            result?.address,
+            result?.latLng?.latitude,
+            result?.latLng?.longitude,
         )
     }
 
@@ -50,7 +50,7 @@ class PlaceRepositoryImpl @Inject constructor(
         // TODO 개선 필요. api를 두번 호출해야 업체명을 안다는게 말이안됨
         // 역지오코딩 할 때 우리가 직접만든 place 객체가 아니라 구글 지도에서 제공하는 place 객체를 역직렬화 한다면
         // 더 정상적인 데이터가 나오지 않을까
-        val placeId = place.placeId ?: return null
+        val placeId = place.placeId
         val result = dataSource.getPlace(placeId) ?: return null
         return PlacePrediction(
             placeId = placeId,

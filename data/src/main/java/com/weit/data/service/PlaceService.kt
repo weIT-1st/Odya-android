@@ -30,5 +30,6 @@ interface PlaceService {
         @Query("input") query: String,
         @Query("language") lang: String,
         @Query("types") types: String,
+        @Query("rankby") rankby: String = "distance",
     ): PlaceAutoCompleteResponse
 }

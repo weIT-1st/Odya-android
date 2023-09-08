@@ -10,8 +10,10 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentSelectPlaceBinding
 import com.weit.presentation.ui.base.BaseMapFragment
+import com.weit.presentation.ui.util.getMarkerIconFromDrawable
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -42,6 +44,10 @@ class SelectPlaceFragment :
         handleAdapterAction(action)
     }
 
+    private val marker by lazy {
+        getMarkerIconFromDrawable(resources, R.drawable.ic_splash_logo)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
@@ -69,7 +75,7 @@ class SelectPlaceFragment :
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.places.collectLatest { places ->
+            viewModel.placeEntities.collectLatest { places ->
                 adapter.submitList(places)
             }
         }
@@ -89,11 +95,12 @@ class SelectPlaceFragment :
                 map?.clear()
                 val marker = MarkerOptions().apply {
                     position(event.latLng)
+                    icon(marker)
                 }
                 map?.addMarker(marker)
             }
             is SelectPlaceViewModel.Event.MoveMap -> {
-                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(event.latLng, 15f)
+                val cameraUpdate = CameraUpdateFactory.newLatLngZoom(event.latLng, DEFAULT_ZOOM)
                 map?.moveCamera(cameraUpdate)
             }
         }
@@ -102,7 +109,7 @@ class SelectPlaceFragment :
     override fun onMapReady(googleMap: GoogleMap) {
         super.onMapReady(googleMap)
         val seoul = LatLng(37.554891, 126.970814)
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, 15f))
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(seoul, DEFAULT_ZOOM))
         googleMap.setOnPoiClickListener {
             viewModel.onClickPointOfInterest(it)
         }
@@ -111,5 +118,9 @@ class SelectPlaceFragment :
     override fun onDestroyView() {
         binding.rvSelectPlacePredictions.adapter = null
         super.onDestroyView()
+    }
+
+    companion object {
+        private const val DEFAULT_ZOOM = 15f
     }
 }

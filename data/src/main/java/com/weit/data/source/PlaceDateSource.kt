@@ -7,7 +7,6 @@ import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.orhanobut.logger.Logger
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
 import com.weit.data.service.PlaceService
@@ -33,6 +32,7 @@ class PlaceDateSource @Inject constructor(
         Place.Field.NAME,
         Place.Field.ID,
         Place.Field.ADDRESS,
+        Place.Field.LAT_LNG,
     )
 
     suspend fun getPlaceDetail(placeId: String): GeocodingResult =
@@ -67,19 +67,11 @@ class PlaceDateSource @Inject constructor(
     suspend fun searchPlaces(
         query: String,
         language: String = "ko",
-        types: List<String> = defaultResultTypes
+        types: List<String> = defaultResultTypes,
     ): List<AutocompletePrediction> = callbackFlow<List<AutocompletePrediction>> {
-        val result = service.getPlacesByQuery(
-            apiKey = BuildConfig.GOOGLE_MAP_KEY,
-            query = query,
-            lang = language,
-            types = PlaceTypes.POINT_OF_INTEREST,
-        )
-        result.predictions.joinToString("\n") { it.structuredFormatting.mainText }
-        Logger.t("MainTest").i("결과 $result")
         val newRequest = FindAutocompletePredictionsRequest.builder()
             .setCountries(Locale.getDefault().country)
-            .setTypesFilter(listOf(PlaceTypes.POINT_OF_INTEREST))
+            .setTypesFilter(listOf(PlaceTypes.ESTABLISHMENT))
             .setSessionToken(sessionToken)
             .setQuery(query)
             .build()

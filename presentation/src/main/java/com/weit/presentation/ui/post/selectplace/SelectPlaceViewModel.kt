@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
+import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
@@ -30,10 +31,14 @@ class SelectPlaceViewModel @AssistedInject constructor(
 
     private val imagePlaces = imagePlacesDTO.toPlacePredictions()
 
-    private val _places = MutableStateFlow(imagePlaces)
-    val places: StateFlow<List<PlacePrediction>> get() = _places
+    private var searchedPlaces = listOf<PlacePrediction>()
+
+    private val _placeEntities = MutableStateFlow(imagePlaces.toSelectPlaceEntity())
+    val placeEntities: StateFlow<List<SelectPlaceEntity>> get() = _placeEntities
 
     val query = MutableStateFlow("")
+
+    private var selectedPlaceEntity: SelectPlaceEntity? = null
 
     private var searchJob: Job = Job().apply {
         complete()
@@ -47,6 +52,9 @@ class SelectPlaceViewModel @AssistedInject constructor(
     fun onClickPointOfInterest(pointOfInterest: PointOfInterest) {
         viewModelScope.launch {
             _event.emit(Event.SetMarker(pointOfInterest.latLng))
+            val placeDetail = getPlaceDetailUseCase(pointOfInterest.placeId)
+            setSelectedPlaceEntity(placeDetail.toPlacePrediction())
+            updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
         }
     }
 
@@ -58,6 +66,8 @@ class SelectPlaceViewModel @AssistedInject constructor(
             val latlng = LatLng(latitude, longitude)
             _event.emit(Event.SetMarker(latlng))
             _event.emit(Event.MoveMap(latlng))
+            setSelectedPlaceEntity(placeDetail.toPlacePrediction())
+            updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
         }
     }
 
@@ -66,20 +76,53 @@ class SelectPlaceViewModel @AssistedInject constructor(
         searchPlace(query)
     }
 
+    private fun updateSelectPlaceEntities(currentEntities: List<SelectPlaceEntity>) {
+        viewModelScope.launch {
+            selectedPlaceEntity?.let { selectedEntity ->
+                val result = listOf(selectedEntity)
+                    .plus(
+                        currentEntities.filterNot {
+                            it.place.placeId == selectedEntity.place.placeId || it.isSelected
+                        },
+                    )
+                _placeEntities.emit(result)
+            } ?: _placeEntities.emit(currentEntities)
+        }
+    }
+
+    private fun setSelectedPlaceEntity(place: PlacePrediction) {
+        // 두 번 선택은 취소로 간주
+        selectedPlaceEntity = if (selectedPlaceEntity?.place?.placeId == place.placeId) {
+            null
+        } else {
+            SelectPlaceEntity(place, true)
+        }
+    }
+
     private fun searchPlace(query: String) {
         searchJob = viewModelScope.launch {
-            val searchedPlaces = if (query.isBlank()) {
+            searchedPlaces = if (query.isBlank()) {
                 imagePlaces.toList()
             } else {
                 getSearchPlaceUseCase(query)
             }
-            _places.emit(searchedPlaces)
+            updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
         }
     }
 
     private fun List<PlacePredictionDTO>.toPlacePredictions() = map {
         PlacePrediction(it.placeId, it.name, it.address)
     }
+
+    private fun List<PlacePrediction>.toSelectPlaceEntity() = map {
+        SelectPlaceEntity(it, false)
+    }
+
+    private fun PlaceDetail.toPlacePrediction() = PlacePrediction(
+        placeId = placeId,
+        name = name ?: "",
+        address = address ?: "",
+    )
 
     sealed class Event {
         data class SetMarker(val latLng: LatLng) : Event()

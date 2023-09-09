@@ -7,6 +7,6 @@ import javax.inject.Inject
 class GetExperiencedFriendUseCase @Inject constructor(
     private val repository: FollowRepository
 ) {
-    suspend operator fun invoke(placeId: String): Result<List<ExperiencedFriendInfo>> =
+    suspend operator fun invoke(placeId: String): Result<ExperiencedFriendInfo> =
         repository.getExperiencedFriend(placeId)
 }

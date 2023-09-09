@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/detail2"
-                android:text="@{review.createAt}"
+
                 android:textColor="@color/label_reversed_assistive"
                 app:layout_constraintTop_toBottomOf="@+id/tv_item_place_review_content"
                 app:layout_constraintEnd_toEndOf="parent"

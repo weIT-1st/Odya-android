@@ -1,7 +1,7 @@
 package com.weit.data.service
 
 import androidx.room.Delete
-import com.weit.data.model.user.UserByNicknameDTO
+import com.weit.data.model.ListResponse
 import com.weit.data.model.user.UserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.domain.model.user.User
@@ -45,5 +45,5 @@ interface UserService {
         @Query("size") size: Int?,
         @Query("lastId") lastId: String?,
         @Query("nickname") nickname: String
-    ): UserByNicknameDTO
+    ): ListResponse<UserContentDTO>
 }

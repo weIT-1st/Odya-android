@@ -1,19 +1,20 @@
 package com.weit.presentation.ui.searchplace.review
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.exception.ForbiddenException
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.place.PlaceReviewInfo
-import com.weit.domain.model.user.UserByNicknameInfo
-import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.place.DeletePlaceReviewUseCase
 import com.weit.domain.usecase.place.GetAverageRatingUseCase
-import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
-import com.weit.domain.usecase.place.UpdatePlaceReviewUseCase
-import com.weit.domain.usecase.user.GetUserByNicknameUseCase
-import com.weit.domain.usecase.user.GetUserIdUseCase
+import com.weit.domain.usecase.place.GetPlaceReviewContentUseCase
+import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetViewModel
+import com.weit.presentation.ui.util.MutableEventFlow
+import com.weit.presentation.ui.util.asEventFlow
+import com.weit.presentation.util.PlaceReviewContentData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -23,9 +24,7 @@ import kotlinx.coroutines.launch
 
 class PlaceReviewViewModel @AssistedInject constructor(
     private val getAverageRatingUseCase: GetAverageRatingUseCase,
-    private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
-    private val getUserByNicknameUseCase: GetUserByNicknameUseCase,
-    private val getUserIdUseCase: GetUserIdUseCase,
+    private val getPlaceReviewContentUseCase: GetPlaceReviewContentUseCase,
     private val deletePlaceReviewUseCase: DeletePlaceReviewUseCase,
     @Assisted private val placeId: String
 ) : ViewModel() {
@@ -36,14 +35,11 @@ class PlaceReviewViewModel @AssistedInject constructor(
     private val _placeReviewList = MutableStateFlow<List<PlaceReviewInfo>>(emptyList())
     val placeReviewList: StateFlow<List<PlaceReviewInfo>> get() = _placeReviewList
 
-    private val _myPlaceReviewID = MutableStateFlow(0L)
-    val myPlaceReviewID : StateFlow<Long> get() = _myPlaceReviewID
+    private val _myPlaceReviewData = MutableStateFlow<PlaceReviewContentData?>(null)
+    val myPlaceReviewData: StateFlow<PlaceReviewContentData?> get() = _myPlaceReviewData
 
-    private val _myReview = MutableStateFlow("")
-    val myReview : StateFlow<String> get() = _myReview
-
-    private val _myRating = MutableStateFlow(initRating)
-    val myRating : StateFlow<Float> get() = _myRating
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -60,46 +56,33 @@ class PlaceReviewViewModel @AssistedInject constructor(
     private suspend fun getAverageRating() {
         val result = getAverageRatingUseCase(placeId)
         if (result.isSuccess) {
-            val averageRating = result.getOrNull()
-            if (averageRating != null) {
-                reviewRating.emit((averageRating / 2).toFloat())
-            }
+            val averageRating = result.getOrThrow()
+            _event.emit(Event.GetAverageRatingSuccess)
+            reviewRating.emit((averageRating / 2))
+        } else {
+            handleError(result.exceptionOrNull() ?: UnknownError())
         }
     }
 
-    fun getPlaceReview() {
+    private fun getPlaceReview() {
         viewModelScope.launch {
-            val placeReviewResult =
-                getPlaceReviewByPlaceIdUseCase(PlaceReviewByPlaceIdInfo(placeId, 20))
-            if (placeReviewResult.isSuccess) {
-                val review = placeReviewResult.getOrNull()
-                if (review != null) {
-                    val list = (review.map {
-                        PlaceReviewInfo(
-                            it.writerNickname,
-                            (it.starRating / 2).toFloat(),
-                            it.review,
-                            it.createdAt.substring(0,10),
-                            it.userId,
-                            false,
-                            it.id,
-                            getUserByNicknameUseCase(UserByNicknameInfo(null,null, it.writerNickname)).getOrNull()?.firstOrNull()!!.profile
-                        )
-                    })
-                    val myReview = list.find { it.userId == getUserIdUseCase() }
-                    if (myReview != null){
-                        myReview.isMine = true
-                        val mutableList = list.toMutableList()
-                        mutableList.remove(myReview)
-                        mutableList.add(0, myReview)
-                        _placeReviewList.emit(mutableList)
-                        _myPlaceReviewID.emit(myReview.placeReviewId)
-                        _myReview.emit(myReview.review)
-                        _myRating.emit(myReview.rating)
-                    } else {
-                        _placeReviewList.emit(list)
-                    }
+            val result = getPlaceReviewContentUseCase(placeId)
+            if (result.isSuccess){
+                val list = result.getOrThrow()
+                _placeReviewList.emit(list)
+
+                val myReview = list.find { it.isMine }
+                if (myReview != null ){
+                    _event.emit(Event.GetPlaceReviewWithMineSuccess)
+                    _myPlaceReviewData.emit(PlaceReviewContentData(
+                        myReview.placeReviewId,
+                        myReview.review,
+                        (myReview.rating * 2).toInt()))
+                } else {
+                    _event.emit(Event.GetPlaceReviewSuccess)
                 }
+            } else {
+                handleError(result.exceptionOrNull() ?: UnknownError())
             }
         }
     }
@@ -107,15 +90,31 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     fun deleteMyReview(){
         viewModelScope.launch {
-            val result = deletePlaceReviewUseCase(myPlaceReviewID.value)
-            Log.d("delete review", "id : ${myPlaceReviewID.value}")
-            if (result.isSuccess){
-                Log.d("delete review", "isSuccess : ${result.isSuccess}")
-            } else {
-                Log.d("delete review", "isSuccess : ${result.isSuccess}")
-            }
+
         }
     }
+
+    private suspend fun handleError(error: Throwable){
+        when (error ){
+            is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
+            is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
+            is NoSuchElementException -> _event.emit(Event.NoSuchElementException)
+            is ForbiddenException -> _event.emit(Event.ForbiddenException)
+            is UnKnownException -> _event.emit(Event.UnKnownException)
+        }
+    }
+
+    sealed class Event {
+        object GetAverageRatingSuccess: Event()
+        object GetPlaceReviewWithMineSuccess: Event()
+        object GetPlaceReviewSuccess: Event()
+        object InvalidRequestException: Event()
+        object InvalidTokenException : Event()
+        object NoSuchElementException: Event()
+        object ForbiddenException: Event()
+        object UnKnownException: Event()
+    }
+
 
     companion object {
         const val initRating = 1.0F

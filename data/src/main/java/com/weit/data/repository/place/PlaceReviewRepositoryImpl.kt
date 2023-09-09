@@ -4,13 +4,14 @@ import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.util.exception
-import com.weit.domain.model.exception.NotExistPlaceReviewException
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class PlaceReviewRepositoryImpl @Inject constructor(
@@ -35,18 +36,19 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): Result<List<PlaceReviewDetail>> {
+    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): Result<List<PlaceReviewDetail>> {
         return runCatching {
             dataSource.getByPlaceId(info).reviews.map {
-                PlaceReviewDetail(
+                val placeReviewDetail = PlaceReviewDetail(
                     it.placeReviewId,
                     it.placeId,
                     it.userId,
                     it.writerNickname,
                     it.starRating,
                     it.review,
-                    it.createdAt
+                    LocalDate.parse(it.createdAt.substring(0,10))
                 )
+                placeReviewDetail
             }
         }
     }
@@ -61,7 +63,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.writerNickname,
                     it.starRating,
                     it.review,
-                    it.createdAt
+                    LocalDate.parse(it.createdAt.substring(0,10), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                 )
             }
         }
@@ -72,12 +74,8 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             dataSource.isExistReview(placeId)
         }
         return if (result.isSuccess) {
-            val isExist = result.getOrNull()?.isExist
-            if (isExist == true) {
-                Result.success(isExist)
-            } else {
-                Result.failure(NotExistPlaceReviewException())
-            }
+            val isExist = result.getOrThrow().isExist
+            Result.success(isExist)
         } else {
             Result.failure(result.exception())
         }
@@ -88,19 +86,23 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             dataSource.getReviewCount(placeId)
         }
         return if (result.isSuccess) {
-            val count = result.getOrNull()?.count
-            if (count != null) {
-                Result.success(count)
-            } else {
-                Result.failure(result.exception())
-            }
+            val count = result.getOrThrow().count
+            Result.success(count)
         } else {
             Result.failure(result.exception())
         }
     }
 
-    override suspend fun getAverageRating(info: PlaceReviewByPlaceIdInfo): Result<Float> =
-        runCatching { dataSource.getByPlaceId(info).averageRating }
+    override suspend fun getAverageRating(placeId: String): Result<Float> {
+        val result = runCatching {
+            dataSource.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId, 20))
+        }
+        return if (result.isSuccess){
+            Result.success(result.getOrThrow().averageRating)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
 
     private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
         PlaceReviewRegistration(

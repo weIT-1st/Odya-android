@@ -76,6 +76,7 @@ class PlaceReviewAdapter(
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: PlaceReviewInfo){
             binding.review = item
+            binding.btnItemPlaceMenu.setOnClickListener {  }
             binding.btnItemPlaceMenu.setOnClickListener { it ->
                 PopupMenu(context, it).apply{
                     menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)

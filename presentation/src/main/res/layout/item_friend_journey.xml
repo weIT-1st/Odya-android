@@ -40,7 +40,7 @@
             tools:text="dddddddd이랑 행복했던 부산여행❤️" />
 
         <include
-            layout="@layout/item_round_profile_32dp"
+            layout="@layout/item_round_profile_big"
             android:id="@+id/include_item_friend_journey_profile"
             android:layout_width="32dp"
             android:layout_height="32dp"

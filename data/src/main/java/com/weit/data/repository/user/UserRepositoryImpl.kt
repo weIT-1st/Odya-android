@@ -5,14 +5,15 @@ import com.weit.data.model.user.UserContentDTO
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
+import com.weit.data.util.exception
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserByNickname
 import com.weit.domain.model.user.UserByNicknameInfo
 import com.weit.domain.model.user.UserContent
-import com.weit.domain.model.user.UserProfile
 import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -65,18 +66,28 @@ class UserRepositoryImpl @Inject constructor(
 
     // 이걸 가져오지 못하면 자신의 UserId가 필요한 기능 수행이 불가능하므로 에러를 throw 함
     override suspend fun getUserId(): Long =
-            userDataSource.getUserId() ?: throw NotFoundException()
+        userDataSource.getUserId() ?: throw NotFoundException()
 
 
-    override suspend fun getUserByNickname(userByNicknameInfo: UserByNicknameInfo): Result<List<UserContent>> {
-        return runCatching {
-           userDataSource.getUserByNickname(userByNicknameInfo).content.map {
-               UserContent(
-                   it.userId,
-                   it.nickname,
-                   it.profile
-               )
-           }
+    override suspend fun getUserByNickname(userByNickname: UserByNickname): Result<UserByNicknameInfo> {
+        val result = runCatching {
+            userDataSource.getUserByNickname(userByNickname)
+        }
+        return if (result.isSuccess) {
+            val user = result.getOrThrow()
+            Result.success(
+                UserByNicknameInfo(
+                    user.hasNext,
+                    user.content.map {
+                        UserContent(
+                            it.userId,
+                            it.nickname,
+                            it.profile
+                        )
+                    }
+                ))
+        } else {
+            Result.failure(result.exception())
         }
     }
 
@@ -123,6 +134,7 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        private const val REGEX_EMAIL =
+            "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
     }
 }

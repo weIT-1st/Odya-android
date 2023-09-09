@@ -12,7 +12,7 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.auth.LogoutUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
@@ -202,7 +202,7 @@ class ExampleViewModel @Inject constructor(
     private fun getReview() {
         viewModelScope.launch {
             val result = getPlaceReviewByPlaceIdUseCase(
-                PlaceReviewByPlaceIdInfo(
+                PlaceReviewByPlaceIdQuery(
                     placeId = "test5",
                     size = 2,
                 ),

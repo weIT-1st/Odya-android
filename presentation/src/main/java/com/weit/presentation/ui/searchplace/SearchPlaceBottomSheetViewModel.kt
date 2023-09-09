@@ -1,39 +1,41 @@
 package com.weit.presentation.ui.searchplace
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.domain.model.follow.ExperiencedFriendInfo
-import com.weit.domain.model.follow.FollowUserContent
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
-import com.weit.domain.model.place.PlaceReviewDetail
-import com.weit.domain.usecase.follow.GetCachedFollowerUseCase
-import com.weit.domain.usecase.follow.GetExperiencedFriendNumUseCase
+import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
-import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
-import com.weit.domain.usecase.user.GetUserIdUseCase
-import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.presentation.model.post.travellog.FollowUserContentDTO
+import com.weit.presentation.ui.feed.FeedViewModel
 import com.weit.presentation.ui.placereview.EditPlaceReviewViewModel
-import com.weit.presentation.util.PlaceReviewContentData
+import com.weit.presentation.ui.post.travellog.PostTravelLogViewModel
+import com.weit.presentation.ui.util.MutableEventFlow
+import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import java.util.concurrent.CopyOnWriteArrayList
 
 class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getExperiencedFriendUseCase: GetExperiencedFriendUseCase,
-    private val getExperiencedFriendNumUseCase: GetExperiencedFriendNumUseCase,
-    private val getUserIdUseCase: GetUserIdUseCase,
     @Assisted private val placeId: String
 ) : ViewModel() {
 
-    var experiencedFriendNum = initExperiencedFriendNum
-    var friendProfile = ArrayList<ExperiencedFriendInfo>()
+    private val _experiencedFriendNum = MutableStateFlow(INIT_EXPERIENCED_FRIEND_COUNT)
+    val experiencedFriendNum: StateFlow<Int> get() = _experiencedFriendNum
+
+    private val _experiencedFriend = MutableStateFlow<List<ExperiencedFriendContent>>(emptyList())
+    val experiencedFriend: StateFlow<List<ExperiencedFriendContent>> get() = _experiencedFriend
+
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -42,48 +44,45 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launch {
-            initExperiencedFriendNum()
-            initExperiencedFriendProfile()
+            initExperiencedFriend()
         }
     }
 
-    private suspend fun initExperiencedFriendNum() {
-        val result = getExperiencedFriendNumUseCase(placeId)
-        if (result.isSuccess) {
-            val num = result.getOrNull()
-            if (num != null) {
-                experiencedFriendNum = num
-            }
-        }
-    }
-
-    private suspend fun initExperiencedFriendProfile() {
+    private suspend fun initExperiencedFriend() {
         val result = getExperiencedFriendUseCase(placeId)
         if (result.isSuccess) {
-            val profile = result.getOrNull()
-            if (profile != null) {
-                when (profile.size) {
-                    0 -> {}
-                    1 -> {
-                        friendProfile.add(profile[0])
-                    }
-                    2 -> {
-                        friendProfile.add(profile[0])
-                        friendProfile.add(profile[1])
-                    }
-                    else -> {
-                        friendProfile.add(profile[0])
-                        friendProfile.add(profile[1])
-                        friendProfile.add(profile[2])
-                    }
-                }
+            val info = result.getOrThrow()
+            _event.emit(Event.GetExperiencedFriendSuccess)
+            _experiencedFriendNum.emit(info.count)
+
+            if (info.count != 0) {
+                val friendSummary = info.followings!!
+                    .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
+                _experiencedFriend.emit(friendSummary)
             }
+        } else {
+            handelError(result.exceptionOrNull() ?: UnknownError())
         }
     }
 
+    private suspend fun handelError(error: Throwable){
+        when (error){
+            is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
+            is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
+            else -> _event.emit(Event.UnknownException)
+        }
+    }
+
+    sealed class Event {
+        object GetExperiencedFriendSuccess: Event()
+        object InvalidRequestException: Event()
+        object InvalidTokenException : Event()
+        object UnknownException: Event()
+    }
 
     companion object {
-        const val initExperiencedFriendNum = 0
+        private const val INIT_EXPERIENCED_FRIEND_COUNT = 0
+        private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 2
         fun provideFactory(
             assistedFactory: PlaceIdFactory,
             placeId: String,

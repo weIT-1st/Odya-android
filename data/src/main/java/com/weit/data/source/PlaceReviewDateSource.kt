@@ -6,7 +6,7 @@ import com.weit.data.model.place.PlaceReviewListDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.PlaceReviewService
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class PlaceReviewDateSource @Inject constructor(
         service.delete(placeReviewId)
     }
 
-    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdInfo): PlaceReviewListDTO =
+    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): PlaceReviewListDTO =
         service.getReviewsByPlaceId(
             placeId = info.placeId,
             size = info.size,

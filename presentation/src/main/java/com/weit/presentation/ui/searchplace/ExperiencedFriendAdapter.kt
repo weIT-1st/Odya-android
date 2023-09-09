@@ -5,41 +5,39 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.domain.model.follow.ExperiencedFriendInfo
-import com.weit.domain.model.place.PlaceReviewInfo
-import com.weit.presentation.databinding.ItemRoundProfile32dpBinding
+import com.weit.presentation.databinding.ItemRoundProfileBigBinding
 
 class ExperiencedFriendAdapter(
+) : ListAdapter<ExperiencedFriendContent, ExperiencedFriendAdapter.ViewHolder>(diffUtil) {
 
-) : ListAdapter<ExperiencedFriendInfo, RecyclerView.ViewHolder>(diffUtil) {
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return ViewHolder(ItemRoundProfile32dpBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExperiencedFriendAdapter.ViewHolder {
+        return ViewHolder(ItemRoundProfileBigBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as ViewHolder).bind(getItem(position))
+    override fun onBindViewHolder(holder:  ExperiencedFriendAdapter.ViewHolder, position: Int) {
+
     }
 
     inner class ViewHolder(
-        private val binding: ItemRoundProfile32dpBinding
+        private val binding: ItemRoundProfileBigBinding
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: ExperiencedFriendInfo){
-            binding.profile = item
         }
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<ExperiencedFriendInfo>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<ExperiencedFriendContent>() {
             override fun areItemsTheSame(
-                oldItem: ExperiencedFriendInfo,
-                newItem: ExperiencedFriendInfo,
-            ): Boolean = oldItem.userId == newItem.userId
+                oldItem: ExperiencedFriendContent,
+                newItem: ExperiencedFriendContent,
+            ): Boolean = oldItem == newItem
 
             override fun areContentsTheSame(
-                oldItem: ExperiencedFriendInfo,
-                newItem: ExperiencedFriendInfo,
-            ): Boolean = oldItem.toString() == newItem.toString()
+                oldItem: ExperiencedFriendContent,
+                newItem: ExperiencedFriendContent,
+            ): Boolean = oldItem == newItem
         }
     }
 }

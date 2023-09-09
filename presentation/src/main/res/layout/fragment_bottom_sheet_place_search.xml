@@ -53,7 +53,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/tv_bs_place_experienced_friend"
                     app:layout_constraintTop_toTopOf="@+id/tv_bs_place_experienced_friend"
                     tools:itemCount="3"
-                    tools:listitem="@layout/item_round_profile_32dp" />
+                    tools:listitem="@layout/item_round_profile_big" />
 
 
                 <TextView

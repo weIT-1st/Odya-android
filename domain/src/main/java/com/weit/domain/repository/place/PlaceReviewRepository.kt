@@ -1,6 +1,6 @@
 package com.weit.domain.repository.place
 
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
@@ -20,7 +20,7 @@ interface PlaceReviewRepository {
     ): Result<Unit>
 
     suspend fun getByPlaceId(
-        info: PlaceReviewByPlaceIdInfo,
+        info: PlaceReviewByPlaceIdQuery,
     ): Result<List<PlaceReviewDetail>>
 
     suspend fun getByUserId(
@@ -36,6 +36,6 @@ interface PlaceReviewRepository {
     ): Result<Int>
 
     suspend fun getAverageRating(
-        info: PlaceReviewByPlaceIdInfo
+        placeId: String
     ): Result<Float>
 }

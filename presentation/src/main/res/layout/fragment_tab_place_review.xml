@@ -42,7 +42,7 @@
 
         <!-- textStyle 임의 배치. 수정 가능성 있음 -->
         <TextView
-            android:id="@+id/tv_tab_place_recent_20"
+            android:id="@+id/tv_tab_place_recent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/body2"
@@ -60,6 +60,7 @@
             android:rating="3"
             android:isIndicator="true"
             android:numStars="5"
+            android:stepSize="0.1"
             android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_tab_place_review_title"
             app:layout_constraintStart_toStartOf="parent"

@@ -38,14 +38,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerComment()
         }
-        binding.btCommunityFollow.setOnClickListener {
-            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
-        }
 
         // TODO 좋아요
     }
     private fun initCommentBottomSheet() {
-        bottomSheetDialog = CommentDialogFragment()
         bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,
@@ -106,6 +102,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
+                bottomSheetDialog = CommentDialogFragment()
                 bottomSheetDialog?.comments = event.comments
             }
 
@@ -129,13 +126,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 sendSnackBar("이미 팔로우 중입니다")
             }
 
-            is FeedDetailViewModel.Event.CreateFollowSuccess -> {
-                sendSnackBar("팔로우 성공")
+            is FeedDetailViewModel.Event.CreateAndDeleteFollowSuccess -> {
+                sendSnackBar("정상적으로 실행")
             }
 
-            is FeedDetailViewModel.Event.DeleteFollowSuccess -> {
-                sendSnackBar("팔로우 해제")
-            }
 
             else -> {}
         }

@@ -9,6 +9,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.follow.FollowFollowingIdInfo
+import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.presentation.model.FeedComment
@@ -28,16 +29,20 @@ import javax.inject.Inject
 class FeedDetailViewModel @Inject constructor(
     private val createFollowCreateUseCase: CreateFollowCreateUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
+    private val changeFollowStateUseCase: ChangeFollowStateUseCase,
 ) : ViewModel() {
 
     private val _feed = MutableStateFlow<FeedDetail?>(null)
     val feed: StateFlow<FeedDetail?> get() = _feed
 
-    private val _likeNum = MutableStateFlow<Int?>(null)
-    val likeNum: StateFlow<Int?> get() = _likeNum
+    private val _likeNum = MutableStateFlow<Int>(0)
+    val likeNum: StateFlow<Int> get() = _likeNum
 
-    private val _commentNum = MutableStateFlow<Int?>(null)
-    val commentNum: StateFlow<Int?> get() = _commentNum
+    private val _commentNum = MutableStateFlow<Int>(0)
+    val commentNum: StateFlow<Int> get() = _commentNum
+
+    private val _followState = MutableStateFlow<Boolean>(false)
+    val followState: StateFlow<Boolean> get() = _followState
 
     private val _event = MutableEventFlow<FeedDetailViewModel.Event>()
     val event = _event.asEventFlow()
@@ -53,12 +58,12 @@ class FeedDetailViewModel @Inject constructor(
             val travelLog = TravelLogInFeed(1, "ddd", "")
 
             val comments = listOf<FeedComment>(
-                FeedComment(1, 1, profile, "dd", "wowwow"),
+                FeedComment(1, 3, profile, "dd", "wowwow"),
                 FeedComment(1, 1, profile, "dd", "wowwow"),
                 FeedComment(1, 1, profile, "dd", "wowwow"),
             )
 
-            val feed = FeedDetail(1, 1, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments)
+            val feed = FeedDetail(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments)
             userId = feed.userId
             val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
             val defaultComments = comments
@@ -73,6 +78,7 @@ class FeedDetailViewModel @Inject constructor(
         _feed.value = feed
         _likeNum.value = feed.likeNum
         _commentNum.value = feed.commentNum
+        _followState.value = feed.followState
     }
 
     fun registerComment() {
@@ -81,25 +87,16 @@ class FeedDetailViewModel @Inject constructor(
         }
     }
 
-    fun onFollowStateChange(isChecked: Boolean) {
+    fun onFollowStateChange() {
         viewModelScope.launch {
-            Logger.t("MainTest").i("feed like $userId")
-            if (isChecked) {
-                val result = createFollowCreateUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.CreateFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-                }
+            _followState.value = !_followState.value
+            val result = changeFollowStateUseCase(userId, _followState.value)
+            if (result.isSuccess) {
+                _event.emit(Event.CreateAndDeleteFollowSuccess)
             } else {
-                val result = deleteFollowUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.DeleteFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-                }
+                _followState.value = !_followState.value
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
@@ -121,8 +118,7 @@ class FeedDetailViewModel @Inject constructor(
             val remainingCommentsCount: Int,
             val comments: List<FeedComment>,
         ) : Event()
-        object CreateFollowSuccess : Event()
-        object DeleteFollowSuccess : Event()
+        object CreateAndDeleteFollowSuccess : Event()
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()
         object NotHavePermissionException : Event()

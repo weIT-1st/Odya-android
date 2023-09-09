@@ -8,6 +8,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -18,8 +19,7 @@ interface FollowService {
     suspend fun createFollow(
         @Body followFollowingId: FollowFollowingId,
     )
-
-    @DELETE("/api/v1/follows")
+    @HTTP(method = "DELETE", path="/api/v1/follows", hasBody = true)
     suspend fun deleteFollow(
         @Body followFollowingId: FollowFollowingId,
     ): Response<Unit>

@@ -6,17 +6,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
 import com.weit.presentation.model.Feed
-import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
     private val navigateFeedDetail: (Long) -> Unit,
-    private val onFollowChanged: (Long, Boolean) -> Unit,
+    private val onFollowChanged: (String, Int, Long, Boolean) -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
         Callback,
@@ -89,8 +89,9 @@ class FeedAdapter(
         fun bind(mayKnowFriend: Feed.MayknowFriendItem) {
             val data = mayKnowFriend.mayKnowFriendList
             val mayKnowFriendRecyclerView = binding.rvMayknowFriendSummary
-            val mayKnowFriendAdapter = MayKnowFriendAdapter { userId, isChecked ->
-                onFollowChanged(userId, isChecked)
+            val mayKnowFriendAdapter = MayKnowFriendAdapter { position, userId, isChecked ->
+                onFollowChanged("friend", position, userId, isChecked)
+                Logger.t("positon").i(position.toString())
             }
             mayKnowFriendAdapter.submitList(data)
             mayKnowFriendRecyclerView.adapter = mayKnowFriendAdapter
@@ -114,7 +115,7 @@ class FeedAdapter(
                 navigateFeedDetail(feed.feedId)
             }
             binding.btCommunityFollow.setOnClickListener {
-                onFollowChanged(feed.userId, feed.followState)
+                onFollowChanged("feed", absoluteAdapterPosition,feed.userId, feed.followState)
             }
             binding.viewCommunityTitle.setOnClickListener {
                 feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }

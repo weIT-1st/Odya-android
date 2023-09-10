@@ -1,5 +1,6 @@
 package com.weit.presentation.model
 
+import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.UserProfile
 
 sealed class Feed {
@@ -16,11 +17,14 @@ sealed class Feed {
         val likeNum: Int,
         val commentNum: Int,
         val place: String?,
-    ) : Feed()
+        ) : Feed()
     data class PopularTravelLogItem(val popularTravelLogList: List<PopularTravelLog>) : Feed()
     data class MayknowFriendItem(val mayKnowFriendList: List<MayKnowFriend>) : Feed()
 }
-
+data class TopicDTO(
+    override val topicId: Long,
+    override val topicWord: String,
+): TopicDetail
 data class MayKnowFriend(
     val userId: Long,
     val userProfile: UserProfile,
@@ -66,6 +70,7 @@ data class FeedDetail(
     val commentNum: Int,
     val place: String?,
     val comments: List<FeedComment>,
+    val topics: List<TopicDTO>,
 )
 
 data class FeedComment(

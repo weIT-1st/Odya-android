@@ -8,12 +8,13 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.follow.FollowFollowingIdInfo
+import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.presentation.model.FeedComment
 import com.weit.presentation.model.FeedDetail
+import com.weit.presentation.model.TopicDTO
 import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
@@ -56,21 +57,21 @@ class FeedDetailViewModel @Inject constructor(
         viewModelScope.launch {
             val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
             val travelLog = TravelLogInFeed(1, "ddd", "")
-
+            val topics = listOf(TopicDTO(1,"바다여행"),TopicDTO(2,"우주여행"))
             val comments = listOf<FeedComment>(
                 FeedComment(1, 3, profile, "dd", "wowwow"),
                 FeedComment(1, 1, profile, "dd", "wowwow"),
                 FeedComment(1, 1, profile, "dd", "wowwow"),
             )
 
-            val feed = FeedDetail(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments)
+            val feed = FeedDetail(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments,topics)
             userId = feed.userId
             val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
             val defaultComments = comments
                 .slice(0 until commentCount)
             val remainingCommentsCount = comments.size - defaultComments.size
             setFeedDetail(feed)
-            _event.emit(Event.OnChangeFeed(feed.travelLog, defaultComments, remainingCommentsCount, comments))
+            _event.emit(Event.OnChangeFeed(feed.travelLog, defaultComments, remainingCommentsCount, comments, feed.topics))
         }
     }
 
@@ -117,6 +118,7 @@ class FeedDetailViewModel @Inject constructor(
             val defaultComments: List<FeedComment>,
             val remainingCommentsCount: Int,
             val comments: List<FeedComment>,
+            val topics: List<TopicDTO>
         ) : Event()
         object CreateAndDeleteFollowSuccess : Event()
         object InvalidRequestException : Event()

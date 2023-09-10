@@ -37,5 +37,5 @@ fun bindReactionCount(textView: TextView, count: Int?) {
                 count.toString()
             }
     }
-
 }
+

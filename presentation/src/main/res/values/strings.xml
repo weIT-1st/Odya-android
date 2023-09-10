@@ -86,6 +86,6 @@
     <string name="feed_reaction_over_count">%d+</string>
     <string name="feed_detail_comment">%d개의 댓글 더보기</string>
     <string name="feed_comment_hint">댓글을 입력해주세요</string>
-
+    <string name="feed_detail_topic"># %s</string>
 
 </resources>

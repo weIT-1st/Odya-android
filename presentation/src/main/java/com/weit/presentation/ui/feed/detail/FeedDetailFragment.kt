@@ -15,6 +15,7 @@ import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
+import com.weit.presentation.ui.feed.detail.FeedTopicAdapter
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,6 +29,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val viewModel: FeedDetailViewModel by viewModels()
     private val args: FeedDetailFragmentArgs by navArgs()
     private val feedCommentAdapter = FeedCommentAdapter()
+    private val feedTopicAdapter = FeedTopicAdapter()
     private var bottomSheetDialog: CommentDialogFragment? = CommentDialogFragment()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -67,6 +69,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
             adapter = feedCommentAdapter
         }
+        binding.rvTopic.adapter = feedTopicAdapter
     }
 
     private fun navigateTravelLog(travelLogId: Long) {
@@ -97,6 +100,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
                 setTravelLog(event.travelLog)
+                feedTopicAdapter.submitList(event.topics)
                 feedCommentAdapter.submitList(event.defaultComments)
                 if (event.remainingCommentsCount > 0) {
                     binding.btnFeedCommentMore.text =

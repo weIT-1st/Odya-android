@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.databinding.ItemMayknowFriendSummaryBinding
 import com.weit.presentation.model.MayKnowFriend
 
-class MayKnowFriendAdapter(private val onFollowChanged: (Long, Boolean) -> Unit) :
+class MayKnowFriendAdapter(private val onFollowChanged: (Int, Long, Boolean) -> Unit) :
     ListAdapter<MayKnowFriend, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MayKnowFriendViewHolder {
@@ -33,7 +33,7 @@ class MayKnowFriendAdapter(private val onFollowChanged: (Long, Boolean) -> Unit)
         fun bind(mayKnowFriend: MayKnowFriend) {
             binding.friend = mayKnowFriend
             binding.btnMayknowFriendSummaryFollow.setOnClickListener {
-                onFollowChanged(mayKnowFriend.userId, mayKnowFriend.followState)
+                onFollowChanged(absoluteAdapterPosition, mayKnowFriend.userId, mayKnowFriend.followState)
             }
         }
     }

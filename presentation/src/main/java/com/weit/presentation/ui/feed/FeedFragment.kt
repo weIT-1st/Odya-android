@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -19,7 +20,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     private val feedAdapter = FeedAdapter(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
-        onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
+        onFollowChanged = { type, position, userId, isChecked -> viewModel.onFollowStateChange(type, position, userId, isChecked) },
     )
     private val topicAdapter = FavoriteTopicAdapter()
 
@@ -44,6 +45,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
             }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.changeFeedEvent.collectLatest { feeds ->
+                feedAdapter.submitList(feeds)            }
         }
     }
 
@@ -87,11 +92,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             is FeedViewModel.Event.ExistedFollowingIdException -> {
                 sendSnackBar("이미 팔로우 중입니다")
             }
-            is FeedViewModel.Event.CreateFollowSuccess -> {
-                sendSnackBar("팔로우 성공")
-            }
-            is FeedViewModel.Event.DeleteFollowSuccess -> {
-                sendSnackBar("팔로우 해제")
+            is FeedViewModel.Event.CreateAndDeleteFollowSuccess -> {
+                sendSnackBar("정상적으로 실행")
             }
             else -> {}
         }

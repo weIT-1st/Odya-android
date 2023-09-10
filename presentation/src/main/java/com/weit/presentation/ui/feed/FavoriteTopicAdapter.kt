@@ -36,11 +36,11 @@ class FavoriteTopicAdapter() :
         private val FavoriteTopicDiffCallback: DiffUtil.ItemCallback<TopicDetail> =
             object : DiffUtil.ItemCallback<TopicDetail>() {
                 override fun areItemsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
-                    return oldItem.topicWord == newItem.topicWord
+                    return oldItem.topicId == newItem.topicId
                 }
 
                 override fun areContentsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
-                    return oldItem == newItem
+                    return oldItem.topicId == newItem.topicId
                 }
             }
     }

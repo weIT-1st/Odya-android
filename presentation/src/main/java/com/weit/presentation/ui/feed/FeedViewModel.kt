@@ -10,7 +10,9 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.follow.FollowFollowingIdInfo
+import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.topic.TopicDetail
+import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
@@ -21,13 +23,16 @@ import com.weit.presentation.model.FeedDTO
 import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.TravelLogInFeed
+import com.weit.presentation.model.post.travellog.DailyTravelLog
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
+import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,13 +42,25 @@ class FeedViewModel @Inject constructor(
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val createFollowCreateUseCase: CreateFollowCreateUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
-) : ViewModel() {
+    private val changeFollowStateUseCase: ChangeFollowStateUseCase,
+    ) : ViewModel() {
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
 
+    private var allFeed = ArrayList<Feed>()
+    private var feedItems = ArrayList<Feed.FeedItem>()
+    private var popularLogs = ArrayList<PopularTravelLog>()
+    private var frineds = ArrayList<MayKnowFriend>()
+
+    private val _changeFeedEvent = MutableEventFlow<List<Feed>>()
+    val changeFeedEvent = _changeFeedEvent.asEventFlow()
+
     init {
         getFavoriteTopicList()
+        getFeeds()
+        getPopularTravelLogs()
+        getMayknowFriends()
         makeFeedItems()
     }
 
@@ -62,50 +79,49 @@ class FeedViewModel @Inject constructor(
 
     fun makeFeedItems() {
         viewModelScope.launch {
-            val items = mutableListOf<Feed>()
 
-            var feedList = getFeeds()
-            var popularTravelLogList = getPopularTravelLogs()
-            val mayKnowFriendList = getMayknowFriends()
+            var feedList = feedItems
+            var popularTravelLogList = Feed.PopularTravelLogItem(popularLogs)
+            val mayKnowFriendList = Feed.MayknowFriendItem(frineds)
 
             val feedIdxBefore = min(feedList.size, 2)
             var feedIdxAfter = min(feedList.size - 2, 2)
 
             for (i in 0 until feedIdxBefore) {
-                items.add(feedList[i])
+                allFeed.add(feedList[i])
             }
 
             if (popularTravelLogList.popularTravelLogList.size > 0) {
-                items.add(popularTravelLogList)
+                allFeed.add(popularTravelLogList)
             }
 
             if (feedList.size > 2) {
                 for (i in 2 until 2 + feedIdxAfter) {
-                    items.add(feedList[i])
+                    allFeed.add(feedList[i])
                 }
             }
 
             if (mayKnowFriendList.mayKnowFriendList.size > 0) {
-                items.add(mayKnowFriendList)
+                allFeed.add(mayKnowFriendList)
             }
 
             if (feedList.size > 4) {
                 for (i in 4 until feedList.size) {
-                    items.add(feedList[i])
+                    allFeed.add(feedList[i])
                 }
             }
 
-            _event.emit(Event.OnChangeFeeds(items))
+            _changeFeedEvent.emit(allFeed.toList())
         }
     }
 
-    private fun getFeeds(): List<Feed.FeedItem> {
+    private fun getFeeds() {
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
         val travelLog = TravelLogInFeed(1, "ddd", "")
-        val feedList = listOf(
-            FeedDTO(1, 1, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
-            FeedDTO(2, 2, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
-            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+        val feedList = listOf<FeedDTO>(
+            FeedDTO(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
+            FeedDTO(2, 5, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+            FeedDTO(2, 6, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
             FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
             FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
         )
@@ -125,49 +141,72 @@ class FeedViewModel @Inject constructor(
                 it.place,
             )
         }
-
-        return feeds
+        feedItems = ArrayList(feeds)
     }
 
-    private fun getPopularTravelLogs(): Feed.PopularTravelLogItem {
+    private fun getPopularTravelLogs() {
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val popularSpotList = listOf(
+        val popularSpotList = arrayListOf<PopularTravelLog>(
             PopularTravelLog(12, 1, profile, "dd", "dd", "dd"),
             PopularTravelLog(13, 2, profile, "dd", "dd", "dd"),
         )
 
-        return Feed.PopularTravelLogItem(popularSpotList)
+        popularLogs = popularSpotList
     }
 
-    private fun getMayknowFriends(): Feed.MayknowFriendItem {
+    private fun getMayknowFriends() {
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val mayKnowFriendList = listOf(
-            MayKnowFriend(1, profile, "ari", "함께 아는 친구 2명", true),
-            MayKnowFriend(2, profile, "ari", "함께 아는 친구 2명", true),
-            MayKnowFriend(3, profile, "ari", "함께 아는 친구 2명", true),
+        val mayKnowFriendList = arrayListOf<MayKnowFriend>(
+            MayKnowFriend(4, profile, "ari", "함께 아는 친구 2명", true),
+            MayKnowFriend(5, profile, "ari", "함께 아는 친구 2명", false),
+            MayKnowFriend(6, profile, "ari", "함께 아는 친구 2명", true),
         )
-        return Feed.MayknowFriendItem(mayKnowFriendList)
+        frineds = mayKnowFriendList
     }
 
-    fun onFollowStateChange(userId: Long, isChecked: Boolean) {
+    fun onFollowStateChange(type:String, position:Int, userId: Long, isChecked: Boolean) {
         viewModelScope.launch {
-            Logger.t("MainTest").i("feed like $userId")
-            if (isChecked) {
-                val result = createFollowCreateUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.CreateFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            Logger.t("position").i(isChecked.toString())
+            val result = changeFollowStateUseCase(userId, !isChecked)
+            if (result.isSuccess) {
+                when(type){
+                    "feed" -> {
+                        feedItems[position] = feedItems[position].copy(followState = !isChecked)
+                        val newFriends = frineds.map { friend ->
+                            if (friend.userId == userId)
+                                friend.copy(followState = !isChecked)
+                            else
+                                friend
+                        }
+                        frineds.clear()
+                        frineds.addAll(newFriends)
+                    }
+                    else -> {
+                        frineds[position] = frineds[position].copy(followState = !isChecked)
+                        val newFeedItems = feedItems.map { feed ->
+                            if(feed.userId == userId)
+                                feed.copy(followState = !isChecked)
+                            else
+                                feed
+                        }
+                        feedItems.clear()
+                        feedItems.addAll(newFeedItems)
+                    }
                 }
+                Logger.t("MainTest").i("성공임돠")
+                Logger.t("position").i(feedItems[0].followState.toString())
+
+
+                makeFeedItems()
             } else {
-                val result = deleteFollowUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.DeleteFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+                when(type){
+                    "feed" -> feedItems[position] = feedItems[position].copy(followState = isChecked)
+                    else -> frineds[position] = frineds[position].copy(followState = isChecked)
                 }
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+
+                makeFeedItems()
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
     }
@@ -190,8 +229,7 @@ class FeedViewModel @Inject constructor(
         data class OnChangeFavoriteTopics(
             val topics: List<TopicDetail>,
         ) : Event()
-        object CreateFollowSuccess : Event()
-        object DeleteFollowSuccess : Event()
+        object CreateAndDeleteFollowSuccess : Event()
         object NotExistTopicIdException : Event()
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()

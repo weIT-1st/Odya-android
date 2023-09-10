@@ -12,6 +12,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         android:layout_marginBottom="18dp">
 
         <com.google.android.material.imageview.ShapeableImageView
@@ -52,23 +56,33 @@
                 app:layout_constraintStart_toStartOf="parent"
                 tools:text="홍길동"/>
 
-            <RatingBar
+            <com.willy.ratingbar.BaseRatingBar
                 android:id="@+id/ratingbar_item_place_review"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/CustomSmallRatingBar"
-                android:isIndicator="true"
                 android:rating="@{review.rating}"
+                app:srb_numStars="5"
+                app:srb_starWidth="17dp"
+                app:srb_starHeight="17dp"
+                app:srb_starPadding="1dp"
+                app:srb_stepSize="0.5"
+                app:srb_clickable="false"
+                app:srb_scrollable="false"
+                app:srb_drawableEmpty="@drawable/ic_star_white_empty"
+                app:srb_drawableFilled="@drawable/ic_star_yellow_fill"
                 android:layout_marginStart="10dp"
                 app:layout_constraintStart_toEndOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintTop_toTopOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_item_place_review_writer"/>
 
-            <androidx.appcompat.widget.AppCompatButton
+
+            <ImageButton
                 android:id="@+id/btn_item_place_menu"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:background="@drawable/ic_dotdotdot"
+                android:src="@drawable/ic_dotdotdot"
+                app:tint="@color/label_normal"
+                android:background="@color/elevation2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_item_place_review_writer"/>

@@ -52,20 +52,24 @@
             app:layout_constraintTop_toTopOf="@+id/tv_tab_place_review_title"
             app:layout_constraintBottom_toBottomOf="@+id/tv_tab_place_review_title" />
 
-        <RatingBar
+        <com.willy.ratingbar.BaseRatingBar
             android:id="@+id/ratingbar_tab_place_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/CustomRatingBar"
-            android:rating="3"
-            android:isIndicator="true"
-            android:numStars="5"
-            android:stepSize="0.1"
+            app:srb_numStars="5"
+            app:srb_minimumStars="0.1"
+            app:srb_starWidth="40dp"
+            app:srb_starHeight="40dp"
+            app:srb_starPadding="1dp"
+            app:srb_stepSize="0.1"
+            app:srb_clickable="false"
+            app:srb_scrollable="false"
+            app:srb_drawableEmpty="@drawable/ic_star_white_empty"
+            app:srb_drawableFilled="@drawable/ic_star_yellow_fill"
             android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_tab_place_review_title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_tap_place_recent_sort"

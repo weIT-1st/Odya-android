@@ -62,9 +62,9 @@ class SearchPlaceBottomSheetFragment(
         initTabViewPager()
         initExperiencedFriendRV()
 
-        // 임시 리뷰 추가 버튼 입니다 디자인 변경 나오면 삭제 후 수정하겠습니다.
+//        임시 리뷰 추가 버튼 입니다 디자인 변경 나오면 삭제 후 수정하겠습니다.
         binding.btnBsPlaceBookMark.setOnClickListener {
-            EditPlaceReviewFragment(placeId, null).show(childFragmentManager, "edit")
+            EditPlaceReviewFragment({},placeId, null).show(childFragmentManager, "edit")
         }
 
         repeatOnStarted(viewLifecycleOwner){

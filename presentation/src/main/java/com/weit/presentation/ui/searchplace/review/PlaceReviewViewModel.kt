@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.searchplace.review
 
+import android.content.res.Resources.NotFoundException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -38,6 +39,9 @@ class PlaceReviewViewModel @AssistedInject constructor(
     private val _myPlaceReviewData = MutableStateFlow<PlaceReviewContentData?>(null)
     val myPlaceReviewData: StateFlow<PlaceReviewContentData?> get() = _myPlaceReviewData
 
+    private val _review = MutableStateFlow<PlaceReviewInfo?>(null)
+    val review : StateFlow<PlaceReviewInfo?> get() = _review
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -64,7 +68,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    private fun getPlaceReview() {
+    fun getPlaceReview() {
         viewModelScope.launch {
             val result = getPlaceReviewContentUseCase(placeId)
             if (result.isSuccess){
@@ -78,6 +82,9 @@ class PlaceReviewViewModel @AssistedInject constructor(
                         myReview.placeReviewId,
                         myReview.review,
                         (myReview.rating * 2).toInt()))
+                    if (myPlaceReviewData.value == null){
+                        _event.emit(Event.DoNotGetMyReviewData)
+                    }
                 } else {
                     _event.emit(Event.GetPlaceReviewSuccess)
                 }
@@ -90,7 +97,17 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     fun deleteMyReview(){
         viewModelScope.launch {
-
+            if (myPlaceReviewData.value == null) {
+                _event.emit(Event.GetPlaceReviewSuccess)
+            }else {
+                val result = deletePlaceReviewUseCase(myPlaceReviewData.value!!.placeReviewId)
+                if (result.isSuccess){
+                    _event.emit(Event.DeleteMyReviewSuccess)
+                    getPlaceReview()
+                } else {
+                    handleError(result.exceptionOrNull() ?: UnknownError())
+                }
+            }
         }
     }
 
@@ -98,7 +115,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
         when (error ){
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
-            is NoSuchElementException -> _event.emit(Event.NoSuchElementException)
+            is NotFoundException -> _event.emit(Event.NotFoundException)
             is ForbiddenException -> _event.emit(Event.ForbiddenException)
             is UnKnownException -> _event.emit(Event.UnKnownException)
         }
@@ -107,10 +124,13 @@ class PlaceReviewViewModel @AssistedInject constructor(
     sealed class Event {
         object GetAverageRatingSuccess: Event()
         object GetPlaceReviewWithMineSuccess: Event()
+        object UpdateMyReviewSuccess: Event()
+        object DeleteMyReviewSuccess: Event()
+        object DoNotGetMyReviewData: Event()
         object GetPlaceReviewSuccess: Event()
         object InvalidRequestException: Event()
         object InvalidTokenException : Event()
-        object NoSuchElementException: Event()
+        object NotFoundException: Event()
         object ForbiddenException: Event()
         object UnKnownException: Event()
     }

@@ -21,6 +21,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.HttpException
 import retrofit2.Response
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -87,7 +88,7 @@ class UserRepositoryImpl @Inject constructor(
                     }
                 ))
         } else {
-            Result.failure(result.exception())
+            Result.failure(handleError(result.exception()))
         }
     }
 
@@ -129,6 +130,22 @@ class UserRepositoryImpl @Inject constructor(
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
+            else -> UnKnownException()
+        }
+    }
+
+    private fun handleError(t: Throwable): Throwable{
+        return if (t is HttpException){
+            handleCode(t.code())
+        } else {
+            t
+        }
+    }
+
+    private fun handleCode(code: Int): Throwable{
+        return when(code) {
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
             else -> UnKnownException()
         }
     }

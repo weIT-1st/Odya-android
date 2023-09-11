@@ -17,7 +17,6 @@ import com.weit.presentation.databinding.ItemPlaceReviewBinding
 import kotlin.coroutines.coroutineContext
 
 class PlaceReviewAdapter(
-    private val context: Context?,
     private val updateItem: () -> Unit,
     private val deleteItem: () -> Unit
 ): ListAdapter<PlaceReviewInfo, RecyclerView.ViewHolder>(diffUtil) {
@@ -55,9 +54,17 @@ class PlaceReviewAdapter(
         private val binding: ItemPlaceReviewBinding,
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: PlaceReviewInfo){
-            binding.review = item
+            if (item.profile != null) {
+                binding.review = item
+            } else {
+                binding.tvItemPlaceReviewWriter.text = item.writerNickname
+                binding.ratingbarItemPlaceReview.rating = item.rating
+                binding.tvItemPlaceReviewContent.text = item.review
+                binding.tvItemPlaceReviewDate.text = item.createAt
+                binding.ivItemPlaceProfile.setImageResource(R.drawable.ic_profile)
+            }
             binding.btnItemPlaceMenu.setOnClickListener { it ->
-                PopupMenu(context, it).apply{
+                PopupMenu(it.context, it).apply{
                     menuInflater.inflate(R.menu.friend_place_review, this.menu)
 
                     setOnMenuItemClickListener {
@@ -75,10 +82,17 @@ class PlaceReviewAdapter(
         private val binding: ItemMyPlaceReviewBinding,
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: PlaceReviewInfo){
-            binding.review = item
-            binding.btnItemPlaceMenu.setOnClickListener {  }
+            if (item.profile != null) {
+                binding.review = item
+            } else {
+                binding.tvItemPlaceReviewWriter.text = item.writerNickname
+                binding.ratingbarItemPlaceReview.rating = item.rating
+                binding.tvItemPlaceReviewContent.text = item.review
+                binding.tvItemPlaceReviewDate.text = item.createAt
+                binding.ivItemPlaceProfile.setImageResource(R.drawable.ic_profile)
+            }
             binding.btnItemPlaceMenu.setOnClickListener { it ->
-                PopupMenu(context, it).apply{
+                PopupMenu(it.context, it).apply{
                     menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)
 
                     setOnMenuItemClickListener {
@@ -110,7 +124,7 @@ class PlaceReviewAdapter(
             override fun areContentsTheSame(
                 oldItem: PlaceReviewInfo,
                 newItem: PlaceReviewInfo,
-            ): Boolean = oldItem.toString() == newItem.toString()
+            ): Boolean = oldItem.review == newItem.review || oldItem.rating == newItem.rating
         }
     }
 }

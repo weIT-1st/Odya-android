@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditPlaceReviewFragment(
+    private val updateReviewList: () -> Unit,
     private val placeId: String,
     private val placeReviewContentData: PlaceReviewContentData?,
 ) : DialogFragment() {
@@ -91,6 +92,7 @@ class EditPlaceReviewFragment(
 
         binding.btnEditReviewRegister.setOnClickListener {
             viewModel.updatePlaceReview(placeId)
+            dismiss()
         }
 
         binding.btnEditReviewCancel.setOnClickListener {
@@ -101,6 +103,7 @@ class EditPlaceReviewFragment(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+        updateReviewList
     }
 
     private fun handleEvent(event: EditPlaceReviewViewModel.Event) {

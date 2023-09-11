@@ -32,9 +32,11 @@ class PlaceReviewFragment(
     private var editPlaceReviewFragment: EditPlaceReviewFragment? = null
     private val placeReviewAdapter:PlaceReviewAdapter by lazy {
         PlaceReviewAdapter(
-        context, { updateMyReview() }, { viewModel.deleteMyReview() }
+        { updateMyReview() }, { viewModel.deleteMyReview() }
         )
     }
+
+    private var myPlaceReviewData: PlaceReviewContentData? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -62,6 +64,12 @@ class PlaceReviewFragment(
                 binding.ratingbarTabPlaceReview.rating = rating
             }
         }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.myPlaceReviewData.collectLatest { data ->
+                myPlaceReviewData = data
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -76,12 +84,17 @@ class PlaceReviewFragment(
 
     private fun updateMyReview(){
         if(editPlaceReviewFragment == null){
-            editPlaceReviewFragment = EditPlaceReviewFragment(placeId, viewModel.myPlaceReviewData.value)
+            if (myPlaceReviewData != null){
+                editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myPlaceReviewData)
+            }
         }
-
         if (!editPlaceReviewFragment!!.isAdded){
             editPlaceReviewFragment!!.show(childFragmentManager, "Edit Dialog")
         }
+    }
+
+    private fun updateReviewList() {
+        viewModel.getPlaceReview()
     }
 
     private fun handelEvent(event: PlaceReviewViewModel.Event){
@@ -105,10 +118,19 @@ class PlaceReviewFragment(
                 sendSnackBar("알 수 없는 에러 발생")
             }
             PlaceReviewViewModel.Event.ForbiddenException -> {
-                sendSnackBar("작성자만 수정할 수 있습니다.")
+                sendSnackBar("작성자만 삭제할 수 있습니다.")
             }
-            PlaceReviewViewModel.Event.NoSuchElementException -> {
+            PlaceReviewViewModel.Event.NotFoundException -> {
                 sendSnackBar("존재하지 않는 장소 리뷰입니다.")
+            }
+            PlaceReviewViewModel.Event.DeleteMyReviewSuccess -> {
+                sendSnackBar("성공적으로 리뷰가 삭제되었습니다..")
+            }
+            PlaceReviewViewModel.Event.UpdateMyReviewSuccess -> {
+                sendSnackBar("성공적으로 리뷰가 수정 되었습니다.")
+            }
+            PlaceReviewViewModel.Event.DoNotGetMyReviewData -> {
+                sendSnackBar("내가 작성한 리뷰 데이터를 가져오지 못했습니다.")
             }
         }
     }

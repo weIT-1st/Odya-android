@@ -7,6 +7,10 @@
         <variable
             name="review"
             type="com.weit.domain.model.place.PlaceReviewInfo" />
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.searchplace.review.PlaceReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

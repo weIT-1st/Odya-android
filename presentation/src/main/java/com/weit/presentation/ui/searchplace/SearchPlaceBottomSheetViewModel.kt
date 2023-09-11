@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.searchplace
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -54,7 +55,6 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
             val info = result.getOrThrow()
             _event.emit(Event.GetExperiencedFriendSuccess)
             _experiencedFriendNum.emit(info.count)
-
             if (info.count != 0) {
                 val friendSummary = info.followings!!
                     .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)

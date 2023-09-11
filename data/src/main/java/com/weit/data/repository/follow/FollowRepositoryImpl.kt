@@ -124,7 +124,7 @@ class FollowRepositoryImpl @Inject constructor(
                 }
             ))
         } else {
-            Result.failure(result.exception())
+            Result.failure(handleFollowError(result.exception()))
         }
     }
 

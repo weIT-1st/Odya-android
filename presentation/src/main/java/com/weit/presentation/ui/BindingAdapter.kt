@@ -38,4 +38,3 @@ fun bindReactionCount(textView: TextView, count: Int?) {
             }
     }
 }
-

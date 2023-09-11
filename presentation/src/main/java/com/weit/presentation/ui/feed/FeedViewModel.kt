@@ -9,41 +9,28 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
-import com.weit.domain.model.follow.FollowFollowingIdInfo
-import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
-import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
-import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
-import com.weit.domain.usecase.topic.GetTopicListUseCase
-import com.weit.domain.usecase.topic.RegisterFavoriteTopicUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDTO
 import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.TravelLogInFeed
-import com.weit.presentation.model.post.travellog.DailyTravelLog
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
-import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
-import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val getTopicListUseCase: GetTopicListUseCase,
-    private val registerFavoriteTopicUseCase: RegisterFavoriteTopicUseCase,
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
-    private val createFollowCreateUseCase: CreateFollowCreateUseCase,
-    private val deleteFollowUseCase: DeleteFollowUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -64,7 +51,7 @@ class FeedViewModel @Inject constructor(
         makeFeedItems()
     }
 
-    fun getFavoriteTopicList() {
+    private fun getFavoriteTopicList() {
         viewModelScope.launch {
             val result = getFavoriteTopicListUseCase()
             if (result.isSuccess) {
@@ -77,9 +64,9 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    fun makeFeedItems() {
+    private fun makeFeedItems() {
         viewModelScope.launch {
-
+            allFeed.clear()
             var feedList = feedItems
             var popularTravelLogList = Feed.PopularTravelLogItem(popularLogs)
             val mayKnowFriendList = Feed.MayknowFriendItem(frineds)
@@ -91,7 +78,7 @@ class FeedViewModel @Inject constructor(
                 allFeed.add(feedList[i])
             }
 
-            if (popularTravelLogList.popularTravelLogList.size > 0) {
+            if (popularTravelLogList.popularTravelLogList.isNotEmpty()) {
                 allFeed.add(popularTravelLogList)
             }
 
@@ -101,7 +88,7 @@ class FeedViewModel @Inject constructor(
                 }
             }
 
-            if (mayKnowFriendList.mayKnowFriendList.size > 0) {
+            if (mayKnowFriendList.mayKnowFriendList.isNotEmpty()) {
                 allFeed.add(mayKnowFriendList)
             }
 
@@ -164,48 +151,33 @@ class FeedViewModel @Inject constructor(
         frineds = mayKnowFriendList
     }
 
-    fun onFollowStateChange(type:String, position:Int, userId: Long, isChecked: Boolean) {
-        viewModelScope.launch {
-            Logger.t("position").i(isChecked.toString())
-            val result = changeFollowStateUseCase(userId, !isChecked)
-            if (result.isSuccess) {
-                when(type){
-                    "feed" -> {
-                        feedItems[position] = feedItems[position].copy(followState = !isChecked)
-                        val newFriends = frineds.map { friend ->
-                            if (friend.userId == userId)
-                                friend.copy(followState = !isChecked)
-                            else
-                                friend
-                        }
-                        frineds.clear()
-                        frineds.addAll(newFriends)
-                    }
-                    else -> {
-                        frineds[position] = frineds[position].copy(followState = !isChecked)
-                        val newFeedItems = feedItems.map { feed ->
-                            if(feed.userId == userId)
-                                feed.copy(followState = !isChecked)
-                            else
-                                feed
-                        }
-                        feedItems.clear()
-                        feedItems.addAll(newFeedItems)
-                    }
-                }
-                Logger.t("MainTest").i("성공임돠")
-                Logger.t("position").i(feedItems[0].followState.toString())
-
-
-                makeFeedItems()
+    private fun onChangeFeedAndFriendItems(userId: Long, isFollowing: Boolean) {
+        val newFriends = frineds.map { friend ->
+            if (friend.userId == userId) {
+                friend.copy(followState = !isFollowing)
             } else {
-                when(type){
-                    "feed" -> feedItems[position] = feedItems[position].copy(followState = isChecked)
-                    else -> frineds[position] = frineds[position].copy(followState = isChecked)
-                }
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-
-                makeFeedItems()
+                friend
+            }
+        }
+        frineds.clear()
+        frineds.addAll(newFriends)
+        val newFeedItems = feedItems.map { feed ->
+            if (feed.userId == userId) {
+                feed.copy(followState = !isFollowing)
+            } else {
+                feed
+            }
+        }
+        feedItems.clear()
+        feedItems.addAll(newFeedItems)
+        makeFeedItems()
+    }
+    fun onFollowStateChange(userId: Long, isFollowing: Boolean) {
+        viewModelScope.launch {
+            onChangeFeedAndFriendItems(userId, isFollowing)
+            val result = changeFollowStateUseCase(userId, !isFollowing)
+            if (result.isFailure) {
+                onChangeFeedAndFriendItems(userId, !isFollowing)
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }

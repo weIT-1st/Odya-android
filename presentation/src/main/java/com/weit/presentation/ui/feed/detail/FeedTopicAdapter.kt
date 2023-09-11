@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemFeedDetailTopicBinding
-import com.weit.presentation.databinding.ItemTopicBinding
 import com.weit.presentation.model.TopicDTO
 
 class FeedTopicAdapter() :
@@ -43,7 +42,7 @@ class FeedTopicAdapter() :
 
                 override fun areContentsTheSame(
                     oldItem: TopicDTO,
-                    newItem: TopicDTO
+                    newItem: TopicDTO,
                 ): Boolean {
                     return oldItem.topicId == newItem.topicId
                 }

@@ -134,7 +134,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 sendSnackBar("정상적으로 실행")
             }
 
-
             else -> {}
         }
     }

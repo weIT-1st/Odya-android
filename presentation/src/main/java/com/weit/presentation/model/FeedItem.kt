@@ -17,14 +17,15 @@ sealed class Feed {
         val likeNum: Int,
         val commentNum: Int,
         val place: String?,
-        ) : Feed()
+    ) : Feed()
     data class PopularTravelLogItem(val popularTravelLogList: List<PopularTravelLog>) : Feed()
     data class MayknowFriendItem(val mayKnowFriendList: List<MayKnowFriend>) : Feed()
 }
 data class TopicDTO(
     override val topicId: Long,
     override val topicWord: String,
-): TopicDetail
+) : TopicDetail
+
 data class MayKnowFriend(
     val userId: Long,
     val userProfile: UserProfile,

@@ -6,7 +6,6 @@ import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
@@ -19,7 +18,8 @@ interface FollowService {
     suspend fun createFollow(
         @Body followFollowingId: FollowFollowingId,
     )
-    @HTTP(method = "DELETE", path="/api/v1/follows", hasBody = true)
+
+    @HTTP(method = "DELETE", path = "/api/v1/follows", hasBody = true)
     suspend fun deleteFollow(
         @Body followFollowingId: FollowFollowingId,
     ): Response<Unit>

@@ -16,7 +16,7 @@ import com.weit.presentation.model.Feed
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
     private val navigateFeedDetail: (Long) -> Unit,
-    private val onFollowChanged: (String, Int, Long, Boolean) -> Unit,
+    private val onFollowChanged: (Long, Boolean) -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
         Callback,
@@ -90,8 +90,7 @@ class FeedAdapter(
             val data = mayKnowFriend.mayKnowFriendList
             val mayKnowFriendRecyclerView = binding.rvMayknowFriendSummary
             val mayKnowFriendAdapter = MayKnowFriendAdapter { position, userId, isChecked ->
-                onFollowChanged("friend", position, userId, isChecked)
-                Logger.t("positon").i(position.toString())
+                onFollowChanged(userId, isChecked)
             }
             mayKnowFriendAdapter.submitList(data)
             mayKnowFriendRecyclerView.adapter = mayKnowFriendAdapter
@@ -104,6 +103,8 @@ class FeedAdapter(
 
         fun bind(feed: Feed.FeedItem) {
             binding.feed = feed
+            Logger.t("MainTest").i(feed.userId.toString() + " " + feed.followState.toString())
+
             if (feed.travelLog == null) {
                 binding.viewCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityBookmark.visibility = View.INVISIBLE
@@ -115,7 +116,7 @@ class FeedAdapter(
                 navigateFeedDetail(feed.feedId)
             }
             binding.btCommunityFollow.setOnClickListener {
-                onFollowChanged("feed", absoluteAdapterPosition,feed.userId, feed.followState)
+                onFollowChanged(feed.userId, feed.followState)
             }
             binding.viewCommunityTitle.setOnClickListener {
                 feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }

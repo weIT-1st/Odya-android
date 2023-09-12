@@ -20,6 +20,7 @@ class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>
         initCommentBottomSheet()
     }
     private fun initCommentBottomSheet() {
+        bottomSheetDialog = LoginConsentDialogFragment()
         bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,

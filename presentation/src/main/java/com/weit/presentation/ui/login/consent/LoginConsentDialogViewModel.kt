@@ -39,7 +39,7 @@ class LoginConsentDialogViewModel @Inject constructor(
             val result = getTermContentUseCase(1)
             if (result.isSuccess) {
                 val terms = result.getOrThrow()
-                _event.emit(Event.getTermContentSusccess(terms.content))
+                _event.emit(Event.GetTermContentSuccess(terms.content))
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -52,7 +52,7 @@ class LoginConsentDialogViewModel @Inject constructor(
             val result = getTermListUseCase()
             if (result.isSuccess) {
                 val terms = result.getOrThrow()
-                _event.emit(Event.getTermTitleSusccess(terms[0].title))
+                _event.emit(Event.GetTermTitleSuccess(terms[0].title))
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -69,7 +69,6 @@ class LoginConsentDialogViewModel @Inject constructor(
 //    fun updateTerm() {
 //        val result = setTermsUseCase(TermIdListInfo(listOf(1,2),listOf(3)))
 //            if (result.isSuccess) {
-// //                _event.emit(Event.OnAgreeSuccess)
 //                Logger.t("MainTest").i("변경 성공성공")
 //            } else {
 //                handleError(result.exceptionOrNull() ?: UnKnownException())
@@ -99,10 +98,10 @@ class LoginConsentDialogViewModel @Inject constructor(
     }
 
     sealed class Event {
-        data class getTermTitleSusccess(
+        data class GetTermTitleSuccess(
             val title: String,
         ) : Event()
-        data class getTermContentSusccess(
+        data class GetTermContentSuccess(
             val content: String,
         ) : Event()
         object OnAgreeSuccess : Event()

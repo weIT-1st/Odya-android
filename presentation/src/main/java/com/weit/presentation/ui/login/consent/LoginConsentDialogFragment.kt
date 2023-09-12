@@ -5,9 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.databinding.BottomSheetLoginConsentBinding
+import com.weit.presentation.ui.login.preview.LoginPreviewThirdFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -45,12 +47,13 @@ class LoginConsentDialogFragment : BottomSheetDialogFragment() {
         when (event) {
             is LoginConsentDialogViewModel.Event.OnAgreeSuccess -> {
                 dismiss()
-//                val action = LoginPreviewThirdFragmentDirections.action
+                val action = LoginPreviewThirdFragmentDirections.actionLoginPreviewThirdFragmentToLoginNicknameFragment()
+                findNavController().navigate(action)
             }
-            is LoginConsentDialogViewModel.Event.getTermTitleSusccess -> {
+            is LoginConsentDialogViewModel.Event.GetTermTitleSuccess -> {
                 binding.tvTermsTitle.text = event.title
             }
-            is LoginConsentDialogViewModel.Event.getTermContentSusccess -> {
+            is LoginConsentDialogViewModel.Event.GetTermContentSuccess -> {
                 binding.tvTermsContent.text = event.content
             }
             else -> {}

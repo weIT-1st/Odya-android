@@ -133,7 +133,6 @@
                     android:layout_marginEnd="20dp"
                     android:background="@drawable/selector_bt_follow"
                     android:checked="@{vm.followState}"
-                    android:onClick="@{() -> vm.onFollowStateChange()}"
                     android:textOff=""
                     android:textOn=""
                     app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"

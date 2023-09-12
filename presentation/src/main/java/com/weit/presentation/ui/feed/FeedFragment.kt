@@ -69,9 +69,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
     private fun handleEvent(event: FeedViewModel.Event) {
         when (event) {
-            is FeedViewModel.Event.OnChangeFeeds -> {
-                feedAdapter.submitList(event.feeds)
-            }
             is FeedViewModel.Event.OnChangeFavoriteTopics -> {
                 topicAdapter.submitList(event.topics)
             }

@@ -34,9 +34,11 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
         initCommentRecyclerView()
         initCommentBottomSheet()
+        binding.btCommunityFollow.setOnClickListener {
+            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
+        }
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerComment()
         }
@@ -44,6 +46,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         // TODO 좋아요
     }
     private fun initCommentBottomSheet() {
+        bottomSheetDialog = CommentDialogFragment()
         bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,
@@ -106,8 +109,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
-                bottomSheetDialog = CommentDialogFragment()
                 bottomSheetDialog?.comments = event.comments
+            }
+            is FeedDetailViewModel.Event.OnChangeFollowState -> {
+                binding.btCommunityFollow.isChecked = event.followState
             }
 
             is FeedDetailViewModel.Event.InvalidRequestException -> {
@@ -128,10 +133,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
             is FeedDetailViewModel.Event.ExistedFollowingIdException -> {
                 sendSnackBar("이미 팔로우 중입니다")
-            }
-
-            is FeedDetailViewModel.Event.CreateAndDeleteFollowSuccess -> {
-                sendSnackBar("정상적으로 실행")
             }
 
             else -> {}

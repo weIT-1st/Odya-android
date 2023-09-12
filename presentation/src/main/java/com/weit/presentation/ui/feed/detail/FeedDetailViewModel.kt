@@ -61,7 +61,7 @@ class FeedDetailViewModel @Inject constructor(
                 FeedComment(1, 1, profile, "dd", "wowwow"),
             )
 
-            val feed = FeedDetail(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments, topics)
+            val feed = FeedDetail(1, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments, topics)
             userId = feed.userId
             val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
             val defaultComments = comments
@@ -85,14 +85,15 @@ class FeedDetailViewModel @Inject constructor(
         }
     }
 
-    fun onFollowStateChange() {
+    fun onFollowStateChange(followState : Boolean) {
         viewModelScope.launch {
-            _followState.value = !_followState.value
-            val result = changeFollowStateUseCase(userId, _followState.value)
+            var changeState = !followState
+            val result = changeFollowStateUseCase(userId, changeState)
             if (result.isSuccess) {
-                _event.emit(Event.CreateAndDeleteFollowSuccess)
+                _event.emit(Event.OnChangeFollowState(changeState))
             } else {
-                _followState.value = !_followState.value
+                changeState = !followState
+                _event.emit(Event.OnChangeFollowState(changeState))
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
@@ -117,7 +118,9 @@ class FeedDetailViewModel @Inject constructor(
             val comments: List<FeedComment>,
             val topics: List<TopicDTO>,
         ) : Event()
-        object CreateAndDeleteFollowSuccess : Event()
+        data class OnChangeFollowState(
+            val followState: Boolean
+        ) : Event()
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()
         object NotHavePermissionException : Event()

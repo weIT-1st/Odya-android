@@ -7,8 +7,8 @@ class ChangeFollowStateUseCase @Inject constructor(
     private val createFollowCreateUseCase: CreateFollowCreateUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
 ) {
-    suspend operator fun invoke(userId: Long, isChecked: Boolean): Result<Unit> {
-        return if (isChecked) {
+    suspend operator fun invoke(userId: Long, followState: Boolean): Result<Unit> {
+        return if (followState) {
             createFollowCreateUseCase(FollowFollowingIdInfo(userId))
         } else {
             deleteFollowUseCase(FollowFollowingIdInfo(userId))

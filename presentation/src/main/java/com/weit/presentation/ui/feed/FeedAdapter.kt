@@ -103,7 +103,6 @@ class FeedAdapter(
 
         fun bind(feed: Feed.FeedItem) {
             binding.feed = feed
-            Logger.t("MainTest").i(feed.userId.toString() + " " + feed.followState.toString())
 
             if (feed.travelLog == null) {
                 binding.viewCommunityTitle.visibility = View.INVISIBLE

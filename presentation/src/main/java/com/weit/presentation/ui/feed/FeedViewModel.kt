@@ -22,6 +22,8 @@ import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
 import javax.inject.Inject
@@ -35,13 +37,13 @@ class FeedViewModel @Inject constructor(
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
 
-    private var allFeed = ArrayList<Feed>()
-    private var feedItems = ArrayList<Feed.FeedItem>()
-    private var popularLogs = ArrayList<PopularTravelLog>()
-    private var frineds = ArrayList<MayKnowFriend>()
+    private val allFeed = ArrayList<Feed>()
+    private val feedItems = ArrayList<Feed.FeedItem>()
+    private val popularLogs = ArrayList<PopularTravelLog>()
+    private val friends = ArrayList<MayKnowFriend>()
 
-    private val _changeFeedEvent = MutableEventFlow<List<Feed>>()
-    val changeFeedEvent = _changeFeedEvent.asEventFlow()
+    private val _changeFeedEvent = MutableStateFlow<List<Feed>>(emptyList())
+    val changeFeedEvent : StateFlow<List<Feed>> get() =  _changeFeedEvent
 
     init {
         getFavoriteTopicList()
@@ -67,35 +69,29 @@ class FeedViewModel @Inject constructor(
     private fun makeFeedItems() {
         viewModelScope.launch {
             allFeed.clear()
-            var feedList = feedItems
-            var popularTravelLogList = Feed.PopularTravelLogItem(popularLogs)
-            val mayKnowFriendList = Feed.MayknowFriendItem(frineds)
+            val feedList = feedItems
+            val popularTravelLogList = Feed.PopularTravelLogItem(popularLogs)
+            val mayKnowFriendList = Feed.MayknowFriendItem(friends)
 
-            val feedIdxBefore = min(feedList.size, 2)
-            var feedIdxAfter = min(feedList.size - 2, 2)
+            val feedSizeBeforeLog = min(feedList.size, MINIMUM_FEED_SIZE)
 
-            for (i in 0 until feedIdxBefore) {
-                allFeed.add(feedList[i])
-            }
+            allFeed.addAll(feedList.subList(0,feedSizeBeforeLog))
 
             if (popularTravelLogList.popularTravelLogList.isNotEmpty()) {
                 allFeed.add(popularTravelLogList)
             }
 
-            if (feedList.size > 2) {
-                for (i in 2 until 2 + feedIdxAfter) {
-                    allFeed.add(feedList[i])
-                }
+            if (feedList.size > MINIMUM_FEED_SIZE) {
+                val feedSizeAfterLog = min(feedList.size - MINIMUM_FEED_SIZE, MINIMUM_FEED_SIZE)
+                allFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE,MINIMUM_FEED_SIZE+feedSizeAfterLog))
             }
 
             if (mayKnowFriendList.mayKnowFriendList.isNotEmpty()) {
                 allFeed.add(mayKnowFriendList)
             }
 
-            if (feedList.size > 4) {
-                for (i in 4 until feedList.size) {
-                    allFeed.add(feedList[i])
-                }
+            if (feedList.size > MINIMUM_FEED_SIZE_DOUBLE) {
+                allFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE_DOUBLE,feedList.size))
             }
 
             _changeFeedEvent.emit(allFeed.toList())
@@ -128,7 +124,8 @@ class FeedViewModel @Inject constructor(
                 it.place,
             )
         }
-        feedItems = ArrayList(feeds)
+        feedItems.clear()
+        feedItems.addAll(ArrayList(feeds))
     }
 
     private fun getPopularTravelLogs() {
@@ -138,7 +135,8 @@ class FeedViewModel @Inject constructor(
             PopularTravelLog(13, 2, profile, "dd", "dd", "dd"),
         )
 
-        popularLogs = popularSpotList
+        popularLogs.clear()
+        popularLogs.addAll(popularSpotList)
     }
 
     private fun getMayknowFriends() {
@@ -148,22 +146,23 @@ class FeedViewModel @Inject constructor(
             MayKnowFriend(5, profile, "ari", "함께 아는 친구 2명", false),
             MayKnowFriend(6, profile, "ari", "함께 아는 친구 2명", true),
         )
-        frineds = mayKnowFriendList
+        friends.clear()
+        friends.addAll(mayKnowFriendList)
     }
 
-    private fun onChangeFeedAndFriendItems(userId: Long, isFollowing: Boolean) {
-        val newFriends = frineds.map { friend ->
-            if (friend.userId == userId) {
-                friend.copy(followState = !isFollowing)
+    private fun onChangeFeedAndFriendItems(userId: Long, followState: Boolean) {
+        val newFriends = friends.map { friends ->
+            if (friends.userId == userId) {
+                friends.copy(followState = !followState)
             } else {
-                friend
+                friends
             }
         }
-        frineds.clear()
-        frineds.addAll(newFriends)
+        friends.clear()
+        friends.addAll(newFriends)
         val newFeedItems = feedItems.map { feed ->
             if (feed.userId == userId) {
-                feed.copy(followState = !isFollowing)
+                feed.copy(followState = !followState)
             } else {
                 feed
             }
@@ -172,12 +171,12 @@ class FeedViewModel @Inject constructor(
         feedItems.addAll(newFeedItems)
         makeFeedItems()
     }
-    fun onFollowStateChange(userId: Long, isFollowing: Boolean) {
+    fun onFollowStateChange(userId: Long, followState: Boolean) {
         viewModelScope.launch {
-            onChangeFeedAndFriendItems(userId, isFollowing)
-            val result = changeFollowStateUseCase(userId, !isFollowing)
+            onChangeFeedAndFriendItems(userId, followState)
+            val result = changeFollowStateUseCase(userId, !followState)
             if (result.isFailure) {
-                onChangeFeedAndFriendItems(userId, !isFollowing)
+                onChangeFeedAndFriendItems(userId, !followState)
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
@@ -195,9 +194,6 @@ class FeedViewModel @Inject constructor(
     }
 
     sealed class Event {
-        data class OnChangeFeeds(
-            val feeds: List<Feed>,
-        ) : Event()
         data class OnChangeFavoriteTopics(
             val topics: List<TopicDetail>,
         ) : Event()
@@ -208,6 +204,11 @@ class FeedViewModel @Inject constructor(
         object NotHavePermissionException : Event()
         object ExistedFollowingIdException : Event()
         object UnknownException : Event()
+    }
+
+    companion object{
+       private const val MINIMUM_FEED_SIZE = 2
+        private const val MINIMUM_FEED_SIZE_DOUBLE = 4
     }
 }
 

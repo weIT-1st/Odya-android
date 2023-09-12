@@ -28,7 +28,7 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
 fun bindReactionCount(textView: TextView, count: Int?) {
     count?.let { count ->
         textView.text =
-            if (count as Int > DEFAULT_REACTION_COUNT) {
+            if (count > DEFAULT_REACTION_COUNT) {
                 textView.resources.getString(
                     R.string.feed_reaction_over_count,
                     DEFAULT_REACTION_COUNT,

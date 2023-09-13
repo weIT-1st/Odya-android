@@ -3,13 +3,11 @@ package com.weit.presentation.ui.searchplace.review
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceReviewBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.placereview.EditPlaceReviewFragment
-import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,19 +18,20 @@ import javax.inject.Inject
 class PlaceReviewFragment(
     private val placeId: String,
 ) : BaseFragment<FragmentTabPlaceReviewBinding>(
-    FragmentTabPlaceReviewBinding::inflate
+    FragmentTabPlaceReviewBinding::inflate,
 ) {
     @Inject
     lateinit var viewModelFactory: PlaceReviewViewModel.PlaceIdFactory
 
-    private val viewModel: PlaceReviewViewModel by viewModels{
+    private val viewModel: PlaceReviewViewModel by viewModels {
         PlaceReviewViewModel.provideFactory(viewModelFactory, placeId)
     }
 
     private var editPlaceReviewFragment: EditPlaceReviewFragment? = null
-    private val placeReviewAdapter:PlaceReviewAdapter by lazy {
+    private val placeReviewAdapter: PlaceReviewAdapter by lazy {
         PlaceReviewAdapter(
-        { updateMyReview() }, { viewModel.deleteMyReview() }
+            { updateMyReview() },
+            { viewModel.deleteMyReview() },
         )
     }
 
@@ -45,19 +44,19 @@ class PlaceReviewFragment(
         initPlaceReviewRV()
     }
     override fun initCollector() {
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handelEvent(event)
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeReviewList.collectLatest {
                 placeReviewAdapter.submitList(it)
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.reviewRating.collectLatest { rating ->
                 binding.tvTabPlaceRecent.text = String.format(getString(R.string.place_recent_review), viewModel.reviewNum)
                 binding.tvTabPlaceReviewScore.text = String.format(getString(R.string.place_score), rating)
@@ -65,7 +64,7 @@ class PlaceReviewFragment(
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.myPlaceReviewData.collectLatest { data ->
                 myPlaceReviewData = data
             }
@@ -77,28 +76,26 @@ class PlaceReviewFragment(
         super.onDestroyView()
     }
 
-    private fun initPlaceReviewRV(){
+    private fun initPlaceReviewRV() {
         binding.rvTabPlaceReview.adapter = placeReviewAdapter
     }
 
-
-    private fun updateMyReview(){
-        if(editPlaceReviewFragment == null){
-            if (myPlaceReviewData != null){
-                editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myPlaceReviewData)
-            }
+    private fun updateMyReview() {
+        if (editPlaceReviewFragment == null) {
+            editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myPlaceReviewData)
         }
-        if (!editPlaceReviewFragment!!.isAdded){
+        if (!editPlaceReviewFragment!!.isAdded && myPlaceReviewData != null) {
             editPlaceReviewFragment!!.show(childFragmentManager, "Edit Dialog")
         }
     }
 
     private fun updateReviewList() {
-        viewModel.getPlaceReview()
+        Log.d("UpdateReview", "review updating")
+        viewModel.getReviewInfo()
     }
 
-    private fun handelEvent(event: PlaceReviewViewModel.Event){
-        when(event){
+    private fun handelEvent(event: PlaceReviewViewModel.Event) {
+        when (event) {
             is PlaceReviewViewModel.Event.GetAverageRatingSuccess -> {
                 // 어떤 조취를 취할까요?
             }

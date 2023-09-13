@@ -18,45 +18,33 @@ class GetPlaceReviewContentUseCase @Inject constructor(
         val userId = userRepository.getUserId()
         val placeReviewResult = placeReviewRepository.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId))
 
-        return if (placeReviewResult.isSuccess){
+        return if (placeReviewResult.isSuccess) {
             val review = placeReviewResult.getOrThrow()
             val list = review.map {
-                val profile = getUserByNicknameUseCase(it.writerNickname).getOrNull()
-                if (profile != null) {
-                    PlaceReviewInfo(
-                        it.writerNickname,
-                        (it.starRating / 2).toFloat(),
-                        it.review,
-                        it.createdAt.toString(),
-                        it.userId,
-                        it.userId == userId,
-                        it.id,
-                        profile.profile)
-                } else {
-                    PlaceReviewInfo(
-                        it.writerNickname,
-                        (it.starRating / 2).toFloat(),
-                        it.review,
-                        it.createdAt.toString(),
-                        it.userId,
-                        it.userId == userId,
-                        it.id,
-                        profile)
-                }
+                PlaceReviewInfo(
+                    it.writerNickname,
+                    (it.starRating.toFloat() / 2),
+                    it.review,
+                    it.createdAt.toString(),
+                    it.userId,
+                    it.userId == userId,
+                    it.id,
+                    getUserByNicknameUseCase(it.writerNickname).getOrNull()?.profile,
+                )
             }
-            val myReview = list.find{it.userId == userId}
+            val myReview = list.find { it.userId == userId }
             return if (myReview == null) {
                 Result.success(list)
             } else {
-                val mutableList = list.toMutableList()
-                mutableList.remove(myReview)
-                mutableList.add(0, myReview)
+                val listWithMyReview = list.toMutableList()
+                listWithMyReview.remove(myReview)
+                listWithMyReview.add(0, myReview)
 
-                Result.success(mutableList.toList())
+                Result.success(listWithMyReview)
             }
         } else {
             val exception = placeReviewResult.exceptionOrNull()
-            if (exception == null){
+            if (exception == null) {
                 Result.failure(UnKnownException())
             } else {
                 Result.failure(exception)

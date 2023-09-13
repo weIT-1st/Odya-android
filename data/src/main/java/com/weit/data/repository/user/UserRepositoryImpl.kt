@@ -69,7 +69,6 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserId(): Long =
         userDataSource.getUserId() ?: throw NotFoundException()
 
-
     override suspend fun getUserByNickname(userByNickname: UserByNickname): Result<UserByNicknameInfo> {
         val result = runCatching {
             userDataSource.getUserByNickname(userByNickname)
@@ -83,10 +82,11 @@ class UserRepositoryImpl @Inject constructor(
                         UserContent(
                             it.userId,
                             it.nickname,
-                            it.profile
+                            it.profile,
                         )
-                    }
-                ))
+                    },
+                ),
+            )
         } else {
             Result.failure(handleError(result.exception()))
         }
@@ -122,7 +122,7 @@ class UserRepositoryImpl @Inject constructor(
         UserContent(
             userId = userId,
             nickname = nickname,
-            profile = profile
+            profile = profile,
         )
 
     private fun handleUserError(response: Response<Unit>): Throwable {
@@ -134,16 +134,16 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun handleError(t: Throwable): Throwable{
-        return if (t is HttpException){
+    private fun handleError(t: Throwable): Throwable {
+        return if (t is HttpException) {
             handleCode(t.code())
         } else {
             t
         }
     }
 
-    private fun handleCode(code: Int): Throwable{
-        return when(code) {
+    private fun handleCode(code: Int): Throwable {
+        return when (code) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             else -> UnKnownException()

@@ -41,7 +41,6 @@ interface FollowRepository {
     ): List<FollowUserContent>
 
     suspend fun getExperiencedFriend(
-        placeId: String
+        placeId: String,
     ): Result<ExperiencedFriendInfo>
-
 }

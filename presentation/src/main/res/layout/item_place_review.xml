@@ -7,10 +7,6 @@
         <variable
             name="review"
             type="com.weit.domain.model.place.PlaceReviewInfo" />
-
-        <variable
-            name="vm"
-            type="com.weit.presentation.ui.searchplace.review.PlaceReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,7 +105,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/detail2"
-
+                android:text="@{review.createAt}"
                 android:textColor="@color/label_reversed_assistive"
                 app:layout_constraintTop_toBottomOf="@+id/tv_item_place_review_content"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -3,7 +3,6 @@ package com.weit.data.repository.follow
 import com.weit.data.model.follow.FollowFollowingId
 import com.weit.data.source.FollowDataSource
 import com.weit.data.util.exception
-import com.weit.domain.model.exception.ImageNotFoundException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
@@ -113,16 +112,18 @@ class FollowRepositoryImpl @Inject constructor(
         }
         return if (result.isSuccess) {
             val info = result.getOrThrow()
-            Result.success(ExperiencedFriendInfo(
-                info.count,
-                info.followings.map {
-                    ExperiencedFriendContent(
-                        it.userId,
-                        it.nickname,
-                        it.profile
-                    )
-                }
-            ))
+            Result.success(
+                ExperiencedFriendInfo(
+                    info.count,
+                    info.followings.map {
+                        ExperiencedFriendContent(
+                            it.userId,
+                            it.nickname,
+                            it.profile,
+                        )
+                    },
+                ),
+            )
         } else {
             Result.failure(handleFollowError(result.exception()))
         }

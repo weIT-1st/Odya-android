@@ -5,5 +5,5 @@ import com.weit.domain.model.user.UserProfile
 data class ExperiencedFriendContent(
     val userId: Long,
     val nickname: String,
-    val profile: UserProfile
+    val profile: UserProfile,
 )

@@ -1,7 +1,6 @@
 package com.weit.presentation.ui.searchplace
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,27 +24,27 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class SearchPlaceBottomSheetFragment(
-    private val placeId: String
-): BottomSheetDialogFragment() {
+    private val placeId: String,
+) : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: SearchPlaceBottomSheetViewModel.PlaceIdFactory
 
-    private val viewModel: SearchPlaceBottomSheetViewModel by viewModels{
+    private val viewModel: SearchPlaceBottomSheetViewModel by viewModels {
         SearchPlaceBottomSheetViewModel.provideFactory(viewModelFactory, placeId)
     }
 
     private var _binding: FragmentBottomSheetPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
-    private val experiencedFriendAdapter: ExperiencedFriendAdapter by lazy{
+    private val experiencedFriendAdapter: ExperiencedFriendAdapter by lazy {
         ExperiencedFriendAdapter()
     }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentBottomSheetPlaceSearchBinding.inflate(inflater, container, false)
         return binding.run {
@@ -53,7 +52,6 @@ class SearchPlaceBottomSheetFragment(
             vm = viewModel
             root
         }
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -64,25 +62,26 @@ class SearchPlaceBottomSheetFragment(
 
 //        임시 리뷰 추가 버튼 입니다 디자인 변경 나오면 삭제 후 수정하겠습니다.
         binding.btnBsPlaceBookMark.setOnClickListener {
-            EditPlaceReviewFragment({},placeId, null).show(childFragmentManager, "edit")
+            EditPlaceReviewFragment({}, placeId, null).show(childFragmentManager, "edit")
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriendNum.collectLatest {
                 binding.tvBsPlaceExperiencedFriend.text = String.format(
-                    getString(R.string.place_experienced_friend_count), it
+                    getString(R.string.place_experienced_friend_count),
+                    it,
                 )
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriend.collectLatest {
                 experiencedFriendAdapter.submitList(it)
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
-            viewModel.event.collectLatest {event ->
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
                 handelEvent(event)
             }
         }
@@ -94,7 +93,7 @@ class SearchPlaceBottomSheetFragment(
         _binding = null
     }
 
-    private fun initTabViewPager(){
+    private fun initTabViewPager() {
         val viewPager = binding.viewPagerBsPlace
         val tabLayout = binding.tlBsPlace
 
@@ -108,8 +107,8 @@ class SearchPlaceBottomSheetFragment(
             isUserInputEnabled = false
         }
 
-        TabLayoutMediator(tabLayout, viewPager){tab, position ->
-            when(position){
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            when (position) {
                 0 -> tab.text = getString(R.string.place_journey)
                 1 -> tab.text = getString(R.string.place_review)
                 2 -> tab.text = getString(R.string.place_community)
@@ -117,12 +116,12 @@ class SearchPlaceBottomSheetFragment(
         }.attach()
     }
 
-    private fun initExperiencedFriendRV(){
+    private fun initExperiencedFriendRV() {
         binding.rvPlaceExperiencedFriendProfile.adapter = experiencedFriendAdapter
     }
 
-    private fun handelEvent(event: SearchPlaceBottomSheetViewModel.Event){
-        when(event){
+    private fun handelEvent(event: SearchPlaceBottomSheetViewModel.Event) {
+        when (event) {
             is SearchPlaceBottomSheetViewModel.Event.GetExperiencedFriendSuccess -> {
                 sendSnackBar("방문한 친구 조회 성공!")
             }

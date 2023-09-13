@@ -1,7 +1,7 @@
 package com.weit.domain.model.user
 
-data class UserContent (
+data class UserContent(
     val userId: Long,
     val nickname: String,
-    val profile: UserProfile
+    val profile: UserProfile,
 )

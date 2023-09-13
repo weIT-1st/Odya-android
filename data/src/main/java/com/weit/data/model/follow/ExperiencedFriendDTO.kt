@@ -6,5 +6,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class ExperiencedFriendDTO(
     @field:Json(name = "count") val count: Int,
-    @field:Json(name = "followings") val followings: List<FollowUserContentDTO>
-    )
+    @field:Json(name = "followings") val followings: List<FollowUserContentDTO>,
+)

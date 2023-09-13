@@ -36,6 +36,6 @@ interface PlaceReviewRepository {
     ): Result<Int>
 
     suspend fun getAverageRating(
-        placeId: String
+        placeId: String,
     ): Result<Float>
 }

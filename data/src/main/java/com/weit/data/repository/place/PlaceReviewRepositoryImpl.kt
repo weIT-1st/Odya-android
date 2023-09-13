@@ -56,7 +56,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.writerNickname,
                     it.starRating,
                     it.review,
-                    LocalDate.parse(it.createdAt.substring(0,10))
+                    LocalDate.parse(it.createdAt.substring(0, 10)),
                 )
                 placeReviewDetail
             }
@@ -73,7 +73,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                     it.writerNickname,
                     it.starRating,
                     it.review,
-                    LocalDate.parse(it.createdAt.substring(0,10), DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                    LocalDate.parse(it.createdAt.substring(0, 10), DateTimeFormatter.ofPattern("yyyy.MM.dd")),
                 )
             }
         }
@@ -107,23 +107,23 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         val result = runCatching {
             dataSource.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId, 20))
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow().averageRating)
         } else {
             Result.failure(result.exception())
         }
     }
 
-    private fun handleReviewError(t: Throwable): Throwable{
-        return if (t is HttpException){
+    private fun handleReviewError(t: Throwable): Throwable {
+        return if (t is HttpException) {
             handleCode(t.code())
         } else {
             t
         }
     }
 
-    private fun handleCode(code: Int) :Throwable{
-        return when(code){
+    private fun handleCode(code: Int): Throwable {
+        return when (code) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             HTTP_NOT_FOUND -> NotFoundException()

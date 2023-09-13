@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.searchplace.review
 
 import android.content.res.Resources.NotFoundException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,7 +13,6 @@ import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.domain.usecase.place.DeletePlaceReviewUseCase
 import com.weit.domain.usecase.place.GetAverageRatingUseCase
 import com.weit.domain.usecase.place.GetPlaceReviewContentUseCase
-import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import com.weit.presentation.util.PlaceReviewContentData
@@ -27,7 +27,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
     private val getAverageRatingUseCase: GetAverageRatingUseCase,
     private val getPlaceReviewContentUseCase: GetPlaceReviewContentUseCase,
     private val deletePlaceReviewUseCase: DeletePlaceReviewUseCase,
-    @Assisted private val placeId: String
+    @Assisted private val placeId: String,
 ) : ViewModel() {
 
     val reviewRating = MutableStateFlow(initRating)
@@ -40,10 +40,12 @@ class PlaceReviewViewModel @AssistedInject constructor(
     val myPlaceReviewData: StateFlow<PlaceReviewContentData?> get() = _myPlaceReviewData
 
     private val _review = MutableStateFlow<PlaceReviewInfo?>(null)
-    val review : StateFlow<PlaceReviewInfo?> get() = _review
+    val review: StateFlow<PlaceReviewInfo?> get() = _review
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
+
+    private var test = 1
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -51,9 +53,15 @@ class PlaceReviewViewModel @AssistedInject constructor(
     }
 
     init {
+        getReviewInfo()
+    }
+
+    fun getReviewInfo() {
         viewModelScope.launch {
             getAverageRating()
             getPlaceReview()
+            Log.d("update List", "update count : $test")
+            test += 1
         }
     }
 
@@ -68,40 +76,41 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    fun getPlaceReview() {
-        viewModelScope.launch {
-            val result = getPlaceReviewContentUseCase(placeId)
-            if (result.isSuccess){
-                val list = result.getOrThrow()
-                _placeReviewList.emit(list)
+    private suspend fun getPlaceReview() {
+        val result = getPlaceReviewContentUseCase(placeId)
+        if (result.isSuccess) {
+            val list = result.getOrThrow()
+            _placeReviewList.emit(list)
 
-                val myReview = list.find { it.isMine }
-                if (myReview != null ){
-                    _event.emit(Event.GetPlaceReviewWithMineSuccess)
-                    _myPlaceReviewData.emit(PlaceReviewContentData(
+            Log.d("placereview", "List : ${_placeReviewList.value}")
+            val myReview = list.find { it.isMine }
+            if (myReview != null) {
+                _event.emit(Event.GetPlaceReviewWithMineSuccess)
+                _myPlaceReviewData.emit(
+                    PlaceReviewContentData(
                         myReview.placeReviewId,
                         myReview.review,
-                        (myReview.rating * 2).toInt()))
-                    if (myPlaceReviewData.value == null){
-                        _event.emit(Event.DoNotGetMyReviewData)
-                    }
-                } else {
-                    _event.emit(Event.GetPlaceReviewSuccess)
+                        (myReview.rating * 2).toInt(),
+                    ),
+                )
+                if (myPlaceReviewData.value == null) {
+                    _event.emit(Event.DoNotGetMyReviewData)
                 }
             } else {
-                handleError(result.exceptionOrNull() ?: UnknownError())
+                _event.emit(Event.GetPlaceReviewSuccess)
             }
+        } else {
+            handleError(result.exceptionOrNull() ?: UnknownError())
         }
     }
 
-
-    fun deleteMyReview(){
+    fun deleteMyReview() {
         viewModelScope.launch {
             if (myPlaceReviewData.value == null) {
                 _event.emit(Event.GetPlaceReviewSuccess)
-            }else {
+            } else {
                 val result = deletePlaceReviewUseCase(myPlaceReviewData.value!!.placeReviewId)
-                if (result.isSuccess){
+                if (result.isSuccess) {
                     _event.emit(Event.DeleteMyReviewSuccess)
                     getPlaceReview()
                 } else {
@@ -111,8 +120,8 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun handleError(error: Throwable){
-        when (error ){
+    private suspend fun handleError(error: Throwable) {
+        when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
             is NotFoundException -> _event.emit(Event.NotFoundException)
@@ -122,19 +131,18 @@ class PlaceReviewViewModel @AssistedInject constructor(
     }
 
     sealed class Event {
-        object GetAverageRatingSuccess: Event()
-        object GetPlaceReviewWithMineSuccess: Event()
-        object UpdateMyReviewSuccess: Event()
-        object DeleteMyReviewSuccess: Event()
-        object DoNotGetMyReviewData: Event()
-        object GetPlaceReviewSuccess: Event()
-        object InvalidRequestException: Event()
+        object GetAverageRatingSuccess : Event()
+        object GetPlaceReviewWithMineSuccess : Event()
+        object UpdateMyReviewSuccess : Event()
+        object DeleteMyReviewSuccess : Event()
+        object DoNotGetMyReviewData : Event()
+        object GetPlaceReviewSuccess : Event()
+        object InvalidRequestException : Event()
         object InvalidTokenException : Event()
-        object NotFoundException: Event()
-        object ForbiddenException: Event()
-        object UnKnownException: Event()
+        object NotFoundException : Event()
+        object ForbiddenException : Event()
+        object UnKnownException : Event()
     }
-
 
     companion object {
         const val initRating = 1.0F
@@ -142,7 +150,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
         fun provideFactory(
             assistedFactory: PlaceIdFactory,
-            placeId: String
+            placeId: String,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(placeId) as T

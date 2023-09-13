@@ -8,9 +8,9 @@ import com.weit.presentation.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PlaceJourneyFragment: BaseFragment<FragmentTabPlaceJourneyBinding> (
-    FragmentTabPlaceJourneyBinding::inflate
-){
+class PlaceJourneyFragment : BaseFragment<FragmentTabPlaceJourneyBinding> (
+    FragmentTabPlaceJourneyBinding::inflate,
+) {
     private val viewModel: PlaceJourneyViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

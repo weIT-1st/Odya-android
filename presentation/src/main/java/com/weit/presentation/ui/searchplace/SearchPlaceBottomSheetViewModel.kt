@@ -1,19 +1,12 @@
 package com.weit.presentation.ui.searchplace
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.follow.ExperiencedFriendContent
-import com.weit.domain.model.follow.ExperiencedFriendInfo
-import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
-import com.weit.presentation.model.post.travellog.FollowUserContentDTO
-import com.weit.presentation.ui.feed.FeedViewModel
-import com.weit.presentation.ui.placereview.EditPlaceReviewViewModel
-import com.weit.presentation.ui.post.travellog.PostTravelLogViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -22,11 +15,10 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.CopyOnWriteArrayList
 
 class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getExperiencedFriendUseCase: GetExperiencedFriendUseCase,
-    @Assisted private val placeId: String
+    @Assisted private val placeId: String,
 ) : ViewModel() {
 
     private val _experiencedFriendNum = MutableStateFlow(INIT_EXPERIENCED_FRIEND_COUNT)
@@ -56,8 +48,9 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
             _event.emit(Event.GetExperiencedFriendSuccess)
             _experiencedFriendNum.emit(info.count)
             if (info.count != 0) {
-                val friendSummary = info.followings!!
+                val friendSummary = info.followings
                     .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
+
                 _experiencedFriend.emit(friendSummary)
             }
         } else {
@@ -65,8 +58,8 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun handelError(error: Throwable){
-        when (error){
+    private suspend fun handelError(error: Throwable) {
+        when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
             else -> _event.emit(Event.UnknownException)
@@ -74,10 +67,10 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     }
 
     sealed class Event {
-        object GetExperiencedFriendSuccess: Event()
-        object InvalidRequestException: Event()
+        object GetExperiencedFriendSuccess : Event()
+        object InvalidRequestException : Event()
         object InvalidTokenException : Event()
-        object UnknownException: Event()
+        object UnknownException : Event()
     }
 
     companion object {

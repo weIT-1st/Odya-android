@@ -48,6 +48,6 @@ interface FollowService {
 
     @GET("/api/v1/follows/{placeId}")
     suspend fun getExperiencedFriend(
-        @Path("placeId") placeId: String
+        @Path("placeId") placeId: String,
     ): ExperiencedFriendDTO
 }

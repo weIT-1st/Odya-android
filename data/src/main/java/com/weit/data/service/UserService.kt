@@ -1,6 +1,5 @@
 package com.weit.data.service
 
-import androidx.room.Delete
 import com.weit.data.model.ListResponse
 import com.weit.data.model.user.UserContentDTO
 import com.weit.data.model.user.UserDTO
@@ -42,8 +41,8 @@ interface UserService {
 
     @GET("/api/v1/users/search")
     suspend fun getUserByNickname(
-        @Query("size") size: Int?,
+        @Query("size") size: Int = 10,
         @Query("lastId") lastId: String?,
-        @Query("nickname") nickname: String
+        @Query("nickname") nickname: String,
     ): ListResponse<UserContentDTO>
 }

@@ -1,7 +1,5 @@
 package com.weit.presentation.ui.searchplace.review
 
-import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,18 +7,15 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemMyPlaceReviewBinding
 import com.weit.presentation.databinding.ItemPlaceReviewBinding
-import kotlin.coroutines.coroutineContext
 
 class PlaceReviewAdapter(
     private val updateItem: () -> Unit,
-    private val deleteItem: () -> Unit
-): ListAdapter<PlaceReviewInfo, RecyclerView.ViewHolder>(diffUtil) {
-
+    private val deleteItem: () -> Unit,
+) : ListAdapter<PlaceReviewInfo, RecyclerView.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
@@ -32,7 +27,7 @@ class PlaceReviewAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = getItem(position)
-        when(holder){
+        when (holder) {
             is ReviewViewHolder -> {
                 holder.bind(item)
             }
@@ -43,7 +38,7 @@ class PlaceReviewAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (getItem(position).isMine){
+        return if (getItem(position).isMine) {
             myReviewType
         } else {
             friendReviewType
@@ -52,63 +47,47 @@ class PlaceReviewAdapter(
 
     inner class ReviewViewHolder(
         private val binding: ItemPlaceReviewBinding,
-    ): RecyclerView.ViewHolder(binding.root){
-        fun bind(item: PlaceReviewInfo){
-            if (item.profile != null) {
-                binding.review = item
-            } else {
-                binding.tvItemPlaceReviewWriter.text = item.writerNickname
-                binding.ratingbarItemPlaceReview.rating = item.rating
-                binding.tvItemPlaceReviewContent.text = item.review
-                binding.tvItemPlaceReviewDate.text = item.createAt
-                binding.ivItemPlaceProfile.setImageResource(R.drawable.ic_profile)
-            }
-            binding.btnItemPlaceMenu.setOnClickListener { it ->
-                PopupMenu(it.context, it).apply{
-                    menuInflater.inflate(R.menu.friend_place_review, this.menu)
-
-                    setOnMenuItemClickListener {
-                        when(it.itemId){
-                            R.id.item_report_review -> {}
-                        }
-                        false
-                    }
-                }.show()
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: PlaceReviewInfo) {
+            binding.review = item
+            binding.btnItemPlaceMenu.setOnClickListener {
+                showPopUpMenu(friendReviewType, it)
             }
         }
     }
 
     inner class MyReviewViewHolder(
         private val binding: ItemMyPlaceReviewBinding,
-    ): RecyclerView.ViewHolder(binding.root){
-        fun bind(item: PlaceReviewInfo){
-            if (item.profile != null) {
-                binding.review = item
-            } else {
-                binding.tvItemPlaceReviewWriter.text = item.writerNickname
-                binding.ratingbarItemPlaceReview.rating = item.rating
-                binding.tvItemPlaceReviewContent.text = item.review
-                binding.tvItemPlaceReviewDate.text = item.createAt
-                binding.ivItemPlaceProfile.setImageResource(R.drawable.ic_profile)
-            }
-            binding.btnItemPlaceMenu.setOnClickListener { it ->
-                PopupMenu(it.context, it).apply{
-                    menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)
-
-                    setOnMenuItemClickListener {
-                        when(it.itemId){
-                            R.id.item_update_review -> {
-                                 updateItem()
-                            }
-                            R.id.item_delete_review -> {
-                                deleteItem()
-                            }
-                        }
-                        false
-                    }
-                }.show()
+    ) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: PlaceReviewInfo) {
+            binding.review = item
+            binding.btnItemPlaceMenu.setOnClickListener {
+                showPopUpMenu(myReviewType, it)
             }
         }
+    }
+
+    private fun showPopUpMenu(type: Int, it: View) {
+        PopupMenu(it.context, it).apply {
+            when (type) {
+                friendReviewType -> menuInflater.inflate(R.menu.friend_place_review, this.menu)
+                myReviewType -> menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)
+            }
+
+            setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.item_update_review -> {
+                        updateItem()
+                    }
+                    R.id.item_delete_review -> {
+                        deleteItem()
+                    }
+                    R.id.item_report_review -> {
+                    }
+                }
+                false
+            }
+        }.show()
     }
 
     companion object {
@@ -119,12 +98,12 @@ class PlaceReviewAdapter(
             override fun areItemsTheSame(
                 oldItem: PlaceReviewInfo,
                 newItem: PlaceReviewInfo,
-            ): Boolean = oldItem.userId == newItem.userId
+            ): Boolean = oldItem.placeReviewId == newItem.placeReviewId
 
             override fun areContentsTheSame(
                 oldItem: PlaceReviewInfo,
                 newItem: PlaceReviewInfo,
-            ): Boolean = oldItem.review == newItem.review || oldItem.rating == newItem.rating
+            ): Boolean = oldItem == newItem
         }
     }
 }

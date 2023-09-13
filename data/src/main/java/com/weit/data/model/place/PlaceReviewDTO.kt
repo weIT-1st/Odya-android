@@ -2,7 +2,6 @@ package com.weit.data.model.place
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import java.time.LocalDate
 
 @JsonClass(generateAdapter = true)
 data class PlaceReviewDTO(

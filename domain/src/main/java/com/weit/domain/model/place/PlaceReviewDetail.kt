@@ -1,7 +1,6 @@
 package com.weit.domain.model.place
 
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 data class PlaceReviewDetail(
     val id: Long,
@@ -10,5 +9,5 @@ data class PlaceReviewDetail(
     val writerNickname: String,
     val starRating: Int,
     val review: String,
-    val createdAt: LocalDate
+    val createdAt: LocalDate,
 )

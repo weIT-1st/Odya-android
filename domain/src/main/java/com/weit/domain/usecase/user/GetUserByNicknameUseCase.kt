@@ -8,7 +8,7 @@ import com.weit.domain.repository.user.UserRepository
 import javax.inject.Inject
 
 class GetUserByNicknameUseCase @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
     suspend operator fun invoke(nickname: String): Result<UserContent> {
         var size = 10
@@ -17,7 +17,7 @@ class GetUserByNicknameUseCase @Inject constructor(
 
         while (searchNextPage) {
             val info = result.getOrThrow()
-            if (info.hasNext || info.content.find { it.nickname == nickname } == null) {
+            if (info.hasNext && info.content.find { it.nickname == nickname } == null) {
                 size += 10
                 result = getUser(size, nickname)
             } else {
@@ -25,15 +25,13 @@ class GetUserByNicknameUseCase @Inject constructor(
             }
         }
         val user = result.getOrThrow().content.find { it.nickname == nickname }
-        return if(user == null){
+        return if (user == null) {
             Result.failure(NicknameNotFoundException())
         } else {
             Result.success(user)
         }
-
     }
 
     private suspend fun getUser(size: Int, nickname: String): Result<UserByNicknameInfo> =
         userRepository.getUserByNickname(UserByNickname(size, null, nickname))
-
 }

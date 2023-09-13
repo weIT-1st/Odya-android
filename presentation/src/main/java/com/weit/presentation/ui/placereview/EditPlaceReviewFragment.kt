@@ -92,6 +92,7 @@ class EditPlaceReviewFragment(
 
         binding.btnEditReviewRegister.setOnClickListener {
             viewModel.updatePlaceReview(placeId)
+            updateReviewList()
             dismiss()
         }
 
@@ -103,7 +104,6 @@ class EditPlaceReviewFragment(
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        updateReviewList
     }
 
     private fun handleEvent(event: EditPlaceReviewViewModel.Event) {

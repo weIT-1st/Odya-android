@@ -57,11 +57,10 @@ class UserDataSource @Inject constructor(
 
     suspend fun getUserByNickname(userByNickname: UserByNickname): ListResponse<UserContentDTO> =
         userService.getUserByNickname(
-            size =  userByNickname.size,
+            size = userByNickname.size,
             lastId = userByNickname.lastId,
-            nickname = userByNickname.nickname
+            nickname = userByNickname.nickname,
         )
-
 
     companion object {
         private const val USER_ID = "USER_ID"

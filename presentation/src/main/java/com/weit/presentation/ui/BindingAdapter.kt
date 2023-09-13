@@ -16,8 +16,8 @@ fun bindImageUri(view: ImageView, uri: String?) {
 }
 
 @BindingAdapter("profile_background")
-fun bindProfileBackground(view: ImageView, profile: UserProfile) {
-    profile.color?.let { color ->
+fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
+    profile?.color?.let { color ->
         view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
     }
 }

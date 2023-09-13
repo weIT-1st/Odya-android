@@ -7,10 +7,6 @@
         <variable
             name="review"
             type="com.weit.domain.model.place.PlaceReviewInfo" />
-
-        <variable
-            name="vm"
-            type="com.weit.presentation.ui.searchplace.review.PlaceReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -80,20 +76,21 @@
                 android:id="@+id/ratingbar_item_place_review"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:rating="@{review.rating}"
-                app:srb_numStars="5"
-                app:srb_starWidth="17dp"
-                app:srb_starHeight="17dp"
-                app:srb_starPadding="1dp"
-                app:srb_stepSize="0.5"
-                app:srb_clickable="false"
-                app:srb_scrollable="false"
-                app:srb_drawableEmpty="@drawable/ic_star_black_empty"
-                app:srb_drawableFilled="@drawable/ic_star_black_fill"
-                android:layout_marginStart="10dp"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintStart_toEndOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintTop_toTopOf="@+id/tv_item_place_review_writer"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_item_place_review_writer"/>
+                app:layout_constraintVertical_bias="0.571"
+                app:srb_clickable="false"
+                app:srb_drawableEmpty="@drawable/ic_star_black_empty"
+                app:srb_drawableFilled="@drawable/ic_star_black_fill"
+                app:srb_numStars="5"
+                app:srb_scrollable="false"
+                app:srb_starHeight="17dp"
+                app:srb_starPadding="1dp"
+                app:srb_starWidth="17dp"
+                app:srb_stepSize="0.5" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_item_place_menu"

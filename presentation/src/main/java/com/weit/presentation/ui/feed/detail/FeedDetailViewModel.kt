@@ -9,8 +9,6 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
-import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
-import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.presentation.model.FeedComment
 import com.weit.presentation.model.FeedDetail
 import com.weit.presentation.model.TopicDTO
@@ -68,7 +66,7 @@ class FeedDetailViewModel @Inject constructor(
                 .slice(0 until commentCount)
             val remainingCommentsCount = comments.size - defaultComments.size
             setFeedDetail(feed)
-            _event.emit(Event.OnChangeFeed(feed.travelLog, defaultComments, remainingCommentsCount, comments, feed.topics))
+            _event.emit(Event.OnChangeFeed(feed, defaultComments, remainingCommentsCount, comments, feed.topics))
         }
     }
 
@@ -112,7 +110,7 @@ class FeedDetailViewModel @Inject constructor(
 
     sealed class Event {
         data class OnChangeFeed(
-            val travelLog: TravelLogInFeed?,
+            val feed: FeedDetail,
             val defaultComments: List<FeedComment>,
             val remainingCommentsCount: Int,
             val comments: List<FeedComment>,

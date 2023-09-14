@@ -30,12 +30,11 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val args: FeedDetailFragmentArgs by navArgs()
     private val feedCommentAdapter = FeedCommentAdapter()
     private val feedTopicAdapter = FeedTopicAdapter()
-    private var bottomSheetDialog: CommentDialogFragment? = CommentDialogFragment()
+    private var bottomSheetDialog: CommentDialogFragment? = null
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         initCommentRecyclerView()
-        initCommentBottomSheet()
         binding.btCommunityFollow.setOnClickListener {
             viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
         }
@@ -45,20 +44,20 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
         // TODO 좋아요
     }
-    private fun initCommentBottomSheet() {
-        bottomSheetDialog = CommentDialogFragment()
-        bottomSheetDialog?.setStyle(
-            DialogFragment.STYLE_NORMAL,
-            R.style.AppBottomSheetDialogTheme,
-        )
-
-        binding.btnFeedCommentMore.setOnClickListener {
-            bottomSheetDialog?.show(
-                requireActivity().supportFragmentManager,
-                CommentDialogFragment.TAG,
-            )
+    private fun initCommentBottomSheet(feedId: Long) {
+        if(bottomSheetDialog==null){
+            bottomSheetDialog = CommentDialogFragment(feedId)
+        }
+        if(bottomSheetDialog?.isAdded?.not() == true){
+            binding.btnFeedCommentMore.setOnClickListener {
+                bottomSheetDialog?.show(
+                    requireActivity().supportFragmentManager,
+                    CommentDialogFragment.TAG,
+                )
+            }
         }
     }
+
 
     private fun initCommentRecyclerView() {
         binding.rvFeedComment.run {
@@ -92,6 +91,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         if (log == null) {
             binding.includeTravelLog.layoutTravelLog.visibility = View.GONE
         } else {
+            binding.includeTravelLog.layoutTravelLog.visibility = View.VISIBLE
             binding.includeTravelLog.log = log
             binding.includeTravelLog.layoutTravelLog.setOnClickListener {
                 navigateTravelLog(log.travelLogId)
@@ -102,14 +102,15 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
-                setTravelLog(event.travelLog)
+                setTravelLog(event.feed.travelLog)
                 feedTopicAdapter.submitList(event.topics)
                 feedCommentAdapter.submitList(event.defaultComments)
                 if (event.remainingCommentsCount > 0) {
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
-                bottomSheetDialog?.comments = event.comments
+                //여기서 초기화 해줘도 되나
+                initCommentBottomSheet(event.feed.feedId)
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {
                 binding.btCommunityFollow.isChecked = event.followState

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.lang.Integer.min
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @HiltViewModel
@@ -37,13 +38,13 @@ class FeedViewModel @Inject constructor(
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
 
-    private val allFeed = ArrayList<Feed>()
-    private val feedItems = ArrayList<Feed.FeedItem>()
-    private val popularLogs = ArrayList<PopularTravelLog>()
-    private val friends = ArrayList<MayKnowFriend>()
+    private val totalFeed = CopyOnWriteArrayList<Feed>()
+    private val feedItems = CopyOnWriteArrayList<Feed.FeedItem>()
+    private val popularLogs = CopyOnWriteArrayList<PopularTravelLog>()
+    private val friends = CopyOnWriteArrayList<MayKnowFriend>()
 
-    private val _changeFeedEvent = MutableStateFlow<List<Feed>>(emptyList())
-    val changeFeedEvent : StateFlow<List<Feed>> get() =  _changeFeedEvent
+    private val _feed = MutableStateFlow<List<Feed>>(emptyList())
+    val feed : StateFlow<List<Feed>> get() =  _feed
 
     init {
         getFavoriteTopicList()
@@ -68,33 +69,33 @@ class FeedViewModel @Inject constructor(
 
     private fun makeFeedItems() {
         viewModelScope.launch {
-            allFeed.clear()
+            totalFeed.clear()
             val feedList = feedItems
             val popularTravelLogList = Feed.PopularTravelLogItem(popularLogs)
             val mayKnowFriendList = Feed.MayknowFriendItem(friends)
 
             val feedSizeBeforeLog = min(feedList.size, MINIMUM_FEED_SIZE)
 
-            allFeed.addAll(feedList.subList(0,feedSizeBeforeLog))
+            totalFeed.addAll(feedList.subList(0,feedSizeBeforeLog))
 
             if (popularTravelLogList.popularTravelLogList.isNotEmpty()) {
-                allFeed.add(popularTravelLogList)
+                totalFeed.add(popularTravelLogList)
             }
 
             if (feedList.size > MINIMUM_FEED_SIZE) {
                 val feedSizeAfterLog = min(feedList.size - MINIMUM_FEED_SIZE, MINIMUM_FEED_SIZE)
-                allFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE,MINIMUM_FEED_SIZE+feedSizeAfterLog))
+                totalFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE,MINIMUM_FEED_SIZE+feedSizeAfterLog))
             }
 
             if (mayKnowFriendList.mayKnowFriendList.isNotEmpty()) {
-                allFeed.add(mayKnowFriendList)
+                totalFeed.add(mayKnowFriendList)
             }
 
             if (feedList.size > MINIMUM_FEED_SIZE_DOUBLE) {
-                allFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE_DOUBLE,feedList.size))
+                totalFeed.addAll(feedList.subList(MINIMUM_FEED_SIZE_DOUBLE,feedList.size))
             }
 
-            _changeFeedEvent.emit(allFeed.toList())
+            _feed.emit(totalFeed.toList())
         }
     }
 
@@ -125,7 +126,7 @@ class FeedViewModel @Inject constructor(
             )
         }
         feedItems.clear()
-        feedItems.addAll(ArrayList(feeds))
+        feedItems.addAll(CopyOnWriteArrayList(feeds))
     }
 
     private fun getPopularTravelLogs() {

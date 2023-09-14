@@ -47,7 +47,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.changeFeedEvent.collectLatest { feeds ->
+            viewModel.feed.collectLatest { feeds ->
                 feedAdapter.submitList(feeds)
             }
         }

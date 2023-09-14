@@ -12,11 +12,11 @@ import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
 import com.weit.presentation.model.FeedComment
 import com.weit.presentation.ui.util.SpaceDecoration
 
-class CommentDialogFragment() : BottomSheetDialogFragment() {
+class CommentDialogFragment(feedId: Long?) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
     private val feedCommentAdapter = FeedCommentAdapter()
-    var comments = listOf<FeedComment>()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,7 +40,9 @@ class CommentDialogFragment() : BottomSheetDialogFragment() {
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
             adapter = feedCommentAdapter
         }
-        feedCommentAdapter.submitList(comments)
+
+        //TODO 댓글 API 호출
+//        feedCommentAdapter.submitList()
     }
     override fun onDestroyView() {
         super.onDestroyView()

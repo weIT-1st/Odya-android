@@ -1,17 +1,20 @@
 package com.weit.data.di
 
 import android.content.Context
+import com.weit.data.repository.community.CommunityCommentRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.repository.topic.TopicRepositoryImpl
 import com.weit.data.repository.user.UserRepositoryImpl
+import com.weit.data.service.CommunityCommentService
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.TopicService
 import com.weit.data.service.UserService
+import com.weit.data.source.CommunityCommentDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
@@ -19,6 +22,7 @@ import com.weit.data.source.PermissionDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
+import com.weit.domain.repository.community.comment.CommunityCommentRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -132,4 +136,19 @@ class MainModule {
     @Provides
     fun provideTopicRepository(dataSource: TopicDataSource): TopicRepository =
         TopicRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityCommentService(@AuthNetworkObject retrofit: Retrofit): CommunityCommentService =
+        retrofit.create(CommunityCommentService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityCommentDataSource(service: CommunityCommentService): CommunityCommentDataSource =
+        CommunityCommentDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityCommentRepository(dataSource: CommunityCommentDataSource): CommunityCommentRepository =
+        CommunityCommentRepositoryImpl(dataSource)
 }

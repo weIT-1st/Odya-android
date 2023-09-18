@@ -1,6 +1,6 @@
 package com.weit.data.repository.community
 
-import com.weit.data.source.CommunityDataSource
+import com.weit.data.source.CommunityCommentDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.community.comment.CommunityCommentContent
 import com.weit.domain.model.community.comment.CommunityCommentDeleteInfo
@@ -22,14 +22,14 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class CommunityCommentRepositoryImpl @Inject constructor(
-    private val communityDataSource: CommunityDataSource,
+    private val communityCommentDataSource: CommunityCommentDataSource,
 ) : CommunityCommentRepository {
 
     private val hasNextComment = AtomicBoolean(true)
 
     override suspend fun registerCommunityComment(communityCommentRegistrationInfo: CommunityCommentRegistrationInfo): Result<Unit> {
         val result = runCatching {
-            communityDataSource.registerCommunityComment(communityCommentRegistrationInfo.communityId,communityCommentRegistrationInfo.content)
+            communityCommentDataSource.registerCommunityComment(communityCommentRegistrationInfo.communityId,communityCommentRegistrationInfo.content)
         }
         return if (result.isSuccess) {
             Result.success(result.getOrThrow())
@@ -43,7 +43,7 @@ class CommunityCommentRepositoryImpl @Inject constructor(
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
-            communityDataSource.getCommunityComments(communityCommentInfo.communityId,communityCommentInfo.size,communityCommentInfo.lastId)
+            communityCommentDataSource.getCommunityComments(communityCommentInfo.communityId,communityCommentInfo.size,communityCommentInfo.lastId)
         }
         return if (result.isSuccess) {
             val communityComments = result.getOrThrow()
@@ -55,7 +55,7 @@ class CommunityCommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateCommunityComment(communityCommentUpdateInfo: CommunityCommentUpdateInfo): Result<Unit> {
-        val response = communityDataSource.updateCommunityComment(communityCommentUpdateInfo.communityId,communityCommentUpdateInfo.commentId,communityCommentUpdateInfo.content)
+        val response = communityCommentDataSource.updateCommunityComment(communityCommentUpdateInfo.communityId,communityCommentUpdateInfo.commentId,communityCommentUpdateInfo.content)
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
@@ -64,7 +64,7 @@ class CommunityCommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteCommunityComment(communityCommentDeleteInfo: CommunityCommentDeleteInfo): Result<Unit> {
-        val response = communityDataSource.deleteCommunityComment(communityCommentDeleteInfo.communityId,communityCommentDeleteInfo.commentId)
+        val response = communityCommentDataSource.deleteCommunityComment(communityCommentDeleteInfo.communityId,communityCommentDeleteInfo.commentId)
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {

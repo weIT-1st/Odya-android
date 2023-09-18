@@ -44,4 +44,10 @@ interface FollowService {
         @Query("size") size: Int,
         @Query("sortType") sortType: String,
     ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/may-know")
+    suspend fun getMayknowUsers(
+        @Query("size") size: Int?,
+        @Query("lasId") lasId: Long?,
+    ): ListResponse<FollowUserContentDTO>
 }

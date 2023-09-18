@@ -6,6 +6,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
+import com.weit.domain.model.follow.MayknowUserSearchInfo
 
 interface FollowRepository {
 
@@ -38,4 +39,8 @@ interface FollowRepository {
     fun getCachedFollowing(
         query: String,
     ): List<FollowUserContent>
+
+    suspend fun getMayknowUsers(
+        mayknowUserSearchInfo: MayknowUserSearchInfo,
+    ): Result<List<FollowUserContent>>
 }

@@ -31,14 +31,20 @@ class LoginConsentDialogFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-    }
-
     private fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.termTitle.collectLatest { title ->
+                binding.tvTermsTitle.text = title
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.termContent.collectLatest { content ->
+                binding.tvTermsContent.text = content
             }
         }
     }
@@ -49,12 +55,6 @@ class LoginConsentDialogFragment : BottomSheetDialogFragment() {
                 dismiss()
                 val action = LoginPreviewThirdFragmentDirections.actionLoginPreviewThirdFragmentToLoginNicknameFragment()
                 findNavController().navigate(action)
-            }
-            is LoginConsentDialogViewModel.Event.GetTermTitleSuccess -> {
-                binding.tvTermsTitle.text = event.title
-            }
-            is LoginConsentDialogViewModel.Event.GetTermContentSuccess -> {
-                binding.tvTermsContent.text = event.content
             }
             else -> {}
         }
@@ -79,7 +79,6 @@ class LoginConsentDialogFragment : BottomSheetDialogFragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-        this.dismiss()
     }
     companion object {
         const val TAG = "LoginConsentDialogFragment"

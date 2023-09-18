@@ -13,6 +13,8 @@ import com.weit.domain.usecase.term.SetTermsUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +26,15 @@ class LoginConsentDialogViewModel @Inject constructor(
     private val setTermsUseCase: SetTermsUseCase,
 ) : ViewModel() {
 
+    private  val _termTitle = MutableStateFlow<String>("")
+    val termTitle : StateFlow<String> get() = _termTitle
+
+    private  val _termContent = MutableStateFlow<String>("")
+    val termContent : StateFlow<String> get() = _termContent
     private val _event = MutableEventFlow<LoginConsentDialogViewModel.Event>()
     val event = _event.asEventFlow()
+
+    private var termId :Long = 0
 
     init {
         getTermList()
@@ -36,10 +45,10 @@ class LoginConsentDialogViewModel @Inject constructor(
 
     private fun getTermContent() {
         viewModelScope.launch {
-            val result = getTermContentUseCase(1)
+            val result = getTermContentUseCase(termId)
             if (result.isSuccess) {
                 val terms = result.getOrThrow()
-                _event.emit(Event.GetTermContentSuccess(terms.content))
+                _termContent.emit(terms.content)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -52,7 +61,8 @@ class LoginConsentDialogViewModel @Inject constructor(
             val result = getTermListUseCase()
             if (result.isSuccess) {
                 val terms = result.getOrThrow()
-                _event.emit(Event.GetTermTitleSuccess(terms[0].title))
+                termId=terms[0].termId
+                _termTitle.emit(terms[0].title)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -98,12 +108,6 @@ class LoginConsentDialogViewModel @Inject constructor(
     }
 
     sealed class Event {
-        data class GetTermTitleSuccess(
-            val title: String,
-        ) : Event()
-        data class GetTermContentSuccess(
-            val content: String,
-        ) : Event()
         object OnAgreeSuccess : Event()
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()

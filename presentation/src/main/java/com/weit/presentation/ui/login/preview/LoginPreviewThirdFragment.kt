@@ -13,26 +13,37 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>(
     FragmentLoginPreviewThirdBinding::inflate,
 ) {
-    private var bottomSheetDialog: LoginConsentDialogFragment? = LoginConsentDialogFragment()
+    private var bottomSheetDialog: LoginConsentDialogFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initCommentBottomSheet()
     }
     private fun initCommentBottomSheet() {
-        bottomSheetDialog = LoginConsentDialogFragment()
+        if(bottomSheetDialog==null){
+            bottomSheetDialog = LoginConsentDialogFragment()
+        }
         bottomSheetDialog?.setStyle(
             DialogFragment.STYLE_NORMAL,
             R.style.AppBottomSheetDialogTheme,
         )
 
-        binding.btnLoginPreviewThirdStart.setOnClickListener {
-            bottomSheetDialog?.show(
-                requireActivity().supportFragmentManager,
-                LoginConsentDialogFragment.TAG,
-            )
+        if(bottomSheetDialog?.isAdded?.not() == true){
+            binding.btnLoginPreviewThirdStart.setOnClickListener {
+                bottomSheetDialog?.show(
+                    requireActivity().supportFragmentManager,
+                    LoginConsentDialogFragment.TAG,
+                )
+            }
         }
+
     }
     override fun initCollector() {
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        bottomSheetDialog?.dismiss()
+        bottomSheetDialog = null
     }
 }

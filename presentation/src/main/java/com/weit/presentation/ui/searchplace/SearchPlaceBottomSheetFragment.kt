@@ -13,7 +13,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentBottomSheetPlaceSearchBinding
-import com.weit.presentation.ui.placereview.EditPlaceReviewFragment
 import com.weit.presentation.ui.searchplace.community.PlaceCommunityFragment
 import com.weit.presentation.ui.searchplace.journey.PlaceJourneyFragment
 import com.weit.presentation.ui.searchplace.review.PlaceReviewFragment
@@ -41,6 +40,8 @@ class SearchPlaceBottomSheetFragment(
         ExperiencedFriendAdapter()
     }
 
+    private var placeTitle = ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -59,11 +60,6 @@ class SearchPlaceBottomSheetFragment(
 
         initTabViewPager()
         initExperiencedFriendRV()
-
-//        임시 리뷰 추가 버튼 입니다 디자인 변경 나오면 삭제 후 수정하겠습니다.
-        binding.btnBsPlaceBookMark.setOnClickListener {
-            EditPlaceReviewFragment({}, placeId, null).show(childFragmentManager, "edit")
-        }
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriendNum.collectLatest {
@@ -99,7 +95,7 @@ class SearchPlaceBottomSheetFragment(
 
         val tabItem = ArrayList<Fragment>()
         tabItem.add(PlaceJourneyFragment())
-        tabItem.add(PlaceReviewFragment(placeId))
+        tabItem.add(PlaceReviewFragment(placeId, placeTitle))
         tabItem.add(PlaceCommunityFragment())
 
         viewPager.apply {

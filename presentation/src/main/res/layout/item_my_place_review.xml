@@ -27,6 +27,7 @@
             app:image_uri="@{review.profile.url}"
             app:profile_background="@{review.profile}"
             app:shapeAppearance="@style/ShapeableImageViewCircle"
+            android:layout_marginStart="20dp"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:src="@tools:sample/avatars"/>
@@ -57,6 +58,7 @@
             android:paddingEnd="16dp"
             android:paddingTop="12dp"
             android:paddingBottom="12dp"
+            android:layout_marginEnd="20dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_item_place_my_review"
             app:layout_constraintStart_toEndOf="@+id/iv_item_place_profile"
             app:layout_constraintEnd_toEndOf="parent">

@@ -52,10 +52,7 @@
     <!--  review  -->
     <string name="create_review_title">리뷰 작성</string>
     <string name="edit_review_title">리뷰 수정</string>
-    <string name="review_star">별점 등록(%.1f/5)</string>
-    <string name="review_detail">리뷰 내용(%d/30)</string>
     <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
-    <string name="review_cancel">취소</string>
     <string name="create_review_register">등록하기</string>
     <string name="edit_review_register">수정하기</string>
     <string name="item_update_review">리뷰 수정</string>
@@ -90,8 +87,8 @@
     <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
 
     <string name="place_review">한줄리뷰</string>
-    <string name="place_how_about">%s의 방문 경험은 어떠혔나요?</string>
-    <string name="place_recent_review">최근 리뷰 %d개</string>
+    <string name="place_how_about">%s의 방문 경험은 어떠셨나요?</string>
+    <string name="place_review_count">리뷰 총 %d개</string>
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
     <string name="place_my_review">내가 작성한 리뷰</string>

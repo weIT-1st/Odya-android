@@ -5,11 +5,9 @@ import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.domain.repository.place.PlaceReviewRepository
 import com.weit.domain.repository.user.UserRepository
-import com.weit.domain.usecase.user.GetUserByNicknameUseCase
 import javax.inject.Inject
 
 class GetPlaceReviewContentUseCase @Inject constructor(
-    private val getUserByNicknameUseCase: GetUserByNicknameUseCase,
     private val placeReviewRepository: PlaceReviewRepository,
     private val userRepository: UserRepository,
 ) {
@@ -19,17 +17,17 @@ class GetPlaceReviewContentUseCase @Inject constructor(
         val placeReviewResult = placeReviewRepository.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId))
 
         return if (placeReviewResult.isSuccess) {
-            val review = placeReviewResult.getOrThrow()
+            val review = placeReviewResult.getOrThrow().content
             val list = review.map {
                 PlaceReviewInfo(
-                    it.writerNickname,
+                    it.userInfo.nickname,
                     (it.starRating.toFloat() / 2),
                     it.review,
-                    it.createdAt.toString(),
-                    it.userId,
-                    it.userId == userId,
-                    it.id,
-                    getUserByNicknameUseCase(it.writerNickname).getOrNull()?.profile,
+                    it.createdAt.toString().substring(0, 10),
+                    it.userInfo.userId,
+                    it.userInfo.userId == userId,
+                    it.placeReviewId,
+                    it.userInfo.profile,
                 )
             }
             val myReview = list.find { it.userId == userId }

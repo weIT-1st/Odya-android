@@ -1,7 +1,6 @@
 package com.weit.presentation.ui.searchplace.review
 
 import android.content.res.Resources.NotFoundException
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -31,7 +30,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
 ) : ViewModel() {
 
     val reviewRating = MutableStateFlow(initRating)
-    val reviewNum = reviewCount
 
     private val _placeReviewList = MutableStateFlow<List<PlaceReviewInfo>>(emptyList())
     val placeReviewList: StateFlow<List<PlaceReviewInfo>> get() = _placeReviewList
@@ -44,8 +42,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
-
-    private var test = 1
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -60,8 +56,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
         viewModelScope.launch {
             getAverageRating()
             getPlaceReview()
-            Log.d("update List", "update count : $test")
-            test += 1
         }
     }
 
@@ -82,7 +76,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
             val list = result.getOrThrow()
             _placeReviewList.emit(list)
 
-            Log.d("placereview", "List : ${_placeReviewList.value}")
             val myReview = list.find { it.isMine }
             if (myReview != null) {
                 _event.emit(Event.GetPlaceReviewWithMineSuccess)
@@ -94,6 +87,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
                     ),
                 )
                 if (myPlaceReviewData.value == null) {
+                    _myPlaceReviewData.emit(null)
                     _event.emit(Event.DoNotGetMyReviewData)
                 }
             } else {
@@ -106,13 +100,18 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     fun deleteMyReview() {
         viewModelScope.launch {
-            if (myPlaceReviewData.value == null) {
-                _event.emit(Event.GetPlaceReviewSuccess)
+            val myReview = myPlaceReviewData.value
+            if (myReview == null) {
+                _event.emit(Event.DoNotGetMyReviewData)
             } else {
-                val result = deletePlaceReviewUseCase(myPlaceReviewData.value!!.placeReviewId)
+                val result = deletePlaceReviewUseCase(myReview.placeReviewId)
                 if (result.isSuccess) {
                     _event.emit(Event.DeleteMyReviewSuccess)
-                    getPlaceReview()
+                    _myPlaceReviewData.emit(null)
+                    getAverageRating()
+                    val list = placeReviewList.value.filterNot { it.isMine }
+                    _placeReviewList.emit(list.toList())
+
                 } else {
                     handleError(result.exceptionOrNull() ?: UnknownError())
                 }
@@ -146,8 +145,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     companion object {
         const val initRating = 1.0F
-        const val reviewCount = 20
-
         fun provideFactory(
             assistedFactory: PlaceIdFactory,
             placeId: String,

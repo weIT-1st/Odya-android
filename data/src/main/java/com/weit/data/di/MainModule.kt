@@ -22,6 +22,7 @@ import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.TermDataSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -114,8 +115,9 @@ class MainModule {
         userDataSource: UserDataSource,
         imageDataSource: ImageDataSource,
         imageRepositoryImpl: ImageRepositoryImpl,
+        userInfoDataSource: UserInfoDataSource,
     ): UserRepository =
-        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl)
+        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
 
     @ActivityRetainedScoped
     @Provides

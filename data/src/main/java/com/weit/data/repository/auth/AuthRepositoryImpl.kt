@@ -133,6 +133,7 @@ class AuthRepositoryImpl @Inject constructor(
             nickname = nickname,
             gender = gender,
             birthday = listOf(birthday.year, birthday.monthValue, birthday.dayOfMonth),
+            termsIdList = termsIdList,
         )
 
     override fun verifyCurrentUser(): Boolean =

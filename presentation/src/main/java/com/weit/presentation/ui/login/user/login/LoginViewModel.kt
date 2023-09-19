@@ -34,6 +34,12 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun deleteUser(){
+        viewModelScope.launch {
+
+        }
+    }
+
     sealed class Event {
         object LoginSuccess : Event()
         object LoginFailed : Event()

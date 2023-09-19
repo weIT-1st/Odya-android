@@ -9,7 +9,7 @@ import com.weit.domain.model.exception.NotExistTermIdException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.usecase.term.GetTermContentUseCase
 import com.weit.domain.usecase.term.GetTermListUseCase
-import com.weit.domain.usecase.term.SetTermsUseCase
+import com.weit.domain.usecase.userinfo.SetTermIdListUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +23,7 @@ class LoginConsentDialogViewModel @Inject constructor(
 //    private val getAgreedTermsUseCase: GetAgreedTermsUseCase,
     private val getTermContentUseCase: GetTermContentUseCase,
     private val getTermListUseCase: GetTermListUseCase,
-    private val setTermsUseCase: SetTermsUseCase,
+    private val setTermIdListUsecase: SetTermIdListUseCase,
 ) : ViewModel() {
 
     private  val _termTitle = MutableStateFlow<String>("")
@@ -34,18 +34,32 @@ class LoginConsentDialogViewModel @Inject constructor(
     private val _event = MutableEventFlow<LoginConsentDialogViewModel.Event>()
     val event = _event.asEventFlow()
 
-    private var termId :Long = 0
+    private val termIdList  = mutableSetOf<String>()
 
     init {
         getTermList()
-        getTermContent()
 //        setTerms()
 //        getAgreedTerms()
     }
 
+    private fun getTermList() {
+        viewModelScope.launch {
+            val result = getTermListUseCase()
+            if (result.isSuccess) {
+                val terms = result.getOrThrow()
+                termIdList.add(terms[0].termId.toString())
+                _termTitle.emit(terms[0].title)
+                getTermContent()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
     private fun getTermContent() {
         viewModelScope.launch {
-            val result = getTermContentUseCase(termId)
+            val result = getTermContentUseCase(termIdList.first().toLong())
             if (result.isSuccess) {
                 val terms = result.getOrThrow()
                 _termContent.emit(terms.content)
@@ -56,22 +70,10 @@ class LoginConsentDialogViewModel @Inject constructor(
         }
     }
 
-    private fun getTermList() {
-        viewModelScope.launch {
-            val result = getTermListUseCase()
-            if (result.isSuccess) {
-                val terms = result.getOrThrow()
-                termId=terms[0].termId
-                _termTitle.emit(terms[0].title)
-            } else {
-                handleError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
 
     fun onAgree() {
         viewModelScope.launch {
+            setTermIdListUsecase(termIdList)
             _event.emit(Event.OnAgreeSuccess)
         }
     }

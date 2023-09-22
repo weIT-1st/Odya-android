@@ -61,6 +61,9 @@ class FollowRepositoryImpl @Inject constructor(
         followingSearchInfo: FollowingSearchInfo,
         query: String,
     ): Result<List<FollowUserContent>> {
+        if (followingSearchInfo.page == 0) {
+            hasNextFollowing.set(true)
+        }
         if (hasNextFollowing.get().not()) {
             return Result.failure(NoMoreItemException())
         }

@@ -1,11 +1,13 @@
 package com.weit.presentation.ui.post.selectplace
 
+import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemSelectPlaceBinding
 
 class SelectPlaceAdapter(
@@ -23,9 +25,43 @@ class SelectPlaceAdapter(
         }
 
         fun bind(item: SelectPlaceEntity) {
-            binding.tvSelectPlaceName.text = item.place.name
-            binding.tvSelectPlaceAddress.text = item.place.address
-            binding.ivSelectPlaceChecked.isVisible = item.isSelected
+            val textColor = getTextColor(item.isSelected)
+            binding.tvSelectPlaceName.run {
+                setTextColor(textColor)
+                text = item.place.name
+            }
+            binding.tvSelectPlaceAddress.run {
+                setTextColor(textColor)
+                text = item.place.address
+            }
+            binding.root.backgroundTintList = getBackgroundTint(item.isSelected)
+            binding.ivSelectPlaceChecked.setImageResource(getCheckIcon(item.isSelected))
+        }
+
+        private fun getTextColor(isSelected: Boolean): Int {
+            val color = if (isSelected) {
+                R.color.background_normal
+            } else {
+                R.color.label_normal
+            }
+            return binding.root.context.resources.getColor(color, null)
+        }
+
+        private fun getBackgroundTint(isSelected: Boolean): ColorStateList? {
+            val color = if (isSelected) {
+                R.color.primary
+            } else {
+                R.color.background_normal
+            }
+            return ContextCompat.getColorStateList(binding.root.context, color)
+        }
+
+        private fun getCheckIcon(isSelected: Boolean): Int {
+            return if (isSelected) {
+                R.drawable.ic_select
+            } else {
+                R.drawable.ic_unselect
+            }
         }
     }
 

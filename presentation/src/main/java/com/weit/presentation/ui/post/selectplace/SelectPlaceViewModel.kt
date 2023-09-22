@@ -36,6 +36,9 @@ class SelectPlaceViewModel @AssistedInject constructor(
     private val _placeEntities = MutableStateFlow(imagePlaces.toSelectPlaceEntity())
     val placeEntities: StateFlow<List<SelectPlaceEntity>> get() = _placeEntities
 
+    private val _currentAddress = MutableStateFlow("")
+    val currentAddress: StateFlow<String> get() = _currentAddress
+
     val query = MutableStateFlow("")
 
     private var selectedPlaceEntity: SelectPlaceEntity? = null
@@ -55,6 +58,7 @@ class SelectPlaceViewModel @AssistedInject constructor(
             val placeDetail = getPlaceDetailUseCase(pointOfInterest.placeId)
             setSelectedPlaceEntity(placeDetail.toPlacePrediction())
             updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
+            _currentAddress.emit(selectedPlaceEntity?.place?.address ?: "")
         }
     }
 
@@ -68,6 +72,7 @@ class SelectPlaceViewModel @AssistedInject constructor(
             _event.emit(Event.MoveMap(latlng))
             setSelectedPlaceEntity(placeDetail.toPlacePrediction())
             updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
+            _currentAddress.emit(selectedPlaceEntity?.place?.address ?: "")
         }
     }
 

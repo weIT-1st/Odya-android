@@ -2,6 +2,7 @@ package com.weit.presentation.ui.post.selectplace
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -45,7 +46,7 @@ class SelectPlaceFragment :
     }
 
     private val marker by lazy {
-        getMarkerIconFromDrawable(resources, R.drawable.ic_splash_logo)
+        getMarkerIconFromDrawable(resources)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,6 +54,21 @@ class SelectPlaceFragment :
         binding.vm = viewModel
         binding.rvSelectPlacePredictions.adapter = adapter
         initBottomSheet()
+    }
+
+    override fun initListener() {
+        binding.tbSelectPlace.setOnMenuItemClickListener { menu ->
+            handleMenuItem(menu.itemId)
+            true
+        }
+    }
+
+    private fun handleMenuItem(itemId: Int) {
+        when (itemId) {
+            R.id.menu_complete -> {
+                // TODO 장소 들고 넘어가기
+            }
+        }
     }
 
     private fun initBottomSheet() {
@@ -77,6 +93,14 @@ class SelectPlaceFragment :
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeEntities.collectLatest { places ->
                 adapter.submitList(places)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.currentAddress.collectLatest { address ->
+                binding.tvSelectPlaceCurrentAddress.run {
+                    isVisible = address.isNotEmpty()
+                    text = address
+                }
             }
         }
     }
@@ -113,6 +137,7 @@ class SelectPlaceFragment :
         googleMap.setOnPoiClickListener {
             viewModel.onClickPointOfInterest(it)
         }
+        googleMap.projection.visibleRegion.latLngBounds
     }
 
     override fun onDestroyView() {

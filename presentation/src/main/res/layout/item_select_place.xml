@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/corners_all_12"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -41,14 +42,14 @@
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="주소"/>
     
-    <androidx.constraintlayout.utils.widget.ImageFilterView
+    <ImageView
         android:id="@+id/iv_select_place_checked"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="12dp"
-        android:src="@drawable/ic_add_friend"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_select_place_name"
-        app:layout_constraintBottom_toBottomOf="@id/tv_select_place_name"
-        app:layout_constraintStart_toEndOf="@id/tv_select_place_name"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/tv_select_place_address"
+        tools:src="@drawable/ic_unselect" />
+    
 </androidx.constraintlayout.widget.ConstraintLayout>

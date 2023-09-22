@@ -13,7 +13,7 @@ import kotlin.math.roundToInt
 
 fun getMarkerIconFromDrawable(
     resources: Resources,
-    @DrawableRes drawableRes: Int,
+    @DrawableRes drawableRes: Int = R.drawable.ic_marker,
     @DimenRes widthDp: Int = R.dimen.marker_width,
     @DimenRes heightDp: Int = R.dimen.marker_height,
 ): BitmapDescriptor? {

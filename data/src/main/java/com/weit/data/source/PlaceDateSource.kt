@@ -7,8 +7,10 @@ import com.google.android.libraries.places.api.model.PlaceTypes
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.orhanobut.logger.Logger
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
+import com.weit.data.model.map.PlaceDetailResponse
 import com.weit.data.service.PlaceService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
@@ -35,8 +37,43 @@ class PlaceDateSource @Inject constructor(
         Place.Field.LAT_LNG,
     )
 
-    suspend fun getPlaceDetail(placeId: String): GeocodingResult =
-        service.getPlaceDetail(BuildConfig.GOOGLE_MAP_KEY, placeId)
+    private val detailPlaceField = listOf(
+        Place.Field.NAME,
+        Place.Field.ID,
+        Place.Field.ADDRESS,
+        Place.Field.ADDRESS_COMPONENTS,
+        Place.Field.LAT_LNG,
+        Place.Field.PHOTO_METADATAS,
+    )
+
+
+    suspend fun getPlaceDetail(
+        placeId: String,
+        language: String = "ko",
+    ): PlaceDetailResponse {
+        val result = service.getPlaceDetail(
+            BuildConfig.GOOGLE_MAP_KEY,
+            placeId,
+            language,
+        )
+        Logger.t("MainTest").i("$result")
+        return result
+    }
+
+    suspend fun getPlaceDetailWithFields(
+        placeId: String,
+        language: String = "ko",
+        fields: List<String>
+    ): PlaceDetailResponse {
+        val result = service.getPlaceDetailWithFields(
+            BuildConfig.GOOGLE_MAP_KEY,
+            placeId,
+            language,
+            fields.joinToString(",")
+        )
+        Logger.t("MainTest").i("$result")
+        return result
+    }
 
     suspend fun getPlace(placeId: String): Place? = callbackFlow {
         val request = FetchPlaceRequest.builder(placeId, defaultPlaceField).build()

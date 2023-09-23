@@ -10,6 +10,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
+import com.weit.presentation.model.FeedDetail
 import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
@@ -28,25 +29,34 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
     private val viewModel: FeedDetailViewModel by viewModels()
     private val args: FeedDetailFragmentArgs by navArgs()
-    private val feedCommentAdapter = FeedCommentAdapter()
+    private val feedCommentAdapter = FeedCommentAdapter(
+        updateItem = { position -> changeComment(position) },
+        deleteItem = { position -> viewModel.deleteComment(position)},
+    )
     private val feedTopicAdapter = FeedTopicAdapter()
     private var bottomSheetDialog: CommentDialogFragment? = null
+
+    private fun changeComment(position:Int){
+        binding.etFeedComment.setText(viewModel.commentList[position].content)
+        viewModel.updateComment(position)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel.feedId = args.feedId
         binding.vm = viewModel
         initCommentRecyclerView()
         binding.btCommunityFollow.setOnClickListener {
             viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
         }
-        binding.btnWriteComment.setOnClickListener {
-            viewModel.registerComment()
-        }
+//        binding.btnWriteComment.setOnClickListener {
+//            viewModel.registerComment()
+//        }
 
         // TODO 좋아요
     }
-    private fun initCommentBottomSheet(feedId: Long) {
+    private fun initCommentBottomSheet(feed: FeedDetail?) {
         if(bottomSheetDialog==null){
-            bottomSheetDialog = CommentDialogFragment(feedId)
+            bottomSheetDialog = CommentDialogFragment(feed)
         }
         if(bottomSheetDialog?.isAdded?.not() == true){
             binding.btnFeedCommentMore.setOnClickListener {
@@ -79,6 +89,12 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         findNavController().navigate(action)
     }
 
+    override fun initListener() {
+        binding.tbFeedDetail.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+    }
+
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
@@ -104,13 +120,15 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             is FeedDetailViewModel.Event.OnChangeFeed -> {
                 setTravelLog(event.feed.travelLog)
                 feedTopicAdapter.submitList(event.topics)
+            }
+            is FeedDetailViewModel.Event.OnChangeComments -> {
                 feedCommentAdapter.submitList(event.defaultComments)
                 if (event.remainingCommentsCount > 0) {
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
                 //여기서 초기화 해줘도 되나
-                initCommentBottomSheet(event.feed.feedId)
+                initCommentBottomSheet(event.feed)
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {
                 binding.btCommunityFollow.isChecked = event.followState

@@ -375,7 +375,7 @@
                         android:textColorHint="@color/label_assistive"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintHorizontal_bias="0.0"
-                        tools:text="dddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhdddddddddddddgggggggg" />
+                        tools:text="@{vm.writedComment}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -386,6 +386,7 @@
                     android:layout_marginEnd="13dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_comment_write"
+                    android:onClick="@{()-> vm.registerAndUpdateComment()}"
                     app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
                     app:layout_constraintEnd_toEndOf="@+id/view_write_comment"
                     app:layout_constraintTop_toTopOf="@+id/view_write_comment" />

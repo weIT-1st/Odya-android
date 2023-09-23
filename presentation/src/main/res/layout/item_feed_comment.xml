@@ -6,7 +6,7 @@
     <data>
         <variable
             name="comment"
-            type="com.weit.presentation.model.FeedComment" />
+            type="com.weit.domain.model.community.comment.CommunityCommentContent" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,8 +17,8 @@
             android:id="@+id/iv_item_feed_profile"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            app:image_uri="@{comment.userProfile.url}"
-            app:profile_background="@{comment.userProfile}"
+            app:image_uri="@{comment.user.profile.url}"
+            app:profile_background="@{comment.user.profile}"
             android:src="@drawable/ic_profile"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
-            tools:text="@{comment.userNickname}"
+            tools:text="@{comment.user.nickname}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iv_item_feed_profile"
             app:layout_constraintTop_toTopOf="parent" />

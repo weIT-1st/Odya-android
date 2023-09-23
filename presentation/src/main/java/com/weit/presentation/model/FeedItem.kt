@@ -70,7 +70,6 @@ data class FeedDetail(
     val likeNum: Int,
     val commentNum: Int,
     val place: String?,
-    val comments: List<FeedComment>,
     val topics: List<TopicDTO>,
 )
 

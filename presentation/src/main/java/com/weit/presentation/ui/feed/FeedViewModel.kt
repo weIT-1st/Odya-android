@@ -11,6 +11,7 @@ import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
+import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDTO
@@ -22,6 +23,7 @@ import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -33,6 +35,7 @@ import javax.inject.Inject
 class FeedViewModel @Inject constructor(
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
+    private val getMayknowUsersUseCase: GetMayknowUsersUseCase,
 ) : ViewModel() {
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
@@ -46,13 +49,45 @@ class FeedViewModel @Inject constructor(
     private val _feed = MutableStateFlow<List<Feed>>(emptyList())
     val feed : StateFlow<List<Feed>> get() =  _feed
 
+    private var pageJob: Job = Job().apply {
+        complete()
+    }
+    private var friendPage = 0
+//    private val _friends = MutableStateFlow<List<MayKnowFriend>>(emptyList())
+//    val friends : StateFlow<List<MayKnowFriend>> get() = _friends
     init {
         getFavoriteTopicList()
         getFeeds()
         getPopularTravelLogs()
-        getMayknowFriends()
+//        loadNextFriends(friendPage)
+//        getMayknowFriends()
         makeFeedItems()
     }
+
+//    fun onNextFriends(){
+//        if(pageJob.isCompleted.not()){
+//            return
+//        }
+//        loadNextFriends(friendPage)
+//    }
+//
+//    private fun loadNextFriends(page: Int){
+//        pageJob = viewModelScope.launch {
+//            val result = getMayknowUsersUseCase(
+//                MayknowUserSearchInfo(
+//                    size = DEFAULT_PAGE_SIZE
+//                ))
+//            if(result.isSuccess){
+//                val newFriends = result.getOrThrow()
+//                friendPage = page + 1
+//                if (newFriends.isEmpty()){
+//                    loadNextFriends(page+1)
+//                }
+//                _friends.emit(friends.value + newFriends)
+//            }
+//
+//        }
+//    }
 
     private fun getFavoriteTopicList() {
         viewModelScope.launch {
@@ -141,6 +176,10 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun getMayknowFriends() {
+
+
+
+
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
         val mayKnowFriendList = arrayListOf<MayKnowFriend>(
             MayKnowFriend(4, profile, "ari", "함께 아는 친구 2명", true),
@@ -210,6 +249,7 @@ class FeedViewModel @Inject constructor(
     companion object{
        private const val MINIMUM_FEED_SIZE = 2
         private const val MINIMUM_FEED_SIZE_DOUBLE = 4
+        private const val DEFAULT_PAGE_SIZE = 20
     }
 }
 

@@ -3,11 +3,21 @@ package com.weit.presentation.ui.feed.detail
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.comment.CommunityCommentContent
+import com.weit.domain.model.community.comment.CommunityCommentDeleteInfo
+import com.weit.domain.model.community.comment.CommunityCommentInfo
+import com.weit.domain.model.community.comment.CommunityCommentRegistrationInfo
+import com.weit.domain.model.community.comment.CommunityCommentUpdateInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
+import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.usecase.community.DeleteCommunityCommentsUseCase
+import com.weit.domain.usecase.community.GetCommunityCommentsUseCase
+import com.weit.domain.usecase.community.RegisterCommunityCommentsUseCase
+import com.weit.domain.usecase.community.UpdateCommunityCommentsUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.presentation.model.FeedComment
 import com.weit.presentation.model.FeedDetail
@@ -18,16 +28,24 @@ import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @HiltViewModel
 class FeedDetailViewModel @Inject constructor(
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
+    private val registerCommunityCommentsUseCase: RegisterCommunityCommentsUseCase,
+    private val getCommunityCommentsUseCase: GetCommunityCommentsUseCase,
+    private val deleteCommunityCommentsUseCase: DeleteCommunityCommentsUseCase,
+    private val updateCommunityCommentsUseCase: UpdateCommunityCommentsUseCase,
 ) : ViewModel() {
 
+    var feedId : Long = 0
+    val writedComment = MutableStateFlow("")
     private val _feed = MutableStateFlow<FeedDetail?>(null)
     val feed: StateFlow<FeedDetail?> get() = _feed
 
@@ -40,11 +58,22 @@ class FeedDetailViewModel @Inject constructor(
     private val _followState = MutableStateFlow<Boolean>(false)
     val followState: StateFlow<Boolean> get() = _followState
 
-    private val _event = MutableEventFlow<FeedDetailViewModel.Event>()
+    private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
     private var userId: Long = 0
+
+    private var commentState = commentRegister
+
+    private var currentPosition : Int = 0
+
+    var commentList =  CopyOnWriteArrayList<CommunityCommentContent>()
+
+
+    private var job: Job = Job().apply { cancel() }
+
     init {
         getFeed()
+        getFeedDetailComments()
     }
 
     private fun getFeed() {
@@ -53,20 +82,17 @@ class FeedDetailViewModel @Inject constructor(
             val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
             val travelLog = TravelLogInFeed(1, "ddd", "")
             val topics = listOf(TopicDTO(1, "바다여행"), TopicDTO(2, "우주여행"))
-            val comments = listOf<FeedComment>(
-                FeedComment(1, 3, profile, "dd", "wowwow"),
-                FeedComment(1, 1, profile, "dd", "wowwow"),
-                FeedComment(1, 1, profile, "dd", "wowwow"),
-            )
+//            val comments = listOf<FeedComment>(
+//                FeedComment(1, 3, profile, "dd", "wowwow"),
+//                FeedComment(1, 1, profile, "dd", "wowwow"),
+//                FeedComment(1, 1, profile, "dd", "wowwow"),
+//            )
 
-            val feed = FeedDetail(1, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments, topics)
+            val feed = FeedDetail(1, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", topics)
             userId = feed.userId
-            val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
-            val defaultComments = comments
-                .slice(0 until commentCount)
-            val remainingCommentsCount = comments.size - defaultComments.size
+
             setFeedDetail(feed)
-            _event.emit(Event.OnChangeFeed(feed, defaultComments, remainingCommentsCount, comments, feed.topics))
+            _event.emit(Event.OnChangeFeed(feed, feed.topics))
         }
     }
 
@@ -77,9 +103,83 @@ class FeedDetailViewModel @Inject constructor(
         _followState.value = feed.followState
     }
 
-    fun registerComment() {
+
+    private fun getFeedDetailComments() {
         viewModelScope.launch {
-            // TODO 댓글 등록 API
+            val result = getCommunityCommentsUseCase(
+                CommunityCommentInfo(feedId, 2)
+            )
+            if (result.isSuccess) {
+                commentList.clear()
+                commentList = CopyOnWriteArrayList(result.getOrThrow())
+                val comments = result.getOrThrow()
+                val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
+                val defaultComments = comments
+                    .slice(0 until commentCount)
+                val remainingCommentsCount = comments.size - defaultComments.size
+                _event.emit(Event.OnChangeComments(_feed.value,defaultComments, remainingCommentsCount))
+            } else {
+                    //TODO 에러
+            }
+        }
+    }
+
+    fun registerAndUpdateComment() {
+       job =  viewModelScope.launch {
+//            val feedId = feed.value?.feedId as Long
+           when(commentState){
+               commentRegister ->{
+                   val result = registerCommunityCommentsUseCase(
+                       CommunityCommentRegistrationInfo(
+                           feedId, writedComment.value
+                       )
+                   )
+                   if (result.isSuccess) {
+                       getFeedDetailComments()
+
+                   } else {
+                       //TODO 에러
+                   }
+               }
+               commentUpdate ->{
+                   commentState = commentRegister
+                   val commentId = commentList[currentPosition].communityCommentId
+                   val result = updateCommunityCommentsUseCase(
+                           CommunityCommentUpdateInfo(
+                               feedId, commentId, writedComment.value
+                           )
+                   )
+                   if (result.isSuccess) {
+                       getFeedDetailComments()
+                   } else {
+                       //TODO 에러
+                   }
+
+               }
+           }
+        }
+    }
+
+    fun updateComment(position: Int){
+        commentState = commentUpdate
+        if (job.isCompleted) {
+            currentPosition = position
+        }
+    }
+
+    fun deleteComment(position : Int) {
+        viewModelScope.launch {
+            val commentId = commentList[position].communityCommentId
+            val result = deleteCommunityCommentsUseCase(
+                CommunityCommentDeleteInfo(
+                    feedId, commentId
+                )
+            )
+            if (result.isSuccess) {
+                getFeedDetailComments()
+            } else {
+                //TODO 에러
+            }
         }
     }
 
@@ -111,10 +211,12 @@ class FeedDetailViewModel @Inject constructor(
     sealed class Event {
         data class OnChangeFeed(
             val feed: FeedDetail,
-            val defaultComments: List<FeedComment>,
-            val remainingCommentsCount: Int,
-            val comments: List<FeedComment>,
             val topics: List<TopicDTO>,
+        ) : Event()
+        data class OnChangeComments(
+            val feed: FeedDetail?,
+            val defaultComments: List<CommunityCommentContent>,
+            val remainingCommentsCount: Int,
         ) : Event()
         data class OnChangeFollowState(
             val followState: Boolean
@@ -127,5 +229,7 @@ class FeedDetailViewModel @Inject constructor(
     }
     companion object {
         private const val DEFAULT_COMMENT_COUNT = 2
+        const val commentRegister = "register"
+        const val commentUpdate = "update"
     }
 }

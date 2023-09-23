@@ -47,11 +47,8 @@ class LoginNicknameViewModel @Inject constructor(
     fun setNickname() {
         viewModelScope.launch {
             val newNickname = nickname.value
-            //박지혜임이라고 쓰면 박지혜이 까지만 저장된다..
             if (handleIsGoodNickname(newNickname)) {
                 setNicknameUseCase(newNickname)
-//                val nickname = getNicknameUseCase()
-//                Logger.t("MainTest").i("${nickname}")
 
             }
         }

@@ -75,28 +75,6 @@ class LoginConsentDialogViewModel @Inject constructor(
         }
     }
 
-//    fun updateTerm() {
-//        val result = setTermsUseCase(TermIdListInfo(listOf(1,2),listOf(3)))
-//            if (result.isSuccess) {
-//                Logger.t("MainTest").i("변경 성공성공")
-//            } else {
-//                handleError(result.exceptionOrNull() ?: UnKnownException())
-//                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-//            }
-//    }
-
-//    private fun getAgreedTerms() {
-//        viewModelScope.launch {
-//            val result = getAgreedTermsUseCase()
-//            if (result.isSuccess) {
-//                val terms = result.getOrThrow()
-//                Logger.t("MainTest").i("동의한 목록 ${terms}")
-//            } else {
-//                handleError(result.exceptionOrNull() ?: UnKnownException())
-//                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-//            }
-//        }
-//    }
     private suspend fun handleError(error: Throwable) {
         when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)

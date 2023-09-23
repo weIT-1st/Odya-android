@@ -20,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginConsentDialogViewModel @Inject constructor(
-//    private val getAgreedTermsUseCase: GetAgreedTermsUseCase,
     private val getTermContentUseCase: GetTermContentUseCase,
     private val getTermListUseCase: GetTermListUseCase,
     private val setTermIdListUsecase: SetTermIdListUseCase,
@@ -38,8 +37,6 @@ class LoginConsentDialogViewModel @Inject constructor(
 
     init {
         getTermList()
-//        setTerms()
-//        getAgreedTerms()
     }
 
     private fun getTermList() {

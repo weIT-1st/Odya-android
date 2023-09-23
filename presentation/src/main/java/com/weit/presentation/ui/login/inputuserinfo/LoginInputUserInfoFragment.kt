@@ -84,6 +84,13 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             LoginInputUserInfoViewModel.Event.DuplicatedNickname -> {
                 sendSnackBar("뭔가 중복이 났는데 아마 닉네임일 겁니다.")
             }
+            LoginInputUserInfoViewModel.Event.GetStoredBirthFaild -> {
+                sendSnackBar("생일을 불러오는데 실패했습니다.")
+            }
+            LoginInputUserInfoViewModel.Event.GetStoredUsernameFaild -> {
+                sendSnackBar("닉네임을 불러오는데 실패했습니다.")
+            }
+            else -> {}
         }
     }
 
@@ -111,12 +118,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
         binding.spinnerLoginGender.adapter = adapter
         binding.spinnerLoginGender.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                var genderType = when (position) {
-                    0 -> GenderType.MALE
-                    1 -> GenderType.FEMALE
-                    else -> GenderType.IDLE
-                }
-                viewModel.setGender(genderType)
+                viewModel.setGender(position)
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {

@@ -19,12 +19,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class DataStoreModule {
 
-//    @Binds
-//    @Singleton
-//    abstract fun bindPreferencesModule(
-//        userInfoRepositoryImpl: UserInfoRepositoryImpl,
-//    ): UserInfoRepository
-
     @Provides
     @Singleton
     fun provideUserInfoRepository(dataSource: UserInfoDataSource): UserInfoRepository =

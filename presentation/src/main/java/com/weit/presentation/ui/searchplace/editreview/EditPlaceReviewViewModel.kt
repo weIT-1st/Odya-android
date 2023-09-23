@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.searchplace.editreview
 
 import android.content.res.Resources.NotFoundException
+import android.media.Rating
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -20,6 +21,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class EditPlaceReviewViewModel @AssistedInject constructor(
@@ -30,7 +32,8 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
 
     private var placeReviewId: Long? = null
     private var reviewState = register
-    val rating = MutableStateFlow(initRating)
+    private val _rating = MutableStateFlow(initRating)
+    val rating: StateFlow<Float> get() = _rating
     val review = MutableStateFlow("")
 
     private val _event = MutableEventFlow<Event>()
@@ -48,7 +51,7 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
             if (placeReviewContentData != null) {
                 reviewState = update
                 placeReviewId = placeReviewContentData.placeReviewId
-                rating.emit((placeReviewContentData.myRating.toFloat() / 2))
+                _rating.emit((placeReviewContentData.myRating.toFloat() / 2))
                 review.emit(placeReviewContentData.myReview)
             }
         }
@@ -57,6 +60,12 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
     fun updatePlaceReview(placeId: String) {
         if (job.isCompleted) {
             updateReview(placeId)
+        }
+    }
+
+    fun setRating(rating: Float){
+        viewModelScope.launch{
+            _rating.emit(rating)
         }
     }
 

@@ -60,6 +60,10 @@ class EditPlaceReviewFragment(
             binding.etEditReviewDetail.hint = placeReviewContentData.myReview
         }
 
+        binding.ratingbarEditReviewStar.setOnRatingChangeListener { _, rating, _ ->
+            viewModel.setRating(rating)
+        }
+
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)

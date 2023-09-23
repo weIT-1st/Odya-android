@@ -30,7 +30,7 @@ class ExperiencedFriendAdapter() : ListAdapter<ExperiencedFriendContent, Experie
             override fun areItemsTheSame(
                 oldItem: ExperiencedFriendContent,
                 newItem: ExperiencedFriendContent,
-            ): Boolean = oldItem == newItem
+            ): Boolean = oldItem.userId == newItem.userId
 
             override fun areContentsTheSame(
                 oldItem: ExperiencedFriendContent,

@@ -119,6 +119,12 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
+    fun onClickCreateReview(){
+        viewModelScope.launch {
+            _event.emit(Event.PopUpEditReview(myPlaceReviewData.value))
+        }
+    }
+
     private suspend fun handleError(error: Throwable) {
         when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
@@ -141,6 +147,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
         object NotFoundException : Event()
         object ForbiddenException : Event()
         object UnKnownException : Event()
+        data class PopUpEditReview(val myReview: PlaceReviewContentData?) : Event()
     }
 
     companion object {

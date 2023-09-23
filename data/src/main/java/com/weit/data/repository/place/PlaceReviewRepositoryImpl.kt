@@ -67,11 +67,16 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): Result<PlaceReviewBySearching> {
-        hasNextReviewByPlaceID.set(true)
+        if (info.lastPlaceReviewId == null){
+            hasNextReviewByPlaceID.set(true)
+        }
+
+        val result = kotlin.runCatching { dataSource.getByPlaceId(info) }
+
         if (hasNextReviewByPlaceID.get().not()) {
             return Result.failure(NoMoreItemException())
         }
-        val result = kotlin.runCatching { dataSource.getByPlaceId(info) }
+
         return if (result.isSuccess) {
             val placeReview = result.getOrThrow()
             hasNextReviewByPlaceID.set(placeReview.hasNext)
@@ -101,13 +106,17 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getByUserId(info: PlaceReviewByUserIdQuery): Result<PlaceReviewBySearching> {
+        if (info.lastPlaceReviewId == null){
+            hasNextReviewByPlaceID.set(true)
+        }
+
         if (hasNextReviewByUserID.get().not()) {
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching { dataSource.getByUserId(info) }
         return if (result.isSuccess) {
             val placeReview = result.getOrThrow()
-            hasNextReviewByUserID.set(placeReview.hasNext)
+            hasNextReviewByPlaceID.set(placeReview.hasNext)
             Result.success(
                 PlaceReviewBySearching(
                     placeReview.hasNext,
@@ -123,7 +132,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
                             ),
                             it.starRating,
                             it.review,
-                            LocalDateTime.parse(it.createdAt, DateTimeFormatter.ofPattern("yyyy.MM.dd'T'HH:mm:ssZ")),
+                            LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME),
                         )
                     },
                 ),
@@ -159,7 +168,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 
     override suspend fun getAverageRating(placeId: String): Result<Float> {
         val result = runCatching {
-            dataSource.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId, 20))
+            dataSource.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId))
         }
         return if (result.isSuccess) {
             Result.success(result.getOrThrow().averageRating)

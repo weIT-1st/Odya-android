@@ -86,6 +86,7 @@ class SearchPlaceBottomSheetFragment(
     override fun onDestroyView() {
         super.onDestroyView()
         binding.rvPlaceExperiencedFriendProfile.adapter = null
+        binding.viewPagerBsPlace.adapter = null
         _binding = null
     }
 
@@ -94,9 +95,9 @@ class SearchPlaceBottomSheetFragment(
         val tabLayout = binding.tlBsPlace
 
         val tabItem = ArrayList<Fragment>()
-        tabItem.add(PlaceJourneyFragment())
-        tabItem.add(PlaceReviewFragment(placeId, placeTitle))
-        tabItem.add(PlaceCommunityFragment())
+        tabItem.add(tabJourney,PlaceJourneyFragment())
+        tabItem.add(tabReview,PlaceReviewFragment(placeId, placeTitle))
+        tabItem.add(tabCommunity,PlaceCommunityFragment())
 
         viewPager.apply {
             adapter = SearchPlaceBottomSheetAdapter(this.findFragment(), tabItem)
@@ -105,9 +106,9 @@ class SearchPlaceBottomSheetFragment(
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             when (position) {
-                0 -> tab.text = getString(R.string.place_journey)
-                1 -> tab.text = getString(R.string.place_review)
-                2 -> tab.text = getString(R.string.place_community)
+                tabJourney -> tab.text = getString(R.string.place_journey)
+                tabReview -> tab.text = getString(R.string.place_review)
+                tabCommunity -> tab.text = getString(R.string.place_community)
             }
         }.attach()
     }
@@ -147,5 +148,11 @@ class SearchPlaceBottomSheetFragment(
                 this.anchorView = anchorView
             }
         }.show()
+    }
+
+    companion object{
+        private const val tabJourney = 0
+        private const val tabReview = 1
+        private const val tabCommunity = 2
     }
 }

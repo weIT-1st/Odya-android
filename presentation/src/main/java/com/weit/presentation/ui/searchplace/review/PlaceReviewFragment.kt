@@ -35,12 +35,10 @@ class PlaceReviewFragment(
     private var editPlaceReviewFragment: EditPlaceReviewFragment? = null
     private val placeReviewAdapter: PlaceReviewAdapter by lazy {
         PlaceReviewAdapter(
-            { updateMyReview() },
+            { viewModel.onClickCreateReview() },
             { viewModel.deleteMyReview() },
         )
     }
-
-    private var myPlaceReviewData: PlaceReviewContentData? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,12 +49,7 @@ class PlaceReviewFragment(
 
     override fun initListener() {
         binding.btnTabCreateReview.setOnClickListener {
-            if (editPlaceReviewFragment == null) {
-                editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myPlaceReviewData)
-            }
-            if (!editPlaceReviewFragment!!.isAdded) {
-                editPlaceReviewFragment!!.show(childFragmentManager, "Edit Dialog")
-            }
+            viewModel.onClickCreateReview()
         }
     }
     override fun initCollector() {
@@ -93,8 +86,7 @@ class PlaceReviewFragment(
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.myPlaceReviewData.collectLatest { data ->
-                myPlaceReviewData = data
-                if (myPlaceReviewData != null) {
+                if (data != null) {
                     binding.lyTabCreateReview.visibility = View.GONE
                 } else {
                     binding.lyTabCreateReview.visibility = View.VISIBLE
@@ -112,11 +104,11 @@ class PlaceReviewFragment(
         binding.rvTabPlaceReview.adapter = placeReviewAdapter
     }
 
-    private fun updateMyReview() {
+    private fun updateMyReview(myReviewData : PlaceReviewContentData?) {
         if (editPlaceReviewFragment == null) {
-            editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myPlaceReviewData)
+            editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myReviewData)
         }
-        if (!editPlaceReviewFragment!!.isAdded && myPlaceReviewData != null) {
+        if (!editPlaceReviewFragment!!.isAdded) {
             editPlaceReviewFragment!!.show(childFragmentManager, "Edit Dialog")
         }
     }
@@ -128,7 +120,6 @@ class PlaceReviewFragment(
     private fun handelEvent(event: PlaceReviewViewModel.Event) {
         when (event) {
             is PlaceReviewViewModel.Event.GetAverageRatingSuccess -> {
-                // 어떤 조취를 취할까요?
             }
             is PlaceReviewViewModel.Event.GetPlaceReviewWithMineSuccess -> {
                 sendSnackBar("나의 리뷰를 함께 가져왔습니다.")
@@ -159,6 +150,9 @@ class PlaceReviewFragment(
             }
             PlaceReviewViewModel.Event.DoNotGetMyReviewData -> {
                 sendSnackBar("내가 작성한 리뷰 데이터를 가져오지 못했습니다.")
+            }
+            is PlaceReviewViewModel.Event.PopUpEditReview -> {
+                updateMyReview(event.myReview)
             }
         }
     }

@@ -23,7 +23,7 @@ class GetPlaceReviewContentUseCase @Inject constructor(
                     it.userInfo.nickname,
                     (it.starRating.toFloat() / 2),
                     it.review,
-                    it.createdAt.toString().substring(0, 10),
+                    "${it.createdAt.year}.${it.createdAt.monthValue}.${it.createdAt.dayOfMonth}",
                     it.userInfo.userId,
                     it.userInfo.userId == userId,
                     it.placeReviewId,

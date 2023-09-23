@@ -48,22 +48,27 @@ class PlaceReviewAdapter(
     inner class ReviewViewHolder(
         private val binding: ItemPlaceReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PlaceReviewInfo) {
-            binding.review = item
-            binding.btnItemPlaceMenu.setOnClickListener {
+        init {
+            binding.btnItemPlaceMenu.setOnClickListener{
                 showPopUpMenu(friendReviewType, it)
             }
+        }
+
+        fun bind(item: PlaceReviewInfo) {
+            binding.review = item
         }
     }
 
     inner class MyReviewViewHolder(
         private val binding: ItemMyPlaceReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: PlaceReviewInfo) {
-            binding.review = item
+        init {
             binding.btnItemPlaceMenu.setOnClickListener {
                 showPopUpMenu(myReviewType, it)
             }
+        }
+        fun bind(item: PlaceReviewInfo) {
+            binding.review = item
         }
     }
 

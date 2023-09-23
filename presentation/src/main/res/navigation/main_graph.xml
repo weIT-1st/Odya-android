@@ -45,6 +45,11 @@
                 app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
                 app:nullable="true"
                 android:defaultValue="@null" />
+            <argument
+                android:name="selectPlace"
+                app:argType="com.weit.presentation.model.post.place.SelectPlaceDTO"
+                app:nullable="true"
+                android:defaultValue="@null" />
             <action
                 android:id="@+id/action_postTravelLogFragment_to_selectPlaceFragment"
                 app:destination="@id/selectPlaceFragment" />
@@ -78,6 +83,10 @@
             <argument
                 android:name="imagePlaces"
                 app:argType="com.weit.presentation.model.post.place.PlacePredictionDTO[]" />
+            <argument
+                android:name="dailyTravelLogPosition"
+                app:argType="integer"
+                android:defaultValue="0" />
         </fragment>
     </navigation>
     <fragment

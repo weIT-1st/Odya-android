@@ -1,7 +1,5 @@
 package com.weit.presentation.ui.post.travellog
 
-import com.weit.domain.model.place.PlacePrediction
-
 sealed class DailyTravelLogAction {
     data class OnSelectPictureClick(
         val position: Int,
@@ -17,7 +15,7 @@ sealed class DailyTravelLogAction {
     ) : DailyTravelLogAction()
 
     data class OnSelectPlace(
-        val currentPlace: PlacePrediction?,
+        val position: Int,
         val images: List<String>,
     ) : DailyTravelLogAction()
 }

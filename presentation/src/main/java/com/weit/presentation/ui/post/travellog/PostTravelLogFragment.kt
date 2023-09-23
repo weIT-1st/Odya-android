@@ -42,7 +42,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_travel_friends_space))
             adapter = travelFriendsAdapter
         }
-        viewModel.initViewState(args.followers?.toList())
+        viewModel.initViewState(args.followers?.toList(), args.selectPlace)
     }
 
     override fun initListener() {
@@ -98,7 +98,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 viewModel.onSelectPictures(action.position, pickImageUseCase)
             }
             is DailyTravelLogAction.OnSelectPlace -> {
-                viewModel.onSelectPlace()
+                viewModel.onSelectPlace(action.position)
             }
             is DailyTravelLogAction.OnDeleteDailyTravelLog -> {
                 viewModel.onDeleteDailyTravelLog(action.position)

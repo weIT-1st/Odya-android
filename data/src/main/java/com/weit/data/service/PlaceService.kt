@@ -19,7 +19,6 @@ interface PlaceService {
         @Query("language") lang: String,
     ): PlaceDetailResponse
 
-
     @GET(DETAIL_URL)
     suspend fun getPlaceDetailWithFields(
         @Query("key") apiKey: String,

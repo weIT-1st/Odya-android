@@ -7,6 +7,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemDailyTravelLogBinding
 import com.weit.presentation.model.post.travellog.DailyTravelLog
@@ -35,7 +36,7 @@ class DailyTravelLogAdapter(
                 val item = getItem(absoluteAdapterPosition)
                 action(
                     DailyTravelLogAction.OnSelectPlace(
-                        currentPlace = item.place,
+                        position = absoluteAdapterPosition,
                         images = item.images,
                     ),
                 )
@@ -50,13 +51,14 @@ class DailyTravelLogAdapter(
                 binding.root.context.getString(R.string.post_travel_log_daily_day, absoluteAdapterPosition + 1)
             binding.btnDailyTravelLogSelectPicture.text =
                 binding.root.context.getString(R.string.post_travel_log_daily_picture_count, item.images.size, MAX_PICTURES)
+
+            val placeName = item.place?.name ?: binding.root.context.getString(R.string.post_travel_log_daily_place)
+            Logger.t("MainTest").i(placeName)
+            binding.btnDailyTravelLogPlace.text = placeName
             binding.btnDailyTravelLogDelete.isVisible = absoluteAdapterPosition != 0
             binding.etDailyTravelLogContents.setText(item.contents)
             pictureAdapter.submitList(item.images)
             binding.rvDailyTravelLogPictures.adapter = pictureAdapter
-            item.place?.name?.let { placeName ->
-                binding.btnDailyTravelLogPlace.text = placeName
-            }
         }
 
         private fun deleteSelectedPicture(imageIndex: Int) {

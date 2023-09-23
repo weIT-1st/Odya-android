@@ -2,10 +2,13 @@ package com.weit.presentation.ui.post.travellog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.model.post.place.PlacePredictionDTO
+import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.model.post.travellog.DailyTravelLog
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
 import com.weit.presentation.model.post.travellog.toDTO
@@ -33,10 +36,15 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     private val _changeTravelLogEvent = MutableEventFlow<List<DailyTravelLog>>()
     val changeTravelLogEvent = _changeTravelLogEvent.asEventFlow()
 
-    fun initViewState(travelFriends: List<FollowUserContent>?) {
+    fun initViewState(travelFriends: List<FollowUserContent>?, selectPlace: SelectPlaceDTO?) {
         updateDailyTravelLogs()
-        val updatedFriends = travelFriends ?: return
-        initTravelFriends(updatedFriends)
+        Logger.t("MainTest").i("asdf $selectPlace")
+        travelFriends?.let {
+            initTravelFriends(it)
+        }
+        selectPlace?.let {
+            updateSelectPlace(it)
+        }
     }
 
     private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
@@ -80,11 +88,11 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun onSelectPlace() {
+    fun onSelectPlace(position: Int) {
         // 장소 빼오기
         val imagePlaces = emptyList<PlacePredictionDTO>()
         viewModelScope.launch {
-            _event.emit(Event.OnSelectPlace(imagePlaces))
+            _event.emit(Event.OnSelectPlace(imagePlaces, position))
         }
     }
 
@@ -112,6 +120,20 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private fun updateSelectPlace(selectPlace: SelectPlaceDTO) {
+        val log = dailyTravelLogs.removeAt(selectPlace.position).copy(place = selectPlace.toPlacePrediction())
+        dailyTravelLogs.add(selectPlace.position, log)
+        updateDailyTravelLogs()
+    }
+
+    private fun SelectPlaceDTO.toPlacePrediction(): PlacePrediction {
+        return PlacePrediction(
+            placeId = placeId,
+            address = address,
+            name = name,
+        )
+    }
+
     fun onPost() {
     }
 
@@ -126,6 +148,7 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
         data class OnSelectPlace(
             val imagePlaces: List<PlacePredictionDTO>,
+            val dailyTravelLogPosition: Int,
         ) : Event()
     }
 

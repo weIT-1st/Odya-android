@@ -46,7 +46,6 @@ class PlaceDateSource @Inject constructor(
         Place.Field.PHOTO_METADATAS,
     )
 
-
     suspend fun getPlaceDetail(
         placeId: String,
         language: String = "ko",
@@ -63,13 +62,13 @@ class PlaceDateSource @Inject constructor(
     suspend fun getPlaceDetailWithFields(
         placeId: String,
         language: String = "ko",
-        fields: List<String>
+        fields: List<String>,
     ): PlaceDetailResponse {
         val result = service.getPlaceDetailWithFields(
             BuildConfig.GOOGLE_MAP_KEY,
             placeId,
             language,
-            fields.joinToString(",")
+            fields.joinToString(","),
         )
         Logger.t("MainTest").i("$result")
         return result

@@ -10,6 +10,7 @@ import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
 import com.weit.presentation.model.post.place.PlacePredictionDTO
+import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -22,6 +23,7 @@ import kotlinx.coroutines.launch
 
 class SelectPlaceViewModel @AssistedInject constructor(
     @Assisted imagePlacesDTO: List<PlacePredictionDTO>,
+    @Assisted private val dailyTravelLogPosition: Int,
     private val getSearchPlaceUseCase: GetSearchPlaceUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
 ) : ViewModel() {
@@ -49,7 +51,7 @@ class SelectPlaceViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface SelectPlaceFactory {
-        fun create(imagePlaces: List<PlacePredictionDTO>): SelectPlaceViewModel
+        fun create(imagePlaces: List<PlacePredictionDTO>, dailyTravelLogPosition: Int): SelectPlaceViewModel
     }
 
     fun onClickPointOfInterest(pointOfInterest: PointOfInterest) {
@@ -79,6 +81,19 @@ class SelectPlaceViewModel @AssistedInject constructor(
     fun onSearch(query: String) {
         searchJob.cancel()
         searchPlace(query)
+    }
+
+    fun onComplete() {
+        val entity = selectedPlaceEntity ?: return
+        val selectPlaceDTO = SelectPlaceDTO(
+            placeId = entity.place.placeId,
+            name = entity.place.name,
+            address = entity.place.address,
+            position = dailyTravelLogPosition,
+        )
+        viewModelScope.launch {
+            _event.emit(Event.OnComplete(selectPlaceDTO))
+        }
     }
 
     private fun updateSelectPlaceEntities(currentEntities: List<SelectPlaceEntity>) {
@@ -132,16 +147,18 @@ class SelectPlaceViewModel @AssistedInject constructor(
     sealed class Event {
         data class SetMarker(val latLng: LatLng) : Event()
         data class MoveMap(val latLng: LatLng) : Event()
+        data class OnComplete(val dto: SelectPlaceDTO) : Event()
     }
 
     companion object {
         fun create(
             viewModelFactory: SelectPlaceFactory,
             imagePlaces: List<PlacePredictionDTO>,
+            dailyTravelLogPosition: Int,
         ): ViewModelProvider.Factory {
             return object : ViewModelProvider.Factory {
                 override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                    return viewModelFactory.create(imagePlaces) as T
+                    return viewModelFactory.create(imagePlaces, dailyTravelLogPosition) as T
                 }
             }
         }

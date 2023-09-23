@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -13,6 +14,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentSelectPlaceBinding
+import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.ui.base.BaseMapFragment
 import com.weit.presentation.ui.util.getMarkerIconFromDrawable
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -34,7 +36,7 @@ class SelectPlaceFragment :
     lateinit var viewModelFactory: SelectPlaceViewModel.SelectPlaceFactory
 
     private val viewModel: SelectPlaceViewModel by viewModels {
-        SelectPlaceViewModel.create(viewModelFactory, args.imagePlaces.toList())
+        SelectPlaceViewModel.create(viewModelFactory, args.imagePlaces.toList(), args.dailyTravelLogPosition)
     }
 
     private val sheetBehavior by lazy {
@@ -66,6 +68,7 @@ class SelectPlaceFragment :
     private fun handleMenuItem(itemId: Int) {
         when (itemId) {
             R.id.menu_complete -> {
+                viewModel.onComplete()
                 // TODO 장소 들고 넘어가기
             }
         }
@@ -74,7 +77,7 @@ class SelectPlaceFragment :
     private fun initBottomSheet() {
         sheetBehavior.run {
             isHideable = true
-            peekHeight = 50
+            peekHeight = 40
             state = BottomSheetBehavior.STATE_EXPANDED
         }
     }
@@ -126,6 +129,21 @@ class SelectPlaceFragment :
             is SelectPlaceViewModel.Event.MoveMap -> {
                 val cameraUpdate = CameraUpdateFactory.newLatLngZoom(event.latLng, DEFAULT_ZOOM)
                 map?.moveCamera(cameraUpdate)
+            }
+            is SelectPlaceViewModel.Event.OnComplete -> {
+                moveToPervPage(event.dto)
+            }
+        }
+    }
+
+    private fun moveToPervPage(dto: SelectPlaceDTO) {
+        val backStackId = findNavController().previousBackStackEntry?.destination?.id ?: return
+        when (backStackId) {
+            R.id.postTravelLogFragment -> {
+                val direction = SelectPlaceFragmentDirections.actionSelectPlaceFragmentToPostTravelLogFragment(
+                    selectPlace = dto,
+                )
+                findNavController().navigate(direction)
             }
         }
     }

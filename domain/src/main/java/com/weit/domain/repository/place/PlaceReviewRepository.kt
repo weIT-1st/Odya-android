@@ -26,4 +26,12 @@ interface PlaceReviewRepository {
     suspend fun getByUserId(
         info: PlaceReviewByUserIdInfo,
     ): Result<List<PlaceReviewDetail>>
+
+    suspend fun isExistReview(
+        placeId: String,
+    ): Result<Boolean>
+
+    suspend fun getReviewCount(
+        placeId: String,
+    ): Result<Int>
 }

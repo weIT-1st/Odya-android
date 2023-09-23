@@ -32,6 +32,7 @@ class LoginRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val userNameDataSource: UserInfoDataSource,
 ) : LoginRepository {
+
     override suspend fun loginWithKakao(): Result<Unit> {
         // TODO 유효 토큰 검사 후 자동 로그인
         // 카카오 로그인 -> 서버 로그인 -> 파이어베이스 로그인

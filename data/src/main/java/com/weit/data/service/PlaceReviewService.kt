@@ -1,5 +1,7 @@
 package com.weit.data.service
 
+import com.weit.data.model.place.IsExistPlaceReviewDTO
+import com.weit.data.model.place.PlaceReviewCountDTO
 import com.weit.data.model.place.PlaceReviewListDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
@@ -43,4 +45,14 @@ interface PlaceReviewService {
         @Query("sortType") sortType: String?,
         @Query("lastId") lastPlaceReviewId: Long?,
     ): PlaceReviewListDTO
+
+    @GET("/api/v1/place-reviews/{id}")
+    suspend fun isExistReview(
+        @Path("id") placeId: String,
+    ): IsExistPlaceReviewDTO
+
+    @GET("/api/v1/place-reviews/count/{id}")
+    suspend fun getReviewCount(
+        @Path("id") placeId: String,
+    ): PlaceReviewCountDTO
 }

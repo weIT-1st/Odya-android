@@ -50,11 +50,11 @@ class AuthRepositoryImpl @Inject constructor(
         val result = authDataSource.isDuplicateNickname(nickname)
 
         return if (result.isSuccessful) {
-            Result.success(true)
+            Result.success(false)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
-                Result.success(false)
+            if (handelError is DuplicatedSomethingException) {
+                Result.success(true)
             } else {
                 Result.failure(handelError)
             }
@@ -65,11 +65,11 @@ class AuthRepositoryImpl @Inject constructor(
         val result = authDataSource.isDuplicateEmail(email)
 
         return if (result.isSuccessful) {
-            Result.success(true)
+            Result.success(false)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
-                Result.success(false)
+            if (handelError is DuplicatedSomethingException) {
+                Result.success(true)
             } else {
                 Result.failure(handelError)
             }
@@ -80,11 +80,11 @@ class AuthRepositoryImpl @Inject constructor(
         val result = authDataSource.isDuplicatePhoneNum(phoneNum)
 
         return if (result.isSuccessful) {
-            Result.success(true)
+            Result.success(false)
         } else {
             val handelError = handleIsDuplicateError(result)
-            if (handelError.equals(DuplicatedSomethingException())) {
-                Result.success(false)
+            if (handelError is DuplicatedSomethingException) {
+                Result.success(true)
             } else {
                 Result.failure(handelError)
             }

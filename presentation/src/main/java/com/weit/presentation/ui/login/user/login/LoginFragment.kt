@@ -20,7 +20,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
-
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -28,6 +27,12 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnToMain.setOnClickListener {
             moveToMain()
         }
+
+        binding.btnToLoginStep.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
+            findNavController().navigate(action)
+        }
+
     }
 
     override fun initCollector() {

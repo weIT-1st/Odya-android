@@ -23,6 +23,11 @@
         <item>남성</item>
         <item>여성</item>
     </string-array>
+    <string name="login_terms_consent">동의하기</string>
+    <string name="login_preview_third_title">한 눈에 담아보는\n나의 여행 동선</string>
+    <string name="login_preview_third_content">동선을 보여드려요</string>
+    <string name="login_preview_third_start">오댜 시작하기</string>
+    <string name="sign_up">등록하기</string>
 
 
     <string name="text_home">홈</string>
@@ -82,5 +87,9 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
-    <string name="feed_reaction_count">99+</string>
+    <!-- feed -->
+    <string name="feed_reaction_count">%d</string>
+    <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
 </resources>

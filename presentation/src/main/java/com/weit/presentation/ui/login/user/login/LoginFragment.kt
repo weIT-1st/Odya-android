@@ -32,6 +32,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
             findNavController().navigate(action)
         }
+
     }
 
     override fun initCollector() {
@@ -48,11 +49,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 // TODO 그냥 실패 시 에러 처리 필요
             }
             is LoginViewModel.Event.UserRegistrationRequired -> {
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
-                        username = event.username,
-                    ),
-                )
+                val action = LoginFragmentDirections.actionLoginFragmentToLoginPreviewThirdFragment()
+                findNavController().navigate(action)
             }
             LoginViewModel.Event.LoginSuccess -> {
                 moveToMain()

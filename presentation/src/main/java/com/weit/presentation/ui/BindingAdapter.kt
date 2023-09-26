@@ -21,4 +21,3 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
         view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
     }
 }
-

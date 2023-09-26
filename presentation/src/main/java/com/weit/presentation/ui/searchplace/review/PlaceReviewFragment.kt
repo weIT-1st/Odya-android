@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
@@ -104,7 +103,7 @@ class PlaceReviewFragment(
         binding.rvTabPlaceReview.adapter = placeReviewAdapter
     }
 
-    private fun updateMyReview(myReviewData : PlaceReviewContentData?) {
+    private fun updateMyReview(myReviewData: PlaceReviewContentData?) {
         if (editPlaceReviewFragment == null) {
             editPlaceReviewFragment = EditPlaceReviewFragment({ updateReviewList() }, placeId, myReviewData)
         }

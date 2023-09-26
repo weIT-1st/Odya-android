@@ -56,7 +56,7 @@
                     tools:listitem="@layout/item_round_profile_big" />
 
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_bs_place_experienced_friend"
                     style="@style/detail1"
                     android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_bs_place_title"
                     style="@style/h4"
                     android:layout_width="0dp"
@@ -94,7 +94,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="해운대해운대해운대해운대 해수욕장" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_bs_place_locate"
                     style="@style/detail2"
                     android:layout_width="0dp"
@@ -110,7 +110,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="부산광역시 해운대구부산광역시 해운대구부산광역시 해운대구" />
 
-                <androidx.appcompat.widget.AppCompatButton
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_bs_place_book_mark"
                     android:layout_width="24dp"
                     android:layout_height="24dp"

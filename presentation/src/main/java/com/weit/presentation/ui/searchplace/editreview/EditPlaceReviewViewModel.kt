@@ -1,7 +1,6 @@
 package com.weit.presentation.ui.searchplace.editreview
 
 import android.content.res.Resources.NotFoundException
-import android.media.Rating
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -63,8 +62,8 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    fun setRating(rating: Float){
-        viewModelScope.launch{
+    fun setRating(rating: Float) {
+        viewModelScope.launch {
             _rating.emit(rating)
         }
     }

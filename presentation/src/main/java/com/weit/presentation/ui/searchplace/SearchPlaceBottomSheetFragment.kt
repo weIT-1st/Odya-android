@@ -95,9 +95,9 @@ class SearchPlaceBottomSheetFragment(
         val tabLayout = binding.tlBsPlace
 
         val tabItem = ArrayList<Fragment>()
-        tabItem.add(tabJourney,PlaceJourneyFragment())
-        tabItem.add(tabReview,PlaceReviewFragment(placeId, placeTitle))
-        tabItem.add(tabCommunity,PlaceCommunityFragment())
+        tabItem.add(tabJourney, PlaceJourneyFragment())
+        tabItem.add(tabReview, PlaceReviewFragment(placeId, placeTitle))
+        tabItem.add(tabCommunity, PlaceCommunityFragment())
 
         viewPager.apply {
             adapter = SearchPlaceBottomSheetAdapter(this.findFragment(), tabItem)
@@ -150,7 +150,7 @@ class SearchPlaceBottomSheetFragment(
         }.show()
     }
 
-    companion object{
+    companion object {
         private const val tabJourney = 0
         private const val tabReview = 1
         private const val tabCommunity = 2

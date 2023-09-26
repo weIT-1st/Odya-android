@@ -11,6 +11,7 @@ import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemMyPlaceReviewBinding
 import com.weit.presentation.databinding.ItemPlaceReviewBinding
+import java.time.LocalDateTime
 
 class PlaceReviewAdapter(
     private val updateItem: () -> Unit,
@@ -49,13 +50,14 @@ class PlaceReviewAdapter(
         private val binding: ItemPlaceReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         init {
-            binding.btnItemPlaceMenu.setOnClickListener{
+            binding.btnItemPlaceMenu.setOnClickListener {
                 showPopUpMenu(friendReviewType, it)
             }
         }
 
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
+            binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
         }
     }
 
@@ -69,6 +71,7 @@ class PlaceReviewAdapter(
         }
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
+            binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
         }
     }
 
@@ -94,6 +97,9 @@ class PlaceReviewAdapter(
             }
         }.show()
     }
+
+    private fun localDateTimeToString(createAt: LocalDateTime): String =
+        "${createAt.year}.${createAt.monthValue}.${createAt.dayOfMonth}"
 
     companion object {
         private const val friendReviewType = 1

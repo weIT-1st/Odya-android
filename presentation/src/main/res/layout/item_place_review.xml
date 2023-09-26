@@ -47,7 +47,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_item_place_profile"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_item_place_review_writer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -89,7 +89,7 @@
                 app:layout_constraintTop_toTopOf="@+id/tv_item_place_review_writer"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_item_place_review_writer"/>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_item_place_review_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -102,12 +102,11 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 tools:text="노을뷰가 너무 예뻐요~ 노을뷰가 너무 예뻐요~"/>
 
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_item_place_review_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/detail2"
-                android:text="@{review.createAt}"
                 android:textColor="@color/label_reversed_assistive"
                 app:layout_constraintTop_toBottomOf="@+id/tv_item_place_review_content"
                 app:layout_constraintEnd_toEndOf="parent"

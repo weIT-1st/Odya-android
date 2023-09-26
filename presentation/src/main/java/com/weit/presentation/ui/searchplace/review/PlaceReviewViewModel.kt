@@ -111,7 +111,6 @@ class PlaceReviewViewModel @AssistedInject constructor(
                     getAverageRating()
                     val list = placeReviewList.value.filterNot { it.isMine }
                     _placeReviewList.emit(list.toList())
-
                 } else {
                     handleError(result.exceptionOrNull() ?: UnknownError())
                 }
@@ -119,7 +118,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    fun onClickCreateReview(){
+    fun onClickCreateReview() {
         viewModelScope.launch {
             _event.emit(Event.PopUpEditReview(myPlaceReviewData.value))
         }

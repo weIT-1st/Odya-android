@@ -1,6 +1,7 @@
 package com.weit.data.repository.place
 
 import android.content.res.Resources.NotFoundException
+import com.weit.data.model.place.PlaceReviewDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
@@ -67,7 +68,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): Result<PlaceReviewBySearching> {
-        if (info.lastPlaceReviewId == null){
+        if (info.lastPlaceReviewId == null) {
             hasNextReviewByPlaceID.set(true)
         }
 
@@ -80,34 +81,15 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         return if (result.isSuccess) {
             val placeReview = result.getOrThrow()
             hasNextReviewByPlaceID.set(placeReview.hasNext)
-            Result.success(
-                PlaceReviewBySearching(
-                    placeReview.hasNext,
-                    placeReview.averageRating,
-                    placeReview.reviews.map {
-                        PlaceReviewContent(
-                            it.placeReviewId,
-                            it.placeId,
-                            UserInfo(
-                                it.userInfo.userId,
-                                it.userInfo.nickname,
-                                it.userInfo.profile,
-                            ),
-                            it.starRating,
-                            it.review,
-                            LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME),
-                        )
-                    },
-                ),
-            )
+            Result.success(placeReview.toPlaceReviewBySearching())
         } else {
             Result.failure(handleReviewError(result.exception()))
         }
     }
 
     override suspend fun getByUserId(info: PlaceReviewByUserIdQuery): Result<PlaceReviewBySearching> {
-        if (info.lastPlaceReviewId == null){
-            hasNextReviewByPlaceID.set(true)
+        if (info.lastPlaceReviewId == null) {
+            hasNextReviewByUserID.set(true)
         }
 
         if (hasNextReviewByUserID.get().not()) {
@@ -117,26 +99,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         return if (result.isSuccess) {
             val placeReview = result.getOrThrow()
             hasNextReviewByPlaceID.set(placeReview.hasNext)
-            Result.success(
-                PlaceReviewBySearching(
-                    placeReview.hasNext,
-                    placeReview.averageRating,
-                    placeReview.reviews.map {
-                        PlaceReviewContent(
-                            it.placeReviewId,
-                            it.placeId,
-                            UserInfo(
-                                it.userInfo.userId,
-                                it.userInfo.nickname,
-                                it.userInfo.profile,
-                            ),
-                            it.starRating,
-                            it.review,
-                            LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME),
-                        )
-                    },
-                ),
-            )
+            Result.success(placeReview.toPlaceReviewBySearching())
         } else {
             Result.failure(handleReviewError(result.exception()))
         }
@@ -212,5 +175,25 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             placeReviewId = placeReviewId,
             rating = rating,
             review = review,
+        )
+
+    private fun PlaceReviewDTO.toPlaceReviewBySearching(): PlaceReviewBySearching =
+        PlaceReviewBySearching(
+            hasNext = hasNext,
+            averageRating = averageRating,
+            content = reviews.map {
+                PlaceReviewContent(
+                    it.placeReviewId,
+                    it.placeId,
+                    UserInfo(
+                        it.userInfo.userId,
+                        it.userInfo.nickname,
+                        it.userInfo.profile,
+                    ),
+                    it.starRating,
+                    it.review,
+                    LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME),
+                )
+            },
         )
 }

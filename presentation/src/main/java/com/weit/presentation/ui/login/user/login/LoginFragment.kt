@@ -7,6 +7,7 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.map.bottomsheet.TempBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

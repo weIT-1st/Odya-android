@@ -1,10 +1,12 @@
 package com.weit.presentation.ui.map
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.place.GetPlacesByCoordinateUseCase
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -18,10 +20,14 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     val getSearchPlaceUseCase: GetSearchPlaceUseCase,
     val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    val getPlacesByCoordinateUseCase: GetPlacesByCoordinateUseCase,
 ) : ViewModel() {
 
     private val _searchPlaceList = MutableStateFlow<List<PlacePrediction>>(emptyList())
     val searchPlaceList: StateFlow<List<PlacePrediction>> get() = _searchPlaceList
+
+    private val _touchPlaceId = MutableStateFlow("")
+    val touchPlaceId: StateFlow<String> get() = _touchPlaceId
 
     private val _detailPlace = MutableEventFlow<PlaceDetail>()
     val detailPlace = _detailPlace.asEventFlow()
@@ -36,6 +42,13 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getPlaceDetailUseCase(placeId)
             _detailPlace.emit(result)
+        }
+    }
+
+    fun getPlaceByCoordinate(latitude: Double, longitude: Double){
+        viewModelScope.launch{
+            val result = getPlacesByCoordinateUseCase(latitude, longitude)
+            _touchPlaceId.emit(result[0].placeId)
         }
     }
 }

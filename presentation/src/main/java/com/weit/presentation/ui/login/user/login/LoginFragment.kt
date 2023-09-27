@@ -7,6 +7,7 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -20,6 +21,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
+    private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
+
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -32,7 +35,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
             findNavController().navigate(action)
         }
-
     }
 
     override fun initCollector() {
@@ -63,5 +65,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+    }
+
+    private fun openBottomSheet() {
+        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment("ChIJzz_R5fKifDURJSTIFbslRp0")
+        searchPlaceBottomSheetFragment?.show(childFragmentManager, "SearchPlace")
     }
 }

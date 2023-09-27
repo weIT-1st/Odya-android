@@ -1,8 +1,8 @@
 package com.weit.domain.model.place
 
-data class PlaceReviewByUserIdInfo(
+data class PlaceReviewByUserIdQuery(
     val userId: Long,
-    val size: Int,
+    val size: Int = 10,
     val sortType: String? = null,
     val lastPlaceReviewId: Long? = null,
 )

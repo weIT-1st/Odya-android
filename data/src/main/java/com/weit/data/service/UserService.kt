@@ -1,5 +1,7 @@
 package com.weit.data.service
 
+import com.weit.data.model.ListResponse
+import com.weit.data.model.user.UserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.domain.model.user.User
 import okhttp3.MultipartBody
@@ -10,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 interface UserService {
 
@@ -37,6 +40,13 @@ interface UserService {
         @Part profile: MultipartBody.Part?,
     ): Response<Unit>
 
+    @GET("/api/v1/users/search")
+    suspend fun getUserByNickname(
+        @Query("size") size: Int = 10,
+        @Query("lastId") lastId: String?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<UserContentDTO>
+  
     @DELETE("/api/v1/users")
     suspend fun deleteUser(): Response<Unit>
 }

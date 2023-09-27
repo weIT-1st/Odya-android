@@ -4,6 +4,7 @@ import android.content.Context
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserByNickname
 import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -37,5 +38,4 @@ class UserDataSource @Inject constructor(
     suspend fun deleteUser() : Response<Unit> {
         return userService.deleteUser()
     }
-
 }

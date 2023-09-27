@@ -4,7 +4,7 @@ import com.weit.domain.model.GenderType
 import com.weit.domain.repository.userinfo.UserInfoRepository
 import javax.inject.Inject
 
-class GetGenderUsecase @Inject constructor(
+class GetGenderUseCase @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
 ) {
     suspend operator fun invoke(): GenderType {

@@ -20,5 +20,8 @@ interface UserRepository {
 
     suspend fun getUserId(): Long
 
+
     suspend fun getUserByNickname(userByNickname: UserByNickname): Result<UserByNicknameInfo>
+
+    suspend fun deleteUser() : Result<Unit>
 }

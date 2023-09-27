@@ -6,6 +6,7 @@ import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.data.util.exception
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
@@ -30,6 +31,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userDataSource: UserDataSource,
     private val imageDataSource: ImageDataSource,
     private val imageRepositoryImpl: ImageRepositoryImpl,
+    private val userInfoDataSource: UserInfoDataSource,
 ) : UserRepository {
 
     override suspend fun getUser(): Result<User> {
@@ -62,12 +64,21 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setUserId(userId: Long) {
-        userDataSource.setUserId(userId)
+        userInfoDataSource.setUserId(userId)
     }
 
     // 이걸 가져오지 못하면 자신의 UserId가 필요한 기능 수행이 불가능하므로 에러를 throw 함
     override suspend fun getUserId(): Long =
-        userDataSource.getUserId() ?: throw NotFoundException()
+        userInfoDataSource.getUserId() ?: throw NotFoundException()
+
+    override suspend fun deleteUser(): Result<Unit> {
+       val result = userDataSource.deleteUser()
+        return if(result.isSuccessful){
+            Result.success(Unit)
+        }else{
+            Result.failure(handleUserError(result))
+        }
+    }
 
     override suspend fun getUserByNickname(userByNickname: UserByNickname): Result<UserByNicknameInfo> {
         val result = runCatching {

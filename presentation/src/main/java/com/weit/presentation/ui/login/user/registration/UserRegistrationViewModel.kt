@@ -46,19 +46,19 @@ class UserRegistrationViewModel @AssistedInject constructor(
 
     @MainThread
     fun registerUser() {
-        viewModelScope.launch {
-            if (checkUserRegistrationCondition()) {
-                val result = registerUserUseCase(
-                    UserRegistrationInfo(
-                        name = username,
-                        nickname = nickname.value,
-                        gender = gender.type,
-                        birthday = birth,
-                    ),
-                )
-                handleRegistrationResult(result)
-            }
-        }
+//        viewModelScope.launch {
+//            if (checkUserRegistrationCondition()) {
+//                val result = registerUserUseCase(
+//                    UserRegistrationInfo(
+//                        name = username,
+//                        nickname = nickname.value,
+//                        gender = gender.type,
+//                        birthday = birth,
+//                    ),
+//                )
+//                handleRegistrationResult(result)
+//            }
+//        }
     }
 
     private suspend fun handleRegistrationResult(result: Result<Unit>) {

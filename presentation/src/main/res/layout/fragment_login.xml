@@ -26,15 +26,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-        <Button
-            android:id="@+id/btn_edit_review"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="한줄수정"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_to_login_step"
             android:layout_width="wrap_content"
@@ -44,7 +35,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/btn_login_kakao"/>
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

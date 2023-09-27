@@ -7,6 +7,7 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -20,6 +21,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
+    private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
+
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
@@ -48,11 +51,8 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
                 // TODO 그냥 실패 시 에러 처리 필요
             }
             is LoginViewModel.Event.UserRegistrationRequired -> {
-                findNavController().navigate(
-                    LoginFragmentDirections.actionLoginFragmentToUserRegistrationFragment(
-                        username = event.username,
-                    ),
-                )
+                val action = LoginFragmentDirections.actionLoginFragmentToLoginPreviewThirdFragment()
+                findNavController().navigate(action)
             }
             LoginViewModel.Event.LoginSuccess -> {
                 moveToMain()
@@ -65,5 +65,10 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
             startActivity(Intent(this, MainActivity::class.java))
             finish()
         }
+    }
+
+    private fun openBottomSheet() {
+        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment("ChIJzz_R5fKifDURJSTIFbslRp0")
+        searchPlaceBottomSheetFragment?.show(childFragmentManager, "SearchPlace")
     }
 }

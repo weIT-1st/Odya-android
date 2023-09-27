@@ -12,7 +12,6 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
-import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.usecase.auth.LogoutUseCase
 import com.weit.domain.usecase.example.GetUserUseCase
@@ -22,7 +21,6 @@ import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.image.GetImageCoordinatesUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.GetScaledImageBytesByUrisUseCase
-import com.weit.domain.usecase.place.GetPlaceReviewByPlaceIdUseCase
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
 import com.weit.domain.usecase.user.UpdateProfileUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -45,7 +43,7 @@ class ExampleViewModel @Inject constructor(
 //    private val insertCoordinateUseCase: InsertCoordinateUseCase,
 //    private val deleteCoordinateUseCase: DeleteCoordinateUseCase,
     private val registerPlaceReviewUseCase: RegisterPlaceReviewUseCase,
-    private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
+//    private val getPlaceReviewByPlaceIdUseCase: GetPlaceReviewByPlaceIdUseCase,
 //    private val getCurrentCoordinateUseCase: GetCurrentCoordinateUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
@@ -199,23 +197,23 @@ class ExampleViewModel @Inject constructor(
         }
     }
 
-    private fun getReview() {
-        viewModelScope.launch {
-            val result = getPlaceReviewByPlaceIdUseCase(
-                PlaceReviewByPlaceIdInfo(
-                    placeId = "test5",
-                    size = 2,
-                ),
-            )
-            if (result.isSuccess) {
-                val reviews = result.getOrThrow()
-                val review = reviews.firstOrNull()
-                Logger.t("MainTest").i("${reviews.size} ${review?.writerNickname} ${review?.review}")
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.message}")
-            }
-        }
-    }
+//    private fun getReview() {
+//        viewModelScope.launch {
+//            val result = getPlaceReviewByPlaceIdUseCase(
+//                PlaceReviewByPlaceIdQuery(
+//                    placeId = "test5",
+//                    size = 2,
+//                ),
+//            )
+//            if (result.isSuccess) {
+//                val reviews = result.getOrThrow()
+//                val review = reviews.firstOrNull()
+//                Logger.t("MainTest").i("${reviews.size} ${review?.writerNickname} ${review?.review}")
+//            } else {
+//                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.message}")
+//            }
+//        }
+//    }
 
     private fun convertUrisToImageBytes(uris: List<String>) {
         viewModelScope.launch {

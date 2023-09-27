@@ -24,6 +24,7 @@ import com.weit.presentation.ui.map.bottomsheet.TempBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.util.logging.Logger
 
 @AndroidEntryPoint
 class MapFragment :
@@ -39,13 +40,12 @@ class MapFragment :
         viewModel.getDetailPlace(it)
     }
 
-    private var tempBottomSheetFragment : TempBottomSheetFragment? = null
+    private var tempBottomSheetFragment: TempBottomSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var coordinates: LatLng
     private var map: GoogleMap? = null
     private var marker: Marker? = null
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,7 +69,7 @@ class MapFragment :
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.touchPlaceId.collectLatest { placeId ->
                 placeBottomSheetUp(placeId)
 //                viewModel.getPlaceDetail(placeId)
@@ -149,7 +149,7 @@ class MapFragment :
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
         marker = map!!.addMarker(MarkerOptions().position(coordinates))
 
-        if(map != null){
+        if (map != null) {
             map!!.setOnMapClickListener {
                 Log.d("OnMapClickListener", "Success")
                 viewModel.getPlaceByCoordinate(it.latitude, it.longitude)
@@ -159,8 +159,10 @@ class MapFragment :
         }
 
         map!!.setOnPoiClickListener {
-            Log.d("Poi", "yes Poi!")
+            Log.d("poi click!", "name : " + it.name)
+            placeBottomSheetUp(it.placeId)
         }
+
     }
 
     override fun onDestroyView() {
@@ -169,14 +171,13 @@ class MapFragment :
         mapFragment?.onDestroyView()
     }
 
-    private fun placeBottomSheetUp(placeId: String){
-        if (tempBottomSheetFragment == null){
+    private fun placeBottomSheetUp(placeId: String) {
+        if (tempBottomSheetFragment == null) {
             tempBottomSheetFragment = TempBottomSheetFragment(placeId)
         }
-        if (!tempBottomSheetFragment!!.isAdded){
+        if (!tempBottomSheetFragment!!.isAdded) {
             tempBottomSheetFragment!!.show(childFragmentManager, "temp")
         }
-
     }
     companion object {
         private val TAG = "MapFragment"

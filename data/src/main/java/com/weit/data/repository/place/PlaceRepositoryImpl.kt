@@ -1,5 +1,6 @@
 package com.weit.data.repository.place
 
+import android.graphics.Bitmap
 import com.weit.data.model.map.Place
 import com.weit.data.source.PlaceDateSource
 import com.weit.domain.model.place.PlaceDetail
@@ -10,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
+import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
@@ -47,6 +49,15 @@ class PlaceRepositoryImpl @Inject constructor(
         }.awaitAll().filterNotNull()
     }
 
+    override suspend fun getPlaceImage(placeId: String): ByteArray? {
+        val result = dataSource.getPlaceImage(placeId).first()
+        return if (result == null){
+            null
+        } else {
+            bitmapToArray(result)
+        }
+    }
+
     private suspend fun getPlacePrediction(place: Place): PlacePrediction? {
         // TODO 개선 필요. api를 두번 호출해야 업체명을 안다는게 말이안됨
         // 역지오코딩 할 때 우리가 직접만든 place 객체가 아니라 구글 지도에서 제공하는 place 객체를 역직렬화 한다면
@@ -58,5 +69,11 @@ class PlaceRepositoryImpl @Inject constructor(
             name = result.name ?: "",
             address = result.address ?: "",
         )
+    }
+
+    private fun bitmapToArray(bitmap: Bitmap): ByteArray{
+        var outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, outputStream)
+        return outputStream.toByteArray()
     }
 }

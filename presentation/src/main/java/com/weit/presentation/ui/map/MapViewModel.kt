@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.map
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.place.PlaceDetail
@@ -45,8 +44,8 @@ class MapViewModel @Inject constructor(
         }
     }
 
-    fun getPlaceByCoordinate(latitude: Double, longitude: Double){
-        viewModelScope.launch{
+    fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
+        viewModelScope.launch {
             val result = getPlacesByCoordinateUseCase(latitude, longitude)
             _touchPlaceId.emit(result[0].placeId)
         }

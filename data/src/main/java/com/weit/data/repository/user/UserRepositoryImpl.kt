@@ -1,20 +1,15 @@
 package com.weit.data.repository.user
 
 import android.content.res.Resources.NotFoundException
-import com.weit.data.model.user.UserContentDTO
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
-import com.weit.data.util.exception
 import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.user.User
-import com.weit.domain.model.user.UserByNickname
-import com.weit.domain.model.user.UserByNicknameInfo
-import com.weit.domain.model.user.UserContent
 import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -22,7 +17,6 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
-import retrofit2.HttpException
 import retrofit2.Response
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -80,29 +74,6 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getUserByNickname(userByNickname: UserByNickname): Result<UserByNicknameInfo> {
-        val result = runCatching {
-            userDataSource.getUserByNickname(userByNickname)
-        }
-        return if (result.isSuccess) {
-            val user = result.getOrThrow()
-            Result.success(
-                UserByNicknameInfo(
-                    user.hasNext,
-                    user.content.map {
-                        UserContent(
-                            it.userId,
-                            it.nickname,
-                            it.profile,
-                        )
-                    },
-                ),
-            )
-        } else {
-            Result.failure(handleError(result.exception()))
-        }
-    }
-
     override suspend fun updateProfile(uri: String): Result<Unit> {
         return kotlin.runCatching {
             val bytes = imageRepositoryImpl.getImageBytes(uri)
@@ -129,13 +100,6 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun UserContentDTO.toUserContent(): UserContent =
-        UserContent(
-            userId = userId,
-            nickname = nickname,
-            profile = profile,
-        )
-
     private fun handleUserError(response: Response<Unit>): Throwable {
         return when (response.code()) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
@@ -145,24 +109,7 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun handleError(t: Throwable): Throwable {
-        return if (t is HttpException) {
-            handleCode(t.code())
-        } else {
-            t
-        }
-    }
-
-    private fun handleCode(code: Int): Throwable {
-        return when (code) {
-            HTTP_BAD_REQUEST -> InvalidRequestException()
-            HTTP_UNAUTHORIZED -> InvalidTokenException()
-            else -> UnKnownException()
-        }
-    }
-
     companion object {
-        private const val REGEX_EMAIL =
-            "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        private const val REGEX_EMAIL = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
     }
 }

@@ -46,7 +46,7 @@ interface UserService {
         @Query("lastId") lastId: String?,
         @Query("nickname") nickname: String,
     ): ListResponse<UserContentDTO>
-  
+
     @DELETE("/api/v1/users")
     suspend fun deleteUser(): Response<Unit>
 }

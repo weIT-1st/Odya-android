@@ -1,5 +1,8 @@
 package com.weit.presentation.ui.searchplace
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -7,6 +10,8 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.place.GetPlaceImageUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -18,6 +23,8 @@ import kotlinx.coroutines.launch
 
 class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getExperiencedFriendUseCase: GetExperiencedFriendUseCase,
+    private val getPlaceImageUseCase: GetPlaceImageUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     @Assisted private val placeId: String,
 ) : ViewModel() {
 
@@ -26,6 +33,15 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
 
     private val _experiencedFriend = MutableStateFlow<List<ExperiencedFriendContent>>(emptyList())
     val experiencedFriend: StateFlow<List<ExperiencedFriendContent>> get() = _experiencedFriend
+
+    private val _placeImage = MutableStateFlow<Bitmap?>(null)
+    val placeImage: StateFlow<Bitmap?> get() = _placeImage
+
+    private val _placeTitle = MutableStateFlow<String>("")
+    val placeTitle: StateFlow<String> get() = _placeTitle
+
+    private val _placeAddress = MutableStateFlow<String>("")
+    val placeAddress: StateFlow<String> get() = _placeAddress
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -38,6 +54,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             initExperiencedFriend()
+            getPlaceInform()
         }
     }
 
@@ -55,6 +72,24 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
             }
         } else {
             handelError(result.exceptionOrNull() ?: UnknownError())
+        }
+    }
+
+    private suspend fun getPlaceInform() {
+        val placeImageByteArray = getPlaceImageUseCase(placeId)
+        if (placeImageByteArray != null) {
+            _placeImage.emit(BitmapFactory.decodeByteArray(placeImageByteArray, 0, placeImageByteArray.size))
+        }
+
+        val placeInform = getPlaceDetailUseCase(placeId)
+//        Log.d("placeInform", "placeinform : $placeInform")
+//        Log.d("placeInform", "placeinform name : ${placeInform.name}")
+//        Log.d("placeInform", "placeinform address : ${placeInform.address}")
+        if (placeInform.name.isNullOrBlank().not()) {
+            _placeTitle.emit(placeInform.name!!)
+        }
+        if (placeInform.address.isNullOrBlank().not()) {
+            _placeAddress.emit(placeInform.address!!)
         }
     }
 

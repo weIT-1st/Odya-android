@@ -1,6 +1,7 @@
 package com.weit.data.source
 
 import android.graphics.Bitmap
+import android.util.Log
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
@@ -13,15 +14,12 @@ import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.weit.data.BuildConfig
-import com.weit.data.R
 import com.weit.data.model.map.GeocodingResult
 import com.weit.data.service.PlaceService
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class PlaceDateSource @Inject constructor(
@@ -88,7 +86,7 @@ class PlaceDateSource @Inject constructor(
         awaitClose { }
     }
 
-    suspend fun getPlaceImage(placeId: String): Flow<Bitmap?> = callbackFlow{
+    suspend fun getPlaceImage(placeId: String): Flow<Bitmap?> = callbackFlow {
         val fields = listOf(Field.PHOTO_METADATAS)
         val placeRequest = FetchPlaceRequest.newInstance(placeId, fields)
 
@@ -98,7 +96,7 @@ class PlaceDateSource @Inject constructor(
                 val metadata = place.photoMetadatas
 
                 // 이거 구글 문서에 있으서 작성은 했는데 이해가 안되요.. 이거 왜써요?
-                if (metadata == null || metadata.isEmpty()){
+                if (metadata == null || metadata.isEmpty()) {
                     return@addOnSuccessListener
                 }
 
@@ -108,14 +106,16 @@ class PlaceDateSource @Inject constructor(
 
                 placesClient.fetchPhoto(photoRequest)
                     .addOnSuccessListener { fetchPhotoResponse: FetchPhotoResponse ->
-                       trySend(fetchPhotoResponse.bitmap)
+                        Log.d("getPlaceImage", "fetchplace success but fetchphoto success")
+                        trySend(fetchPhotoResponse.bitmap)
                     }.addOnFailureListener {
+                        Log.d("getPlaceImage", "fetchplace success but fetchphoto faile : " + it.message)
                         trySend(null)
                     }
             }.addOnFailureListener {
+                Log.d("getPlaceImage", "fetchplace fail : " + it.message)
                 trySend(null)
             }
-        awaitClose {  }
+        awaitClose { }
     }
-
 }

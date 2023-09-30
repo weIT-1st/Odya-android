@@ -34,9 +34,8 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun deleteUser(){
+    fun deleteUser() {
         viewModelScope.launch {
-
         }
     }
 

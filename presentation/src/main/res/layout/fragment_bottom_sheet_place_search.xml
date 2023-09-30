@@ -89,13 +89,13 @@
                     android:gravity="center"
                     android:maxLines="1"
                     android:textColor="@color/label_normal"
-                    app:layout_constraintBottom_toTopOf="@+id/tv_bs_place_locate"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_bs_place_address"
                     app:layout_constraintEnd_toStartOf="@+id/btn_bs_place_book_mark"
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="해운대해운대해운대해운대 해수욕장" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_bs_place_locate"
+                    android:id="@+id/tv_bs_place_address"
                     style="@style/detail2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                     android:layout_height="24dp"
                     android:layout_marginEnd="40dp"
                     android:background="@drawable/ic_book_mark"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_locate"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_bs_place_address"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/tv_bs_place_title" />
 

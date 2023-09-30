@@ -51,7 +51,7 @@ class PlaceRepositoryImpl @Inject constructor(
 
     override suspend fun getPlaceImage(placeId: String): ByteArray? {
         val result = dataSource.getPlaceImage(placeId).first()
-        return if (result == null){
+        return if (result == null) {
             null
         } else {
             bitmapToArray(result)
@@ -71,7 +71,7 @@ class PlaceRepositoryImpl @Inject constructor(
         )
     }
 
-    private fun bitmapToArray(bitmap: Bitmap): ByteArray{
+    private fun bitmapToArray(bitmap: Bitmap): ByteArray {
         var outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 80, outputStream)
         return outputStream.toByteArray()

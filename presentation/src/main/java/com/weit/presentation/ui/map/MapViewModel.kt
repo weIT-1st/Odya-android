@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.map
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.place.PlaceDetail
@@ -41,13 +42,27 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getPlaceDetailUseCase(placeId)
             _detailPlace.emit(result)
+            result.placeId?.let { _touchPlaceId.emit(it) }
         }
     }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
         viewModelScope.launch {
-            val result = getPlacesByCoordinateUseCase(latitude, longitude)
-            _touchPlaceId.emit(result[0].placeId)
+            val place = getPlacesByCoordinateUseCase(latitude, longitude)
+
+            Log.d("getPlaceImage", "item count : ${place.size}")
+            for (item in place) {
+                Log.d("getPlaceImage", "placeId : ${item.placeId}")
+                Log.d("getPlaceImage", "name : ${item.name}")
+                Log.d("getPlaceImage", "address : ${item.address}")
+            }
+
+            if (place.isEmpty().not()) {
+                _touchPlaceId.emit(place[0].placeId)
+                Log.d("getPlaceImage", "touchPlaceId : ${touchPlaceId.value}")
+            } else {
+                Log.d("getPlaceImage", "notPlaceId")
+            }
         }
     }
 }

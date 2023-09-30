@@ -20,7 +20,7 @@ class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>
         initCommentBottomSheet()
     }
     private fun initCommentBottomSheet() {
-        if(bottomSheetDialog==null){
+        if (bottomSheetDialog == null) {
             bottomSheetDialog = LoginConsentDialogFragment()
         }
         bottomSheetDialog?.setStyle(
@@ -28,7 +28,7 @@ class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>
             R.style.AppBottomSheetDialogTheme,
         )
 
-        if(bottomSheetDialog?.isAdded?.not() == true){
+        if (bottomSheetDialog?.isAdded?.not() == true) {
             binding.btnLoginPreviewThirdStart.setOnClickListener {
                 bottomSheetDialog?.show(
                     requireActivity().supportFragmentManager,
@@ -36,7 +36,6 @@ class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>
                 )
             }
         }
-
     }
     override fun initCollector() {
     }

@@ -6,13 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.GenderType
 import com.weit.domain.model.auth.UserRegistrationInfo
-import com.weit.domain.model.exception.InvalidPermissionException
-import com.weit.domain.model.exception.InvalidRequestException
-import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
-import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.usecase.auth.RegisterUserUseCase
 import com.weit.domain.usecase.userinfo.GetBirthUseCase
 import com.weit.domain.usecase.userinfo.GetGenderUseCase
@@ -21,8 +16,6 @@ import com.weit.domain.usecase.userinfo.GetTermIdListUseCase
 import com.weit.domain.usecase.userinfo.GetUsernameUseCase
 import com.weit.domain.usecase.userinfo.SetBirthUseCase
 import com.weit.domain.usecase.userinfo.SetGenderUseCase
-import com.weit.presentation.ui.feed.FeedViewModel
-import com.weit.presentation.ui.login.user.registration.UserRegistrationViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,7 +33,7 @@ class LoginInputUserInfoViewModel @Inject constructor(
     private val getGenderUseCase: GetGenderUseCase,
     private val getTermIdListUseCase: GetTermIdListUseCase,
     private val registerUserUseCase: RegisterUserUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
     private var gender = GenderType.IDLE
     private lateinit var birth: LocalDate
 
@@ -60,7 +53,6 @@ class LoginInputUserInfoViewModel @Inject constructor(
         viewModelScope.launch {
             birth = LocalDate.of(year, month + 1, day)
             setBirthUseCase(birth)
-
         }
     }
 
@@ -74,11 +66,10 @@ class LoginInputUserInfoViewModel @Inject constructor(
             }
             gender = genderType
             setGenderUseCase(genderType)
-
         }
     }
 
-    private suspend fun checkUserRegistrationCondition() : Boolean {
+    private suspend fun checkUserRegistrationCondition(): Boolean {
         if (gender == GenderType.IDLE) {
             _event.emit(Event.GenderNotSelected)
             return false
@@ -95,21 +86,20 @@ class LoginInputUserInfoViewModel @Inject constructor(
         viewModelScope.launch {
             if (checkUserRegistrationCondition()) {
                 var username = ""
-                var birth = LocalDate.of(2000,1,1)
+                var birth = LocalDate.of(2000, 1, 1)
 
                 val usernameResult = getUsernameUseCase()
-                if(usernameResult.isSuccess){
+                if (usernameResult.isSuccess) {
                     username = usernameResult.getOrThrow().toString()
-                }else{
+                } else {
                     _event.emit(Event.GetStoredUsernameFaild)
                     Logger.t("MainTest").i("실패 ${usernameResult.exceptionOrNull()?.javaClass?.name}")
                 }
 
-
                 val birthResult = getBirthUseCase()
-                if(birthResult.isSuccess){
+                if (birthResult.isSuccess) {
                     birth = birthResult.getOrThrow()
-                }else{
+                } else {
                     _event.emit(Event.GetStoredBirthFaild)
                     Logger.t("MainTest").i("실패 ${usernameResult.exceptionOrNull()?.javaClass?.name}")
                 }
@@ -117,8 +107,7 @@ class LoginInputUserInfoViewModel @Inject constructor(
                 val gender = getGenderUseCase()
                 val termsIdList = getTermIdListUseCase()
 
-
-                Logger.t("MainTest").i("${gender} ${birth} ${username} ${nickname} ${termsIdList}")
+                Logger.t("MainTest").i("$gender $birth $username $nickname $termsIdList")
 
                 val result = registerUserUseCase(
                     UserRegistrationInfo(

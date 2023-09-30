@@ -50,7 +50,7 @@ class SearchPlaceBottomSheetFragment(
         _binding = FragmentBottomSheetPlaceSearchBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
-            vm = viewModel
+//            vm = viewModel
             root
         }
     }
@@ -79,6 +79,26 @@ class SearchPlaceBottomSheetFragment(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handelEvent(event)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.placeImage.collectLatest { bitmap ->
+                if (bitmap == null) {
+                } else {
+                    binding.ivBsPlaceThumbnail.setImageBitmap(bitmap)
+                }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.placeTitle.collectLatest { title ->
+                binding.tvBsPlaceTitle.text = title
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.placeAddress.collectLatest { address ->
+                binding.tvBsPlaceAddress.text = address
             }
         }
     }

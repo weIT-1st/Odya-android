@@ -12,12 +12,10 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
-import com.weit.domain.model.GenderType
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentLoginInputUserInfoBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.user.registration.UserRegistrationViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -122,7 +120,6 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             }
 
             override fun onNothingSelected(p0: AdapterView<*>?) {
-
             }
         }
     }

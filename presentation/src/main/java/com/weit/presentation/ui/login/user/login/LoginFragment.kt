@@ -30,11 +30,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnToMain.setOnClickListener {
             moveToMain()
         }
-
-        binding.btnToLoginStep.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToLoginContentFragment()
-            findNavController().navigate(action)
-        }
     }
 
     override fun initCollector() {

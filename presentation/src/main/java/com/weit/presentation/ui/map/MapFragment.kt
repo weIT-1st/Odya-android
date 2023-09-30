@@ -20,11 +20,10 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.map.bottomsheet.TempBottomSheetFragment
+import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import java.util.logging.Logger
 
 @AndroidEntryPoint
 class MapFragment :
@@ -40,7 +39,7 @@ class MapFragment :
         viewModel.getDetailPlace(it)
     }
 
-    private var tempBottomSheetFragment: TempBottomSheetFragment? = null
+    private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var coordinates: LatLng
@@ -71,10 +70,11 @@ class MapFragment :
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.touchPlaceId.collectLatest { placeId ->
-                placeBottomSheetUp(placeId)
-//                viewModel.getPlaceDetail(placeId)
+                Log.d("getPlaceImage", "touchPlaceIdCollectLatest : $placeId")
+                if (placeId.isBlank().not()) {
+                    placeBottomSheetUp(placeId)
+                }
             }
-            7
         }
     }
 
@@ -162,7 +162,6 @@ class MapFragment :
             Log.d("poi click!", "name : " + it.name)
             placeBottomSheetUp(it.placeId)
         }
-
     }
 
     override fun onDestroyView() {
@@ -172,11 +171,11 @@ class MapFragment :
     }
 
     private fun placeBottomSheetUp(placeId: String) {
-        if (tempBottomSheetFragment == null) {
-            tempBottomSheetFragment = TempBottomSheetFragment(placeId)
-        }
-        if (!tempBottomSheetFragment!!.isAdded) {
-            tempBottomSheetFragment!!.show(childFragmentManager, "temp")
+        Log.d("getPlaceImage", "placeID : $placeId")
+        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId)
+
+        if (!searchPlaceBottomSheetFragment!!.isAdded) {
+            searchPlaceBottomSheetFragment!!.show(childFragmentManager, "temp")
         }
     }
     companion object {

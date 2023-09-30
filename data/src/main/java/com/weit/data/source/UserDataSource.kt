@@ -1,6 +1,8 @@
 package com.weit.data.source
 
 import android.content.Context
+import com.weit.data.model.ListResponse
+import com.weit.data.model.user.UserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.service.UserService
 import com.weit.domain.model.user.User
@@ -35,7 +37,14 @@ class UserDataSource @Inject constructor(
         return userService.updateUserProfile(profile)
     }
 
-    suspend fun deleteUser() : Response<Unit> {
+    suspend fun getUserByNickname(userByNickname: UserByNickname): ListResponse<UserContentDTO> =
+        userService.getUserByNickname(
+            size = userByNickname.size,
+            lastId = userByNickname.lastId,
+            nickname = userByNickname.nickname,
+        )
+
+    suspend fun deleteUser(): Response<Unit> {
         return userService.deleteUser()
     }
 }

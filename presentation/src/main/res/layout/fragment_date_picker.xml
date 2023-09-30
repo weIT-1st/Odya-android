@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <DatePicker
+            android:id="@+id/dp_date_picker"
+            style="@style/datepicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarTextColor="@color/label_alternative"
+            android:datePickerMode="calendar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/div_date_picker" />
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div_date_picker"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="@id/btn_date_picker_cancel"
+            app:layout_constraintEnd_toEndOf="@id/btn_date_picker_complete"
+            app:layout_constraintBottom_toTopOf="@id/btn_date_picker_cancel" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_date_picker_cancel"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@android:color/transparent"
+            android:stateListAnimator="@null"
+            android:text="@string/date_picker_cancel"
+            android:textColor="@color/label_alternative"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="@id/dp_date_picker"
+            app:layout_constraintEnd_toStartOf="@id/btn_date_picker_complete"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_date_picker_complete"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:backgroundTint="@android:color/transparent"
+            android:stateListAnimator="@null"
+            android:text="@string/date_picker_complete"
+            android:textColor="?attr/colorPrimary"
+            app:layout_constraintEnd_toEndOf="@id/dp_date_picker"
+            app:layout_constraintStart_toEndOf="@id/btn_date_picker_cancel"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

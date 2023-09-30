@@ -89,10 +89,28 @@
         <item name="android:maxHeight">47dip</item>
     </style>
 
-
     <style name="edit_text_box" parent="Widget.Design.TextInputLayout">
         <item name="colorControlNormal">@color/elevation3</item>  // unFocus 상태일때 밑줄 색.
         <item name="boxStrokeColor">@color/elevation3</item> // Focus 상태일때 밑줄 색.
+    </style>
+
+    <style name="ShapeableImageView8dp">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
+    <style name="AppModalStyle"
+        parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/corners_top_12_in_bottom_sheet</item>
+    </style>
+    <style name="datepicker" parent="@android:style/Widget.Material.DatePicker">
+        <item name="android:headerBackground">@color/background_normal</item>
+        <item name="android:textColorPrimary">@color/label_normal</item>
     </style>
 
 </resources>

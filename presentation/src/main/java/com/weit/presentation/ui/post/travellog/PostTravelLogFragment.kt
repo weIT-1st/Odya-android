@@ -2,6 +2,7 @@ package com.weit.presentation.ui.post.travellog
 
 import android.os.Bundle
 import android.view.View
+import android.widget.DatePicker
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
@@ -9,6 +10,7 @@ import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentPostTravelLogBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,6 +87,9 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                     event.imagePlaces.toTypedArray(),
                 )
                 findNavController().navigate(action)
+            }
+            is PostTravelLogViewModel.Event.ShowDatePicker -> {
+                DatePickerDialogFragment(event.currentPeriod).show(childFragmentManager, null)
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.weit.data.repository.place
 
 import android.graphics.Bitmap
+import android.util.Log
+import com.google.android.gms.common.api.ApiException
 import com.weit.data.model.map.Place
 import com.weit.data.source.PlaceDateSource
 import com.weit.domain.model.place.PlaceDetail
@@ -29,18 +31,28 @@ class PlaceRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPlaceDetail(placeId: String): PlaceDetail {
-        val result = dataSource.getPlaceDetail(placeId).result[0]
-        return PlaceDetail(
-            result.placeId,
-            result.name,
-            result.adrAddress,
-            result.geometry?.location?.lat,
-            result.geometry?.location?.lng,
-        )
+    override suspend fun getPlaceDetail(placeId: String): Result<PlaceDetail> {
+        val result = dataSource.getPlace(placeId)
+
+        return if (result is Throwable) {
+            Result.failure(result)
+        } else {
+            Result.success(
+                PlaceDetail(
+                    result.id,
+                    result.name,
+                    result.address,
+                    result.latLng?.latitude,
+                    result.latLng?.longitude
+                )
+            )
+        }
     }
 
-    override suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): List<PlacePrediction> {
+    override suspend fun getPlacesByCoordinate(
+        latitude: Double,
+        longitude: Double
+    ): List<PlacePrediction> {
         val geocodingResult = dataSource.getPlacesByCoordinate(latitude, longitude)
         return geocodingResult.result.map { place ->
             CoroutineScope(Dispatchers.IO).async {

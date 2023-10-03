@@ -41,7 +41,6 @@ class PlaceReviewFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = viewModel
         initPlaceReviewRV()
         binding.tvTabHowAboutThis.text = getString(R.string.place_how_about, placeTitle)
     }

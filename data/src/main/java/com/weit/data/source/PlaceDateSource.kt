@@ -2,6 +2,7 @@ package com.weit.data.source
 
 import android.graphics.Bitmap
 import android.util.Log
+import com.google.android.gms.common.api.ApiException
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
@@ -16,6 +17,8 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
 import com.weit.data.service.PlaceService
+import com.weit.domain.model.exception.UnKnownException
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -38,18 +41,16 @@ class PlaceDateSource @Inject constructor(
         Place.Field.NAME,
         Place.Field.ID,
         Place.Field.ADDRESS,
+        Place.Field.LAT_LNG
     )
 
-    suspend fun getPlaceDetail(placeId: String): GeocodingResult =
-        service.getPlaceDetail(BuildConfig.GOOGLE_MAP_KEY, placeId)
-
-    suspend fun getPlace(placeId: String): Place? = callbackFlow {
+    suspend fun getPlace(placeId: String): Place = callbackFlow {
         val request = FetchPlaceRequest.builder(placeId, defaultPlaceField).build()
         placesClient.fetchPlace(request).addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 trySend(task.result.place)
             } else {
-                trySend(null)
+                throw task.exception ?: UnKnownException()
             }
         }
         awaitClose { }
@@ -95,9 +96,8 @@ class PlaceDateSource @Inject constructor(
                 val place = response.place
                 val metadata = place.photoMetadatas
 
-                // 이거 구글 문서에 있으서 작성은 했는데 이해가 안되요.. 이거 왜써요?
                 if (metadata == null || metadata.isEmpty()) {
-                    return@addOnSuccessListener
+                    trySend(null)
                 }
 
                 val photoMetadata = metadata.first()
@@ -106,15 +106,12 @@ class PlaceDateSource @Inject constructor(
 
                 placesClient.fetchPhoto(photoRequest)
                     .addOnSuccessListener { fetchPhotoResponse: FetchPhotoResponse ->
-                        Log.d("getPlaceImage", "fetchplace success but fetchphoto success")
                         trySend(fetchPhotoResponse.bitmap)
                     }.addOnFailureListener {
-                        Log.d("getPlaceImage", "fetchplace success but fetchphoto faile : " + it.message)
-                        trySend(null)
+                        throw it
                     }
             }.addOnFailureListener {
-                Log.d("getPlaceImage", "fetchplace fail : " + it.message)
-                trySend(null)
+               throw it
             }
         awaitClose { }
     }

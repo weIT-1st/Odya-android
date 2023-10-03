@@ -15,6 +15,5 @@ class PlaceCommunityFragment() : BaseFragment<FragmentTabPlaceCommunityBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = viewModel
     }
 }

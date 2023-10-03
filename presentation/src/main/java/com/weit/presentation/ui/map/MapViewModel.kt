@@ -42,7 +42,7 @@ class MapViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getPlaceDetailUseCase(placeId)
             _detailPlace.emit(result)
-            result.placeId?.let { _touchPlaceId.emit(it) }
+            result?.placeId?.let { _touchPlaceId.emit(it) }
         }
     }
 

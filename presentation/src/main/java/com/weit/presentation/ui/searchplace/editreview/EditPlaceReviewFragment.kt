@@ -9,7 +9,7 @@ import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentBottomSheetReviewBinding
+import com.weit.presentation.databinding.BottomSheetEditReviewBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,7 +30,7 @@ class EditPlaceReviewFragment(
         EditPlaceReviewViewModel.provideFactory(viewModelFactory, placeReviewContentData)
     }
 
-    private var _binding: FragmentBottomSheetReviewBinding? = null
+    private var _binding: BottomSheetEditReviewBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ class EditPlaceReviewFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentBottomSheetReviewBinding.inflate(inflater, container, false)
+        _binding = BottomSheetEditReviewBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel

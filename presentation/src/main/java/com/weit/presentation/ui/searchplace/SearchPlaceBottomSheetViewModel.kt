@@ -37,10 +37,10 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val _placeImage = MutableStateFlow<Bitmap?>(null)
     val placeImage: StateFlow<Bitmap?> get() = _placeImage
 
-    private val _placeTitle = MutableStateFlow<String>("")
+    private val _placeTitle = MutableStateFlow(DEFAULT_PLACE_TITLE)
     val placeTitle: StateFlow<String> get() = _placeTitle
 
-    private val _placeAddress = MutableStateFlow<String>("")
+    private val _placeAddress = MutableStateFlow(DEFAULT_PLACE_ADDRESS)
     val placeAddress: StateFlow<String> get() = _placeAddress
 
     private val _event = MutableEventFlow<Event>()
@@ -82,9 +82,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
         }
 
         val placeInform = getPlaceDetailUseCase(placeId)
-//        Log.d("placeInform", "placeinform : $placeInform")
-//        Log.d("placeInform", "placeinform name : ${placeInform.name}")
-//        Log.d("placeInform", "placeinform address : ${placeInform.address}")
+
         if (placeInform.name.isNullOrBlank().not()) {
             _placeTitle.emit(placeInform.name!!)
         }
@@ -111,7 +109,9 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     companion object {
         private const val INIT_EXPERIENCED_FRIEND_COUNT = 0
         private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 2
-        fun provideFactory(
+        private const val DEFAULT_PLACE_TITLE = ""
+        private const val DEFAULT_PLACE_ADDRESS = ""
+       fun provideFactory(
             assistedFactory: PlaceIdFactory,
             placeId: String,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {

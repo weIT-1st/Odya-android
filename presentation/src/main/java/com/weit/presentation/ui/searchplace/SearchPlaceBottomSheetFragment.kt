@@ -5,14 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.IntRange
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentBottomSheetPlaceSearchBinding
+import com.weit.presentation.databinding.BottomSheetPlaceSearchBinding
 import com.weit.presentation.ui.searchplace.community.PlaceCommunityFragment
 import com.weit.presentation.ui.searchplace.journey.PlaceJourneyFragment
 import com.weit.presentation.ui.searchplace.review.PlaceReviewFragment
@@ -33,24 +35,26 @@ class SearchPlaceBottomSheetFragment(
         SearchPlaceBottomSheetViewModel.provideFactory(viewModelFactory, placeId)
     }
 
-    private var _binding: FragmentBottomSheetPlaceSearchBinding? = null
+    private var _binding: BottomSheetPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
     private val experiencedFriendAdapter: ExperiencedFriendAdapter by lazy {
         ExperiencedFriendAdapter()
     }
 
-    private var placeTitle = ""
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        isCancelable = true
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentBottomSheetPlaceSearchBinding.inflate(inflater, container, false)
+        _binding = BottomSheetPlaceSearchBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
-//            vm = viewModel
             root
         }
     }
@@ -58,7 +62,6 @@ class SearchPlaceBottomSheetFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        initTabViewPager()
         initExperiencedFriendRV()
 
         repeatOnStarted(viewLifecycleOwner) {
@@ -83,16 +86,17 @@ class SearchPlaceBottomSheetFragment(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeImage.collectLatest { bitmap ->
-                if (bitmap == null) {
-                } else {
-                    binding.ivBsPlaceThumbnail.setImageBitmap(bitmap)
-                }
+                Glide.with(requireContext())
+                    .load(bitmap)
+                    .placeholder(R.layout.image_placeholder.toDrawable())
+                    .into(binding.ivBsPlaceThumbnail)
             }
         }
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeTitle.collectLatest { title ->
                 binding.tvBsPlaceTitle.text = title
+                initTabViewPager(title)
             }
         }
 
@@ -110,7 +114,7 @@ class SearchPlaceBottomSheetFragment(
         _binding = null
     }
 
-    private fun initTabViewPager() {
+    private fun initTabViewPager(placeTitle: String) {
         val viewPager = binding.viewPagerBsPlace
         val tabLayout = binding.tlBsPlace
 

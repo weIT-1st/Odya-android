@@ -70,10 +70,15 @@ class MapFragment :
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.touchPlaceId.collectLatest { placeId ->
-                Log.d("getPlaceImage", "touchPlaceIdCollectLatest : $placeId")
                 if (placeId.isBlank().not()) {
                     placeBottomSheetUp(placeId)
                 }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.currentLatLng.collectLatest {
+                showMap(it)
             }
         }
     }

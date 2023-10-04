@@ -8,7 +8,6 @@ import javax.inject.Inject
 class GetPlaceDetailUseCase @Inject constructor(
     private val repository: PlaceRepository,
 ) {
-    suspend operator fun invoke(placeId: String): PlaceDetail {
-        return repository.getPlaceDetail(placeId).getOrThrow()
-    }
+    suspend operator fun invoke(placeId: String): PlaceDetail =
+        repository.getPlaceDetail(placeId).getOrThrow()
 }

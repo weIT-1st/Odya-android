@@ -1,5 +1,6 @@
 package com.weit.data.di
 
+import android.app.Activity
 import android.content.Context
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
@@ -12,7 +13,9 @@ import com.weit.domain.repository.place.PlaceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ActivityContext
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dagger.hilt.android.scopes.ActivityScoped
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
@@ -49,6 +52,9 @@ class PlaceModule {
 
     @Singleton
     @Provides
-    fun providePlaceRepository(dataSource: PlaceDateSource): PlaceRepository =
-        PlaceRepositoryImpl(dataSource)
+    fun providePlaceRepository(
+        @ApplicationContext context: Context,
+        dataSource: PlaceDateSource
+    ): PlaceRepository =
+        PlaceRepositoryImpl(context, dataSource)
 }

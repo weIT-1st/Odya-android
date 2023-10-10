@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        tools:context=".ui.login.consent.LoginConsentFragment">
+
+
+        <ImageView
+            android:id="@+id/iv_feed_no_travel_log"
+            android:layout_width="match_parent"
+            android:layout_height="270dp"
+            android:layout_marginTop="145dp"
+            android:src="@drawable/x_vecter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_feed_no_travel_log_hint1"
+            style="@style/h6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="37dp"
+            android:text="@string/post_feed_no_tavellog_hint1"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintTop_toBottomOf="@+id/iv_feed_no_travel_log"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_feed_no_travel_log_write"
+            style="@style/h6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/primary"
+            android:layout_marginTop="95dp"
+            android:text="@string/post_feed_no_tavellog_write"
+            android:textColor="@color/label_reversed"
+            app:layout_constraintTop_toBottomOf="@+id/tv_feed_no_travel_log_hint1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_feed_no_travel_log_hint2"
+            style="@style/detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="41dp"
+            android:text="@string/post_feed_no_tavellog_hint2"
+            android:textColor="@color/label_assistive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_feed_no_travel_log_write"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -34,8 +34,8 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val _experiencedFriend = MutableStateFlow<List<ExperiencedFriendContent>>(emptyList())
     val experiencedFriend: StateFlow<List<ExperiencedFriendContent>> get() = _experiencedFriend
 
-    private val _placeImage = MutableStateFlow<Bitmap?>(null)
-    val placeImage: StateFlow<Bitmap?> get() = _placeImage
+    private val _placeImage = MutableStateFlow<ByteArray?>(null)
+    val placeImage: StateFlow<ByteArray?> get() = _placeImage
 
     private val _placeTitle = MutableStateFlow(DEFAULT_PLACE_TITLE)
     val placeTitle: StateFlow<String> get() = _placeTitle
@@ -77,8 +77,9 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
 
     private suspend fun getPlaceInform() {
         val placeImageByteArray = getPlaceImageUseCase(placeId)
-        if (placeImageByteArray != null) {
-            _placeImage.emit(BitmapFactory.decodeByteArray(placeImageByteArray, 0, placeImageByteArray.size))
+
+        if (placeImageByteArray.isSuccess){
+            _placeImage.emit(placeImageByteArray.getOrThrow())
         }
 
         val placeInform = getPlaceDetailUseCase(placeId)

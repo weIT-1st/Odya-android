@@ -8,6 +8,7 @@ import com.google.android.libraries.places.api.net.PlacesClient
 import com.weit.data.BuildConfig
 import com.weit.data.repository.place.PlaceRepositoryImpl
 import com.weit.data.service.PlaceService
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceDateSource
 import com.weit.domain.repository.place.PlaceRepository
 import dagger.Module
@@ -56,5 +57,5 @@ class PlaceModule {
         @ApplicationContext context: Context,
         dataSource: PlaceDateSource
     ): PlaceRepository =
-        PlaceRepositoryImpl(context, dataSource)
+        PlaceRepositoryImpl(context, dataSource, ImageDataSource(context.contentResolver) )
 }

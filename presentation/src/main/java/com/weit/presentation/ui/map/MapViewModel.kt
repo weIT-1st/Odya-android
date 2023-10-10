@@ -75,9 +75,6 @@ class MapViewModel @Inject constructor(
 
             if (place.isEmpty().not()) {
                 _touchPlaceId.emit(place[0].placeId)
-                Log.d("getPlaceImage", "touchPlaceId : ${touchPlaceId.value}")
-            } else {
-                Log.d("getPlaceImage", "notPlaceId")
             }
         }
     }

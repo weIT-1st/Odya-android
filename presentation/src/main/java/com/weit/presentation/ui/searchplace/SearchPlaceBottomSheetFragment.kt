@@ -42,6 +42,8 @@ class SearchPlaceBottomSheetFragment(
         ExperiencedFriendAdapter()
     }
 
+    private val placeHolder = R.layout.image_placeholder.toDrawable()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         isCancelable = true
@@ -88,7 +90,7 @@ class SearchPlaceBottomSheetFragment(
             viewModel.placeImage.collectLatest { bitmap ->
                 Glide.with(requireContext())
                     .load(bitmap)
-                    .placeholder(R.layout.image_placeholder.toDrawable())
+                    .placeholder(placeHolder)
                     .into(binding.ivBsPlaceThumbnail)
             }
         }

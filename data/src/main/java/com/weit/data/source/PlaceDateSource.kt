@@ -97,7 +97,7 @@ class PlaceDateSource @Inject constructor(
                 val metadata = place.photoMetadatas
 
                 if (metadata == null || metadata.isEmpty()) {
-                    trySend(null)
+                    return@addOnSuccessListener
                 }
 
                 val photoMetadata = metadata.first()

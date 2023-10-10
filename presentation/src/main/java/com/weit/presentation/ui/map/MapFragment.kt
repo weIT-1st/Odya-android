@@ -70,7 +70,7 @@ class MapFragment :
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.touchPlaceId.collectLatest { placeId ->
-                if (placeId.isBlank().not()) {
+                if (placeId.isNotBlank()) {
                     placeBottomSheetUp(placeId)
                 }
             }
@@ -176,7 +176,6 @@ class MapFragment :
     }
 
     private fun placeBottomSheetUp(placeId: String) {
-        Log.d("getPlaceImage", "placeID : $placeId")
         searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId)
 
         if (!searchPlaceBottomSheetFragment!!.isAdded) {

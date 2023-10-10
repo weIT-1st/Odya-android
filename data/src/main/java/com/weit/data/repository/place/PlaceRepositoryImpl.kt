@@ -1,13 +1,15 @@
 package com.weit.data.repository.place
 
 import android.content.Context
-import android.graphics.Bitmap
 import com.google.android.gms.location.LocationServices
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.model.map.Place
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceDateSource
+import com.weit.data.util.exception
 import com.weit.domain.model.CoordinateInfo
+import com.weit.domain.model.exception.ImageNotFoundException
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
@@ -19,12 +21,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
     @ActivityContext private val context: Context,
     private val dataSource: PlaceDateSource,
+    private val imageDataSource: ImageDataSource
 ) : PlaceRepository {
 
     override suspend fun searchPlace(query: String): List<PlacePrediction> {
@@ -39,20 +41,21 @@ class PlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPlaceDetail(placeId: String): Result<PlaceDetail> {
-        val result = dataSource.getPlace(placeId)
+        val result = runCatching {dataSource.getPlace(placeId)}
 
-        return if (result is Throwable) {
-            Result.failure(result)
-        } else {
+        return if (result.isSuccess) {
+            val placeDetail = result.getOrThrow()
             Result.success(
                 PlaceDetail(
-                    result.id,
-                    result.name,
-                    result.address,
-                    result.latLng?.latitude,
-                    result.latLng?.longitude
+                    placeDetail.id,
+                    placeDetail.name,
+                    placeDetail.address,
+                    placeDetail.latLng?.latitude,
+                    placeDetail.latLng?.longitude
                 )
             )
+        } else {
+            Result.failure(result.exception())
         }
     }
 
@@ -68,12 +71,18 @@ class PlaceRepositoryImpl @Inject constructor(
         }.awaitAll().filterNotNull()
     }
 
-    override suspend fun getPlaceImage(placeId: String): ByteArray? {
-        val result = dataSource.getPlaceImage(placeId).first()
-        return if (result == null) {
-            null
+    override suspend fun getPlaceImage(placeId: String): Result<ByteArray> {
+        val result = runCatching { dataSource.getPlaceImage(placeId) }
+        return if (result.isSuccess) {
+            val placeImage = result.getOrThrow().first()
+
+            if (placeImage != null){
+                Result.success(imageDataSource.bitmapToByteArray(placeImage))
+            } else {
+                Result.failure(ImageNotFoundException())
+            }
         } else {
-            bitmapToArray(result)
+            Result.failure(result.exception())
         }
     }
 
@@ -110,12 +119,6 @@ class PlaceRepositoryImpl @Inject constructor(
             name = result.name ?: "",
             address = result.address ?: "",
         )
-    }
-
-    private fun bitmapToArray(bitmap: Bitmap): ByteArray {
-        var outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, outputStream)
-        return outputStream.toByteArray()
     }
 
     private suspend fun checkLocationPermission(permission: String): TedPermissionResult {

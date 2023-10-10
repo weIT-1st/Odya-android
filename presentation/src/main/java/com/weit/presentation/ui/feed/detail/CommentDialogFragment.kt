@@ -8,25 +8,35 @@ import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
 import com.weit.presentation.model.FeedComment
 import com.weit.presentation.model.FeedDetail
+import com.weit.presentation.ui.placereview.EditPlaceReviewViewModel
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: CommentDialogViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: CommentDialogViewModel.FeedDetailFactory
+
+    private val viewModel: CommentDialogViewModel by viewModels {
+        CommentDialogViewModel.provideFactory(viewModelFactory,feed)
+    }
 
     private val feedCommentAdapter = FeedCommentAdapter(
         updateItem = { position -> changeComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
     )
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,9 +44,9 @@ class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment()
         savedInstanceState: Bundle?,
     ): View {
         _binding = BottomSheetFeedCommentBinding.inflate(inflater, container, false)
-        viewModel._feed.value = feed // 프로필변경ㅇ 오류가 없는지 확인
-        viewModel.feedId = feed?.feedId ?: 0
+
         binding.vm = viewModel
+
         return binding.root
     }
 
@@ -54,7 +64,7 @@ class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment()
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
-                viewModel.loadNextComments()
+                viewModel.onNextComments()
             }
         }
     }

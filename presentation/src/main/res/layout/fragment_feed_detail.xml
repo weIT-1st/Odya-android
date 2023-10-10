@@ -375,7 +375,7 @@
                         android:textColorHint="@color/label_assistive"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintHorizontal_bias="0.0"
-                        tools:text="@{vm.writedComment}" />
+                        android:text="@={vm.writedComment}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

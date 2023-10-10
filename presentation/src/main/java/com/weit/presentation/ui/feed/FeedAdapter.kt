@@ -12,11 +12,13 @@ import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
 import com.weit.presentation.model.Feed
+import com.weit.presentation.ui.util.InfinityScrollListener
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
     private val navigateFeedDetail: (Long) -> Unit,
     private val onFollowChanged: (Long, Boolean) -> Unit,
+    private val scrollListener: () -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
         Callback,
@@ -93,7 +95,16 @@ class FeedAdapter(
                 onFollowChanged(userId, isChecked)
             }
             mayKnowFriendAdapter.submitList(data)
-            mayKnowFriendRecyclerView.adapter = mayKnowFriendAdapter
+            mayKnowFriendRecyclerView.run{
+                addOnScrollListener(infinityScrollListener)
+                adapter = mayKnowFriendAdapter
+            }
+        }
+    }
+
+    private val infinityScrollListener = object : InfinityScrollListener() {
+        override fun loadNextPage() {
+            scrollListener()
         }
     }
 

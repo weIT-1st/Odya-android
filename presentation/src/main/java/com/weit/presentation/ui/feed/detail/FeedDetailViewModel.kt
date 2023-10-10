@@ -13,13 +13,11 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.follow.FollowUserContent
-import com.weit.domain.usecase.community.DeleteCommunityCommentsUseCase
-import com.weit.domain.usecase.community.GetCommunityCommentsUseCase
-import com.weit.domain.usecase.community.RegisterCommunityCommentsUseCase
-import com.weit.domain.usecase.community.UpdateCommunityCommentsUseCase
+import com.weit.domain.usecase.community.comment.DeleteCommunityCommentsUseCase
+import com.weit.domain.usecase.community.comment.GetCommunityCommentsUseCase
+import com.weit.domain.usecase.community.comment.RegisterCommunityCommentsUseCase
+import com.weit.domain.usecase.community.comment.UpdateCommunityCommentsUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
-import com.weit.presentation.model.FeedComment
 import com.weit.presentation.model.FeedDetail
 import com.weit.presentation.model.TopicDTO
 import com.weit.presentation.model.TravelLogInFeed
@@ -45,7 +43,7 @@ class FeedDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     var feedId : Long = 0
-    val writedComment = MutableStateFlow("")
+    var writedComment = MutableStateFlow("")
     private val _feed = MutableStateFlow<FeedDetail?>(null)
     val feed: StateFlow<FeedDetail?> get() = _feed
 
@@ -79,6 +77,7 @@ class FeedDetailViewModel @Inject constructor(
     private fun getFeed() {
         // TODO feedId로 상세 정보 가져오기
         viewModelScope.launch {
+
             val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
             val travelLog = TravelLogInFeed(1, "ddd", "")
             val topics = listOf(TopicDTO(1, "바다여행"), TopicDTO(2, "우주여행"))
@@ -88,7 +87,7 @@ class FeedDetailViewModel @Inject constructor(
 //                FeedComment(1, 1, profile, "dd", "wowwow"),
 //            )
 
-            val feed = FeedDetail(1, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", topics)
+            val feed = FeedDetail(2, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", topics)
             userId = feed.userId
 
             setFeedDetail(feed)
@@ -107,9 +106,11 @@ class FeedDetailViewModel @Inject constructor(
     private fun getFeedDetailComments() {
         viewModelScope.launch {
             val result = getCommunityCommentsUseCase(
-                CommunityCommentInfo(feedId, 2)
+                CommunityCommentInfo(2,null,null) //스크롤로 가져오는거면 댓글 총갯수는 어떻게 파악?
             )
             if (result.isSuccess) {
+                 Logger.t("MainTest").i("${result.getOrThrow()}")
+
                 commentList.clear()
                 commentList = CopyOnWriteArrayList(result.getOrThrow())
                 val comments = result.getOrThrow()
@@ -119,26 +120,28 @@ class FeedDetailViewModel @Inject constructor(
                 val remainingCommentsCount = comments.size - defaultComments.size
                 _event.emit(Event.OnChangeComments(_feed.value,defaultComments, remainingCommentsCount))
             } else {
-                    //TODO 에러
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
 
     fun registerAndUpdateComment() {
        job =  viewModelScope.launch {
-//            val feedId = feed.value?.feedId as Long
            when(commentState){
                commentRegister ->{
+                   Logger.t("MainTest").i(writedComment.value)
+
                    val result = registerCommunityCommentsUseCase(
                        CommunityCommentRegistrationInfo(
-                           feedId, writedComment.value
+                           2, writedComment.value
                        )
                    )
                    if (result.isSuccess) {
+                       writedComment.emit("")
                        getFeedDetailComments()
 
                    } else {
-                       //TODO 에러
+                       Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
                    }
                }
                commentUpdate ->{
@@ -146,7 +149,7 @@ class FeedDetailViewModel @Inject constructor(
                    val commentId = commentList[currentPosition].communityCommentId
                    val result = updateCommunityCommentsUseCase(
                            CommunityCommentUpdateInfo(
-                               feedId, commentId, writedComment.value
+                               2, commentId, writedComment.value
                            )
                    )
                    if (result.isSuccess) {
@@ -172,7 +175,7 @@ class FeedDetailViewModel @Inject constructor(
             val commentId = commentList[position].communityCommentId
             val result = deleteCommunityCommentsUseCase(
                 CommunityCommentDeleteInfo(
-                    feedId, commentId
+                    2, commentId
                 )
             )
             if (result.isSuccess) {
@@ -181,6 +184,10 @@ class FeedDetailViewModel @Inject constructor(
                 //TODO 에러
             }
         }
+    }
+
+    fun deleteFeed(){
+
     }
 
     fun onFollowStateChange(followState : Boolean) {

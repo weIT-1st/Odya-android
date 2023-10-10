@@ -3,16 +3,26 @@ package com.weit.presentation.ui.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityRegistrationInfo
+import com.weit.domain.model.community.CommunityRequestInfo
+import com.weit.domain.model.community.comment.CommunityCommentInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
+import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.model.follow.MayknowUserSearchInfo
 import com.weit.domain.model.topic.TopicDetail
+import com.weit.domain.model.user.User
+import com.weit.domain.usecase.community.GetCommunitiesUseCase
+import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
+import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDTO
 import com.weit.presentation.model.MayKnowFriend
@@ -20,6 +30,8 @@ import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
+import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
+import com.weit.presentation.ui.login.nickname.LoginNicknameViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +48,13 @@ class FeedViewModel @Inject constructor(
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val getMayknowUsersUseCase: GetMayknowUsersUseCase,
+    private val registerCommunityUseCase: RegisterCommunityUseCase,
+    private val getImagesUseCase: GetImagesUseCase,
+    private val getCommunitiesUseCase: GetCommunitiesUseCase,
+    private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
+
+    val user = MutableStateFlow<User?>(null)
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -44,7 +62,7 @@ class FeedViewModel @Inject constructor(
     private val totalFeed = CopyOnWriteArrayList<Feed>()
     private val feedItems = CopyOnWriteArrayList<Feed.FeedItem>()
     private val popularLogs = CopyOnWriteArrayList<PopularTravelLog>()
-    private val friends = CopyOnWriteArrayList<MayKnowFriend>()
+    private val friends = CopyOnWriteArrayList<FollowUserContent>()
 
     private val _feed = MutableStateFlow<List<Feed>>(emptyList())
     val feed : StateFlow<List<Feed>> get() =  _feed
@@ -52,43 +70,60 @@ class FeedViewModel @Inject constructor(
     private var pageJob: Job = Job().apply {
         complete()
     }
-    private var friendPage = 0
-//    private val _friends = MutableStateFlow<List<MayKnowFriend>>(emptyList())
+
+    private var lastId :Long? = null
+    //    private val _friends = MutableStateFlow<List<MayKnowFriend>>(emptyList())
 //    val friends : StateFlow<List<MayKnowFriend>> get() = _friends
     init {
+
+        viewModelScope.launch {
+            getUserUseCase().onSuccess {
+                user.value = it
+            }
+        }
+
         getFavoriteTopicList()
         getFeeds()
         getPopularTravelLogs()
-//        loadNextFriends(friendPage)
+        loadNextFriends()
 //        getMayknowFriends()
         makeFeedItems()
+//    getImages()
     }
 
-//    fun onNextFriends(){
-//        if(pageJob.isCompleted.not()){
-//            return
-//        }
-//        loadNextFriends(friendPage)
-//    }
-//
-//    private fun loadNextFriends(page: Int){
-//        pageJob = viewModelScope.launch {
-//            val result = getMayknowUsersUseCase(
-//                MayknowUserSearchInfo(
-//                    size = DEFAULT_PAGE_SIZE
-//                ))
-//            if(result.isSuccess){
-//                val newFriends = result.getOrThrow()
-//                friendPage = page + 1
-//                if (newFriends.isEmpty()){
-//                    loadNextFriends(page+1)
-//                }
-//                _friends.emit(friends.value + newFriends)
-//            }
-//
-//        }
-//    }
 
+    private fun getImages() {
+        viewModelScope.launch {
+            val result = getImagesUseCase()
+            if (result.isSuccess) {
+                val uris = result.getOrThrow().subList(0, 1)
+                registerCommunity(uris)
+            } else {
+            }
+        }
+    }
+
+    private fun registerCommunity(uris : List<String>){
+        viewModelScope.launch {
+            val result = registerCommunityUseCase(
+                CommunityRegistrationInfo(
+                    "이번 여행은 짱좋아",
+                    "PUBLIC",
+                    null,
+                    null,
+                    1
+                ),
+                uris
+            )
+            if (result.isSuccess) {
+                Logger.t("MainTest").i("커뮤니티 등록 성공")
+
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
     private fun getFavoriteTopicList() {
         viewModelScope.launch {
             val result = getFavoriteTopicListUseCase()
@@ -135,33 +170,47 @@ class FeedViewModel @Inject constructor(
     }
 
     private fun getFeeds() {
-        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val travelLog = TravelLogInFeed(1, "ddd", "")
-        val feedList = listOf<FeedDTO>(
-            FeedDTO(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
-            FeedDTO(2, 5, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
-            FeedDTO(2, 6, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
-            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
-            FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
-        )
-        val feeds = feedList.map {
-            Feed.FeedItem(
-                it.feedId,
-                it.userId,
-                it.userProfile,
-                it.userNickname,
-                it.followState,
-                it.feedImage,
-                it.travelLog,
-                it.date,
-                it.content,
-                it.likeNum,
-                it.commentNum,
-                it.place,
+        viewModelScope.launch {
+
+//            val result = getCommunitiesUseCase(
+//                CommunityRequestInfo()
+//            )
+//            if (result.isSuccess) {
+//                Logger.t("MainTest").i("${result.getOrThrow()}")
+//
+//            } else {
+//                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+//            }
+
+            val profile =
+                UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
+            val travelLog = TravelLogInFeed(1, "ddd", "")
+            val feedList = listOf<FeedDTO>(
+                FeedDTO(1, 4, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd"),
+                FeedDTO(2, 5, profile, "dd", false, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+                FeedDTO(2, 6, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+                FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
+                FeedDTO(2, 2, profile, "dd", true, "dd", travelLog, "Dd", "dd", 10, 9, "dd"),
             )
+            val feeds = feedList.map {
+                Feed.FeedItem(
+                    it.feedId,
+                    it.userId,
+                    it.userProfile,
+                    it.userNickname,
+                    it.followState,
+                    it.feedImage,
+                    it.travelLog,
+                    it.date,
+                    it.content,
+                    it.likeNum,
+                    it.commentNum,
+                    it.place,
+                )
+            }
+            feedItems.clear()
+            feedItems.addAll(CopyOnWriteArrayList(feeds))
         }
-        feedItems.clear()
-        feedItems.addAll(CopyOnWriteArrayList(feeds))
     }
 
     private fun getPopularTravelLogs() {
@@ -175,31 +224,40 @@ class FeedViewModel @Inject constructor(
         popularLogs.addAll(popularSpotList)
     }
 
-    private fun getMayknowFriends() {
+        fun onNextFriends(){
+        if(pageJob.isCompleted.not()){
+            return
+        }
+        loadNextFriends()
+    }
 
+    private fun loadNextFriends(){
+        pageJob = viewModelScope.launch {
+            val result = getMayknowUsersUseCase(
+                MayknowUserSearchInfo(
+                    DEFAULT_PAGE_SIZE,lastId
+                ))
+            if(result.isSuccess){
+                val newFriends = result.getOrThrow()
+                Logger.t("MainTest").i("${newFriends}")
 
+                if(newFriends.size>0){
+                    lastId = newFriends[newFriends.lastIndex].userId
+                }
+                if (newFriends.isEmpty()){
+                    loadNextFriends()
+                }
+                val originalFriends = friends
+                friends.clear()
+                friends.addAll(originalFriends + newFriends)
 
+            }
 
-        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val mayKnowFriendList = arrayListOf<MayKnowFriend>(
-            MayKnowFriend(4, profile, "ari", "함께 아는 친구 2명", true),
-            MayKnowFriend(5, profile, "ari", "함께 아는 친구 2명", false),
-            MayKnowFriend(6, profile, "ari", "함께 아는 친구 2명", true),
-        )
-        friends.clear()
-        friends.addAll(mayKnowFriendList)
+        }
     }
 
     private fun onChangeFeedAndFriendItems(userId: Long, followState: Boolean) {
-        val newFriends = friends.map { friends ->
-            if (friends.userId == userId) {
-                friends.copy(followState = !followState)
-            } else {
-                friends
-            }
-        }
-        friends.clear()
-        friends.addAll(newFriends)
+
         val newFeedItems = feedItems.map { feed ->
             if (feed.userId == userId) {
                 feed.copy(followState = !followState)
@@ -213,11 +271,15 @@ class FeedViewModel @Inject constructor(
     }
     fun onFollowStateChange(userId: Long, followState: Boolean) {
         viewModelScope.launch {
-            onChangeFeedAndFriendItems(userId, followState)
             val result = changeFollowStateUseCase(userId, !followState)
             if (result.isFailure) {
                 onChangeFeedAndFriendItems(userId, !followState)
                 handleError(result.exceptionOrNull() ?: UnKnownException())
+            }else{
+                //알 수도 있는 친구를 다시 부른다
+                lastId = null
+                loadNextFriends()
+                onChangeFeedAndFriendItems(userId, followState)
             }
         }
     }

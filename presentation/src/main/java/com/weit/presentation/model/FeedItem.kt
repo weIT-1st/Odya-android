@@ -1,7 +1,10 @@
 package com.weit.presentation.model
 
+import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.UserProfile
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 sealed class Feed {
     data class FeedItem(
@@ -19,7 +22,7 @@ sealed class Feed {
         val place: String?,
     ) : Feed()
     data class PopularTravelLogItem(val popularTravelLogList: List<PopularTravelLog>) : Feed()
-    data class MayknowFriendItem(val mayKnowFriendList: List<MayKnowFriend>) : Feed()
+    data class MayknowFriendItem(val mayKnowFriendList: List<FollowUserContent>) : Feed()
 }
 data class TopicDTO(
     override val topicId: Long,
@@ -40,6 +43,7 @@ data class PopularTravelLog(
     val userNickname: String,
     val travelLogTitle: String,
     val travelLogImage: String,
+    val travelLogDate: LocalDateTime?= null,
 )
 
 data class FeedDTO(

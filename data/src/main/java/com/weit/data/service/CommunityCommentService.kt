@@ -2,7 +2,10 @@ package com.weit.data.service
 
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityCommentContentDTO
+import com.weit.data.model.community.CommunityCommentRegistration
 import retrofit2.Response
+import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -14,7 +17,7 @@ interface CommunityCommentService {
     @POST("/api/v1/communities/{communityId}/comments")
     suspend fun registerCommunityComment(
         @Path("communityId") communityId: Long,
-        @Query("content") content: String,
+        @Body communityCommentRegistration: CommunityCommentRegistration,
     )
 
     @GET("/api/v1/communities/{communityId}/comments")
@@ -28,10 +31,10 @@ interface CommunityCommentService {
     suspend fun updateCommunityComment(
         @Path("communityId") communityId: Long,
         @Path("commentId") commentId: Long,
-        @Query("content") content: String,
+        @Body communityCommentRegistration: CommunityCommentRegistration,
     ): Response<Unit>
 
-    @GET("/api/v1/communities/{communityId}/comments/{commentId}")
+    @DELETE("/api/v1/communities/{communityId}/comments/{commentId}")
     suspend fun deleteCommunityComment(
         @Path("communityId") communityId: Long,
         @Path("commentId") commentId: Long,

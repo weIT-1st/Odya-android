@@ -2,6 +2,7 @@ package com.weit.data.di
 
 import android.content.Context
 import com.weit.data.repository.community.CommunityCommentRepositoryImpl
+import com.weit.data.repository.community.CommunityRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -9,12 +10,14 @@ import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.repository.topic.TopicRepositoryImpl
 import com.weit.data.repository.user.UserRepositoryImpl
 import com.weit.data.service.CommunityCommentService
+import com.weit.data.service.CommunityService
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.TopicService
 import com.weit.data.service.UserService
 import com.weit.data.source.CommunityCommentDataSource
+import com.weit.data.source.CommunityDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
@@ -23,6 +26,7 @@ import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.domain.repository.community.comment.CommunityCommentRepository
+import com.weit.domain.repository.community.comment.CommunityRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -151,4 +155,23 @@ class MainModule {
     @Provides
     fun provideCommunityCommentRepository(dataSource: CommunityCommentDataSource): CommunityCommentRepository =
         CommunityCommentRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityService(@AuthNetworkObject retrofit: Retrofit): CommunityService =
+        retrofit.create(CommunityService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityDataSource(service: CommunityService): CommunityDataSource =
+        CommunityDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityRepository(
+        dataSource: CommunityDataSource,
+        imageRepositoryImpl: ImageRepositoryImpl,
+        imageDataSource: ImageDataSource,
+    ): CommunityRepository =
+        CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource)
 }

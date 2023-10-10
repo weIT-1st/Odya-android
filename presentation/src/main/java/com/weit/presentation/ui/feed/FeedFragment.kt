@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.orhanobut.logger.Logger
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -21,7 +22,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
         onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
-    )
+        scrollListener = { viewModel.onNextFriends() }
+        )
     private val topicAdapter = FavoriteTopicAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +54,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
         }
     }
+
 
     private fun navigateTravelLog(travelLogId: Long) {
         val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)

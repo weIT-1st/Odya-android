@@ -1,7 +1,9 @@
 package com.weit.data.repository.community
 
+import com.orhanobut.logger.Logger
 import com.weit.data.source.CommunityCommentDataSource
 import com.weit.data.util.exception
+import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.community.comment.CommunityCommentContent
 import com.weit.domain.model.community.comment.CommunityCommentDeleteInfo
 import com.weit.domain.model.community.comment.CommunityCommentInfo
@@ -39,9 +41,15 @@ class CommunityCommentRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCommunityComments(communityCommentInfo: CommunityCommentInfo): Result<List<CommunityCommentContent>> {
+
+        if(communityCommentInfo.lastId == null){
+            hasNextComment.set(true)
+        }
+       
         if (hasNextComment.get().not()) {
             return Result.failure(NoMoreItemException())
         }
+
         val result = runCatching {
             communityCommentDataSource.getCommunityComments(communityCommentInfo.communityId,communityCommentInfo.size,communityCommentInfo.lastId)
         }
@@ -73,13 +81,17 @@ class CommunityCommentRepositoryImpl @Inject constructor(
     }
 
     private fun handleUpdateAndDeleteCommentError(response: Response<*>): Throwable {
+        Logger.t("MainTest").i("실패 ${response.getErrorMessage()} ${response.message()} ${response.errorBody()}")
         return handleCode(response.code())
     }
 
     private fun handleRegisterAndGetCommentError(t: Throwable): Throwable {
         return if (t is HttpException) {
+            Logger.t("MainTest").i("실패 ${t.response()?.getErrorMessage()}")
             handleCode(t.code())
         } else {
+            Logger.t("MainTest").i("실패 ${t.message}")
+
             t
         }
     }

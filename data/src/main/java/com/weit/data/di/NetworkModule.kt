@@ -4,6 +4,7 @@ import com.squareup.moshi.Moshi
 import com.weit.data.BuildConfig
 import com.weit.data.interceptor.AuthInterceptor
 import com.weit.data.source.AuthDataSource
+import com.weit.data.util.LocalDateTimeConverter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -101,5 +102,7 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideMoshi(): Moshi = Moshi.Builder().build()
+    fun provideMoshi(): Moshi = Moshi.Builder()
+        .add(LocalDateTimeConverter())
+        .build()
 }

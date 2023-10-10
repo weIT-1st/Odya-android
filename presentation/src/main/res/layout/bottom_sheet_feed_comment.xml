@@ -57,18 +57,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rv_feed_comments" />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/iv_write_comment_profile"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginStart="20dp"
-        android:src="@drawable/ic_profile"
-        app:image_uri="@{vm.feed.userProfile.url}"
-        app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
-        app:layout_constraintEnd_toStartOf="@+id/ti_feed_comment"
-        app:layout_constraintStart_toStartOf="@+id/view_write_comment"
-        app:layout_constraintTop_toTopOf="@+id/view_write_comment"
-        app:profile_background="@{vm.feed.userProfile}" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_write_comment_profile"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_profile"
+            app:image_uri="@{vm.feed.userProfile.url}"
+            app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
+            app:layout_constraintEnd_toStartOf="@+id/ti_feed_comment"
+            app:layout_constraintStart_toStartOf="@+id/view_write_comment"
+            app:layout_constraintTop_toTopOf="@+id/view_write_comment"
+            app:profile_background="@{vm.feed.userProfile}" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ti_feed_comment"
@@ -96,7 +96,7 @@
             android:textColorHint="@color/label_assistive"
             app:layout_constrainedWidth="true"
             app:layout_constraintHorizontal_bias="0.0"
-            tools:text="@{vm.writedComment}" />
+            android:text="@={vm.writedComment}" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,6 +107,7 @@
         android:layout_marginEnd="13dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_comment_write"
+        android:onClick="@{()-> vm.registerAndUpdateComment()}"
         app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
         app:layout_constraintEnd_toEndOf="@+id/view_write_comment"
         app:layout_constraintTop_toTopOf="@+id/view_write_comment" />

@@ -48,9 +48,12 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.btCommunityFollow.setOnClickListener {
             viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
         }
-//        binding.btnWriteComment.setOnClickListener {
-//            viewModel.registerComment()
-//        }
+        binding.btnWriteComment.setOnClickListener {
+            viewModel.registerAndUpdateComment()
+        }
+        binding.tbFeedDetail.setOnClickListener {
+            viewModel.deleteFeed()
+        }
 
         // TODO 좋아요
     }

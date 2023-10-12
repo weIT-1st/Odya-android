@@ -105,12 +105,6 @@ class ImageDataSource @Inject constructor(
             imageName ?: throw ImageNotFoundException()
         }
 
-    fun bitmapToByteArray(bitmap: Bitmap): ByteArray {
-        var outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
-        return outputStream.toByteArray()
-    }
-
     companion object {
         private const val DEFAULT_QUALITY = 90
         private const val DEFAULT_RESIZE = 1024

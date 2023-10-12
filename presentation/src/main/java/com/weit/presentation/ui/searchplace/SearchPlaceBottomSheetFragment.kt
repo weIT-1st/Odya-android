@@ -9,6 +9,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
+import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
@@ -26,6 +27,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class SearchPlaceBottomSheetFragment(
     private val placeId: String,
+    private val reset : () -> Unit
 ) : BottomSheetDialogFragment() {
 
     @Inject
@@ -43,6 +45,8 @@ class SearchPlaceBottomSheetFragment(
     }
 
     private val placeHolder = R.layout.image_placeholder.toDrawable()
+
+    private val tabItem = ArrayList<Fragment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,6 +69,11 @@ class SearchPlaceBottomSheetFragment(
         super.onViewCreated(view, savedInstanceState)
 
         initExperiencedFriendRV()
+        initTabViewPager()
+
+        tabItem.add(tabJourney, PlaceJourneyFragment())
+        tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
+        tabItem.add(tabCommunity, PlaceCommunityFragment())
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriendNum.collectLatest {
@@ -86,6 +95,7 @@ class SearchPlaceBottomSheetFragment(
                 handelEvent(event)
             }
         }
+
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeImage.collectLatest { bitmap ->
                 Glide.with(requireContext())
@@ -98,7 +108,7 @@ class SearchPlaceBottomSheetFragment(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.placeTitle.collectLatest { title ->
                 binding.tvBsPlaceTitle.text = title
-                initTabViewPager(title)
+                changeTitle(title)
             }
         }
 
@@ -114,15 +124,15 @@ class SearchPlaceBottomSheetFragment(
         binding.rvPlaceExperiencedFriendProfile.adapter = null
         binding.viewPagerBsPlace.adapter = null
         _binding = null
+        reset()
     }
 
-    private fun initTabViewPager(placeTitle: String) {
+    private fun initTabViewPager() {
         val viewPager = binding.viewPagerBsPlace
         val tabLayout = binding.tlBsPlace
 
-        val tabItem = ArrayList<Fragment>()
         tabItem.add(tabJourney, PlaceJourneyFragment())
-        tabItem.add(tabReview, PlaceReviewFragment(placeId, placeTitle))
+        tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
         tabItem.add(tabCommunity, PlaceCommunityFragment())
 
         viewPager.apply {
@@ -138,6 +148,17 @@ class SearchPlaceBottomSheetFragment(
             }
         }.attach()
     }
+
+    private fun changeTitle(placeTitle: String){
+        val viewPager = binding.viewPagerBsPlace
+
+        viewPager.apply {
+            adapter = SearchPlaceBottomSheetAdapter(this.findFragment(), tabItem)
+            isUserInputEnabled = false
+        }
+
+    }
+
 
     private fun initExperiencedFriendRV() {
         binding.rvPlaceExperiencedFriendProfile.adapter = experiencedFriendAdapter

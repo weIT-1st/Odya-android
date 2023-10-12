@@ -46,10 +46,11 @@ class PlaceModule {
     @Singleton
     @Provides
     fun providePlaceDataSource(
+        @ApplicationContext context: Context,
         service: PlaceService,
         sessionToken: AutocompleteSessionToken,
         placesClient: PlacesClient,
-    ): PlaceDateSource = PlaceDateSource(service, sessionToken, placesClient)
+    ): PlaceDateSource = PlaceDateSource(context, service, sessionToken, placesClient)
 
     @Singleton
     @Provides
@@ -57,5 +58,5 @@ class PlaceModule {
         @ApplicationContext context: Context,
         dataSource: PlaceDateSource
     ): PlaceRepository =
-        PlaceRepositoryImpl(context, dataSource, ImageDataSource(context.contentResolver) )
+        PlaceRepositoryImpl(dataSource, ImageDataSource(context.contentResolver) )
 }

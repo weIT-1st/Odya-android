@@ -1,8 +1,10 @@
 package com.weit.data.source
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.model.Place
@@ -14,18 +16,26 @@ import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FetchPlaceResponse
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.gun0912.tedpermission.TedPermissionResult
+import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
 import com.weit.data.service.PlaceService
+import com.weit.domain.model.CoordinateInfo
+import com.weit.domain.model.exception.InvalidPermissionException
+import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.UnKnownException
+import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PlaceDateSource @Inject constructor(
+    @ActivityContext private val context: Context,
     private val service: PlaceService,
     private val sessionToken: AutocompleteSessionToken,
     private val placesClient: PlacesClient,
@@ -114,5 +124,38 @@ class PlaceDateSource @Inject constructor(
                throw it
             }
         awaitClose { }
+    }
+
+    suspend fun getCurrentPlaceDetail(): Result<CoordinateInfo> {
+        val accessFineLocation =
+            checkLocationPermission(android.Manifest.permission.ACCESS_FINE_LOCATION)
+        val accessCoarseLocation =
+            checkLocationPermission(android.Manifest.permission.ACCESS_COARSE_LOCATION)
+
+        return if (accessFineLocation.isGranted && accessCoarseLocation.isGranted) {
+            var latitude: Float? = null
+            var longitude: Float? = null
+            val fusedLocationProviderClient =
+                LocationServices.getFusedLocationProviderClient(context)
+            fusedLocationProviderClient.lastLocation
+                .addOnSuccessListener {
+                    latitude = it.latitude.toFloat()
+                    longitude = it.longitude.toFloat()
+                }.await()
+            if (latitude == null || longitude == null){
+                Result.failure(InvalidRequestException())
+            } else {
+                Result.success(CoordinateInfo(latitude!!, longitude!!))
+            }
+        } else {
+            Result.failure(InvalidPermissionException())
+        }
+    }
+
+    private suspend fun checkLocationPermission(permission: String): TedPermissionResult {
+        return TedPermission.create()
+            .setDeniedMessage("현재 위치 정보를 가져오기 위해서는 권한이 필요해요")
+            .setPermissions(permission)
+            .check()
     }
 }

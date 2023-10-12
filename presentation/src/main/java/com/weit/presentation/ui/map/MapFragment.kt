@@ -156,16 +156,15 @@ class MapFragment :
 
         if (map != null) {
             map!!.setOnMapClickListener {
-                Log.d("OnMapClickListener", "Success")
                 viewModel.getPlaceByCoordinate(it.latitude, it.longitude)
             }
-        } else {
-            Log.d("OnMapClickListener", "Fail")
-        }
 
-        map!!.setOnPoiClickListener {
-            Log.d("poi click!", "name : " + it.name)
-            placeBottomSheetUp(it.placeId)
+            map!!.setOnPoiClickListener {
+                placeBottomSheetUp(it.placeId)
+            }
+
+        } else {
+            sendSnackBar("지도 정보를 받아오지 못했어요")
         }
     }
 
@@ -176,11 +175,18 @@ class MapFragment :
     }
 
     private fun placeBottomSheetUp(placeId: String) {
-        searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId)
+        if (searchPlaceBottomSheetFragment == null){
+            searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId
+            ) { placeBottomSheetNull() }
+        }
 
         if (!searchPlaceBottomSheetFragment!!.isAdded) {
-            searchPlaceBottomSheetFragment!!.show(childFragmentManager, "temp")
+            searchPlaceBottomSheetFragment!!.show(childFragmentManager, TAG)
         }
+    }
+
+    private fun placeBottomSheetNull(){
+        searchPlaceBottomSheetFragment = null
     }
     companion object {
         private val TAG = "MapFragment"

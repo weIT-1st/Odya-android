@@ -10,7 +10,7 @@ interface PlaceRepository {
 
     suspend fun getPlaceDetail(placeId: String): Result<PlaceDetail>
 
-    suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): List<PlacePrediction>
+    suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): Result<List<PlacePrediction>>
 
     suspend fun getPlaceImage(placeId: String): Result<ByteArray>
 

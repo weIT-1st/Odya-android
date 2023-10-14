@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityRegistrationInfo
-import com.weit.domain.model.community.CommunityRequestInfo
-import com.weit.domain.model.community.comment.CommunityCommentInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
@@ -25,13 +23,10 @@ import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.FeedDTO
-import com.weit.presentation.model.MayKnowFriend
 import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
-import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
-import com.weit.presentation.ui.login.nickname.LoginNicknameViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -88,7 +83,7 @@ class FeedViewModel @Inject constructor(
         loadNextFriends()
 //        getMayknowFriends()
         makeFeedItems()
-//    getImages()
+    getImages()
     }
 
 

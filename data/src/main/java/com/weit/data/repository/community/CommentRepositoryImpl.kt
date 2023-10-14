@@ -1,20 +1,20 @@
 package com.weit.data.repository.community
 
 import com.orhanobut.logger.Logger
-import com.weit.data.source.CommunityCommentDataSource
+import com.weit.data.source.CommentDataSource
 import com.weit.data.util.exception
 import com.weit.data.util.getErrorMessage
-import com.weit.domain.model.community.comment.CommunityCommentContent
-import com.weit.domain.model.community.comment.CommunityCommentDeleteInfo
-import com.weit.domain.model.community.comment.CommunityCommentInfo
-import com.weit.domain.model.community.comment.CommunityCommentRegistrationInfo
-import com.weit.domain.model.community.comment.CommunityCommentUpdateInfo
+import com.weit.domain.model.community.comment.CommentContent
+import com.weit.domain.model.community.comment.CommentDeleteInfo
+import com.weit.domain.model.community.comment.CommentInfo
+import com.weit.domain.model.community.comment.CommentRegistrationInfo
+import com.weit.domain.model.community.comment.CommentUpdateInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
-import com.weit.domain.repository.community.comment.CommunityCommentRepository
+import com.weit.domain.repository.community.comment.CommentRepository
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
@@ -23,15 +23,15 @@ import retrofit2.Response
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
-class CommunityCommentRepositoryImpl @Inject constructor(
-    private val communityCommentDataSource: CommunityCommentDataSource,
-) : CommunityCommentRepository {
+class CommentRepositoryImpl @Inject constructor(
+    private val commentDataSource: CommentDataSource,
+) : CommentRepository {
 
     private val hasNextComment = AtomicBoolean(true)
 
-    override suspend fun registerCommunityComment(communityCommentRegistrationInfo: CommunityCommentRegistrationInfo): Result<Unit> {
+    override suspend fun registerCommunityComment(commentRegistrationInfo: CommentRegistrationInfo): Result<Unit> {
         val result = runCatching {
-            communityCommentDataSource.registerCommunityComment(communityCommentRegistrationInfo.communityId,communityCommentRegistrationInfo.content)
+            commentDataSource.registerCommunityComment(commentRegistrationInfo.communityId,commentRegistrationInfo.content)
         }
         return if (result.isSuccess) {
             Result.success(result.getOrThrow())
@@ -40,9 +40,9 @@ class CommunityCommentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getCommunityComments(communityCommentInfo: CommunityCommentInfo): Result<List<CommunityCommentContent>> {
+    override suspend fun getCommunityComments(commentInfo: CommentInfo): Result<List<CommentContent>> {
 
-        if(communityCommentInfo.lastId == null){
+        if(commentInfo.lastId == null){
             hasNextComment.set(true)
         }
        
@@ -51,7 +51,7 @@ class CommunityCommentRepositoryImpl @Inject constructor(
         }
 
         val result = runCatching {
-            communityCommentDataSource.getCommunityComments(communityCommentInfo.communityId,communityCommentInfo.size,communityCommentInfo.lastId)
+            commentDataSource.getCommunityComments(commentInfo.communityId,commentInfo.size,commentInfo.lastId)
         }
         return if (result.isSuccess) {
             val communityComments = result.getOrThrow()
@@ -62,8 +62,8 @@ class CommunityCommentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateCommunityComment(communityCommentUpdateInfo: CommunityCommentUpdateInfo): Result<Unit> {
-        val response = communityCommentDataSource.updateCommunityComment(communityCommentUpdateInfo.communityId,communityCommentUpdateInfo.commentId,communityCommentUpdateInfo.content)
+    override suspend fun updateCommunityComment(commentUpdateInfo: CommentUpdateInfo): Result<Unit> {
+        val response = commentDataSource.updateCommunityComment(commentUpdateInfo.communityId,commentUpdateInfo.commentId,commentUpdateInfo.content)
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
@@ -71,8 +71,8 @@ class CommunityCommentRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun deleteCommunityComment(communityCommentDeleteInfo: CommunityCommentDeleteInfo): Result<Unit> {
-        val response = communityCommentDataSource.deleteCommunityComment(communityCommentDeleteInfo.communityId,communityCommentDeleteInfo.commentId)
+    override suspend fun deleteCommunityComment(commentDeleteInfo: CommentDeleteInfo): Result<Unit> {
+        val response = commentDataSource.deleteCommunityComment(commentDeleteInfo.communityId,commentDeleteInfo.commentId)
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
@@ -81,17 +81,13 @@ class CommunityCommentRepositoryImpl @Inject constructor(
     }
 
     private fun handleUpdateAndDeleteCommentError(response: Response<*>): Throwable {
-        Logger.t("MainTest").i("실패 ${response.getErrorMessage()} ${response.message()} ${response.errorBody()}")
         return handleCode(response.code())
     }
 
     private fun handleRegisterAndGetCommentError(t: Throwable): Throwable {
         return if (t is HttpException) {
-            Logger.t("MainTest").i("실패 ${t.response()?.getErrorMessage()}")
             handleCode(t.code())
         } else {
-            Logger.t("MainTest").i("실패 ${t.message}")
-
             t
         }
     }

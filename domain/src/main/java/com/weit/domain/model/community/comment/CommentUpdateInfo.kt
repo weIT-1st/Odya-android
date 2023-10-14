@@ -1,6 +1,7 @@
 package com.weit.domain.model.community.comment
 
-data class CommunityCommentRegistrationInfo(
+data class CommentUpdateInfo(
     val communityId: Long,
+    val commentId: Long,
     val content: String,
 )

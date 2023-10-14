@@ -1,16 +1,10 @@
 package com.weit.data.source
 
 import com.weit.data.model.ListResponse
-import com.weit.data.model.community.CommunityCommentContentDTO
 import com.weit.data.model.community.CommunityContentDTO
 import com.weit.data.model.community.CommunityMainContentDTO
-import com.weit.data.model.community.CommunityRegistration
-import com.weit.data.model.follow.CommunityId
-import com.weit.data.model.follow.FollowFollowingId
-import com.weit.data.service.CommunityCommentService
 import com.weit.data.service.CommunityService
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import retrofit2.Response
 import javax.inject.Inject
 

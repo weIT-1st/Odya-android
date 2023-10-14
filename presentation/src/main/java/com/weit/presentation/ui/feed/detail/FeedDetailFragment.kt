@@ -14,6 +14,7 @@ import com.weit.presentation.model.FeedDetail
 import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
+import com.weit.presentation.ui.feed.detail.CommentDialogViewModel
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.feed.detail.FeedTopicAdapter
@@ -21,14 +22,21 @@ import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     FragmentFeedDetailBinding::inflate,
 ) {
-
-    private val viewModel: FeedDetailViewModel by viewModels()
     private val args: FeedDetailFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var viewModelFactory: FeedDetailViewModel.FeedDetailFactory
+
+    private val viewModel: FeedDetailViewModel by viewModels {
+        FeedDetailViewModel.provideFactory(viewModelFactory,args.feedId)
+    }
+//    private val viewModel: FeedDetailViewModel by viewModels()
     private val feedCommentAdapter = FeedCommentAdapter(
         updateItem = { position -> changeComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
@@ -42,7 +50,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.feedId = args.feedId
+//        viewModel.feedId = args.feedId
         binding.vm = viewModel
         initCommentRecyclerView()
         binding.btCommunityFollow.setOnClickListener {
@@ -57,7 +65,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
         // TODO 좋아요
     }
-    private fun initCommentBottomSheet(feed: FeedDetail?) {
+    private fun showCommentBottomSheet(feed: FeedDetail) {
         if(bottomSheetDialog==null){
             bottomSheetDialog = CommentDialogFragment(feed)
         }
@@ -130,8 +138,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
-                //여기서 초기화 해줘도 되나
-                initCommentBottomSheet(event.feed)
+                event.feed?.let { showCommentBottomSheet(it) }
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {
                 binding.btCommunityFollow.isChecked = event.followState

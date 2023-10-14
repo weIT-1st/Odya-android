@@ -1,21 +1,21 @@
 package com.weit.data.source
 
 import com.weit.data.model.ListResponse
-import com.weit.data.model.community.CommunityCommentContentDTO
+import com.weit.data.model.community.CommentContentDTO
 import com.weit.data.model.community.CommunityCommentRegistration
-import com.weit.data.service.CommunityCommentService
+import com.weit.data.service.CommentService
 import retrofit2.Response
 import javax.inject.Inject
 
-class CommunityCommentDataSource @Inject constructor(
-    private val service: CommunityCommentService,
+class CommentDataSource @Inject constructor(
+    private val service: CommentService,
 ) {
 
     suspend fun registerCommunityComment(communityId: Long, content:String) {
         service.registerCommunityComment(communityId, CommunityCommentRegistration(content))
     }
 
-    suspend fun getCommunityComments(communityId: Long, size:Int?, lastId:Long?): ListResponse<CommunityCommentContentDTO> {
+    suspend fun getCommunityComments(communityId: Long, size:Int?, lastId:Long?): ListResponse<CommentContentDTO> {
         return service.getCommunityComments(communityId,size,lastId)
     }
 

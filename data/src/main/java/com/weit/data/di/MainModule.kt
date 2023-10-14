@@ -1,7 +1,8 @@
 package com.weit.data.di
 
 import android.content.Context
-import com.weit.data.repository.community.CommunityCommentRepositoryImpl
+import com.squareup.moshi.Moshi
+import com.weit.data.repository.community.CommentRepositoryImpl
 import com.weit.data.repository.community.CommunityRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
@@ -9,14 +10,14 @@ import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.repository.topic.TopicRepositoryImpl
 import com.weit.data.repository.user.UserRepositoryImpl
-import com.weit.data.service.CommunityCommentService
+import com.weit.data.service.CommentService
 import com.weit.data.service.CommunityService
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.TopicService
 import com.weit.data.service.UserService
-import com.weit.data.source.CommunityCommentDataSource
+import com.weit.data.source.CommentDataSource
 import com.weit.data.source.CommunityDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
@@ -25,7 +26,7 @@ import com.weit.data.source.PermissionDataSource
 import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
-import com.weit.domain.repository.community.comment.CommunityCommentRepository
+import com.weit.domain.repository.community.comment.CommentRepository
 import com.weit.domain.repository.community.comment.CommunityRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
@@ -143,18 +144,18 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideCommunityCommentService(@AuthNetworkObject retrofit: Retrofit): CommunityCommentService =
-        retrofit.create(CommunityCommentService::class.java)
+    fun provideCommentService(@AuthNetworkObject retrofit: Retrofit): CommentService =
+        retrofit.create(CommentService::class.java)
 
     @ActivityRetainedScoped
     @Provides
-    fun provideCommunityCommentDataSource(service: CommunityCommentService): CommunityCommentDataSource =
-        CommunityCommentDataSource(service)
+    fun provideCommentDataSource(service: CommentService): CommentDataSource =
+        CommentDataSource(service)
 
     @ActivityRetainedScoped
     @Provides
-    fun provideCommunityCommentRepository(dataSource: CommunityCommentDataSource): CommunityCommentRepository =
-        CommunityCommentRepositoryImpl(dataSource)
+    fun provideCommentRepository(dataSource: CommentDataSource): CommentRepository =
+        CommentRepositoryImpl(dataSource)
 
     @ActivityRetainedScoped
     @Provides
@@ -172,6 +173,7 @@ class MainModule {
         dataSource: CommunityDataSource,
         imageRepositoryImpl: ImageRepositoryImpl,
         imageDataSource: ImageDataSource,
+        moshi: Moshi
     ): CommunityRepository =
-        CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource)
+        CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource,moshi)
 }

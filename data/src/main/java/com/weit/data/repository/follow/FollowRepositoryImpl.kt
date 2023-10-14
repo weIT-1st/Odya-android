@@ -31,7 +31,7 @@ class FollowRepositoryImpl @Inject constructor(
 
     private val hasNextFollower = AtomicBoolean(true)
     private val hasNextFollowing = AtomicBoolean(true)
-    private val hasNextFriend = AtomicBoolean(true)
+    private val hasNextUser = AtomicBoolean(true)
 
 
     override suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
@@ -107,16 +107,20 @@ class FollowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
-        if (hasNextFriend.get().not()) {
+        if(mayknowUserSearchInfo.lastId == null){
+            hasNextUser.set(true)
+        }
+
+        if (hasNextUser.get().not()) {
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
             followDataSource.getMayknowUsers(mayknowUserSearchInfo)
         }
         return if (result.isSuccess) {
-            val mayKnowFriend = result.getOrThrow()
-            hasNextFriend.set(mayKnowFriend.hasNext)
-            Result.success(mayKnowFriend.content)
+            val mayKnowUser = result.getOrThrow()
+            hasNextUser.set(mayKnowUser.hasNext)
+            Result.success(mayKnowUser.content)
         } else {
             Result.failure(result.exception())
         }

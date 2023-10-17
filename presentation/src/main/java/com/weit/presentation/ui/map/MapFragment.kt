@@ -176,8 +176,9 @@ class MapFragment :
 
     private fun placeBottomSheetUp(placeId: String) {
         if (searchPlaceBottomSheetFragment == null){
-            searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId
-            ) { placeBottomSheetNull() }
+            searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId) {
+                placeBottomSheetReset()
+            }
         }
 
         if (!searchPlaceBottomSheetFragment!!.isAdded) {
@@ -185,7 +186,7 @@ class MapFragment :
         }
     }
 
-    private fun placeBottomSheetNull(){
+    private fun placeBottomSheetReset(){
         searchPlaceBottomSheetFragment = null
     }
     companion object {

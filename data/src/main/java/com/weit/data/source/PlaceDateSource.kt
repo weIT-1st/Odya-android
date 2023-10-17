@@ -104,14 +104,9 @@ class PlaceDateSource @Inject constructor(
         placesClient.fetchPlace(placeRequest)
             .addOnSuccessListener { response: FetchPlaceResponse ->
                 val place = response.place
-                val metadata = place.photoMetadatas
+                val metadata = place.photoMetadatas?.firstOrNull() ?: return@addOnSuccessListener
 
-                if (metadata == null || metadata.isEmpty()) {
-                    return@addOnSuccessListener
-                }
-
-                val photoMetadata = metadata.first()
-                val photoRequest = FetchPhotoRequest.builder(photoMetadata)
+                val photoRequest = FetchPhotoRequest.builder(metadata)
                     .build()
 
                 placesClient.fetchPhoto(photoRequest)
@@ -137,11 +132,15 @@ class PlaceDateSource @Inject constructor(
             var longitude: Float? = null
             val fusedLocationProviderClient =
                 LocationServices.getFusedLocationProviderClient(context)
+
             fusedLocationProviderClient.lastLocation
-                .addOnSuccessListener {
-                    latitude = it.latitude.toFloat()
-                    longitude = it.longitude.toFloat()
+                .addOnCompleteListener {
+                    if (it.isSuccessful){
+                        latitude = it.result.latitude.toFloat()
+                        longitude = it.result.longitude.toFloat()
+                    }
                 }.await()
+
             if (latitude == null || longitude == null){
                 Result.failure(InvalidRequestException())
             } else {

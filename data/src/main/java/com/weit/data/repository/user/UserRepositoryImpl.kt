@@ -5,6 +5,7 @@ import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.data.source.UserInfoDataSource
+import com.weit.data.util.exception
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.RegexException
@@ -66,10 +67,10 @@ class UserRepositoryImpl @Inject constructor(
         userInfoDataSource.getUserId() ?: throw NotFoundException()
 
     override suspend fun deleteUser(): Result<Unit> {
-       val result = userDataSource.deleteUser()
-        return if(result.isSuccessful){
+        val result = userDataSource.deleteUser()
+        return if (result.isSuccessful) {
             Result.success(Unit)
-        }else{
+        } else {
             Result.failure(handleUserError(result))
         }
     }

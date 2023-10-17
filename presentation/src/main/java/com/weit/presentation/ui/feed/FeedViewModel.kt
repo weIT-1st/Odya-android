@@ -21,6 +21,7 @@ import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
 import com.weit.domain.usecase.image.GetImagesUseCase
+import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
@@ -48,8 +49,7 @@ class FeedViewModel @Inject constructor(
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val getMayknowUsersUseCase: GetMayknowUsersUseCase,
-    private val registerCommunityUseCase: RegisterCommunityUseCase,
-    private val getImagesUseCase: GetImagesUseCase,
+//    private val getImagesUseCase: GetImagesUseCase,
     private val getCommunitiesUseCase: GetCommunitiesUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
@@ -88,42 +88,21 @@ class FeedViewModel @Inject constructor(
         loadNextFriends()
 //        getMayknowFriends()
         makeFeedItems()
-//    getImages()
     }
 
 
-    private fun getImages() {
-        viewModelScope.launch {
-            val result = getImagesUseCase()
-            if (result.isSuccess) {
-                val uris = result.getOrThrow().subList(0, 1)
-                registerCommunity(uris)
-            } else {
-            }
-        }
-    }
+//    private fun getImages() {
+//        viewModelScope.launch {
+//            val result = getImagesUseCase()
+//            if (result.isSuccess) {
+//                val uris = result.getOrThrow().subList(0, 1)
+//                registerCommunity(uris)
+//            } else {
+//            }
+//        }
+//    }
 
-    private fun registerCommunity(uris : List<String>){
-        viewModelScope.launch {
-            val result = registerCommunityUseCase(
-                CommunityRegistrationInfo(
-                    "이번 여행은 짱좋아",
-                    "PUBLIC",
-                    null,
-                    null,
-                    1
-                ),
-                uris
-            )
-            if (result.isSuccess) {
-                Logger.t("MainTest").i("커뮤니티 등록 성공")
 
-            } else {
-                handleError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
     private fun getFavoriteTopicList() {
         viewModelScope.launch {
             val result = getFavoriteTopicListUseCase()
@@ -284,6 +263,13 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    fun onSelectPictures(pickImageUseCase: PickImageUseCase) {
+        viewModelScope.launch {
+            val images = pickImageUseCase()
+            _event.emit(Event.OnSelectPictures(images))
+        }
+    }
+
     private suspend fun handleError(error: Throwable) {
         when (error) {
             is ExistedFollowingIdException -> _event.emit(Event.ExistedFollowingIdException)
@@ -298,6 +284,9 @@ class FeedViewModel @Inject constructor(
     sealed class Event {
         data class OnChangeFavoriteTopics(
             val topics: List<TopicDetail>,
+        ) : Event()
+        data class OnSelectPictures(
+            val uris: List<String>,
         ) : Event()
         object CreateAndDeleteFollowSuccess : Event()
         object NotExistTopicIdException : Event()
@@ -315,18 +304,6 @@ class FeedViewModel @Inject constructor(
     }
 }
 
-// feedFragment에서는 필요없지만 다른 곳에서 쓰일테니 여기둠
-// private fun getTopicList() {
-//    viewModelScope.launch {
-//        val result = getTopicListUseCase()
-//        if (result.isSuccess) {
-//            val topic = result.getOrThrow()
-//            Logger.t("MainTest").i("$topic")
-//        } else {
-//            Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-//        }
-//    }
-// }
 // private fun addFavoriteTopic() {
 //    viewModelScope.launch {
 //        val result = registerFavoriteTopicUseCase(

@@ -1,21 +1,27 @@
 package com.weit.presentation.ui.feed
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.orhanobut.logger.Logger
+import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
+import com.weit.presentation.model.feed.FeedImage
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding>(
     FragmentFeedBinding::inflate,
 ) {
+
+    @Inject
+    lateinit var pickImageUseCase: PickImageUseCase
 
     private val viewModel: FeedViewModel by viewModels()
     private val feedAdapter = FeedAdapter(
@@ -32,8 +38,17 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         initTopicRecyclerView()
         initCommunityRecyclerView()
         binding.btnWrite.setOnClickListener {
-            navigateFeedPost()
+            viewModel.onSelectPictures(pickImageUseCase)
         }
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun initTopicRecyclerView() {
@@ -66,14 +81,17 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         findNavController().navigate(action)
     }
 
-    private fun navigateFeedPost() {
-        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment()
+    private fun navigateFeedPost(uris: List<String>) {
+        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(FeedImage(uris))
         findNavController().navigate(action)
     }
     private fun handleEvent(event: FeedViewModel.Event) {
         when (event) {
             is FeedViewModel.Event.OnChangeFavoriteTopics -> {
                 topicAdapter.submitList(event.topics)
+            }
+            is FeedViewModel.Event.OnSelectPictures -> {
+                navigateFeedPost(event.uris)
             }
             is FeedViewModel.Event.NotExistTopicIdException -> {
                 sendSnackBar("해당 토픽은 존재하지 않습니다용")

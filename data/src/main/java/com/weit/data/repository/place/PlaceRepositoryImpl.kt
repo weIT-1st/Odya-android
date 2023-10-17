@@ -1,28 +1,21 @@
 package com.weit.data.repository.place
 
-import android.content.Context
-import com.google.android.gms.location.LocationServices
-import com.gun0912.tedpermission.TedPermissionResult
-import com.gun0912.tedpermission.coroutine.TedPermission
 import com.weit.data.model.map.Place
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceDateSource
 import com.weit.data.util.exception
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.exception.ImageNotFoundException
-import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.repository.place.PlaceRepository
-import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
-import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(

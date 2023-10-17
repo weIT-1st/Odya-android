@@ -2,8 +2,6 @@ package com.weit.data.source
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
-import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.LocationServices
 import com.google.android.libraries.places.api.model.AutocompletePrediction
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
@@ -26,7 +24,6 @@ import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.UnKnownException
 import dagger.hilt.android.qualifiers.ActivityContext
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow

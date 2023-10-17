@@ -1,15 +1,18 @@
-package com.weit.presentation.ui.searchplace.editreview
+package com.weit.presentation.ui.placereview
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import androidx.annotation.IntRange
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentBottomSheetReviewBinding
+import com.weit.presentation.databinding.FragmentDialogEditReviewBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,10 +21,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class EditPlaceReviewFragment(
-    private val updateReviewList: () -> Unit,
     private val placeId: String,
     private val placeReviewContentData: PlaceReviewContentData?,
-) : BottomSheetDialogFragment() {
+) : DialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: EditPlaceReviewViewModel.PlaceReviewContentFactory
@@ -30,12 +32,12 @@ class EditPlaceReviewFragment(
         EditPlaceReviewViewModel.provideFactory(viewModelFactory, placeReviewContentData)
     }
 
-    private var _binding: FragmentBottomSheetReviewBinding? = null
+    private var _binding: FragmentDialogEditReviewBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        isCancelable = true
+        isCancelable = false
     }
 
     override fun onCreateView(
@@ -43,7 +45,9 @@ class EditPlaceReviewFragment(
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = FragmentBottomSheetReviewBinding.inflate(inflater, container, false)
+        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        _binding = FragmentDialogEditReviewBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
             vm = viewModel
@@ -60,18 +64,37 @@ class EditPlaceReviewFragment(
             binding.etEditReviewDetail.hint = placeReviewContentData.myReview
         }
 
-        binding.ratingbarEditReviewStar.setOnRatingChangeListener { _, rating, _ ->
-            viewModel.setRating(rating)
-        }
-
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
             }
         }
 
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.review.collectLatest { review ->
+                binding.tvEditReviewDetail.text = String.format(
+                    getString(R.string.review_detail),
+                    review.length,
+                )
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.rating.collectLatest { rating ->
+                viewModel.setStar(rating)
+                binding.tvEditReviewStar.text = String.format(
+                    getString(R.string.review_star),
+                    rating,
+                )
+            }
+        }
+
         binding.btnEditReviewRegister.setOnClickListener {
             viewModel.updatePlaceReview(placeId)
+        }
+
+        binding.btnEditReviewCancel.setOnClickListener {
+            dismiss()
         }
     }
 
@@ -83,9 +106,7 @@ class EditPlaceReviewFragment(
     private fun handleEvent(event: EditPlaceReviewViewModel.Event) {
         when (event) {
             EditPlaceReviewViewModel.Event.RegistrationSuccess -> {
-                updateReviewList()
                 sendSnackBar("한줄 리뷰 성공")
-                dismiss()
             }
             EditPlaceReviewViewModel.Event.TooLongReviewError -> {
                 sendSnackBar("리뷰가 너무 길어요")
@@ -93,8 +114,8 @@ class EditPlaceReviewFragment(
             EditPlaceReviewViewModel.Event.TooShortReviewError -> {
                 sendSnackBar("리뷰를 입력하세요")
             }
-            EditPlaceReviewViewModel.Event.InvalidRequestError -> {
-                sendSnackBar("다시 입력하세요")
+            EditPlaceReviewViewModel.Event.IsDuplicatedReviewError -> {
+                sendSnackBar("중복된 리뷰 이빈다.")
             }
             EditPlaceReviewViewModel.Event.NotEnoughStarError -> {
                 sendSnackBar("별점을 입력하세요")
@@ -107,12 +128,6 @@ class EditPlaceReviewFragment(
             }
             EditPlaceReviewViewModel.Event.UnregisteredError -> {
                 sendSnackBar("로그인 하세요")
-            }
-            EditPlaceReviewViewModel.Event.AlreadyRegisterReviewError -> {
-                sendSnackBar("이미 리뷰가 존재합니다.")
-            }
-            EditPlaceReviewViewModel.Event.NotExistPlaceReview -> {
-                sendSnackBar("수정할 리뷰가 없어요")
             }
         }
     }

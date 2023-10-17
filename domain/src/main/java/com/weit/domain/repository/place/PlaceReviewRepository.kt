@@ -1,8 +1,8 @@
 package com.weit.domain.repository.place
 
-import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
-import com.weit.domain.model.place.PlaceReviewBySearching
-import com.weit.domain.model.place.PlaceReviewByUserIdQuery
+import com.weit.domain.model.place.PlaceReviewByPlaceIdInfo
+import com.weit.domain.model.place.PlaceReviewByUserIdInfo
+import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 
@@ -20,12 +20,12 @@ interface PlaceReviewRepository {
     ): Result<Unit>
 
     suspend fun getByPlaceId(
-        info: PlaceReviewByPlaceIdQuery,
-    ): Result<PlaceReviewBySearching>
+        info: PlaceReviewByPlaceIdInfo,
+    ): Result<List<PlaceReviewDetail>>
 
     suspend fun getByUserId(
-        info: PlaceReviewByUserIdQuery,
-    ): Result<PlaceReviewBySearching>
+        info: PlaceReviewByUserIdInfo,
+    ): Result<List<PlaceReviewDetail>>
 
     suspend fun isExistReview(
         placeId: String,
@@ -34,8 +34,4 @@ interface PlaceReviewRepository {
     suspend fun getReviewCount(
         placeId: String,
     ): Result<Int>
-
-    suspend fun getAverageRating(
-        placeId: String,
-    ): Result<Float>
 }

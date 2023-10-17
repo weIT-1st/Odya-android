@@ -7,7 +7,6 @@ import com.weit.domain.usecase.auth.LoginWithKakaoUseCase
 import com.weit.presentation.databinding.FragmentLoginBinding
 import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -21,8 +20,6 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     lateinit var loginWithKakaoUseCase: LoginWithKakaoUseCase
 
     private val viewModel: LoginViewModel by viewModels()
-    private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
-
     override fun initListener() {
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)

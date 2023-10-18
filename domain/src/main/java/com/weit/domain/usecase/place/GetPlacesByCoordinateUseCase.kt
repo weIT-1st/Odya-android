@@ -10,5 +10,5 @@ class GetPlacesByCoordinateUseCase @Inject constructor(
     suspend operator fun invoke(
         latitude: Double,
         longitude: Double,
-    ): Result<List<PlacePrediction>> = repository.getPlacesByCoordinate(latitude, longitude)
+    ): List<PlacePrediction> = repository.getPlacesByCoordinate(latitude, longitude)
 }

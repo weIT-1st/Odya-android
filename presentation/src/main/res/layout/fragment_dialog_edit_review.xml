@@ -29,15 +29,7 @@
             android:id="@+id/tv_edit_review_star"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-<<<<<<<< HEAD:presentation/src/main/res/layout/bottom_sheet_edit_review.xml
-            android:isIndicator="true"
-            android:layout_marginTop="18dp"
-            android:rating="@{vm.rating}"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-========
             style="@style/detail2"
->>>>>>>> origin/develop:presentation/src/main/res/layout/fragment_dialog_edit_review.xml
             app:layout_constraintTop_toBottomOf="@+id/tv_edit_review_title"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="16dp"

@@ -1,11 +1,13 @@
-package com.weit.presentation.ui.placereview
+package com.weit.presentation.ui.searchplace.editreview
 
+import android.content.res.Resources.NotFoundException
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.RequestResourceAlreadyExistsException
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 import com.weit.domain.usecase.place.RegisterPlaceReviewUseCase
@@ -18,6 +20,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class EditPlaceReviewViewModel @AssistedInject constructor(
@@ -28,7 +31,8 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
 
     private var placeReviewId: Long? = null
     private var reviewState = register
-    val rating = MutableStateFlow(initRating)
+    private val _rating = MutableStateFlow(initRating)
+    val rating: StateFlow<Float> get() = _rating
     val review = MutableStateFlow("")
 
     private val _event = MutableEventFlow<Event>()
@@ -46,7 +50,7 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
             if (placeReviewContentData != null) {
                 reviewState = update
                 placeReviewId = placeReviewContentData.placeReviewId
-                rating.emit((placeReviewContentData.myRating / 2).toFloat())
+                _rating.emit((placeReviewContentData.myRating.toFloat() / 2))
                 review.emit(placeReviewContentData.myReview)
             }
         }
@@ -55,6 +59,12 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
     fun updatePlaceReview(placeId: String) {
         if (job.isCompleted) {
             updateReview(placeId)
+        }
+    }
+
+    fun setRating(rating: Float) {
+        viewModelScope.launch {
+            _rating.emit(rating)
         }
     }
 
@@ -96,15 +106,11 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
 
     private suspend fun handleRegistrationError(error: Throwable) {
         when (error) {
+            is InvalidRequestException -> _event.emit(Event.InvalidRequestError)
             is InvalidTokenException -> _event.emit(Event.InvalidTokenError)
-            is DuplicatedSomethingException -> _event.emit(Event.IsDuplicatedReviewError)
+            is RequestResourceAlreadyExistsException -> _event.emit(Event.AlreadyRegisterReviewError)
+            is NotFoundException -> _event.emit(Event.NotExistPlaceReview)
             else -> error
-        }
-    }
-
-    suspend fun setStar(newRating: Float) {
-        if (newRating < 0.5F) {
-            rating.emit(0.5F)
         }
     }
 
@@ -139,8 +145,10 @@ class EditPlaceReviewViewModel @AssistedInject constructor(
         object TooShortReviewError : Event()
         object TooLongReviewError : Event()
         object UnregisteredError : Event()
-        object IsDuplicatedReviewError : Event()
+        object InvalidRequestError : Event()
         object InvalidTokenError : Event()
+        object AlreadyRegisterReviewError : Event()
+        object NotExistPlaceReview : Event()
     }
 
     companion object {

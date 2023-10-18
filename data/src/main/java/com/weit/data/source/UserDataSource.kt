@@ -35,14 +35,6 @@ class UserDataSource @Inject constructor(
         return userService.updateUserProfile(profile)
     }
 
-    suspend fun getUserByNickname(userByNickname: UserByNickname): ListResponse<UserContentDTO> =
-        userService.getUserByNickname(
-            size = userByNickname.size,
-            lastId = userByNickname.lastId,
-            nickname = userByNickname.nickname,
-        )
-
-
     suspend fun deleteUser() : Response<Unit> {
         return userService.deleteUser()
     }

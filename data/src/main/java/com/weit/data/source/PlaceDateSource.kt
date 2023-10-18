@@ -113,7 +113,7 @@ class PlaceDateSource @Inject constructor(
                         throw it
                     }
             }.addOnFailureListener {
-               throw it
+                throw it
             }
         awaitClose { }
     }

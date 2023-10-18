@@ -89,6 +89,8 @@ dependencies {
 
     implementation("androidx.exifinterface:exifinterface:1.3.6")
 
+    implementation 'com.github.ome450901:SimpleRatingBar:1.5.1'
+
 }
 
 secrets {

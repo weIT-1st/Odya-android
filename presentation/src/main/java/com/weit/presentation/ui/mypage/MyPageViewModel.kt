@@ -26,6 +26,7 @@ class MyPageViewModel @Inject constructor(
             val result = deleteUserUseCase()
             if (result.isSuccess) {
                 Logger.t("MainTest").i("계정 삭제 성공")
+
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -47,3 +48,4 @@ class MyPageViewModel @Inject constructor(
         object UnknownException : Event()
     }
 }
+

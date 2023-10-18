@@ -9,7 +9,9 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import java.io.IOException
@@ -23,13 +25,14 @@ class UserInfoDataSource @Inject constructor(
         name = "com.weit.odya.userInfo",
     )
 
-    private companion object {
+    private companion object{
         val KEY_USERNAME = stringPreferencesKey(name = "username")
         val KEY_NICKNAME = stringPreferencesKey(name = "nickname")
         val KEY_BIRTH = stringPreferencesKey(name = "birth")
         val KEY_GENDER = stringPreferencesKey(name = "gender")
         val KEY_TERM_ID_LIST = stringSetPreferencesKey(name = "termidlist")
         val KEY_USER_ID = longPreferencesKey(name = "userId")
+
     }
 
     suspend fun setUserId(userId: Long) {
@@ -52,6 +55,7 @@ class UserInfoDataSource @Inject constructor(
             }
         return flow.firstOrNull()
     }
+
 
     suspend fun setUsername(username: String) {
         context.userInfoDataStore.edit { preference ->
@@ -157,4 +161,5 @@ class UserInfoDataSource @Inject constructor(
             }
         return flow.firstOrNull()
     }
+
 }

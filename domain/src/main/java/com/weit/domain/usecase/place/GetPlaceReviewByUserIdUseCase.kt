@@ -1,9 +1,7 @@
 package com.weit.domain.usecase.place
 
 import com.weit.domain.model.place.PlaceReviewBySearching
-import com.weit.domain.model.place.PlaceReviewByUserIdInfo
 import com.weit.domain.model.place.PlaceReviewByUserIdQuery
-import com.weit.domain.model.place.PlaceReviewDetail
 import com.weit.domain.repository.place.PlaceReviewRepository
 import javax.inject.Inject
 

@@ -8,5 +8,5 @@ class GetPlaceDetailUseCase @Inject constructor(
     private val repository: PlaceRepository,
 ) {
     suspend operator fun invoke(placeId: String): PlaceDetail =
-        repository.getPlaceDetail(placeId)
+        repository.getPlaceDetail(placeId).getOrThrow()
 }

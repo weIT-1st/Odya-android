@@ -2,7 +2,9 @@ package com.weit.presentation.ui.login.user.registration
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.GenderType
+import com.weit.domain.model.auth.UserRegistrationInfo
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.usecase.auth.RegisterUserUseCase
@@ -12,6 +14,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 
 class UserRegistrationViewModel @AssistedInject constructor(

@@ -25,15 +25,15 @@ class LoginConsentDialogViewModel @Inject constructor(
     private val setTermIdListUsecase: SetTermIdListUseCase,
 ) : ViewModel() {
 
-    private val _termTitle = MutableStateFlow<String>("")
-    val termTitle: StateFlow<String> get() = _termTitle
+    private  val _termTitle = MutableStateFlow<String>("")
+    val termTitle : StateFlow<String> get() = _termTitle
 
-    private val _termContent = MutableStateFlow<String>("")
-    val termContent: StateFlow<String> get() = _termContent
+    private  val _termContent = MutableStateFlow<String>("")
+    val termContent : StateFlow<String> get() = _termContent
     private val _event = MutableEventFlow<LoginConsentDialogViewModel.Event>()
     val event = _event.asEventFlow()
 
-    private val termIdList = mutableSetOf<String>()
+    private val termIdList  = mutableSetOf<String>()
 
     init {
         getTermList()
@@ -66,6 +66,7 @@ class LoginConsentDialogViewModel @Inject constructor(
             }
         }
     }
+
 
     fun onAgree() {
         viewModelScope.launch {

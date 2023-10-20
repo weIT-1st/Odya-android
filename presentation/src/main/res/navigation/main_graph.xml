@@ -85,6 +85,6 @@
         android:label="FeedPostFragment" >
         <argument
             android:name="feedImages"
-            app:argType="com.weit.presentation.model.feed.FeedImage" />
+            app:argType="string[]" />
     </fragment>
 </navigation>

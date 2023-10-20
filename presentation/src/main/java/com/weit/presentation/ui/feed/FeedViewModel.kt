@@ -49,7 +49,6 @@ class FeedViewModel @Inject constructor(
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val getMayknowUsersUseCase: GetMayknowUsersUseCase,
-//    private val getImagesUseCase: GetImagesUseCase,
     private val getCommunitiesUseCase: GetCommunitiesUseCase,
     private val getUserUseCase: GetUserUseCase,
 ) : ViewModel() {
@@ -89,18 +88,6 @@ class FeedViewModel @Inject constructor(
 //        getMayknowFriends()
         makeFeedItems()
     }
-
-
-//    private fun getImages() {
-//        viewModelScope.launch {
-//            val result = getImagesUseCase()
-//            if (result.isSuccess) {
-//                val uris = result.getOrThrow().subList(0, 1)
-//                registerCommunity(uris)
-//            } else {
-//            }
-//        }
-//    }
 
 
     private fun getFavoriteTopicList() {
@@ -266,7 +253,11 @@ class FeedViewModel @Inject constructor(
     fun onSelectPictures(pickImageUseCase: PickImageUseCase) {
         viewModelScope.launch {
             val images = pickImageUseCase()
-            _event.emit(Event.OnSelectPictures(images))
+            if(images.isEmpty()){
+                _event.emit(Event.NotSelectedFeedImages)
+            }else{
+                _event.emit(Event.OnSelectPictures(images))
+            }
         }
     }
 
@@ -288,6 +279,7 @@ class FeedViewModel @Inject constructor(
         data class OnSelectPictures(
             val uris: List<String>,
         ) : Event()
+        object NotSelectedFeedImages : Event()
         object CreateAndDeleteFollowSuccess : Event()
         object NotExistTopicIdException : Event()
         object InvalidRequestException : Event()

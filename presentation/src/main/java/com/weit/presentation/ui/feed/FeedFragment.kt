@@ -1,14 +1,11 @@
 package com.weit.presentation.ui.feed
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
-import com.weit.presentation.model.feed.FeedImage
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -37,18 +34,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.vm = viewModel
         initTopicRecyclerView()
         initCommunityRecyclerView()
-        binding.btnWrite.setOnClickListener {
+        binding.btnFeedWrite.setOnClickListener {
             viewModel.onSelectPictures(pickImageUseCase)
         }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     private fun initTopicRecyclerView() {
@@ -82,7 +70,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     private fun navigateFeedPost(uris: List<String>) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(FeedImage(uris))
+        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(uris.toTypedArray())
         findNavController().navigate(action)
     }
     private fun handleEvent(event: FeedViewModel.Event) {
@@ -92,6 +80,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
             is FeedViewModel.Event.OnSelectPictures -> {
                 navigateFeedPost(event.uris)
+            }
+            is FeedViewModel.Event.NotSelectedFeedImages -> {
+                sendSnackBar("사진을 선택해주세요")
+                findNavController().popBackStack()
             }
             is FeedViewModel.Event.NotExistTopicIdException -> {
                 sendSnackBar("해당 토픽은 존재하지 않습니다용")

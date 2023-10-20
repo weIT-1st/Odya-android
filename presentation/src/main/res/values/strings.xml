@@ -107,6 +107,9 @@
     <string name="topic_title">토픽</string>
     <string name="feed_my_activity_title">내 활동</string>
     <string name="feed_my_activity_hint">%s 님의 모든 활동을\n한곳에서 관리해보세요</string>
+    <string name="feed_post_content_size">%d</string>
+    <string name="feed_post_image_update">사진편집</string>
+
 
 
 

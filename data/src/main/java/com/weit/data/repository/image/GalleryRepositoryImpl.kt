@@ -19,7 +19,7 @@ class GalleryRepositoryImpl @Inject constructor(
 
     private val imagesEvent = MutableSharedFlow<List<String>>()
 
-    private val pickImagesResult = (context as AppCompatActivity).registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) { uris ->
+    private val pickImagesResult = (context as AppCompatActivity).registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(15)) { uris ->
         CoroutineScope(Dispatchers.Default).launch {
             imagesEvent.emit(uris.map { it.toString() })
         }

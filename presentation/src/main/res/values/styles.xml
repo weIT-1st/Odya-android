@@ -111,8 +111,8 @@
         <item name="android:background">@drawable/corners_top_12_in_bottom_sheet</item>
     </style>
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/system_inactive</item>
-        <item name="android:textColor">@color/label_inactive</item>
+        <item name="chipBackgroundColor">@color/selector_chip_background</item>
+        <item name="android:textColor">@color/selector_chip_text</item>
     </style>
 
 </resources>

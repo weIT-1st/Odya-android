@@ -20,14 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MapViewModel @Inject constructor(
-    val getSearchPlaceUseCase: GetSearchPlaceUseCase,
-    val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     val getPlacesByCoordinateUseCase: GetPlacesByCoordinateUseCase,
-    val getCurrentPlaceUseCase: GetCurrentPlaceUseCase
+    val getCurrentPlaceUseCase: GetCurrentPlaceUseCase,
+    val getPlaceDetailUseCase: GetPlaceDetailUseCase
 ) : ViewModel() {
-
-    private val _searchPlaceList = MutableStateFlow<List<PlacePrediction>>(emptyList())
-    val searchPlaceList: StateFlow<List<PlacePrediction>> get() = _searchPlaceList
 
     private val _touchPlaceId = MutableStateFlow("")
     val touchPlaceId: StateFlow<String> get() = _touchPlaceId
@@ -47,22 +43,6 @@ class MapViewModel @Inject constructor(
             }
         }
     }
-    fun searchPlace(query: String) {
-        viewModelScope.launch {
-            val result = getSearchPlaceUseCase(query)
-            _searchPlaceList.emit(result)
-        }
-    }
-
-    fun getDetailPlace(placeId: String) {
-        viewModelScope.launch {
-            val result = getPlaceDetailUseCase(placeId)
-            _detailPlace.emit(result)
-            if (result.placeId.isNullOrBlank().not()){
-                _touchPlaceId.emit(result.placeId!!)
-            }
-        }
-    }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
         viewModelScope.launch {
@@ -72,6 +52,13 @@ class MapViewModel @Inject constructor(
                 val place = result.getOrThrow()
                 _touchPlaceId.emit(place[0].placeId)
             }
+        }
+    }
+
+    fun getDetailPlace(placeId: String) {
+        viewModelScope.launch {
+            val result = getPlaceDetailUseCase(placeId)
+            _detailPlace.emit(result)
         }
     }
 

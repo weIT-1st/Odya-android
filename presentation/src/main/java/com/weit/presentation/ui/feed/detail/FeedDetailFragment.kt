@@ -3,18 +3,16 @@ package com.weit.presentation.ui.feed
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.weit.domain.model.community.CommunityContent
+import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
-import com.weit.presentation.model.FeedDetail
-import com.weit.presentation.model.TravelLogInFeed
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
-import com.weit.presentation.ui.feed.detail.CommentDialogViewModel
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.feed.detail.FeedTopicAdapter
@@ -36,7 +34,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val viewModel: FeedDetailViewModel by viewModels {
         FeedDetailViewModel.provideFactory(viewModelFactory,args.feedId)
     }
-//    private val viewModel: FeedDetailViewModel by viewModels()
     private val feedCommentAdapter = FeedCommentAdapter(
         updateItem = { position -> changeComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
@@ -50,7 +47,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        viewModel.feedId = args.feedId
         binding.vm = viewModel
         initCommentRecyclerView()
         binding.btCommunityFollow.setOnClickListener {
@@ -65,7 +61,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
         // TODO 좋아요
     }
-    private fun showCommentBottomSheet(feed: FeedDetail) {
+    private fun showCommentBottomSheet(feed: CommunityContent) {
         if(bottomSheetDialog==null){
             bottomSheetDialog = CommentDialogFragment(feed)
         }
@@ -114,14 +110,14 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         }
     }
 
-    private fun setTravelLog(log: TravelLogInFeed?) {
+    private fun setTravelLog(log: CommunityTravelJournal?) {
         if (log == null) {
             binding.includeTravelLog.layoutTravelLog.visibility = View.GONE
         } else {
             binding.includeTravelLog.layoutTravelLog.visibility = View.VISIBLE
             binding.includeTravelLog.log = log
             binding.includeTravelLog.layoutTravelLog.setOnClickListener {
-                navigateTravelLog(log.travelLogId)
+                navigateTravelLog(log.travelJournalId)
             }
         }
     }
@@ -129,12 +125,16 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
-                setTravelLog(event.feed.travelLog)
+                //feed image viewpager 연결하기
+
+                setTravelLog(event.feed.travelJournal)
                 feedTopicAdapter.submitList(event.topics)
             }
             is FeedDetailViewModel.Event.OnChangeComments -> {
                 feedCommentAdapter.submitList(event.defaultComments)
-                if (event.remainingCommentsCount > 0) {
+                if(event.remainingCommentsCount < 0){
+                    binding.btnFeedCommentMore.visibility = View.GONE
+                }else{
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
@@ -142,6 +142,9 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {
                 binding.btCommunityFollow.isChecked = event.followState
+            }
+            is FeedDetailViewModel.Event.DeleteCommunitySuccess -> {
+                findNavController().popBackStack()
             }
 
             is FeedDetailViewModel.Event.InvalidRequestException -> {

@@ -20,6 +20,8 @@ interface CommunityRepository {
 
     suspend fun getFriendCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>>
 
+    suspend fun getCommunitiesByTopic(topicId: Long, communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>>
+
     suspend fun updateCommunity(
         communityId: Long,
         communityUpdateInfo: CommunityUpdateInfo,

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="log"
-            type="com.weit.presentation.model.TravelLogInFeed" />
+            type="com.weit.domain.model.community.CommunityTravelJournal" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/corners_all_8"
@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:image_uri="@{log.travelLogImage}"
+            app:image_uri="@{log.mainImageUrl}"
             tools:src="@drawable/bg_popular_spot_summary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -70,7 +70,7 @@
             app:layout_constraintEnd_toStartOf="@+id/tv_popular_spot_hot"
             app:layout_constraintStart_toEndOf="@+id/iv_travel_log_diary"
             app:layout_constraintTop_toTopOf="@+id/iv_travel_log_diary"
-            tools:text="@{log.travelLogTitle}" />
+            tools:text="@{log.title}" />
 
         <TextView
             android:id="@+id/tv_popular_spot_hot"

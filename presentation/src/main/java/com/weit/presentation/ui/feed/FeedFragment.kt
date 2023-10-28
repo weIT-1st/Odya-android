@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.orhanobut.logger.Logger
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.InfinityScrollListener
@@ -24,7 +23,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
         scrollListener = { viewModel.onNextFriends() }
         )
-    private val topicAdapter = FavoriteTopicAdapter()
+    private val topicAdapter = FavoriteTopicAdapter(
+        selectTopic = { topicId -> viewModel.onNextFeeds(topicId)}
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -40,7 +41,18 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.rvTopic.adapter = topicAdapter
     }
     private fun initCommunityRecyclerView() {
-        binding.rvCommunity.adapter = feedAdapter
+        binding.rvCommunity.run{
+            addOnScrollListener(infinityScrollListener)
+            adapter = feedAdapter
+        }
+    }
+
+    private val infinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextFeeds(null)
+            }
+        }
     }
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {

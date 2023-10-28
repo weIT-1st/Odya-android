@@ -63,12 +63,12 @@
             android:layout_height="24dp"
             android:layout_marginStart="20dp"
             android:src="@drawable/ic_profile"
-            app:image_uri="@{vm.feed.userProfile.url}"
+            app:image_uri="@{vm.feed.writer.profile.url}"
             app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
             app:layout_constraintEnd_toStartOf="@+id/ti_feed_comment"
             app:layout_constraintStart_toStartOf="@+id/view_write_comment"
             app:layout_constraintTop_toTopOf="@+id/view_write_comment"
-            app:profile_background="@{vm.feed.userProfile}" />
+            app:profile_background="@{vm.feed.writer.profile}" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ti_feed_comment"

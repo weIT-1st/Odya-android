@@ -8,12 +8,9 @@ import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityContent
 import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
-import com.weit.presentation.model.FeedComment
-import com.weit.presentation.model.FeedDetail
-import com.weit.presentation.ui.placereview.EditPlaceReviewViewModel
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -22,7 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CommentDialogFragment(val feed: FeedDetail) : BottomSheetDialogFragment() {
+class CommentDialogFragment(val feed: CommunityContent) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
 

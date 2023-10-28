@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.comment.CommentContent
 import com.weit.domain.model.community.comment.CommentDeleteInfo
 import com.weit.domain.model.community.comment.CommentInfo
@@ -13,7 +14,6 @@ import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
 import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
-import com.weit.presentation.model.FeedDetail
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,11 +28,11 @@ class CommentDialogViewModel @AssistedInject constructor(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val deleteCommentsUseCase: DeleteCommentsUseCase,
     private val updateCommentsUseCase: UpdateCommentsUseCase,
-    @Assisted private val feedDetail: FeedDetail,
+    @Assisted private val feedDetail: CommunityContent,
 ) : ViewModel() {
     var feedId : Long = 0
-    var _feed = MutableStateFlow<FeedDetail?>(null)
-    val feed: StateFlow<FeedDetail?> get() = _feed
+    var _feed = MutableStateFlow<CommunityContent?>(null)
+    val feed: StateFlow<CommunityContent?> get() = _feed
 
     val writedComment = MutableStateFlow("")
     private var commentState = commentRegister
@@ -55,12 +55,12 @@ class CommentDialogViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface FeedDetailFactory {
-        fun create(feedDetailFactory: FeedDetail): CommentDialogViewModel
+        fun create(feedDetailFactory: CommunityContent): CommentDialogViewModel
     }
 
     init{
         viewModelScope.launch {
-            feedId = feedDetail.feedId
+            feedId = feedDetail.communityId
             _feed.value = feedDetail
         }
         onNextComments()
@@ -131,9 +131,9 @@ class CommentDialogViewModel @AssistedInject constructor(
     }
 
     private fun beforeGetComments(){
-        lastId = null
         _comments.value = emptyList()
         commentJob.cancel()
+        lastId = null
         loadNextComments()
     }
 
@@ -150,8 +150,6 @@ class CommentDialogViewModel @AssistedInject constructor(
     fun deleteComment(position : Int) {
         viewModelScope.launch {
             val commentId = commentList[position].communityCommentId
-            Logger.t("MainTest").i("${commentId}")
-
             val result = deleteCommentsUseCase(
                 CommentDeleteInfo(
                     feedId, commentId
@@ -175,7 +173,7 @@ class CommentDialogViewModel @AssistedInject constructor(
 
         fun provideFactory(
             assistedFactory: CommentDialogViewModel.FeedDetailFactory,
-            feedDetail: FeedDetail,
+            feedDetail: CommunityContent,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(feedDetail) as T

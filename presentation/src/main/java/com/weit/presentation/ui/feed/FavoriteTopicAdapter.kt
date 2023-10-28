@@ -3,21 +3,26 @@ package com.weit.presentation.ui.feed
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.presentation.databinding.ItemTopicBinding
 
-class FavoriteTopicAdapter() :
-    androidx.recyclerview.widget.ListAdapter<TopicDetail, FavoriteTopicAdapter.FavoriteTopicViewHolder>(
+class FavoriteTopicAdapter(
+    private val selectTopic: (Long) -> Unit,
+) :
+    ListAdapter<TopicDetail, FavoriteTopicAdapter.FavoriteTopicViewHolder>(
         FavoriteTopicDiffCallback,
     ) {
 
-    class FavoriteTopicViewHolder(
+    inner class FavoriteTopicViewHolder(
         private val binding: ItemTopicBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
         fun bind(topic: TopicDetail) {
-            itemView.apply {
-                binding.tvTopic.text = topic.topicWord
+            binding.tvTopic.text = topic.topicWord
+            itemView.setOnClickListener {
+                selectTopic(topic.topicId)
             }
         }
     }
@@ -39,7 +44,10 @@ class FavoriteTopicAdapter() :
                     return oldItem.topicId == newItem.topicId
                 }
 
-                override fun areContentsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
+                override fun areContentsTheSame(
+                    oldItem: TopicDetail,
+                    newItem: TopicDetail
+                ): Boolean {
                     return oldItem.topicId == newItem.topicId
                 }
             }

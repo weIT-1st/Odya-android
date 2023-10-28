@@ -40,5 +40,8 @@ class CommunityDataSource @Inject constructor(
         return service.getFriendsCommunities(size,communityId,sortType)
     }
 
+    suspend fun getCommunitiesByTopic(topicId: Long, size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMainContentDTO> {
+        return service.getCommunitiesByTopic(topicId,size,communityId,sortType)
+    }
 
 }

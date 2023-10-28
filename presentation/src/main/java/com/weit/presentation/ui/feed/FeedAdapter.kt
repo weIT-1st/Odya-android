@@ -117,7 +117,7 @@ class FeedAdapter(
         fun bind(feed: Feed.FeedItem) {
             binding.feed = feed
 
-            if (feed.travelLog == null) {
+            if (feed.travelJournalSimpleResponse == null) {
                 binding.viewCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityBookmark.visibility = View.INVISIBLE
                 binding.tvCommunityTitle.visibility = View.INVISIBLE
@@ -125,13 +125,13 @@ class FeedAdapter(
             }
 
             binding.viewCommunityContent.setOnClickListener {
-                navigateFeedDetail(feed.feedId)
+                navigateFeedDetail(feed.communityId)
             }
             binding.btCommunityFollow.setOnClickListener {
-                onFollowChanged(feed.userId, feed.followState)
+                onFollowChanged(feed.writer.userId, feed.writer.isFollowing ?: false)
             }
             binding.viewCommunityTitle.setOnClickListener {
-                feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }
+                feed.travelJournalSimpleResponse?.let { log -> navigateTravelLog(log.travelJournalId) }
             }
         }
     }
@@ -141,7 +141,7 @@ class FeedAdapter(
             object : DiffUtil.ItemCallback<Feed>() {
                 override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
                     return oldItem is Feed.FeedItem && newItem is Feed.FeedItem &&
-                        oldItem.feedId == newItem.feedId
+                        oldItem.communityId == newItem.communityId
                 }
 
                 override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {

@@ -57,6 +57,14 @@ interface CommunityService {
         @Query("sortType") sortType: String?,
     ): ListResponse<CommunityMainContentDTO>
 
+    @GET("/api/v1/communities/topic/{topicId}")
+    suspend fun getCommunitiesByTopic(
+        @Path("topicId") topicId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") lastCommunityId: Long?,
+        @Query("sortType") sortType: String?,
+    ): ListResponse<CommunityMainContentDTO>
+
     @DELETE("/api/v1/communities/{communityId}")
     suspend fun deleteCommunity(
         @Path("communityId") communityId: Long,

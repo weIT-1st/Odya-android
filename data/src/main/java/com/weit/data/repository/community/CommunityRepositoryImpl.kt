@@ -152,6 +152,29 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getCommunitiesByTopic(
+        topicId: Long,
+        communityRequestInfo: CommunityRequestInfo
+    ): Result<List<CommunityMainContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextCommunity.set(true)
+        }
+
+        if (hasNextCommunity.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            communityDataSource.getCommunitiesByTopic(topicId, communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType)
+        }
+        return if (result.isSuccess) {
+            val communities = result.getOrThrow()
+            hasNextCommunity.set(communities.hasNext)
+            Result.success(communities.content)
+        } else {
+            Result.failure(handleRegisterAndGetCommentError(result.exception()))
+        }
+    }
+
     override suspend fun updateCommunity(
         communityId: Long,
         communityUpdateInfo: CommunityUpdateInfo,
@@ -205,7 +228,6 @@ class CommunityRepositoryImpl @Inject constructor(
             handleCode(t.code())
         } else {
             Logger.t("MainTest").i("실패 ${t.message}")
-
             t
         }
     }

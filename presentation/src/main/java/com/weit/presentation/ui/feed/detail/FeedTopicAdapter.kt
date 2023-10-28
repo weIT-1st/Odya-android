@@ -10,7 +10,7 @@ import com.weit.presentation.databinding.ItemFeedDetailTopicBinding
 import com.weit.presentation.model.TopicDTO
 
 class FeedTopicAdapter() :
-    androidx.recyclerview.widget.ListAdapter<TopicDTO, FeedTopicAdapter.FeedTopicViewHolder>(
+    androidx.recyclerview.widget.ListAdapter<TopicDetail, FeedTopicAdapter.FeedTopicViewHolder>(
         TopicDiffCallback,
     ) {
 
@@ -34,15 +34,15 @@ class FeedTopicAdapter() :
     }
 
     companion object {
-        private val TopicDiffCallback: DiffUtil.ItemCallback<TopicDTO> =
-            object : DiffUtil.ItemCallback<TopicDTO>() {
-                override fun areItemsTheSame(oldItem: TopicDTO, newItem: TopicDTO): Boolean {
+        private val TopicDiffCallback: DiffUtil.ItemCallback<TopicDetail> =
+            object : DiffUtil.ItemCallback<TopicDetail>() {
+                override fun areItemsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
                     return oldItem.topicId == newItem.topicId
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: TopicDTO,
-                    newItem: TopicDTO,
+                    oldItem: TopicDetail,
+                    newItem: TopicDetail,
                 ): Boolean {
                     return oldItem.topicId == newItem.topicId
                 }

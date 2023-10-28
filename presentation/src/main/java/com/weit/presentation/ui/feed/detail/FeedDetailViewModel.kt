@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.comment.CommentContent
 import com.weit.domain.model.community.comment.CommentDeleteInfo
 import com.weit.domain.model.community.comment.CommentInfo
@@ -14,28 +15,24 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
+import com.weit.domain.model.topic.TopicDetail
+import com.weit.domain.usecase.community.DeleteCommunityUseCase
+import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
 import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
-import com.weit.presentation.model.FeedDetail
-import com.weit.presentation.model.TopicDTO
-import com.weit.presentation.model.TravelLogInFeed
-import com.weit.presentation.model.user.UserProfileColorDTO
-import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
-import javax.inject.Inject
 
 class FeedDetailViewModel @AssistedInject constructor(
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
@@ -43,7 +40,9 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val deleteCommentsUseCase: DeleteCommentsUseCase,
     private val updateCommentsUseCase: UpdateCommentsUseCase,
-    @Assisted feedId: Long,
+    private val deleteCommunityUseCase: DeleteCommunityUseCase,
+    private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
+    @Assisted private val feedId: Long,
 ) : ViewModel() {
 
     @AssistedFactory
@@ -52,8 +51,9 @@ class FeedDetailViewModel @AssistedInject constructor(
     }
 
     var writedComment = MutableStateFlow("")
-    private val _feed = MutableStateFlow<FeedDetail?>(null)
-    val feed: StateFlow<FeedDetail?> get() = _feed
+
+    private val _feed = MutableStateFlow<CommunityContent?>(null)
+    val feed: StateFlow<CommunityContent?> get() = _feed
 
     private val _likeNum = MutableStateFlow<Int>(0)
     val likeNum: StateFlow<Int> get() = _likeNum
@@ -63,6 +63,9 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     private val _followState = MutableStateFlow<Boolean>(false)
     val followState: StateFlow<Boolean> get() = _followState
+
+    private val _createdDate = MutableStateFlow<String>("")
+    val creadtedDate: StateFlow<String> get() = _createdDate
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -79,42 +82,42 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     init {
         getFeed()
-        getFeedDetailComments()
+        getFeedDetailComments(feedId)
     }
 
     private fun getFeed() {
-        // TODO feedId로 상세 정보 가져오기
         viewModelScope.launch {
+            val result = getDetailCommunityUseCase(feedId)
+            if (result.isSuccess) {
+                val feed = result.getOrThrow()
+                Logger.t("MainTest").i("${feed}")
 
-            val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-            val travelLog = TravelLogInFeed(1, "ddd", "")
-            val topics = listOf(TopicDTO(1, "바다여행"), TopicDTO(2, "우주여행"))
-//            val comments = listOf<FeedComment>(
-//                FeedComment(1, 3, profile, "dd", "wowwow"),
-//                FeedComment(1, 1, profile, "dd", "wowwow"),
-//                FeedComment(1, 1, profile, "dd", "wowwow"),
-//            )
-
-            val feed = FeedDetail(2, 5, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", topics)
-            userId = feed.userId
-
-            setFeedDetail(feed)
-            _event.emit(Event.OnChangeFeed(feed, feed.topics))
+//                userId = feed.
+                setFeedDetail(feed)
+                _event.emit(Event.OnChangeFeed(feed, listOf(feed.topic)))
+            } else {
+                // TODO 에러 처리
+                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+            }
         }
     }
 
-    private fun setFeedDetail(feed: FeedDetail) {
+    private fun setFeedDetail(feed: CommunityContent) {
         _feed.value = feed
-        _likeNum.value = feed.likeNum
-        _commentNum.value = feed.commentNum
-        _followState.value = feed.followState
+        _likeNum.value = feed.communityLikeCount
+        _commentNum.value = feed.communityCommentCount
+        _followState.value = feed.writer?.isFollowing ?: true
+        //TODO 피드 삭제, CREATEDDATE, WRITER NON-NULL CHANGE
+
+        //LocalDateTimeConverter를 여기서 쓸 수가 있는건가?
+        //_createdDate.value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(feed.createdDate)
     }
 
 
-    private fun getFeedDetailComments() {
+    private fun getFeedDetailComments(feedId: Long) {
         viewModelScope.launch {
             val result = getCommentsUseCase(
-                CommentInfo(2,null,null) //스크롤로 가져오는거면 댓글 총갯수는 어떻게 파악?
+                CommentInfo(feedId)
             )
             if (result.isSuccess) {
                 commentList.clear()
@@ -123,8 +126,15 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
                 val defaultComments = comments
                     .slice(0 until commentCount)
-                val remainingCommentsCount = comments.size - defaultComments.size
 
+                var remainingCommentsCount = 0
+                if(_feed.value?.communityCommentCount != null){
+                    remainingCommentsCount = _feed.value?.communityCommentCount?.minus(
+                        defaultComments.size
+                    ) as Int
+                }else{
+                    remainingCommentsCount = -1
+                }
                 _event.emit(Event.OnChangeComments(_feed.value,defaultComments, remainingCommentsCount))
             } else {
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -136,16 +146,14 @@ class FeedDetailViewModel @AssistedInject constructor(
        job =  viewModelScope.launch {
            when(commentState){
                commentRegister ->{
-                   Logger.t("MainTest").i(writedComment.value)
-
                    val result = registerCommentsUseCase(
                        CommentRegistrationInfo(
-                           2, writedComment.value
+                           feedId, writedComment.value
                        )
                    )
                    if (result.isSuccess) {
                        writedComment.emit("")
-                       getFeedDetailComments()
+                       getFeedDetailComments(feedId)
 
                    } else {
                        Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -156,11 +164,11 @@ class FeedDetailViewModel @AssistedInject constructor(
                    val commentId = commentList[currentPosition].communityCommentId
                    val result = updateCommentsUseCase(
                            CommentUpdateInfo(
-                               2, commentId, writedComment.value
+                               feedId, commentId, writedComment.value
                            )
                    )
                    if (result.isSuccess) {
-                       getFeedDetailComments()
+                       getFeedDetailComments(feedId)
                    } else {
                        //TODO 에러
                    }
@@ -182,11 +190,11 @@ class FeedDetailViewModel @AssistedInject constructor(
             val commentId = commentList[position].communityCommentId
             val result = deleteCommentsUseCase(
                 CommentDeleteInfo(
-                    2, commentId
+                    feedId, commentId
                 )
             )
             if (result.isSuccess) {
-                getFeedDetailComments()
+                getFeedDetailComments(feedId)
             } else {
                 //TODO 에러
             }
@@ -194,7 +202,15 @@ class FeedDetailViewModel @AssistedInject constructor(
     }
 
     fun deleteFeed(){
-
+        viewModelScope.launch {
+            val result = deleteCommunityUseCase(feedId)
+            if (result.isSuccess) {
+                _event.emit(Event.DeleteCommunitySuccess)
+            } else {
+                // TODO 에러 처리
+                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
     }
 
     fun onFollowStateChange(followState : Boolean) {
@@ -224,17 +240,19 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     sealed class Event {
         data class OnChangeFeed(
-            val feed: FeedDetail,
-            val topics: List<TopicDTO>,
+            val feed: CommunityContent,
+            val topics: List<TopicDetail>,
         ) : Event()
         data class OnChangeComments(
-            val feed: FeedDetail?,
+            val feed: CommunityContent?,
             val defaultComments: List<CommentContent>,
             val remainingCommentsCount: Int,
         ) : Event()
         data class OnChangeFollowState(
             val followState: Boolean
         ) : Event()
+        object DeleteCommunitySuccess : Event()
+
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()
         object NotHavePermissionException : Event()

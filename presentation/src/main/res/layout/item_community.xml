@@ -21,7 +21,7 @@
             android:background="@drawable/corners_top_8"
             android:scaleType="centerCrop"
             android:src="@drawable/background"
-            app:image_uri="@{feed.feedImage}"
+            app:image_uri="@{feed.communityMainImageUrl}"
             app:layout_constraintDimensionRatio="1.2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
             app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
             app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
-            tools:text="@{feed.travelLog.travelLogTitle}" />
+            tools:text="@{feed.travelJournalSimpleResponse.title}" />
 
 
         <ImageView
@@ -94,8 +94,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_profile"
-            app:image_uri="@{feed.userProfile.url}"
-            app:profile_background="@{feed.userProfile}"
+            app:image_uri="@{feed.writer.profile.url}"
+            app:profile_background="@{feed.writer.profile}"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
             app:layout_constraintTop_toTopOf="@+id/view_community_content" />
 
@@ -114,7 +114,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
             app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-            tools:text="@{feed.userNickname}" />
+            tools:text="@{feed.writer.nickname}" />
 
         <ImageView
             android:id="@+id/iv_community_badge"
@@ -155,7 +155,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-            tools:text="@{feed.date}" />
+            tools:text="" />
 
         <ToggleButton
             android:id="@+id/bt_community_follow"
@@ -165,7 +165,7 @@
             android:background="@drawable/selector_bt_follow"
             android:textOff=""
             android:textOn=""
-            android:checked="@{feed.followState}"
+            android:checked="@{feed.writer.following}"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
@@ -184,7 +184,7 @@
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
             app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
-            tools:text="@{feed.content}" />
+            tools:text="@{feed.communityContent}" />
 
 
         <View
@@ -227,7 +227,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/iv_community_location"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
-            tools:text="@{feed.place}" />
+            tools:text="@{feed.placeId}" />
 
 
         <ToggleButton
@@ -250,7 +250,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
             android:textColor="@color/label_assistive"
-            app:text_reaction_count="@{feed.likeNum}"
+            app:text_reaction_count="@{feed.communityLikeCount}"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
             app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
@@ -276,7 +276,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
-            app:text_reaction_count="@{feed.commentNum}"
+            app:text_reaction_count="@{feed.communityCommentCount}"
             android:textColor="@color/label_assistive"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toEndOf="@+id/view_community_reply"

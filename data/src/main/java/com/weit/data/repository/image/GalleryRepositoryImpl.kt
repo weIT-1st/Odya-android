@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.weit.domain.repository.image.GalleryRepository
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.CoroutineScope
@@ -19,7 +21,7 @@ class GalleryRepositoryImpl @Inject constructor(
 
     private val imagesEvent = MutableSharedFlow<List<String>>()
 
-    private val pickImagesResult = (context as AppCompatActivity).registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(15)) { uris ->
+    private val pickImagesResult = (context as AppCompatActivity).registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia(MAX_SELECT_IMAGE_COUNT)) { uris ->
         CoroutineScope(Dispatchers.Default).launch {
             imagesEvent.emit(uris.map { it.toString() })
         }
@@ -28,5 +30,9 @@ class GalleryRepositoryImpl @Inject constructor(
     override suspend fun pickImages(): List<String> {
         pickImagesResult.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
         return imagesEvent.first()
+    }
+
+    companion object {
+        private const val MAX_SELECT_IMAGE_COUNT = 15
     }
 }

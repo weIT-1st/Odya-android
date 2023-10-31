@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.Constants.feedTopic
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,7 +25,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         scrollListener = { viewModel.onNextFriends() }
         )
     private val topicAdapter = FavoriteTopicAdapter(
-        selectTopic = { topicId -> viewModel.onNextFeeds(topicId)}
+        selectTopic = { topicId ->
+            binding.btnFeedSortAll.isChecked = false
+            binding.btnFeedSortFriend.isChecked = false
+            viewModel.onNextFeeds(topicId)}
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -34,6 +38,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         initCommunityRecyclerView()
         binding.btnWrite.setOnClickListener {
             navigateFeedPost()
+        }
+        binding.btnFeedSortFriend.setOnClickListener {
+            viewModel.selectFeedFriend()
+        }
+        binding.btnFeedSortAll.setOnClickListener {
+            viewModel.selectFeedAll()
         }
     }
 
@@ -50,7 +60,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
-                viewModel.onNextFeeds(null)
+                viewModel.onNextFeeds()
             }
         }
     }
@@ -79,8 +89,9 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     private fun navigateFeedPost() {
-        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment()
-        findNavController().navigate(action)
+//        val ss :Array<String> = arrayOf()
+//        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(ss)
+//        findNavController().navigate(action)
     }
     private fun handleEvent(event: FeedViewModel.Event) {
         when (event) {

@@ -3,6 +3,7 @@ package com.weit.presentation.ui.feed
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityMainContent
 import com.weit.domain.model.community.CommunityUser
 import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.exception.InvalidPermissionException
@@ -21,6 +22,7 @@ import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.community.GetCommunitiesByTopicUseCase
 import com.weit.domain.usecase.community.GetCommunitiesUseCase
+import com.weit.domain.usecase.community.GetFriendCommunitiesUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
 import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
@@ -31,6 +33,10 @@ import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.example.ExampleViewModel
+import com.weit.presentation.ui.feed.detail.CommentDialogViewModel
+import com.weit.presentation.ui.util.Constants.feedAll
+import com.weit.presentation.ui.util.Constants.feedFriend
+import com.weit.presentation.ui.util.Constants.feedTopic
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -50,9 +56,11 @@ class FeedViewModel @Inject constructor(
     private val getCommunitiesUseCase: GetCommunitiesUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getCommunitiesByTopicUseCase: GetCommunitiesByTopicUseCase,
+    private val getFriendCommunitiesUseCase: GetFriendCommunitiesUseCase,
 ) : ViewModel() {
 
     val user = MutableStateFlow<User?>(null)
+    private var feedState = feedAll
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -74,14 +82,10 @@ class FeedViewModel @Inject constructor(
     private var getFeedJob: Job = Job().apply {
         complete()
     }
-
+    private var selectedTopicId: Long = 0
     private var topicFeedLastId: Long? = null
-    private var getTopicFeedJob: Job = Job().apply {
-        complete()
-    }
+    private var friendFeedLastId: Long? = null
 
-    //    private val _friends = MutableStateFlow<List<MayKnowFriend>>(emptyList())
-//    val friends : StateFlow<List<MayKnowFriend>> get() = _friends
     init {
 
         viewModelScope.launch {
@@ -93,7 +97,7 @@ class FeedViewModel @Inject constructor(
         getTopicList()
         onNextFeeds(null)
         getPopularTravelLogs()
-//        onNextFriends() 확인
+        onNextFriends()
         makeFeedItems()
     }
 
@@ -147,141 +151,113 @@ class FeedViewModel @Inject constructor(
         }
     }
 
+    fun selectFeedFriend(){
+        feedState = feedFriend
+        friendFeedLastId = null
+        onNextFeeds()
+    }
 
-    fun onNextFeeds(topicId: Long?) {
-        if(topicFeedLastId == null){
+    fun selectFeedAll(){
+        feedState = feedAll
+        feedLastId = null
+        onNextFeeds()
+    }
+
+    fun onNextFeeds(topicId: Long?= null) {
+        if(topicFeedLastId == null || feedLastId==null || friendFeedLastId == null){
             feedItems.clear()
         }
         if (getFeedJob.isCompleted.not()) {
             return
         }
-        loadNextFeeds(topicId)
+        Logger.t("MainTest").i("${topicId}")
+
+        //토픽 눌렀을 때
+        if(topicId != null){
+            feedState = feedTopic
+            selectedTopicId = topicId
+        }
+        loadNextFeeds()
     }
 
-    private fun loadNextFeeds(topicId: Long?) {
-        getFeedJob = viewModelScope.launch {
-            if(topicId == null){
-                val result = getCommunitiesUseCase(
-                    CommunityRequestInfo(DEFAULT_PAGE_SIZE, feedLastId)
-                )
-                if (result.isSuccess) {
-                    val newContents = result.getOrThrow()
+    private fun changeFeedItems(newContents: List<CommunityMainContent>){
+        val feeds = newContents.map {
+            Feed.FeedItem(
+                it.communityId,
+                it.communityContent,
+                it.placeId,
+                it.communityMainImageUrl,
+                it.writer,
+                it.travelJournalSimpleResponse,
+                it.communityCommentCount,
+                it.communityLikeCount
+            )
+        }
+        val original = feedItems
+        feedItems.clear()
+        feedItems.addAll(original + CopyOnWriteArrayList(feeds))
+        makeFeedItems()
+    }
 
-                    feedLastId = newContents[newContents.lastIndex].communityId
-                    if (newContents.isEmpty()) {
-                        loadNextFeeds(null)
+    private fun loadNextFeeds() {
+        getFeedJob = viewModelScope.launch {
+            when(feedState) {
+                feedAll -> {
+                    val result = getCommunitiesUseCase(
+                        CommunityRequestInfo(DEFAULT_PAGE_SIZE, feedLastId)
+                    )
+                    if (result.isSuccess) {
+                        val newContents = result.getOrThrow()
+                        feedLastId = newContents[newContents.lastIndex].communityId
+                        if (newContents.isEmpty()) {
+                            loadNextFeeds()
+                        }
+                        changeFeedItems(newContents)
+                    } else {
+                        Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
                     }
-                    val feeds = newContents.map {
-                        Feed.FeedItem(
-                            it.communityId,
-                            it.communityContent,
-                            it.placeId,
-                            it.communityMainImageUrl,
-                            it.writer,
-                            it.travelJournalSimpleResponse,
-                            it.communityCommentCount,
-                            it.communityLikeCount
-                        )
-                    }
-                    val original = feedItems
-                    feedItems.clear()
-                    feedItems.addAll(original + CopyOnWriteArrayList(feeds))
-                    makeFeedItems()
-                } else {
-                    // TODO 에러 처리
-                    Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
                 }
-            }else{
-                val result = getCommunitiesByTopicUseCase(
-                    topicId,CommunityRequestInfo(DEFAULT_PAGE_SIZE, topicFeedLastId)
-                )
-                if (result.isSuccess) {
-                    val newContents = result.getOrThrow()
-                    Logger.t("MainTest").i("${newContents}")
-                    if(!newContents.isEmpty()){
-                        topicFeedLastId = newContents[newContents.lastIndex].communityId
+
+                feedFriend -> {
+                    val result = getFriendCommunitiesUseCase(
+                        CommunityRequestInfo(DEFAULT_PAGE_SIZE, friendFeedLastId)
+                    )
+                    if (result.isSuccess) {
+                        val newContents = result.getOrThrow()
+                        if (!newContents.isEmpty()) {
+                            friendFeedLastId = newContents[newContents.lastIndex].communityId
+                        }
+                        if (newContents.isEmpty()) {
+                            onNextFeeds()
+                        }
+                        changeFeedItems(newContents)
+                    } else {
+                        handleError(result.exceptionOrNull() ?: UnKnownException())
+                        Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
                     }
-                    if (newContents.isEmpty()) {
-                        onNextFeeds(topicId)
+                }
+
+                feedTopic -> {
+                    val result = getCommunitiesByTopicUseCase(
+                        selectedTopicId,CommunityRequestInfo(DEFAULT_PAGE_SIZE, topicFeedLastId)
+                    )
+                    if (result.isSuccess) {
+                        val newContents = result.getOrThrow()
+                        if(!newContents.isEmpty()){
+                            topicFeedLastId = newContents[newContents.lastIndex].communityId
+                        }
+                        if (newContents.isEmpty()) {
+                            onNextFeeds(selectedTopicId)
+                        }
+                        changeFeedItems(newContents)
+                    } else {
+                        handleError(result.exceptionOrNull() ?: UnKnownException())
                     }
-                    val feeds = newContents.map {
-                        Feed.FeedItem(
-                            it.communityId,
-                            it.communityContent,
-                            it.placeId,
-                            it.communityMainImageUrl,
-                            it.writer,
-                            it.travelJournalSimpleResponse,
-                            it.communityCommentCount,
-                            it.communityLikeCount
-                        )
-                    }
-                    val original = feedItems
-                    feedItems.clear()
-                    feedItems.addAll(original + CopyOnWriteArrayList(feeds))
-                    makeFeedItems()
-                } else {
-                    // TODO 에러 처리
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
                 }
             }
-
         }
     }
 
-//    fun onNextTopicFeeds(topicId: Long) {
-//        if(topicFeedLastId == null){
-//            feedItems.clear()
-//        }
-//        if (getTopicFeedJob.isCompleted.not()) {
-//            return
-//        }
-//        loadNextTopicFeeds(topicId)
-//    }
-
-
-//    private fun loadNextTopicFeeds(topicId: Long) {
-//        getTopicFeedJob = viewModelScope.launch {
-//            val result = getCommunitiesByTopicUseCase(
-//                topicId,CommunityRequestInfo(DEFAULT_PAGE_SIZE, topicFeedLastId)
-//            )
-//            if (result.isSuccess) {
-//                val newContents = result.getOrThrow()
-//                Logger.t("MainTest").i("${newContents}")
-//                topicFeedLastId = newContents[newContents.lastIndex].communityId
-//                if (newContents.isEmpty()) {
-//                    onNextTopicFeeds(topicId)
-//                }
-//                val feeds = newContents.map {
-//                    Feed.FeedItem(
-//                        it.communityId,
-//                        it.communityContent,
-//                        it.placeId,
-//                        it.communityMainImageUrl,
-//                        it.writer,
-//                        it.travelJournalSimpleResponse,
-//                        it.communityCommentCount,
-//                        it.communityLikeCount
-//                    )
-//                }
-//                val original = feedItems
-//                feedItems.clear()
-//                feedItems.addAll(original + CopyOnWriteArrayList(feeds))
-//                makeFeedItems()
-//            } else {
-//                // TODO 에러 처리
-//                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
-//            }
-//        }
-//    }
-
-//     private suspend fun handleError(error: Throwable) {
-//        when (error) {
-//            is NoMoreItemException -> topicFeedLastId=null
-//            else -> {}
-//        }
-//    }
     private fun getPopularTravelLogs() {
         val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
         val popularSpotList = arrayListOf<PopularTravelLog>(
@@ -368,7 +344,11 @@ private suspend fun handleError(error: Throwable) {
         is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
         is InvalidTokenException -> _event.emit(Event.InvalidTokenException)
         is InvalidPermissionException -> _event.emit(Event.NotHavePermissionException)
-        is NoMoreItemException -> topicFeedLastId = null
+        is NoMoreItemException -> {
+            topicFeedLastId = null
+            friendFeedLastId = null
+            feedLastId = null
+        }
         else -> _event.emit(Event.UnknownException)
     }
 }
@@ -391,6 +371,7 @@ companion object {
     private const val MINIMUM_FEED_SIZE = 2
     private const val MINIMUM_FEED_SIZE_DOUBLE = 4
     private const val DEFAULT_PAGE_SIZE = 20
+
 }
 }
 

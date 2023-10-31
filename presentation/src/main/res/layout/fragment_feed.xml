@@ -45,16 +45,45 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tb_feed"/>
 
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/btn_feed_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedButton="@+id/btn_feed_sort_all"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rv_topic"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_feed_sort_all"
+                style="@style/btn_follow_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background_normal"
+                android:text="@string/feed_sort_all" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_feed_sort_friend"
+                style="@style/btn_follow_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background_normal"
+                android:text="@string/feed_sort_friend" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_community"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="56dp"
             android:clipToPadding="false"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_topic"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_feed_sort"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_write"
@@ -67,5 +96,6 @@
             android:layout_marginBottom="76dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

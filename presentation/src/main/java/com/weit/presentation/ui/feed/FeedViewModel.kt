@@ -253,11 +253,7 @@ class FeedViewModel @Inject constructor(
     fun onSelectPictures(pickImageUseCase: PickImageUseCase) {
         viewModelScope.launch {
             val images = pickImageUseCase()
-            if(images.isEmpty()){
-                _event.emit(Event.NotSelectedFeedImages)
-            }else{
-                _event.emit(Event.OnSelectPictures(images))
-            }
+             _event.emit(Event.OnSelectPictures(images))
         }
     }
 

@@ -37,7 +37,11 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     lateinit var viewModelFactory: FeedPostViewModel.FeedPostFactory
 
     private val viewModel: FeedPostViewModel by viewModels {
-        FeedPostViewModel.provideFactory(viewModelFactory,args.feedImages)
+        if(args.feedImages == null){
+            FeedPostViewModel.provideFactory(viewModelFactory, emptyArray())
+        }else{
+            FeedPostViewModel.provideFactory(viewModelFactory,args.feedImages)
+        }
     }
 
     @Inject

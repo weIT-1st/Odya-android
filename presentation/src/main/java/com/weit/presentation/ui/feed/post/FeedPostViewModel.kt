@@ -9,6 +9,7 @@ import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.presentation.ui.feed.FeedViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -29,7 +30,7 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _topicList = MutableStateFlow<List<TopicDetail>?>(null)
     val topicList : StateFlow<List<TopicDetail>?> get() = _topicList
 
-    private val _imageList = MutableStateFlow<List<String>?>(null)
+    private val _imageList = MutableStateFlow<List<String>?>(emptyList())
     val imageList : StateFlow<List<String>?> get() = _imageList
 
     private var selectedTopicId :Long? = null
@@ -37,7 +38,7 @@ class FeedPostViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface FeedPostFactory {
-        fun create(imageUris: Array<String>): FeedPostViewModel
+        fun create(imageUris: Array<String>?): FeedPostViewModel
     }
 
     init{
@@ -74,7 +75,7 @@ class FeedPostViewModel @AssistedInject constructor(
                     null,
                     selectedTopicId
                 ),
-                imageUris.toList()
+                _imageList.value ?: emptyList()
             )
             if (result.isSuccess) {
                 _event.emit(Event.FeedPostSuccess)
@@ -88,6 +89,7 @@ class FeedPostViewModel @AssistedInject constructor(
     fun onUpdatePictures(pickImageUseCase: PickImageUseCase) {
         viewModelScope.launch {
             val images = pickImageUseCase()
+            _imageList.emit(images.toList())
         }
     }
 
@@ -99,7 +101,7 @@ class FeedPostViewModel @AssistedInject constructor(
     companion object {
         fun provideFactory(
             assistedFactory: FeedPostViewModel.FeedPostFactory,
-            imageUris: Array<String>,
+            imageUris: Array<String>?,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(imageUris) as T

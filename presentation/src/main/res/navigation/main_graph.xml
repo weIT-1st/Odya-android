@@ -85,6 +85,7 @@
         android:label="FeedPostFragment" >
         <argument
             android:name="feedImages"
-            app:argType="string[]" />
+            app:argType="string[]"
+            app:nullable="true" />
     </fragment>
 </navigation>

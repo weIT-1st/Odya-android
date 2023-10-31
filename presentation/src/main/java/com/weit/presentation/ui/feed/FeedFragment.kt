@@ -81,10 +81,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             is FeedViewModel.Event.OnSelectPictures -> {
                 navigateFeedPost(event.uris)
             }
-            is FeedViewModel.Event.NotSelectedFeedImages -> {
-                sendSnackBar("사진을 선택해주세요")
-                findNavController().popBackStack()
-            }
             is FeedViewModel.Event.NotExistTopicIdException -> {
                 sendSnackBar("해당 토픽은 존재하지 않습니다용")
             }

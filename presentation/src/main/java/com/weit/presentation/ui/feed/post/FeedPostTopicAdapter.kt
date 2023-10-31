@@ -42,7 +42,7 @@ class FeedPostTopicAdapter(
                 }
 
                 override fun areContentsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
-                    return oldItem.topicId == newItem.topicId
+                    return oldItem == newItem
                 }
             }
     }

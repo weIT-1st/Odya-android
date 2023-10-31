@@ -50,7 +50,7 @@ class MapFragment :
 
     override fun initListener() {
         binding.btnMapPopularOdya.setOnClickListener {
-            mainSearchTopSheetUp()
+            showMainSearchTopSheet()
         }
     }
 
@@ -159,7 +159,7 @@ class MapFragment :
         searchPlaceBottomSheetFragment = null
     }
 
-    private fun mainSearchTopSheetUp(){
+    private fun showMainSearchTopSheet(){
         if (mainSearchTopSheetFragment == null){
             mainSearchTopSheetFragment = MainSearchTopSheetFragment{
                 viewModel.getDetailPlace(it)

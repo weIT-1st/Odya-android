@@ -38,7 +38,7 @@ class OdyaHotPlaceAdapter(
     ):RecyclerView.ViewHolder(binding.root){
         fun bind(item : HotPlaceRank){
             val rankText = itemView.context.getString(R.string.place_main_hot_place_rank, item.rank)
-            if (item.rank < 4){
+            if (item.rank < specialRank){
                 binding.tvItemHotPlaceRank.setTextColor(ContextCompat.getColor(itemView.context.applicationContext, R.color.primary))
             } else {
                 binding.tvItemHotPlaceRank.setTextColor(ContextCompat.getColor(itemView.context.applicationContext, R.color.system_inactive))
@@ -59,5 +59,7 @@ class OdyaHotPlaceAdapter(
                 }
 
             }
+
+        const val specialRank = 4
     }
 }

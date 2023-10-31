@@ -53,11 +53,11 @@ class PlaceSearchHistoryDataSource @Inject constructor(
     ): Response<Unit> =
         service.registerPlaceSearchHistory(searchTerm)
 
-    suspend fun getPlaceSearchHistoryRank(): Array<String> =
+    suspend fun getPlaceSearchHistoryRank(): List<String> =
         service.getPlaceSearchHistoryRank()
 
     suspend fun getPlaceSearchHistoryAgeRank(
         ageRange: Int?
-    ): Array<String> =
+    ): List<String> =
         service.getPlaceSearchHistoryAgeRank(ageRange)
 }

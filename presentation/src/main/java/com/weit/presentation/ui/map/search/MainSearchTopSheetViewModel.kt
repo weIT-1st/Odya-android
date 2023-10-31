@@ -28,8 +28,8 @@ class MainSearchTopSheetViewModel @Inject constructor(
     private val _searchPlaceList = MutableStateFlow<List<PlacePrediction>>(emptyList())
     val searchPlaceList: StateFlow<List<PlacePrediction>> get() = _searchPlaceList
 
-    private val _recentSearchList = MutableStateFlow<Set<String>>(emptySet())
-    val recentSearchList: StateFlow<Set<String>> get() = _recentSearchList
+    private val _recentSearchList = MutableStateFlow<List<String>>(emptyList())
+    val recentSearchList: StateFlow<List<String>> get() = _recentSearchList
 
     private val _odyaHotPlaceRank = MutableStateFlow<List<HotPlaceRank>>(emptyList())
     val odyaHotPlaceRank : StateFlow<List<HotPlaceRank>> get() = _odyaHotPlaceRank
@@ -37,7 +37,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val list : MutableList<HotPlaceRank> = mutableListOf()
-            (1..10).forEach { list.add(HotPlaceRank(it, "")) }
+            (topRankMinCount..topRankMaxCount).forEach { list.add(HotPlaceRank(it, "")) }
             _odyaHotPlaceRank.emit(list)
         }
     }
@@ -53,13 +53,8 @@ class MainSearchTopSheetViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getRecentPlaceSearchUseCase()
             if (result.isSuccess){
-                val set = result.getOrThrow()
-                val resultSet = if (set == null){
-                        emptySet<String>()
-                    } else {
-                        set!!
-                    }
-                _recentSearchList.emit(resultSet)
+                val list = result.getOrThrow()?: emptyList()
+                _recentSearchList.emit(list)
             } else {
                 Log.d("searchRecent", "fail : ${result.exceptionOrNull()?.message}")
             }
@@ -68,7 +63,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
 
     fun plusRecentPlaceSearch(searchTerm: String){
         viewModelScope.launch {
-            val list = recentSearchList.value.toMutableSet()
+            val list = recentSearchList.value.toMutableList()
             list.add(searchTerm)
             _recentSearchList.emit(list)
             setRecentPlaceSearchUseCase(list)
@@ -77,19 +72,19 @@ class MainSearchTopSheetViewModel @Inject constructor(
 
     fun deleteAllRecentPlaceSearch(){
         viewModelScope.launch{
-            deleteRecentPlace(emptySet())
+            deleteRecentPlace(emptyList())
         }
     }
 
     fun deleteSomethingRecentPlaceSearch(searchedPlace: String){
         viewModelScope.launch{
             val set = recentSearchList.value
-            set.filterNot { it == searchedPlace }
-            deleteRecentPlace(set)
+            val newSet = set.filterNot { it == searchedPlace }.toList()
+            deleteRecentPlace(newSet)
         }
     }
 
-    private suspend fun deleteRecentPlace(set: Set<String>){
+    private suspend fun deleteRecentPlace(set: List<String>){
         val result = setRecentPlaceSearchUseCase(set)
 
         if (result.isSuccess){
@@ -107,7 +102,9 @@ class MainSearchTopSheetViewModel @Inject constructor(
                 val list = result.getOrThrow().toList()
                 val hotplaceRankList = odyaHotPlaceRank.value.toMutableList()
                 list.mapIndexed { index, place ->
-                    hotplaceRankList[index] = HotPlaceRank(index + 1, place)
+                    if (index < topRankMaxCount){
+                        hotplaceRankList[index] = HotPlaceRank(index + 1, place)
+                    }
                 }
                 _odyaHotPlaceRank.emit(hotplaceRankList)
             } else {
@@ -116,5 +113,9 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
+    companion object{
+        private const val topRankMinCount = 1
+        private const val topRankMaxCount = 10
+    }
 
 }

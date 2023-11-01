@@ -4,20 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityMainContent
-import com.weit.domain.model.community.CommunityUser
 import com.weit.domain.model.community.CommunityRequestInfo
+import com.weit.domain.model.community.CommunityUser
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
-import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
-import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.MayknowUserSearchInfo
-import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.community.GetCommunitiesByTopicUseCase
@@ -25,15 +22,13 @@ import com.weit.domain.usecase.community.GetCommunitiesUseCase
 import com.weit.domain.usecase.community.GetFriendCommunitiesUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
-import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.PopularTravelLog
+import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
-import com.weit.presentation.ui.example.ExampleViewModel
-import com.weit.presentation.ui.feed.detail.CommentDialogViewModel
 import com.weit.presentation.ui.util.Constants.feedAll
 import com.weit.presentation.ui.util.Constants.feedFriend
 import com.weit.presentation.ui.util.Constants.feedTopic
@@ -86,6 +81,7 @@ class FeedViewModel @Inject constructor(
     private var topicFeedLastId: Long? = null
     private var friendFeedLastId: Long? = null
 
+    private var topicList = CopyOnWriteArrayList<FeedTopic>()
     init {
 
         viewModelScope.launch {
@@ -101,11 +97,32 @@ class FeedViewModel @Inject constructor(
         makeFeedItems()
     }
 
+    fun updateTopicUI(position: Int) {
+        viewModelScope.launch {
+            val newTopics = topicList.mapIndexed { index, feedTopic ->
+                if (index == position) {
+                    feedTopic.copy(isChecked = true)
+                } else {
+                    feedTopic.copy(isChecked = false)
+                }
+            }
+            topicList.clear()
+            topicList.addAll(newTopics)
+            _event.emit(Event.OnChangeFavoriteTopics(newTopics))
+        }
+    }
+
+
     private fun getTopicList() {
         viewModelScope.launch {
             val result = getTopicListUseCase()
             if (result.isSuccess) {
-                val topics = result.getOrThrow()
+                val topics = result.getOrThrow().map{
+                    FeedTopic(
+                        it.topicId,it.topicWord,false
+                    )
+                }
+                topicList.addAll(topics)
                 _event.emit(Event.OnChangeFavoriteTopics(topics))
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
@@ -170,7 +187,6 @@ class FeedViewModel @Inject constructor(
         if (getFeedJob.isCompleted.not()) {
             return
         }
-        Logger.t("MainTest").i("${topicId}")
 
         //토픽 눌렀을 때
         if(topicId != null){
@@ -355,7 +371,7 @@ private suspend fun handleError(error: Throwable) {
 
 sealed class Event {
     data class OnChangeFavoriteTopics(
-        val topics: List<TopicDetail>,
+        val topics: List<FeedTopic>,
     ) : Event()
 
     object CreateAndDeleteFollowSuccess : Event()

@@ -2,7 +2,6 @@ package com.weit.data.repository.community
 
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.CommunityDataSource
@@ -10,11 +9,10 @@ import com.weit.data.source.ImageDataSource
 import com.weit.data.util.exception
 import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.community.CommunityContent
-import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.community.CommunityMainContent
 import com.weit.domain.model.community.CommunityRegistrationInfo
+import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
-import com.weit.domain.model.community.comment.CommentRegistrationInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
@@ -43,6 +41,7 @@ class CommunityRepositoryImpl @Inject constructor(
     private val hasNextCommunity = AtomicBoolean(true)
     private val hasNextMyCommunity = AtomicBoolean(true)
     private val hasNextFriendCommunity = AtomicBoolean(true)
+    private val hasNextTopicCommunity = AtomicBoolean(true)
 
 
     override suspend fun registerCommunity(
@@ -157,10 +156,10 @@ class CommunityRepositoryImpl @Inject constructor(
         communityRequestInfo: CommunityRequestInfo
     ): Result<List<CommunityMainContent>> {
         if(communityRequestInfo.lastId == null){
-            hasNextCommunity.set(true)
+            hasNextTopicCommunity.set(true)
         }
 
-        if (hasNextCommunity.get().not()) {
+        if (hasNextTopicCommunity.get().not()) {
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
@@ -168,7 +167,7 @@ class CommunityRepositoryImpl @Inject constructor(
         }
         return if (result.isSuccess) {
             val communities = result.getOrThrow()
-            hasNextCommunity.set(communities.hasNext)
+            hasNextTopicCommunity.set(communities.hasNext)
             Result.success(communities.content)
         } else {
             Result.failure(handleRegisterAndGetCommentError(result.exception()))

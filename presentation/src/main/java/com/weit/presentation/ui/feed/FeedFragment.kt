@@ -6,7 +6,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.util.Constants.feedTopic
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +24,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         scrollListener = { viewModel.onNextFriends() }
         )
     private val topicAdapter = FavoriteTopicAdapter(
-        selectTopic = { topicId ->
+        selectTopic = { topicId, position ->
+            viewModel.updateTopicUI(position)
             binding.btnFeedSortAll.isChecked = false
             binding.btnFeedSortFriend.isChecked = false
             viewModel.onNextFeeds(topicId)}

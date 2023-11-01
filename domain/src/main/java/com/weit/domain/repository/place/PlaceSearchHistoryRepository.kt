@@ -6,7 +6,7 @@ interface PlaceSearchHistoryRepository {
         searchTermList: List<String>
     ): Result<Unit>
 
-    suspend fun getRecentPlaceSearch(): Result<List<String>?>
+    suspend fun getRecentPlaceSearch(): Result<List<String>>
 
     suspend fun registerPlaceSearchHistory(
         searchTerm: String

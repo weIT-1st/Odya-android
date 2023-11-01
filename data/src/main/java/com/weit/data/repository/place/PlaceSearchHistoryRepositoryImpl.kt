@@ -21,7 +21,7 @@ class PlaceSearchHistoryRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getRecentPlaceSearch(): Result<List<String>?> {
+    override suspend fun getRecentPlaceSearch(): Result<List<String>> {
         val result =  runCatching { dataSource.getRecentPlaceSearch() }
         return if (result.isSuccess){
             val list = result.getOrThrow()?.toList()?: emptyList()

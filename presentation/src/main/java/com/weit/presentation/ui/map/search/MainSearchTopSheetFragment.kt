@@ -11,11 +11,16 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.DialogMainSearchBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainSearchTopSheetFragment(
-    val onSearchPlaceListener : (String) -> Unit
+    val onSearchPlace : (String) -> Unit
 ): DialogFragment() {
 
     private val viewModel: MainSearchTopSheetViewModel by viewModels()
@@ -24,9 +29,12 @@ class MainSearchTopSheetFragment(
     private val binding get() = _binding!!
 
     private val placePredictionAdapter = PlacePredictionAdapter{placeId, placeName ->
-        onSearchPlaceListener(placeId)
-        viewModel.plusRecentPlaceSearch(placeName)
-        dismiss()
+        onSearchPlace(placeId)
+        GlobalScope.launch(Dispatchers.IO){
+            viewModel.plusRecentPlaceSearch(placeName)
+        }.invokeOnCompletion {
+            dismiss()
+        }
     }
 
     private val recentPlaceSearchAdapter = RecentPlaceSearchAdapter {

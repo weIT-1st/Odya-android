@@ -61,13 +61,11 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-    fun plusRecentPlaceSearch(searchTerm: String){
-        viewModelScope.launch {
-            val list = recentSearchList.value.toMutableList()
-            list.add(searchTerm)
-            _recentSearchList.emit(list)
-            setRecentPlaceSearchUseCase(list)
-        }
+    suspend fun plusRecentPlaceSearch(searchTerm: String){
+        val list = recentSearchList.value.toMutableList()
+        list.add(searchTerm)
+        _recentSearchList.emit(list)
+
     }
 
     fun deleteAllRecentPlaceSearch(){
@@ -78,17 +76,17 @@ class MainSearchTopSheetViewModel @Inject constructor(
 
     fun deleteSomethingRecentPlaceSearch(searchedPlace: String){
         viewModelScope.launch{
-            val set = recentSearchList.value
-            val newSet = set.filterNot { it == searchedPlace }.toList()
+            val list = recentSearchList.value
+            val newSet = list.filterNot { it == searchedPlace }.toList()
             deleteRecentPlace(newSet)
         }
     }
 
-    private suspend fun deleteRecentPlace(set: List<String>){
-        val result = setRecentPlaceSearchUseCase(set)
+    private suspend fun deleteRecentPlace(list: List<String>){
+        val result = setRecentPlaceSearchUseCase(list)
 
         if (result.isSuccess){
-            _recentSearchList.emit(set)
+            _recentSearchList.emit(list)
         } else {
             Log.d("Delete Recent Place Search", "failed")
         }
@@ -101,11 +99,13 @@ class MainSearchTopSheetViewModel @Inject constructor(
             if (result.isSuccess){
                 val list = result.getOrThrow().toList()
                 val hotplaceRankList = odyaHotPlaceRank.value.toMutableList()
-                list.mapIndexed { index, place ->
-                    if (index < topRankMaxCount){
+
+                list.forEachIndexed { index, place ->
+                    if (index < hotplaceRankList.size){
                         hotplaceRankList[index] = HotPlaceRank(index + 1, place)
                     }
                 }
+
                 _odyaHotPlaceRank.emit(hotplaceRankList)
             } else {
                 Log.d("hot odya", "fail")

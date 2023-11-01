@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class FeedPostViewModel @AssistedInject constructor(
     private val getTopicListUseCase: GetTopicListUseCase,
     private val registerCommunityUseCase: RegisterCommunityUseCase,
-    @Assisted private val imageUris: Array<String>,
+    @Assisted private val imageUris: List<String>,
     ): ViewModel() {
     private val _event = MutableEventFlow<FeedPostViewModel.Event>()
     val event = _event.asEventFlow()
@@ -38,12 +38,12 @@ class FeedPostViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface FeedPostFactory {
-        fun create(imageUris: Array<String>?): FeedPostViewModel
+        fun create(imageUris: List<String>?): FeedPostViewModel
     }
 
     init{
         viewModelScope.launch {
-            _imageList.emit(imageUris.toList())
+            _imageList.emit(imageUris)
         }
         getTopicList()
     }
@@ -101,7 +101,7 @@ class FeedPostViewModel @AssistedInject constructor(
     companion object {
         fun provideFactory(
             assistedFactory: FeedPostViewModel.FeedPostFactory,
-            imageUris: Array<String>?,
+            imageUris: List<String>?,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(imageUris) as T

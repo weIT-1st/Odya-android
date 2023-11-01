@@ -43,7 +43,6 @@ data class PopularTravelLog(
     val userNickname: String,
     val travelLogTitle: String,
     val travelLogImage: String,
-    val travelLogDate: LocalDateTime?= null,
 )
 
 data class FeedDTO(

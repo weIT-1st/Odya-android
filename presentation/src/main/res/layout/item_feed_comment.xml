@@ -6,7 +6,7 @@
     <data>
         <variable
             name="comment"
-            type="com.weit.domain.model.community.comment.CommunityCommentContent" />
+            type="com.weit.domain.model.community.comment.CommentContent" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

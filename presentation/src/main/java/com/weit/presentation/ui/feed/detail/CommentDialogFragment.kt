@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment() {
+class CommentDialogFragment(val feed: FeedDetail) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
 
@@ -34,7 +34,7 @@ class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment()
     }
 
     private val feedCommentAdapter = FeedCommentAdapter(
-        updateItem = { position -> changeComment(position) },
+        updateItem = { position -> viewModel.updateComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
     )
 
@@ -48,11 +48,6 @@ class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment()
         binding.vm = viewModel
 
         return binding.root
-    }
-
-    private fun changeComment(position:Int){
-        binding.etFeedComment.setText(viewModel.commentList[position].content)
-        viewModel.updateComment(position)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,6 +67,11 @@ class CommentDialogFragment(val feed: FeedDetail?) : BottomSheetDialogFragment()
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.comments.collectLatest { comments ->
                 feedCommentAdapter.submitList(comments)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.changedComment.collectLatest { content ->
+                binding.etFeedComment.setText(content)
             }
         }
     }

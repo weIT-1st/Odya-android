@@ -2,6 +2,8 @@ package com.weit.data.repository.community
 
 import com.google.gson.Gson
 import com.orhanobut.logger.Logger
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.CommunityDataSource
 import com.weit.data.source.ImageDataSource
@@ -12,17 +14,16 @@ import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.community.CommunityMainContent
 import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
+import com.weit.domain.model.community.comment.CommentRegistrationInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.repository.community.comment.CommunityRepository
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -36,6 +37,7 @@ class CommunityRepositoryImpl @Inject constructor(
     private val communityDataSource: CommunityDataSource,
     private val imageRepositoryImpl: ImageRepositoryImpl,
     private val imageDataSource: ImageDataSource,
+    private val moshi: Moshi,
     ) : CommunityRepository {
 
     private val hasNextCommunity = AtomicBoolean(true)
@@ -49,30 +51,28 @@ class CommunityRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         val result = runCatching {
 
-            val fileList : MutableList<MultipartBody.Part> = mutableListOf()
-            for(uri in communityImages){
-                val bytes = imageRepositoryImpl.getImageBytes(uri)
+            val files = communityImages.map{
+                val bytes = imageRepositoryImpl.getImageBytes(it)
                 val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
                 val fileName = try {
-                    imageDataSource.getImageName(uri)
+                    imageDataSource.getImageName(it)
                 } catch (e: Exception) {
                     return Result.failure(e)
                 }
-                val file = MultipartBody.Part.createFormData(
+                MultipartBody.Part.createFormData(
                     "community-content-image",
                     "$fileName.webp",
                     requestFile,
                 )
-
-                fileList.add(file)
             }
 
-            val communityInfoJson = Gson().toJson(communityRegistrationInfo)
+            val adapter= moshi.adapter(CommunityRegistrationInfo::class.java)
+            val communityInfoJson = adapter.toJson(communityRegistrationInfo)
 
             val communityRequestBody = communityInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val communityPart = MultipartBody.Part.createFormData("community", "community", communityRequestBody)
-            communityDataSource.registerCommunity(communityPart,fileList)
+            communityDataSource.registerCommunity(communityPart,files)
         }
         return if (result.isSuccess) {
             Result.success(result.getOrThrow())
@@ -82,6 +82,10 @@ class CommunityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextCommunity.set(true)
+        }
+
         if (hasNextCommunity.get().not()) {
             return Result.failure(NoMoreItemException())
         }
@@ -109,6 +113,10 @@ class CommunityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getMyCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextMyCommunity.set(true)
+        }
+
         if (hasNextMyCommunity.get().not()) {
             return Result.failure(NoMoreItemException())
         }
@@ -125,6 +133,10 @@ class CommunityRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getFriendCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextFriendCommunity.set(true)
+        }
+
         if (hasNextFriendCommunity.get().not()) {
             return Result.failure(NoMoreItemException())
         }

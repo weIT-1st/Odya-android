@@ -7,14 +7,14 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.community.comment.CommunityCommentContent
+import com.weit.domain.model.community.comment.CommentContent
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemFeedCommentBinding
 
 class FeedCommentAdapter(
     private val updateItem: (Int) -> Unit,
     private val deleteItem: (Int) -> Unit,
-) : ListAdapter<CommunityCommentContent, FeedCommentAdapter.FeedCommentViewHolder>(DiffCallback) {
+) : ListAdapter<CommentContent, FeedCommentAdapter.FeedCommentViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FeedCommentViewHolder {
         return FeedCommentViewHolder(
@@ -34,13 +34,15 @@ class FeedCommentAdapter(
         private val binding: ItemFeedCommentBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(feedComment: CommunityCommentContent) {
+        init{
+            binding.btnItemFeedMenu.setOnClickListener {
+                showPopUpMenu(absoluteAdapterPosition,it)
+            }
+        }
+        fun bind(feedComment: CommentContent) {
             binding.comment = feedComment
             if(feedComment.isWriter){
                 binding.btnItemFeedMenu.visibility = View.VISIBLE
-                binding.btnItemFeedMenu.setOnClickListener {
-                    showPopUpMenu(absoluteAdapterPosition,it)
-                }
             }else{
                 binding.btnItemFeedMenu.visibility = View.GONE
             }
@@ -65,18 +67,18 @@ class FeedCommentAdapter(
         }.show()
     }
     companion object {
-        private val DiffCallback: DiffUtil.ItemCallback<CommunityCommentContent> =
-            object : DiffUtil.ItemCallback<CommunityCommentContent>() {
+        private val DiffCallback: DiffUtil.ItemCallback<CommentContent> =
+            object : DiffUtil.ItemCallback<CommentContent>() {
                 override fun areItemsTheSame(
-                    oldItem: CommunityCommentContent,
-                    newItem: CommunityCommentContent,
+                    oldItem: CommentContent,
+                    newItem: CommentContent,
                 ): Boolean {
                     return oldItem.communityCommentId == newItem.communityCommentId
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: CommunityCommentContent,
-                    newItem: CommunityCommentContent,
+                    oldItem: CommentContent,
+                    newItem: CommentContent,
                 ): Boolean {
                     return oldItem.toString() == newItem.toString()
                 }

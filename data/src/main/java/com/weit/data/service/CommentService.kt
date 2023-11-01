@@ -1,7 +1,7 @@
 package com.weit.data.service
 
 import com.weit.data.model.ListResponse
-import com.weit.data.model.community.CommunityCommentContentDTO
+import com.weit.data.model.community.CommentContentDTO
 import com.weit.data.model.community.CommunityCommentRegistration
 import retrofit2.Response
 import retrofit2.http.Body
@@ -12,7 +12,7 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
-interface CommunityCommentService {
+interface CommentService {
 
     @POST("/api/v1/communities/{communityId}/comments")
     suspend fun registerCommunityComment(
@@ -25,7 +25,7 @@ interface CommunityCommentService {
         @Path("communityId") communityId: Long,
         @Query("size") size: Int?,
         @Query("lastId") lastCommunityId: Long?,
-    ): ListResponse<CommunityCommentContentDTO>
+    ): ListResponse<CommentContentDTO>
 
     @PATCH("/api/v1/communities/{communityId}/comments/{commentId}")
     suspend fun updateCommunityComment(

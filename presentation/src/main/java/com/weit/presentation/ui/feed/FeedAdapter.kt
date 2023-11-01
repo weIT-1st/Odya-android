@@ -88,6 +88,10 @@ class FeedAdapter(
     inner class MayKnowFriendViewHolder(
         private val binding: ItemMayknowFriendBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init{
+            binding.rvMayknowFriendSummary.addOnScrollListener(infinityScrollListener)
+        }
         fun bind(mayKnowFriend: Feed.MayknowFriendItem) {
             val data = mayKnowFriend.mayKnowFriendList
             val mayKnowFriendRecyclerView = binding.rvMayknowFriendSummary
@@ -95,10 +99,8 @@ class FeedAdapter(
                 onFollowChanged(userId, isChecked)
             }
             mayKnowFriendAdapter.submitList(data)
-            mayKnowFriendRecyclerView.run{
-                addOnScrollListener(infinityScrollListener)
-                adapter = mayKnowFriendAdapter
-            }
+            mayKnowFriendRecyclerView.adapter = mayKnowFriendAdapter
+
         }
     }
 

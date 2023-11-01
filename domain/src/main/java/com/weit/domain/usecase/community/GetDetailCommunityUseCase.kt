@@ -1,7 +1,6 @@
 package com.weit.domain.usecase.community
 
 import com.weit.domain.model.community.CommunityContent
-import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.repository.community.comment.CommunityRepository
 import javax.inject.Inject
 

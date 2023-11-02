@@ -110,6 +110,9 @@
     <string name="feed_sort_all">• 전체 보기</string>
     <string name="feed_sort_friend">• 친구글만 보기</string>
 
+    <string name="feed_post_content_size">%d</string>
+    <string name="feed_post_image_update">사진편집</string>
+
 
 
 

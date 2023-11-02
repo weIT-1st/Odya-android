@@ -23,6 +23,9 @@ import com.weit.domain.usecase.community.GetFriendCommunitiesUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.domain.usecase.image.GetImagesUseCase
+import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.PopularTravelLog
@@ -368,20 +371,31 @@ private suspend fun handleError(error: Throwable) {
         else -> _event.emit(Event.UnknownException)
     }
 }
+    fun onSelectPictures(pickImageUseCase: PickImageUseCase) {
+        viewModelScope.launch {
+            val images = pickImageUseCase()
+             _event.emit(Event.OnSelectPictures(images))
+        }
+    }
+
+
 
 sealed class Event {
-    data class OnChangeFavoriteTopics(
-        val topics: List<FeedTopic>,
-    ) : Event()
-
-    object CreateAndDeleteFollowSuccess : Event()
-    object NotExistTopicIdException : Event()
-    object InvalidRequestException : Event()
-    object InvalidTokenException : Event()
-    object NotHavePermissionException : Event()
-    object ExistedFollowingIdException : Event()
-    object UnknownException : Event()
-}
+        data class OnChangeFavoriteTopics(
+            val topics: List<FeedTopic>,
+        ) : Event()
+        data class OnSelectPictures(
+            val uris: List<String>,
+        ) : Event()
+        object NotSelectedFeedImages : Event()
+        object CreateAndDeleteFollowSuccess : Event()
+        object NotExistTopicIdException : Event()
+        object InvalidRequestException : Event()
+        object InvalidTokenException : Event()
+        object NotHavePermissionException : Event()
+        object ExistedFollowingIdException : Event()
+        object UnknownException : Event()
+    }
 
 companion object {
     private const val MINIMUM_FEED_SIZE = 2

@@ -65,7 +65,7 @@
             android:textColor="@color/label_assistive"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="@{log.travelLogDate.toString()}" />
+            tools:text="date" />
 
 
 

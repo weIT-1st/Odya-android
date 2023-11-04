@@ -11,7 +11,7 @@ interface CommunityContent {
     val placeId: String?
     val writer: CommunityUser
     val travelJournal: CommunityTravelJournal?
-    val topic: TopicDetail
+    val topic: TopicDetail?
     val communityContentImages: List<CommunityContentImage>
     val communityCommentCount: Int
     val communityLikeCount: Int

@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class CommentDialogFragment(val feed: CommunityContent) : BottomSheetDialogFragment() {
+class CommentDialogFragment(val feedId: Long) : BottomSheetDialogFragment() {
     private var _binding: BottomSheetFeedCommentBinding? = null
     private val binding get() = _binding!!
 
@@ -27,7 +27,7 @@ class CommentDialogFragment(val feed: CommunityContent) : BottomSheetDialogFragm
     lateinit var viewModelFactory: CommentDialogViewModel.FeedDetailFactory
 
     private val viewModel: CommentDialogViewModel by viewModels {
-        CommentDialogViewModel.provideFactory(viewModelFactory,feed)
+        CommentDialogViewModel.provideFactory(viewModelFactory,feedId)
     }
 
     private val feedCommentAdapter = FeedCommentAdapter(

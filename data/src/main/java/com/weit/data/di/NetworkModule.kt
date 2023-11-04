@@ -1,6 +1,7 @@
 package com.weit.data.di
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.weit.data.BuildConfig
 import com.weit.data.interceptor.AuthInterceptor
 import com.weit.data.source.AuthDataSource
@@ -104,6 +105,6 @@ object NetworkModule {
     @Provides
     fun provideMoshi(): Moshi = Moshi.Builder()
         .add(LocalDateTimeConverter())
+        .add(KotlinJsonAdapterFactory())
         .build()
 }
-//        .add(KotlinJsonAdapterFactory())

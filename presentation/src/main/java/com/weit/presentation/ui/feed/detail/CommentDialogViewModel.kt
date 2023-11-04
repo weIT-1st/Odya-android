@@ -10,10 +10,12 @@ import com.weit.domain.model.community.comment.CommentDeleteInfo
 import com.weit.domain.model.community.comment.CommentInfo
 import com.weit.domain.model.community.comment.CommentRegistrationInfo
 import com.weit.domain.model.community.comment.CommentUpdateInfo
+import com.weit.domain.model.user.User
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
 import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -28,11 +30,10 @@ class CommentDialogViewModel @AssistedInject constructor(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val deleteCommentsUseCase: DeleteCommentsUseCase,
     private val updateCommentsUseCase: UpdateCommentsUseCase,
-    @Assisted private val feedDetail: CommunityContent,
+    private val getUserUseCase: GetUserUseCase,
+    @Assisted private val feedId: Long,
 ) : ViewModel() {
-    var feedId : Long = 0
-    var _feed = MutableStateFlow<CommunityContent?>(null)
-    val feed: StateFlow<CommunityContent?> get() = _feed
+    val user = MutableStateFlow<User?>(null)
 
     val writedComment = MutableStateFlow("")
     private var commentState = commentRegister
@@ -55,13 +56,17 @@ class CommentDialogViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface FeedDetailFactory {
-        fun create(feedDetailFactory: CommunityContent): CommentDialogViewModel
+        fun create(feedId: Long): CommentDialogViewModel
     }
 
     init{
+
         viewModelScope.launch {
-            feedId = feedDetail.communityId
-            _feed.value = feedDetail
+            getUserUseCase().onSuccess {
+                user.value = it
+                Logger.t("MainTest").i("user ${user.value}")
+
+            }
         }
         onNextComments()
     }
@@ -173,10 +178,10 @@ class CommentDialogViewModel @AssistedInject constructor(
 
         fun provideFactory(
             assistedFactory: CommentDialogViewModel.FeedDetailFactory,
-            feedDetail: CommunityContent,
+            feedId: Long,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(feedDetail) as T
+                return assistedFactory.create(feedId) as T
             }
         }
     }

@@ -94,6 +94,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_profile"
+            app:shapeAppearance="@style/ShapeableImageViewCircle"
             app:image_uri="@{feed.writer.profile.url}"
             app:profile_background="@{feed.writer.profile}"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"

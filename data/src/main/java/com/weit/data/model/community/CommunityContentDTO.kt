@@ -12,7 +12,7 @@ data class CommunityContentDTO(
     @field:Json(name = "placeId") override val placeId: String?,
     @field:Json(name = "writer") override val writer: CommunityUserDTO,
     @field:Json(name = "travelJournal") override val travelJournal: TravelJournalDTO?,
-    @field:Json(name = "topic") override val topic: CommunityTopicDTO,
+    @field:Json(name = "topic") override val topic: CommunityTopicDTO?,
     @field:Json(name = "communityContentImages") override val communityContentImages: List<CommunityContentImageDTO>,
     @field:Json(name = "communityCommentCount") override val communityCommentCount: Int,
     @field:Json(name = "communityLikeCount") override val communityLikeCount: Int,

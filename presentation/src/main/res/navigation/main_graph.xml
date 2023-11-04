@@ -87,5 +87,8 @@
             android:name="feedImages"
             app:argType="string[]"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_fragment_feed"
+            app:destination="@id/fragment_feed" />
     </fragment>
 </navigation>

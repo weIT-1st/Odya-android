@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
@@ -38,8 +39,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         updateItem = { position -> changeComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
     )
-    private val feedTopicAdapter = FeedTopicAdapter()
     private var bottomSheetDialog: CommentDialogFragment? = null
+    private val feedImageAdapter = FeedImageAdapter()
 
     private fun changeComment(position:Int){
         binding.etFeedComment.setText(viewModel.commentList[position].content)
@@ -49,32 +50,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         initCommentRecyclerView()
-        binding.btCommunityFollow.setOnClickListener {
-            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
-        }
-        binding.btnWriteComment.setOnClickListener {
-            viewModel.registerAndUpdateComment()
-        }
-        binding.tbFeedDetail.setOnClickListener {
-            viewModel.deleteFeed()
-        }
-
-        // TODO 좋아요
+        initListener()
     }
-    private fun showCommentBottomSheet(feed: CommunityContent) {
-        if(bottomSheetDialog==null){
-            bottomSheetDialog = CommentDialogFragment(feed)
-        }
-        if(bottomSheetDialog?.isAdded?.not() == true){
-            binding.btnFeedCommentMore.setOnClickListener {
-                bottomSheetDialog?.show(
-                    requireActivity().supportFragmentManager,
-                    CommentDialogFragment.TAG,
-                )
-            }
-        }
-    }
-
 
     private fun initCommentRecyclerView() {
         binding.rvFeedComment.run {
@@ -88,8 +65,30 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             addItemDecoration(DividerItemDecoration(context, LinearLayout.VERTICAL))
             adapter = feedCommentAdapter
         }
-        binding.rvTopic.adapter = feedTopicAdapter
+        binding.vpCommunityImages.adapter = feedImageAdapter
+
     }
+
+    private fun showCommentBottomSheet() {
+        if(bottomSheetDialog==null){
+            bottomSheetDialog = CommentDialogFragment(args.feedId)
+            Logger.t("MainTest").i("null")
+
+        }
+        Logger.t("MainTest").i("bottomsheet를 눌렀다!")
+
+
+            binding.btnFeedCommentMore.setOnClickListener {
+                Logger.t("MainTest").i("bottomsheet를 눌렀다!")
+                if(bottomSheetDialog?.isAdded?.not() == true){
+                bottomSheetDialog?.show(
+                    requireActivity().supportFragmentManager,
+                    CommentDialogFragment.TAG,
+                )
+            }
+        }
+    }
+
 
     private fun navigateTravelLog(travelLogId: Long) {
         val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)
@@ -99,6 +98,15 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     override fun initListener() {
         binding.tbFeedDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+        binding.btCommunityFollow.setOnClickListener {
+            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
+        }
+        binding.btnWriteComment.setOnClickListener {
+            viewModel.registerAndUpdateComment()
+        }
+        binding.tbFeedDetail.setOnClickListener {
+            viewModel.deleteFeed()
         }
     }
 
@@ -125,20 +133,25 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
-                //feed image viewpager 연결하기
+                val uris = event.feed.communityContentImages.map{
+                    it.imageUrl
+                }
+                feedImageAdapter.submitList(uris)
+                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
 
                 setTravelLog(event.feed.travelJournal)
-                feedTopicAdapter.submitList(event.topics)
             }
             is FeedDetailViewModel.Event.OnChangeComments -> {
                 feedCommentAdapter.submitList(event.defaultComments)
-                if(event.remainingCommentsCount < 0){
+
+                if(event.remainingCommentsCount == 0){
                     binding.btnFeedCommentMore.visibility = View.GONE
                 }else{
+                    binding.btnFeedCommentMore.visibility = View.VISIBLE
                     binding.btnFeedCommentMore.text =
                         getString(R.string.feed_detail_comment, event.remainingCommentsCount)
                 }
-                event.feed?.let { showCommentBottomSheet(it) }
+                showCommentBottomSheet()
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {
                 binding.btCommunityFollow.isChecked = event.followState

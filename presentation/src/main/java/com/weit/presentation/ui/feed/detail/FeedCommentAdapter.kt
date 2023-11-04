@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -41,11 +42,7 @@ class FeedCommentAdapter(
         }
         fun bind(feedComment: CommentContent) {
             binding.comment = feedComment
-            if(feedComment.isWriter){
-                binding.btnItemFeedMenu.visibility = View.VISIBLE
-            }else{
-                binding.btnItemFeedMenu.visibility = View.GONE
-            }
+            binding.btnItemFeedMenu.isVisible = feedComment.isWriter
         }
     }
 

@@ -10,5 +10,5 @@ data class CommunityUserDTO(
     @field:Json(name = "userId") override val userId: Long,
     @field:Json(name = "nickname") override val nickname: String,
     @field:Json(name = "profile") override val profile: UserProfileDTO,
-    @field:Json(name = "isFollowing")override val isFollowing: Boolean,
+    @field:Json(name = "isFollowing")override val isFollowing: Boolean?,
 ) : CommunityUser

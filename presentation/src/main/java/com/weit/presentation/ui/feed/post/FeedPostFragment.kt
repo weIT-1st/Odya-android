@@ -9,12 +9,11 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
-import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedPostBinding
+import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.post.FeedImageAdapter
 import com.weit.presentation.ui.feed.post.FeedPostTopicAdapter
 import com.weit.presentation.ui.feed.post.FeedPostViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -30,7 +29,8 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     private val args: FeedPostFragmentArgs by navArgs()
     private val feedImageAdapter = FeedImageAdapter()
     private val feedPostTopicAdapter = FeedPostTopicAdapter(
-        clickTopic = { topicId ->  viewModel.selectTopic(topicId) }
+        selectTopic = { topicId, position ->
+            viewModel.selectTopic(topicId, position) }
     )
 
     @Inject
@@ -62,7 +62,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
     }
 
-    private fun initTopics(topics: List<TopicDetail>?){
+    private fun initTopics(topics: List<FeedTopic>?){
         val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
             flexWrap = FlexWrap.WRAP
             flexDirection = FlexDirection.ROW
@@ -89,19 +89,17 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 feedImageAdapter.submitList(images)
             }
         }
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.topicList.collectLatest { topics ->
-                initTopics(topics)
-            }
-        }
     }
 
     private fun handleEvent(event: FeedPostViewModel.Event) {
         when (event) {
             is FeedPostViewModel.Event.FeedPostSuccess -> {
-                findNavController().popBackStack()
+                val action = FeedPostFragmentDirections.actionFragmentFeedPostToFragmentFeed()
+                findNavController().navigate(action)
             }
-
+            is FeedPostViewModel.Event.OnChangeTopics -> {
+                initTopics(event.topics)
+            }
             else -> {}
         }
     }

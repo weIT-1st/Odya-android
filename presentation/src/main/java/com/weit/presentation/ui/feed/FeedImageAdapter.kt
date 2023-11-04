@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.feed.post
+package com.weit.presentation.ui.feed
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,13 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.weit.domain.model.topic.TopicDetail
-import com.weit.presentation.R
-import com.weit.presentation.databinding.ItemDailyTravelLogPictureBinding
-import com.weit.presentation.databinding.ItemFeedDetailTopicBinding
 import com.weit.presentation.databinding.ItemFeedPostImageBinding
-import com.weit.presentation.model.TopicDTO
-import com.weit.presentation.ui.post.travellog.DailyTravelLogPictureAdapter
 
 class FeedImageAdapter(
 ) : ListAdapter<String, FeedImageAdapter.ViewHolder>(diffUtil) {

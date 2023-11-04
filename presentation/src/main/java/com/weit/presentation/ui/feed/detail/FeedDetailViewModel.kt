@@ -16,6 +16,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.topic.TopicDetail
+import com.weit.domain.model.user.User
 import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
@@ -23,6 +24,7 @@ import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
 import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -42,6 +44,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val updateCommentsUseCase: UpdateCommentsUseCase,
     private val deleteCommunityUseCase: DeleteCommunityUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
+    private val getUserUseCase: GetUserUseCase,
     @Assisted private val feedId: Long,
 ) : ViewModel() {
 
@@ -49,6 +52,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     interface FeedDetailFactory {
         fun create(feedId: Long): FeedDetailViewModel
     }
+    val user = MutableStateFlow<User?>(null)
 
     var writedComment = MutableStateFlow("")
 
@@ -69,7 +73,7 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
-    private var userId: Long = 0
+    private var userId: Long = -1
 
     private var commentState = commentRegister
 
@@ -81,6 +85,11 @@ class FeedDetailViewModel @AssistedInject constructor(
     private var job: Job = Job().apply { complete() }
 
     init {
+        viewModelScope.launch {
+            getUserUseCase().onSuccess {
+                user.value = it
+            }
+        }
         getFeed()
         getFeedDetailComments(feedId)
     }
@@ -90,11 +99,9 @@ class FeedDetailViewModel @AssistedInject constructor(
             val result = getDetailCommunityUseCase(feedId)
             if (result.isSuccess) {
                 val feed = result.getOrThrow()
-                Logger.t("MainTest").i("${feed}")
-
-//                userId = feed.
+                userId = feed.writer.userId
                 setFeedDetail(feed)
-                _event.emit(Event.OnChangeFeed(feed, listOf(feed.topic)))
+                _event.emit(Event.OnChangeFeed(feed))
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
@@ -106,10 +113,7 @@ class FeedDetailViewModel @AssistedInject constructor(
         _feed.value = feed
         _likeNum.value = feed.communityLikeCount
         _commentNum.value = feed.communityCommentCount
-        _followState.value = feed.writer?.isFollowing ?: true
-        //TODO 피드 삭제, CREATEDDATE, WRITER NON-NULL CHANGE
-
-        //LocalDateTimeConverter를 여기서 쓸 수가 있는건가?
+        _followState.value = feed.writer.isFollowing ?: true
         //_createdDate.value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(feed.createdDate)
     }
 
@@ -128,14 +132,10 @@ class FeedDetailViewModel @AssistedInject constructor(
                     .slice(0 until commentCount)
 
                 var remainingCommentsCount = 0
-                if(_feed.value?.communityCommentCount != null){
-                    remainingCommentsCount = _feed.value?.communityCommentCount?.minus(
-                        defaultComments.size
-                    ) as Int
-                }else{
-                    remainingCommentsCount = -1
+                if(comments.size > DEFAULT_COMMENT_COUNT){
+                    remainingCommentsCount = comments.size - DEFAULT_COMMENT_COUNT
                 }
-                _event.emit(Event.OnChangeComments(_feed.value,defaultComments, remainingCommentsCount))
+                _event.emit(Event.OnChangeComments(defaultComments, remainingCommentsCount))
             } else {
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
@@ -241,10 +241,8 @@ class FeedDetailViewModel @AssistedInject constructor(
     sealed class Event {
         data class OnChangeFeed(
             val feed: CommunityContent,
-            val topics: List<TopicDetail>,
         ) : Event()
         data class OnChangeComments(
-            val feed: CommunityContent?,
             val defaultComments: List<CommentContent>,
             val remainingCommentsCount: Int,
         ) : Event()

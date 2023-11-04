@@ -9,6 +9,7 @@ import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.feed.FeedViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -18,6 +19,7 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.CopyOnWriteArrayList
 
 class FeedPostViewModel @AssistedInject constructor(
     private val getTopicListUseCase: GetTopicListUseCase,
@@ -27,14 +29,16 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _event = MutableEventFlow<FeedPostViewModel.Event>()
     val event = _event.asEventFlow()
 
-    private val _topicList = MutableStateFlow<List<TopicDetail>?>(null)
-    val topicList : StateFlow<List<TopicDetail>?> get() = _topicList
+//    private val _topicList = MutableStateFlow<List<TopicDetail>?>(null)
+//    val topicList : StateFlow<List<TopicDetail>?> get() = _topicList
 
     private val _imageList = MutableStateFlow<List<String>?>(emptyList())
     val imageList : StateFlow<List<String>?> get() = _imageList
 
     private var selectedTopicId :Long? = null
     val content = MutableStateFlow("")
+
+    private var topicList = CopyOnWriteArrayList<FeedTopic>()
 
     @AssistedFactory
     interface FeedPostFactory {
@@ -48,19 +52,41 @@ class FeedPostViewModel @AssistedInject constructor(
         getTopicList()
     }
 
+
      private fun getTopicList() {
         viewModelScope.launch {
             val result = getTopicListUseCase()
             if (result.isSuccess) {
-                var topics = result.getOrThrow()
-                _topicList.emit(topics)
+                val topics = result.getOrThrow().map{
+                    FeedTopic(
+                        it.topicId,it.topicWord,false
+                    )
+                }
+                topicList.addAll(topics)
+                _event.emit(Event.OnChangeTopics(topics))
             } else {
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
 
-    fun selectTopic(topicId: Long){
+    fun updateTopicUI(position: Int) {
+        viewModelScope.launch {
+            val newTopics = topicList.mapIndexed { index, feedTopic ->
+                if (index == position) {
+                    feedTopic.copy(isChecked = true)
+                } else {
+                    feedTopic.copy(isChecked = false)
+                }
+            }
+            topicList.clear()
+            topicList.addAll(newTopics)
+            _event.emit(Event.OnChangeTopics(newTopics))
+        }
+    }
+
+    fun selectTopic(topicId: Long, position:Int){
+        updateTopicUI(position)
         selectedTopicId = topicId
     }
 
@@ -94,6 +120,9 @@ class FeedPostViewModel @AssistedInject constructor(
     }
 
     sealed class Event {
+        data class OnChangeTopics(
+            val topics: List<FeedTopic>,
+        ) : FeedPostViewModel.Event()
         object FeedPostSuccess : Event()
         object UnknownException : Event()
     }

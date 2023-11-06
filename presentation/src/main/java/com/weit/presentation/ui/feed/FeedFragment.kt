@@ -4,32 +4,51 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedFragment : BaseFragment<FragmentFeedBinding>(
     FragmentFeedBinding::inflate,
 ) {
 
+    @Inject
+    lateinit var pickImageUseCase: PickImageUseCase
+
     private val viewModel: FeedViewModel by viewModels()
     private val feedAdapter = FeedAdapter(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
         onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
+        scrollListener = { viewModel.onNextFriends() }
+        )
+    private val topicAdapter = FavoriteTopicAdapter(
+        selectTopic = { topicId, position ->
+            viewModel.updateTopicUI(position)
+            binding.btnFeedSortAll.isChecked = false
+            binding.btnFeedSortFriend.isChecked = false
+            viewModel.onNextFeeds(topicId)}
     )
-    private val topicAdapter = FavoriteTopicAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         initTopicRecyclerView()
         initCommunityRecyclerView()
-        binding.btnWrite.setOnClickListener {
-            navigateFeedPost()
+        binding.btnFeedWrite.setOnClickListener {
+            viewModel.onSelectPictures(pickImageUseCase)
+        }
+        binding.btnFeedSortFriend.setOnClickListener {
+            viewModel.selectFeedFriend()
+        }
+        binding.btnFeedSortAll.setOnClickListener {
+            viewModel.selectFeedAll()
         }
     }
 
@@ -37,7 +56,18 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.rvTopic.adapter = topicAdapter
     }
     private fun initCommunityRecyclerView() {
-        binding.rvCommunity.adapter = feedAdapter
+        binding.rvCommunity.run{
+            addOnScrollListener(infinityScrollListener)
+            adapter = feedAdapter
+        }
+    }
+
+    private val infinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextFeeds()
+            }
+        }
     }
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
@@ -45,7 +75,13 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
                 handleEvent(event)
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.feed.collectLatest { feeds ->
+                feedAdapter.submitList(feeds)
+            }
+        }
     }
+
 
     private fun navigateTravelLog(travelLogId: Long) {
         val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)
@@ -57,17 +93,17 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         findNavController().navigate(action)
     }
 
-    private fun navigateFeedPost() {
-        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment()
+    private fun navigateFeedPost(uris: List<String>) {
+        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(uris.toTypedArray())
         findNavController().navigate(action)
     }
     private fun handleEvent(event: FeedViewModel.Event) {
         when (event) {
-            is FeedViewModel.Event.OnChangeFeeds -> {
-                feedAdapter.submitList(event.feeds)
-            }
             is FeedViewModel.Event.OnChangeFavoriteTopics -> {
                 topicAdapter.submitList(event.topics)
+            }
+            is FeedViewModel.Event.OnSelectPictures -> {
+                navigateFeedPost(event.uris)
             }
             is FeedViewModel.Event.NotExistTopicIdException -> {
                 sendSnackBar("해당 토픽은 존재하지 않습니다용")
@@ -87,11 +123,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             is FeedViewModel.Event.ExistedFollowingIdException -> {
                 sendSnackBar("이미 팔로우 중입니다")
             }
-            is FeedViewModel.Event.CreateFollowSuccess -> {
-                sendSnackBar("팔로우 성공")
-            }
-            is FeedViewModel.Event.DeleteFollowSuccess -> {
-                sendSnackBar("팔로우 해제")
+            is FeedViewModel.Event.CreateAndDeleteFollowSuccess -> {
+                sendSnackBar("정상적으로 실행")
             }
             else -> {}
         }

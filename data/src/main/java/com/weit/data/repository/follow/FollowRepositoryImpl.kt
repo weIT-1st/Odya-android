@@ -16,6 +16,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
+import com.weit.domain.model.follow.MayknowUserSearchInfo
 import com.weit.domain.repository.follow.FollowRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
@@ -32,6 +33,8 @@ class FollowRepositoryImpl @Inject constructor(
 
     private val hasNextFollower = AtomicBoolean(true)
     private val hasNextFollowing = AtomicBoolean(true)
+    private val hasNextUser = AtomicBoolean(true)
+
 
     override suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
         val result = runCatching {
@@ -126,6 +129,26 @@ class FollowRepositoryImpl @Inject constructor(
             )
         } else {
             Result.failure(handleFollowError(result.exception()))
+        }
+    }
+
+    override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
+        if(mayknowUserSearchInfo.lastId == null){
+            hasNextUser.set(true)
+        }
+
+        if (hasNextUser.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getMayknowUsers(mayknowUserSearchInfo)
+        }
+        return if (result.isSuccess) {
+            val mayKnowUser = result.getOrThrow()
+            hasNextUser.set(mayKnowUser.hasNext)
+            Result.success(mayKnowUser.content)
+        } else {
+            Result.failure(result.exception())
         }
     }
 

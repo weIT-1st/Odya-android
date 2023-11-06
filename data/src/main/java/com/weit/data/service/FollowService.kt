@@ -7,8 +7,8 @@ import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
 import retrofit2.Response
 import retrofit2.http.Body
-import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -20,7 +20,7 @@ interface FollowService {
         @Body followFollowingId: FollowFollowingId,
     )
 
-    @DELETE("/api/v1/follows")
+    @HTTP(method = "DELETE", path = "/api/v1/follows", hasBody = true)
     suspend fun deleteFollow(
         @Body followFollowingId: FollowFollowingId,
     ): Response<Unit>
@@ -50,4 +50,10 @@ interface FollowService {
     suspend fun getExperiencedFriend(
         @Path("placeId") placeId: String,
     ): ExperiencedFriendDTO
+
+    @GET("/api/v1/follows/may-know")
+    suspend fun getMayknowUsers(
+        @Query("size") size: Int?,
+        @Query("lasId") lasId: Long?,
+    ): ListResponse<FollowUserContentDTO>
 }

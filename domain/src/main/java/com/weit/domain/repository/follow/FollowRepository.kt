@@ -41,6 +41,7 @@ interface FollowRepository {
         query: String,
     ): List<FollowUserContent>
 
+
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo,
     ): Result<List<FollowUserContent>>

@@ -51,9 +51,12 @@ interface FollowService {
         @Path("placeId") placeId: String,
     ): ExperiencedFriendDTO
 
+
     @GET("/api/v1/follows/may-know")
     suspend fun getMayknowUsers(
         @Query("size") size: Int?,
         @Query("lasId") lasId: Long?,
     ): ListResponse<FollowUserContentDTO>
+
+
 }

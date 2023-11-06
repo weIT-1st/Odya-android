@@ -199,23 +199,6 @@ class ExampleViewModel @Inject constructor(
         }
     }
 
-    private fun getReview() {
-        viewModelScope.launch {
-            val result = getPlaceReviewByPlaceIdUseCase(
-                PlaceReviewByPlaceIdInfo(
-                    placeId = "test5",
-                    size = 2,
-                ),
-            )
-            if (result.isSuccess) {
-                val reviews = result.getOrThrow()
-                val review = reviews.firstOrNull()
-                Logger.t("MainTest").i("${reviews.size} ${review?.writerNickname} ${review?.review}")
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.message}")
-            }
-        }
-    }
 
     private fun convertUrisToImageBytes(uris: List<String>) {
         viewModelScope.launch {

@@ -5,6 +5,7 @@ import com.weit.domain.model.user.User
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
@@ -35,4 +36,7 @@ interface UserService {
     suspend fun updateUserProfile(
         @Part profile: MultipartBody.Part?,
     ): Response<Unit>
+
+    @DELETE("/api/v1/users")
+    suspend fun deleteUser(): Response<Unit>
 }

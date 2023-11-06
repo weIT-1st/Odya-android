@@ -7,6 +7,8 @@ import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserRegistration
 import com.weit.data.model.auth.UserTokenDTO
+import com.weit.data.model.auth.term.TermContentDTO
+import com.weit.data.model.auth.term.TermDTO
 import com.weit.data.service.AuthService
 import com.weit.domain.model.exception.auth.TokenNotFoundException
 import com.weit.domain.model.exception.auth.UserNotFoundException
@@ -66,4 +68,10 @@ class AuthDataSource @Inject constructor(
         val user = auth.currentUser
         return user != null
     }
+
+    suspend fun getTermList(): List<TermDTO> =
+        service.getTermList()
+
+    suspend fun getTermContent(termId: Long): TermContentDTO =
+        service.getTermContent(termId)
 }

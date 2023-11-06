@@ -8,6 +8,7 @@ import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceReviewRepositoryImpl
+import com.weit.data.repository.term.TermRepositoryImpl
 import com.weit.data.repository.topic.TopicRepositoryImpl
 import com.weit.data.repository.user.UserRepositoryImpl
 import com.weit.data.service.CommentService
@@ -15,6 +16,7 @@ import com.weit.data.service.CommunityService
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
+import com.weit.data.service.TermService
 import com.weit.data.service.TopicService
 import com.weit.data.service.UserService
 import com.weit.data.source.CommentDataSource
@@ -24,14 +26,17 @@ import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PermissionDataSource
 import com.weit.data.source.PlaceReviewDateSource
+import com.weit.data.source.TermDataSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.domain.repository.community.comment.CommentRepository
 import com.weit.domain.repository.community.comment.CommunityRepository
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceReviewRepository
+import com.weit.domain.repository.term.TermRepository
 import com.weit.domain.repository.topic.TopicRepository
 import com.weit.domain.repository.user.UserRepository
 import dagger.Module
@@ -119,8 +124,9 @@ class MainModule {
         userDataSource: UserDataSource,
         imageDataSource: ImageDataSource,
         imageRepositoryImpl: ImageRepositoryImpl,
+        userInfoDataSource: UserInfoDataSource,
     ): UserRepository =
-        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl)
+        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
 
     @ActivityRetainedScoped
     @Provides
@@ -176,4 +182,21 @@ class MainModule {
         moshi: Moshi
     ): CommunityRepository =
         CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource,moshi)
+
+        
+    @ActivityRetainedScoped
+    @Provides
+    fun provideTermService(@AuthNetworkObject retrofit: Retrofit): TermService =
+        retrofit.create(TermService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideTermDataSource(service: TermService): TermDataSource =
+        TermDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideTermRepository(dataSource: TermDataSource): TermRepository =
+        TermRepositoryImpl(dataSource)
+
 }

@@ -1,5 +1,6 @@
 package com.weit.domain.repository.follow
 
+import com.weit.domain.model.follow.ExperiencedFriendInfo
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
 import com.weit.domain.model.follow.FollowUserContent
@@ -40,7 +41,13 @@ interface FollowRepository {
         query: String,
     ): List<FollowUserContent>
 
+
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo,
     ): Result<List<FollowUserContent>>
+
+    suspend fun getExperiencedFriend(
+        placeId: String,
+    ): Result<ExperiencedFriendInfo>
+
 }

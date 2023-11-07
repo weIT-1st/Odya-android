@@ -9,6 +9,7 @@ import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.feed.FeedViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -29,13 +30,12 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _event = MutableEventFlow<FeedPostViewModel.Event>()
     val event = _event.asEventFlow()
 
-//    private val _topicList = MutableStateFlow<List<TopicDetail>?>(null)
-//    val topicList : StateFlow<List<TopicDetail>?> get() = _topicList
-
     private val _imageList = MutableStateFlow<List<String>?>(emptyList())
     val imageList : StateFlow<List<String>?> get() = _imageList
 
     private var selectedTopicId :Long? = null
+    private var selectedVisibility :String = Visibility.PUBLIC.name
+
     val content = MutableStateFlow("")
 
     private var topicList = CopyOnWriteArrayList<FeedTopic>()
@@ -90,13 +90,17 @@ class FeedPostViewModel @AssistedInject constructor(
         selectedTopicId = topicId
     }
 
+    fun selectVisibility(visibility: Visibility){
+        selectedVisibility = visibility.name
+    }
+
     fun registerCommunity(){
         viewModelScope.launch {
 
             val result = registerCommunityUseCase(
                 CommunityRegistrationInfo(
                     content.value,
-                    "PUBLIC",
+                    selectedVisibility,
                     null,
                     null,
                     selectedTopicId

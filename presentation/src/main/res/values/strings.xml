@@ -115,6 +115,13 @@
     <string name="feed_sort_all">• 전체 보기</string>
     <string name="feed_sort_friend">• 친구글만 보기</string>
 
+    <!--접근권한 관련 -->
+    <string name="visibility_title">접근권한</string>
+    <string name="visibility_all">전체공개</string>
+    <string name="visibility_friend">친구공개</string>
+    <string name="visibility_private">비공개</string>
+
+
     <string name="feed_post_content_size">%d</string>
     <string name="feed_post_image_update">사진편집</string>
 

@@ -72,14 +72,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun showCommentBottomSheet() {
         if(bottomSheetDialog==null){
             bottomSheetDialog = CommentDialogFragment(args.feedId)
-            Logger.t("MainTest").i("null")
 
         }
-        Logger.t("MainTest").i("bottomsheet를 눌렀다!")
-
 
             binding.btnFeedCommentMore.setOnClickListener {
-                Logger.t("MainTest").i("bottomsheet를 눌렀다!")
                 if(bottomSheetDialog?.isAdded?.not() == true){
                 bottomSheetDialog?.show(
                     requireActivity().supportFragmentManager,

@@ -9,9 +9,11 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedPostBinding
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.post.FeedPostTopicAdapter
@@ -47,7 +49,31 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
+        initVisibilityTab()
+
     }
+
+    private fun initVisibilityTab(){
+        binding.tlFeedPostVisibility.addOnTabSelectedListener(object :
+            TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab) {
+                when (tab.position) {
+                    0 -> {
+                        viewModel.selectVisibility(Visibility.PUBLIC)
+                    }
+                    1 -> {
+                        viewModel.selectVisibility(Visibility.FRIEND_ONLY)
+                    }
+                    else -> {
+                        viewModel.selectVisibility(Visibility.PRIVATE)
+                    }
+                }
+            }
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+    }
+
 
     override fun initListener() {
         super.initListener()

@@ -76,9 +76,10 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     },
                     journal.travelJournalCompanions.map { companion ->
                         TravelJournalCompanionsInfo(
-                        companion.userId,
-                        companion.nickname,
-                        companion.isRegistered
+                            companion.userId,
+                            companion.nickname,
+                            companion.profileUrl,
+                            companion.isRegistered
                         )
                     }
                 )

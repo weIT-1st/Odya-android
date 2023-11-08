@@ -60,36 +60,8 @@ class MapViewModel @Inject constructor(
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
             }
 
-//            getMyOdyaList()
-//            getFriendOdyaList()
-//            getFriendWithMyOdyaList()
-
-            val temp = emptyList<TravelJournalPlaceList>().toMutableList()
-            temp.add(TravelJournalPlaceList(
-                123,
-                "",
-                37.48978900686437.toLong(),
-                126.9813484065627.toLong(),
-                TravelJournalContentsImagesInfo(
-                    123,
-                    "",
-                    ""
-                )
-            ))
-
-            temp.add(TravelJournalPlaceList(
-                123,
-                "",
-                37.490365560194725.toLong(),
-                126.98077723398481 .toLong(),
-                TravelJournalContentsImagesInfo(
-                    123,
-                    "",
-                    ""
-                )
-            ))
-
-            _myOdyaList.emit(temp)
+            getMyOdyaList()
+            getFriendOdyaList()
         }
     }
 

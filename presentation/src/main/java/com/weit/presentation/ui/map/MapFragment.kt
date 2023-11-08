@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.SearchView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -97,7 +98,6 @@ class MapFragment :
         repeatOnStarted(viewLifecycleOwner){
             viewModel.myOdyaList.collectLatest {
                 for (item in it){
-                    Log.d("jomi", "item : $item")
                     addMarker(item)
                 }
             }
@@ -200,13 +200,13 @@ class MapFragment :
     }
 
     private fun addMarker(place : TravelJournalPlaceList): Marker{
-        val odyaMarkerPin = LayoutInflater.from(requireContext()).inflate(R.layout.item_odya_pin, null)
-        Log.d("jomi", "addMarker")
+        val odyaMarkerPin = LayoutInflater.from(requireContext()).inflate(R.layout.item_odya_pin, null, false)
         val ivOdyaPin = odyaMarkerPin.findViewById<ImageView>(R.id.iv_item_odya_pin)
-        val position = LatLng(place.latitude.toDouble(), place.longitude.toDouble())
+        val position = LatLng(place.latitude, place.longitude)
 
         Glide.with(requireContext())
             .load(place.travelJournalContentImage.contentImageUrl)
+            .placeholder(R.layout.image_placeholder.toDrawable())
             .into(ivOdyaPin)
 
         val markerOption = MarkerOptions()
@@ -217,7 +217,12 @@ class MapFragment :
     }
 
     private fun createDrawableFromView(view: View):Bitmap {
-        val bitmap = Bitmap.createBitmap(48, 88, Bitmap.Config.ARGB_8888)
+        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        view.measure(48, 88)
+        view.layout(0,0, view.measuredWidth, view.measuredHeight)
+        view.buildDrawingCache()
+        val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+
         val canvas = Canvas(bitmap)
         view.draw(canvas)
         return bitmap

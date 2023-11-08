@@ -44,4 +44,11 @@ class CommunityDataSource @Inject constructor(
         return service.getCommunitiesByTopic(topicId,size,communityId,sortType)
     }
 
+    suspend fun registerCommunityLike(communityId: Long): Response<Unit> {
+        return service.registerCommunityLike(communityId)
+    }
+
+    suspend fun deleteCommunityLike(communityId: Long): Response<Unit> {
+        return service.deleteCommunityLike(communityId)
+    }
 }

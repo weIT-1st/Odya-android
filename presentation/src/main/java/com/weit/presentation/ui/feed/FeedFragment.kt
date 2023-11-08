@@ -26,6 +26,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
         onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
+        onLikeChanged = { position, likeState -> viewModel.onLikeStateChange(position, likeState)},
         scrollListener = { viewModel.onNextFriends() }
         )
     private val topicAdapter = FavoriteTopicAdapter(

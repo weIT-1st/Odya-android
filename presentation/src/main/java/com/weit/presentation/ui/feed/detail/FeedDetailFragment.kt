@@ -99,6 +99,9 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.tbFeedDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+        binding.btnCommunityLike.setOnClickListener {
+            viewModel.onLikeStateChange(binding.btnCommunityLike.isChecked)
+        }
         binding.btCommunityFollow.setOnClickListener {
             viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
         }
@@ -138,19 +141,12 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 }
                 feedImageAdapter.submitList(uris)
                 binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
-
+                binding.btnFeedCommentMore.text =
+                    getString(R.string.feed_detail_comment, event.feed.communityCommentCount)
                 setTravelLog(event.feed.travelJournal)
             }
             is FeedDetailViewModel.Event.OnChangeComments -> {
                 feedCommentAdapter.submitList(event.defaultComments)
-
-                if(event.remainingCommentsCount == 0){
-                    binding.btnFeedCommentMore.visibility = View.GONE
-                }else{
-                    binding.btnFeedCommentMore.visibility = View.VISIBLE
-                    binding.btnFeedCommentMore.text =
-                        getString(R.string.feed_detail_comment, event.remainingCommentsCount)
-                }
                 showCommentBottomSheet()
             }
             is FeedDetailViewModel.Event.OnChangeFollowState -> {

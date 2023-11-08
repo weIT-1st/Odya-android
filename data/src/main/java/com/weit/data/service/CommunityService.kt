@@ -70,5 +70,13 @@ interface CommunityService {
         @Path("communityId") communityId: Long,
     ): Response<Unit>
 
+    @POST("/api/v1/communities/{communityId}/likes")
+    suspend fun registerCommunityLike(
+        @Path("communityId") communityId: Long,
+    ): Response<Unit>
 
+    @DELETE("/api/v1/communities/{communityId}/likes")
+    suspend fun deleteCommunityLike(
+        @Path("communityId") communityId: Long,
+    ): Response<Unit>
 }

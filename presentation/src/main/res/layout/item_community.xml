@@ -232,11 +232,12 @@
 
 
         <ToggleButton
-            android:id="@+id/iv_community_heart"
+            android:id="@+id/btn_community_heart"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="4dp"
             android:background="@drawable/selector_bt_heart"
+            android:checked="@{feed.userLiked}"
             android:textOff=""
             android:textOn=""
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"

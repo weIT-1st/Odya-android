@@ -16,6 +16,7 @@ sealed class Feed {
         val travelJournalSimpleResponse: CommunityTravelJournal?,
         val communityCommentCount: Int,
         val communityLikeCount: Int,
+        val isUserLiked: Boolean,
     ) : Feed()
     data class PopularTravelLogItem(val popularTravelLogList: List<PopularTravelLog>) : Feed()
     data class MayknowFriendItem(val mayKnowFriendList: List<FollowUserContent>) : Feed()

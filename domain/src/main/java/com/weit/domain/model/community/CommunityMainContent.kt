@@ -10,5 +10,6 @@ interface CommunityMainContent {
     val travelJournalSimpleResponse: CommunityTravelJournal?
     val communityCommentCount: Int
     val communityLikeCount: Int
+    val isUserLiked: Boolean
     val createdDate: String
 }

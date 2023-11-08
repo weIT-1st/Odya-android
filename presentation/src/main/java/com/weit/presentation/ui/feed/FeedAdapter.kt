@@ -18,6 +18,7 @@ class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
     private val navigateFeedDetail: (Long) -> Unit,
     private val onFollowChanged: (Long, Boolean) -> Unit,
+    private val onLikeChanged: (Int,Boolean) -> Unit,
     private val scrollListener: () -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
@@ -128,10 +129,13 @@ class FeedAdapter(
                 navigateFeedDetail(feed.communityId)
             }
             binding.btCommunityFollow.setOnClickListener {
-                onFollowChanged(feed.writer.userId, feed.writer.isFollowing ?: false)
+                onFollowChanged(feed.writer.userId, feed.writer.isFollowing)
             }
             binding.viewCommunityTitle.setOnClickListener {
                 feed.travelJournalSimpleResponse?.let { log -> navigateTravelLog(log.travelJournalId) }
+            }
+            binding.btnCommunityHeart.setOnClickListener {
+                onLikeChanged(absoluteAdapterPosition, feed.isUserLiked)
             }
         }
     }

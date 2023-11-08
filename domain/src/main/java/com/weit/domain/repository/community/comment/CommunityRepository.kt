@@ -28,6 +28,7 @@ interface CommunityRepository {
         communityImages: List<String>): Result<Unit>
     suspend fun deleteCommunity(communityId: Long) : Result<Unit>
 
-
+    suspend fun registerCommunityLike(communityId: Long): Result<Unit>
+    suspend fun deleteCommunityLike(communityId: Long): Result<Unit>
 
 }

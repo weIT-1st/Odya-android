@@ -17,8 +17,11 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.User
+import com.weit.domain.usecase.community.ChangeLikeStateUseCase
+import com.weit.domain.usecase.community.DeleteCommunityLikeUseCase
 import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
+import com.weit.domain.usecase.community.RegisterCommunityLikeUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
@@ -45,6 +48,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val deleteCommunityUseCase: DeleteCommunityUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val changeLikeStateUseCase: ChangeLikeStateUseCase,
     @Assisted private val feedId: Long,
 ) : ViewModel() {
 
@@ -70,6 +74,9 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     private val _createdDate = MutableStateFlow<String>("")
     val creadtedDate: StateFlow<String> get() = _createdDate
+
+    private val _likeState = MutableStateFlow<Boolean>(false)
+    val likeState: StateFlow<Boolean> get() = _likeState
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -114,6 +121,7 @@ class FeedDetailViewModel @AssistedInject constructor(
         _likeNum.value = feed.communityLikeCount
         _commentNum.value = feed.communityCommentCount
         _followState.value = feed.writer.isFollowing ?: true
+        _likeState.value = feed.isUserLiked
         //_createdDate.value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(feed.createdDate)
     }
 
@@ -130,12 +138,7 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
                 val defaultComments = comments
                     .slice(0 until commentCount)
-
-                var remainingCommentsCount = 0
-                if(comments.size > DEFAULT_COMMENT_COUNT){
-                    remainingCommentsCount = comments.size - DEFAULT_COMMENT_COUNT
-                }
-                _event.emit(Event.OnChangeComments(defaultComments, remainingCommentsCount))
+                _event.emit(Event.OnChangeComments(defaultComments))
             } else {
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
@@ -215,13 +218,32 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     fun onFollowStateChange(followState : Boolean) {
         viewModelScope.launch {
-            var changeState = !followState
-            val result = changeFollowStateUseCase(userId, changeState)
+            val result = changeFollowStateUseCase(userId, !followState)
             if (result.isSuccess) {
-                _event.emit(Event.OnChangeFollowState(changeState))
+                //이거 되는지 확인 만약 바뀌는게 성공한다면 changestate으로 바뀐다
+//                _followState.value = changeState
+                _event.emit(Event.OnChangeFollowState(!followState))
             } else {
-                changeState = !followState
-                _event.emit(Event.OnChangeFollowState(changeState))
+                //실패한다면 그대로 변경 !
+//                changeState = !followState
+                _event.emit(Event.OnChangeFollowState(followState))
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    fun onLikeStateChange(originalState : Boolean) {
+        viewModelScope.launch {
+            val result = changeLikeStateUseCase(feedId, !originalState)
+            if (result.isSuccess) {
+                    _likeState.value = !originalState
+//                _event.emit(Event.OnChangeFollowState(changeState))
+            } else {
+                _likeState.value = originalState
+
+//                changeState = !followState
+//                _event.emit(Event.OnChangeFollowState(changeState))
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
@@ -244,7 +266,6 @@ class FeedDetailViewModel @AssistedInject constructor(
         ) : Event()
         data class OnChangeComments(
             val defaultComments: List<CommentContent>,
-            val remainingCommentsCount: Int,
         ) : Event()
         data class OnChangeFollowState(
             val followState: Boolean

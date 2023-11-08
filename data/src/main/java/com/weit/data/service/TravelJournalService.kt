@@ -13,7 +13,7 @@ interface TravelJournalService {
 
     // 여행일지 생성 API
 
-    @GET("/api/v1/travel-journals/")
+    @GET("/api/v1/travel-journals")
     suspend fun getTravelJournal(
         @Path("travelJournalId") travelJournalId: Long
     ): TravelJournalDTO

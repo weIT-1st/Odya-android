@@ -4,8 +4,15 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
+import com.weit.domain.model.journal.TravelJournalContentsImagesInfo
+import com.weit.domain.model.journal.TravelJournalListInfo
+import com.weit.domain.model.journal.TravelJournalPlaceList
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
+import com.weit.domain.usecase.journal.GetFriendTravelJournalListUseCase
+import com.weit.domain.usecase.journal.GetFriendTravelJournalPlaceListUseCase
+import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
+import com.weit.domain.usecase.journal.GetMyTravelJournalPlaceListUseCase
 import com.weit.domain.usecase.place.GetCurrentPlaceUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlacesByCoordinateUseCase
@@ -22,7 +29,9 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(
     val getPlacesByCoordinateUseCase: GetPlacesByCoordinateUseCase,
     val getCurrentPlaceUseCase: GetCurrentPlaceUseCase,
-    val getPlaceDetailUseCase: GetPlaceDetailUseCase
+    val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    val getMyTravelJournalPlaceListUseCase: GetMyTravelJournalPlaceListUseCase,
+    val getFriendTravelJournalPlaceListUseCase: GetFriendTravelJournalPlaceListUseCase
 ) : ViewModel() {
 
     private val _touchPlaceId = MutableStateFlow("")
@@ -34,6 +43,15 @@ class MapViewModel @Inject constructor(
     private val _currentLatLng = MutableStateFlow<LatLng>(DEFAULT_LAT_LNG)
     val currentLatLng : StateFlow<LatLng> get() = _currentLatLng
 
+    private val _myOdyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
+    val myOdyaList : StateFlow<List<TravelJournalPlaceList>> get() = _myOdyaList
+
+    private val _friendOdyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
+    val friendOdyaList : StateFlow<List<TravelJournalPlaceList>> get() = _friendOdyaList
+
+    private val _friendWithMyOdyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
+    val friendWithMyOdyaList : StateFlow<List<TravelJournalPlaceList>> get() = _friendOdyaList
+
     init {
         viewModelScope.launch {
             val current = getCurrentPlaceUseCase()
@@ -41,6 +59,37 @@ class MapViewModel @Inject constructor(
                 val result = current.getOrThrow()
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
             }
+
+//            getMyOdyaList()
+//            getFriendOdyaList()
+//            getFriendWithMyOdyaList()
+
+            val temp = emptyList<TravelJournalPlaceList>().toMutableList()
+            temp.add(TravelJournalPlaceList(
+                123,
+                "",
+                37.48978900686437.toLong(),
+                126.9813484065627.toLong(),
+                TravelJournalContentsImagesInfo(
+                    123,
+                    "",
+                    ""
+                )
+            ))
+
+            temp.add(TravelJournalPlaceList(
+                123,
+                "",
+                37.490365560194725.toLong(),
+                126.98077723398481 .toLong(),
+                TravelJournalContentsImagesInfo(
+                    123,
+                    "",
+                    ""
+                )
+            ))
+
+            _myOdyaList.emit(temp)
         }
     }
 
@@ -61,6 +110,28 @@ class MapViewModel @Inject constructor(
             _detailPlace.emit(result)
         }
     }
+
+    private suspend fun getMyOdyaList(){
+        val result = getMyTravelJournalPlaceListUseCase(null, null)
+        _myOdyaList.emit(result)
+    }
+
+    private suspend fun getFriendOdyaList(){
+        val result = getFriendTravelJournalPlaceListUseCase(null, null)
+        _myOdyaList.emit(result)
+    }
+
+    private suspend fun getFriendWithMyOdyaList(){
+        val myOdyaList = myOdyaList.value
+        val friendOdyaList = friendOdyaList.value
+        val newFriendWithMyOdyaList = emptyList<List<TravelJournalPlaceList>>().toMutableList()
+
+        newFriendWithMyOdyaList.add(myOdyaList)
+        newFriendWithMyOdyaList.add(friendOdyaList)
+
+        _friendWithMyOdyaList.emit(friendOdyaList)
+    }
+
 
     companion object{
         // 서울역

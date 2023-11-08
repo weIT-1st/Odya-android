@@ -17,6 +17,11 @@ class TravelJournalModule {
 
     @ActivityRetainedScoped
     @Provides
+    fun provideJournalService(@AuthNetworkObject retrofit: Retrofit): TravelJournalService =
+        retrofit.create(TravelJournalService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
     fun provideJournalRepository(dataSource: TravelJournalDataSource): TravelJournalRepository =
         TravelJournalRepositoryImpl(dataSource)
 
@@ -24,9 +29,4 @@ class TravelJournalModule {
     @Provides
     fun provideJournalDataSource(service: TravelJournalService): TravelJournalDataSource =
         TravelJournalDataSource(service)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideJournalService(@AuthNetworkObject retrofit: Retrofit): TravelJournalService =
-        retrofit.create(TravelJournalService::class.java)
 }

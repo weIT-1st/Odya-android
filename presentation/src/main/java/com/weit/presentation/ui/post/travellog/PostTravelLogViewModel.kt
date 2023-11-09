@@ -2,7 +2,6 @@ package com.weit.presentation.ui.post.travellog
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.model.user.UserProfile
@@ -11,11 +10,13 @@ import com.weit.presentation.model.post.place.PlacePredictionDTO
 import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.model.post.travellog.DailyTravelLog
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
+import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.model.post.travellog.toDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
@@ -30,6 +31,9 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
     private val friends = CopyOnWriteArrayList<FollowUserContent>()
 
+    private val _travelPeriod = MutableStateFlow(TravelPeriod())
+    val travelPeriod: StateFlow<TravelPeriod> get() = _travelPeriod
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -38,7 +42,6 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     fun initViewState(travelFriends: List<FollowUserContent>?, selectPlace: SelectPlaceDTO?) {
         updateDailyTravelLogs()
-        Logger.t("MainTest").i("asdf $selectPlace")
         travelFriends?.let {
             initTravelFriends(it)
         }
@@ -134,6 +137,19 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         )
     }
 
+    fun showDatePicker() {
+        viewModelScope.launch {
+            _event.emit(Event.ShowDatePicker(travelPeriod.value))
+        }
+    }
+
+    fun onChangePeriod(period: TravelPeriod) {
+        viewModelScope.launch {
+            _travelPeriod.emit(period)
+            _event.emit(Event.ClearDatePickerDialog)
+        }
+    }
+
     fun onPost() {
     }
 
@@ -150,6 +166,12 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
             val imagePlaces: List<PlacePredictionDTO>,
             val dailyTravelLogPosition: Int,
         ) : Event()
+
+        data class ShowDatePicker(
+            val currentPeriod: TravelPeriod,
+        ) : Event()
+
+        object ClearDatePickerDialog : Event()
     }
 
     companion object {

@@ -86,5 +86,11 @@
     <string name="select_place_title">장소 태그하기</string>
     <string name="select_place_search">장소를 검색해보세요</string>
 
+    <!-- date picker -->
+    <string name="date_picker_cancel">취소</string>
+    <string name="date_picker_complete">확인</string>
+    <string name="date_picker_year">%d년</string>
+    <string name="date_picker_date">%d월 %d일 (%s)</string>
+
     <string name="feed_reaction_count">99+</string>
 </resources>

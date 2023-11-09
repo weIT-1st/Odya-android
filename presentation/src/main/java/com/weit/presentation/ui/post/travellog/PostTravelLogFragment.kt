@@ -2,10 +2,10 @@ package com.weit.presentation.ui.post.travellog
 
 import android.os.Bundle
 import android.view.View
-import android.widget.DatePicker
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentPostTravelLogBinding
@@ -15,6 +15,9 @@ import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,6 +39,8 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     }
     private val travelFriendsAdapter = TravelFriendsAdapter()
 
+    private var datePickerDialog: DatePickerDialogFragment? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
@@ -51,6 +56,12 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
         binding.includePostTravelLogFriends.btnTravelFriendsAdd.setOnClickListener {
             viewModel.onEditTravelFriends()
         }
+        binding.includePostTravelLogStart.root.setOnClickListener {
+            viewModel.showDatePicker()
+        }
+        binding.includePostTravelLogEnd.root.setOnClickListener {
+            viewModel.showDatePicker()
+        }
     }
 
     override fun initCollector() {
@@ -63,6 +74,18 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.changeTravelLogEvent.collectLatest { logs ->
                 dailyTravelLogAdapter.submitList(logs)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.travelPeriod.collectLatest { period ->
+                binding.includePostTravelLogStart.run {
+                    tvDatePickerDate.text = period.start.toDateString()
+                    tvDatePickerDayOfWeek.text = period.start.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                }
+                binding.includePostTravelLogEnd.run {
+                    tvDatePickerDate.text = period.end.toDateString()
+                    tvDatePickerDayOfWeek.text = period.end.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                }
             }
         }
     }
@@ -89,7 +112,18 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 findNavController().navigate(action)
             }
             is PostTravelLogViewModel.Event.ShowDatePicker -> {
-                DatePickerDialogFragment(event.currentPeriod).show(childFragmentManager, null)
+                if (datePickerDialog == null) {
+                    Logger.t("MainTest").i("초기화")
+                    datePickerDialog = DatePickerDialogFragment(event.currentPeriod) {
+                        viewModel.onChangePeriod(it)
+                    }
+                }
+                if (datePickerDialog?.isAdded == false) {
+                    datePickerDialog?.show(childFragmentManager, null)
+                }
+            }
+            PostTravelLogViewModel.Event.ClearDatePickerDialog -> {
+                datePickerDialog = null
             }
         }
     }
@@ -109,6 +143,15 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 viewModel.onDeleteDailyTravelLog(action.position)
             }
         }
+    }
+
+    private fun LocalDate.toDateString(): String {
+        return getString(
+            R.string.edit_text_birth,
+            year,
+            monthValue,
+            dayOfMonth,
+        )
     }
 
     override fun onDestroyView() {

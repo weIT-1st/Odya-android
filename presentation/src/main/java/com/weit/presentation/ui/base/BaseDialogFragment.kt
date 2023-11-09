@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.annotation.IntRange
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 
 abstract class BaseDialogFragment<VB : ViewDataBinding>(

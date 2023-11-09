@@ -106,7 +106,7 @@
 
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/corners_top_12_in_bottom_sheet</item>
+        <item name="android:background">@drawable/corners_top_12</item>
     </style>
     <style name="datepicker" parent="@android:style/Widget.Material.DatePicker">
         <item name="android:headerBackground">@color/background_normal</item>

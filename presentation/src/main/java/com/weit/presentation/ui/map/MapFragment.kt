@@ -1,39 +1,30 @@
 package com.weit.presentation.ui.map
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.SearchView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.weit.domain.model.journal.TravelJournalContentsImagesInfo
-import com.weit.domain.model.journal.TravelJournalPlaceList
+import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
-import com.weit.presentation.databinding.ItemOdyaPinBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
 import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
@@ -57,7 +48,7 @@ class MapFragment :
     private lateinit var coordinates: LatLng
     private var map: GoogleMap? = null
     private var marker: Marker? = null
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
@@ -71,13 +62,9 @@ class MapFragment :
         binding.btnMapCurrentLocate.setOnClickListener {
             updateMap(coordinates)
         }
-        
+
         binding.toggleMapLoogOdya.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked){
-                viewModel.changeOdyaToggleOn()
-            } else {
-                viewModel.changeOdyaToggleOff()
-            }
+            viewModel.changeOdyaToggleOff(isChecked)
         }
     }
 
@@ -97,15 +84,15 @@ class MapFragment :
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.currentLatLng.collectLatest {
                 showMap(it)
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.odyaList.collectLatest {
-                for (item in it){
+                for (item in it) {
                     addMarker(item)
                 }
             }
@@ -137,8 +124,8 @@ class MapFragment :
         } else {
             updateMap(coordinates)
         }
-
     }
+
     private fun updateMap(latLng: LatLng) {
         marker!!.position = latLng
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
@@ -172,6 +159,12 @@ class MapFragment :
             sendSnackBar("지도 정보를 받아오지 못했어요")
         }
 
+        map?.setOnCameraIdleListener {
+            viewModel.getOdyaList(
+                map!!.projection.visibleRegion.latLngBounds.northeast,
+                map!!.projection.visibleRegion.latLngBounds.southwest
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -181,7 +174,7 @@ class MapFragment :
     }
 
     private fun placeBottomSheetUp(placeId: String) {
-        if (searchPlaceBottomSheetFragment == null){
+        if (searchPlaceBottomSheetFragment == null) {
             searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId) {
                 placeBottomSheetReset()
             }
@@ -192,28 +185,30 @@ class MapFragment :
         }
     }
 
-    private fun placeBottomSheetReset(){
+    private fun placeBottomSheetReset() {
         searchPlaceBottomSheetFragment = null
     }
 
-    private fun mainSearchTopSheetUp(){
-        if (mainSearchTopSheetFragment == null){
-            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
+    private fun mainSearchTopSheetUp() {
+        if (mainSearchTopSheetFragment == null) {
+            mainSearchTopSheetFragment = MainSearchTopSheetFragment {
                 viewModel.getDetailPlace(it)
             }
         }
-        if (!mainSearchTopSheetFragment!!.isAdded){
+        if (!mainSearchTopSheetFragment!!.isAdded) {
             mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
         }
     }
 
-    private fun addMarker(place : TravelJournalPlaceList): Marker{
-        val odyaMarkerPin = LayoutInflater.from(requireContext()).inflate(R.layout.item_odya_pin, null, false)
+
+    private fun addMarker(place: CoordinateUserImageResponseInfo): Marker {
+        val odyaMarkerPin =
+            LayoutInflater.from(requireContext()).inflate(R.layout.item_odya_pin, null, false)
         val ivOdyaPin = odyaMarkerPin.findViewById<ImageView>(R.id.iv_item_odya_pin)
         val position = LatLng(place.latitude, place.longitude)
 
         Glide.with(requireContext())
-            .load(place.travelJournalContentImage.contentImageUrl)
+            .load(place.imageUrl)
             .placeholder(R.layout.image_placeholder.toDrawable())
             .into(ivOdyaPin)
 
@@ -224,12 +219,16 @@ class MapFragment :
         return map!!.addMarker(markerOption)!!
     }
 
-    private fun createDrawableFromView(view: View):Bitmap {
-        view.layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+    private fun createDrawableFromView(view: View): Bitmap {
+        view.layoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         view.measure(48, 88)
-        view.layout(0,0, view.measuredWidth, view.measuredHeight)
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
         view.buildDrawingCache()
-        val bitmap = Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+        val bitmap =
+            Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
 
         val canvas = Canvas(bitmap)
         view.draw(canvas)

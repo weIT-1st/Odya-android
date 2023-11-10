@@ -1,7 +1,9 @@
 package com.weit.data.model.image
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class UserImageResponseDTO(
     @field:Json(name = "imageId") val imageId: Long,
     @field:Json(name = "imageUrl") val imageUrl: String,

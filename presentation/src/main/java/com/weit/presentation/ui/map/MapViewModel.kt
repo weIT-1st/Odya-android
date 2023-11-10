@@ -49,8 +49,8 @@ class MapViewModel @Inject constructor(
     private val _friendOdyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
     val friendOdyaList : StateFlow<List<TravelJournalPlaceList>> get() = _friendOdyaList
 
-    private val _friendWithMyOdyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
-    val friendWithMyOdyaList : StateFlow<List<TravelJournalPlaceList>> get() = _friendOdyaList
+    private val _odyaList = MutableStateFlow<List<TravelJournalPlaceList>>(emptyList())
+    val odyaList : StateFlow<List<TravelJournalPlaceList>> get() = _friendOdyaList
 
     init {
         viewModelScope.launch {
@@ -93,17 +93,35 @@ class MapViewModel @Inject constructor(
         _myOdyaList.emit(result)
     }
 
-    private suspend fun getFriendWithMyOdyaList(){
+    private suspend fun changeOdyaList(){
         val myOdyaList = myOdyaList.value
         val friendOdyaList = friendOdyaList.value
-        val newFriendWithMyOdyaList = emptyList<List<TravelJournalPlaceList>>().toMutableList()
 
-        newFriendWithMyOdyaList.add(myOdyaList)
-        newFriendWithMyOdyaList.add(friendOdyaList)
-
-        _friendWithMyOdyaList.emit(friendOdyaList)
     }
 
+    fun changeOdyaToggleOn(){
+        viewModelScope.launch {
+            val myOdyaList = myOdyaList.value
+            _odyaList.emit(myOdyaList)
+        }
+    }
+
+    fun changeOdyaToggleOff(){
+        viewModelScope.launch{
+            val myOdyaList = myOdyaList.value
+            val friendOdyaList = friendOdyaList.value
+            val odyaList = odyaList.value
+
+            if (myOdyaList == odyaList){
+                friendOdyaList.forEach {
+                    odyaList.toMutableList().add(it)
+                }
+                _odyaList.emit(odyaList)
+            } else {
+                _odyaList.emit(odyaList)
+            }
+        }
+    }
 
     companion object{
         // 서울역

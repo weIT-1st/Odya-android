@@ -151,16 +151,16 @@ class TravelJournalRepositoryImpl @Inject constructor(
         delete(dataSource.deleteTravelJournalFriend(travelJournalId))
 
     private fun getInfiniteJournalList(
-        hasNest: AtomicBoolean,
+        hasNext: AtomicBoolean,
         result: Result<ListResponse<TravelJournalListDTO>>
     ): Result<List<TravelJournalListInfo>> {
-        if (hasNest.get().not()) {
+        if (hasNext.get().not()) {
             return Result.failure(NoMoreItemException())
         }
 
         return if (result.isSuccess) {
             val listSearch = result.getOrThrow()
-            hasNest.set(listSearch.hasNext)
+            hasNext.set(listSearch.hasNext)
             Result.success(listSearch.content.map {
                 TravelJournalListInfo(
                     it.travelJournalId,

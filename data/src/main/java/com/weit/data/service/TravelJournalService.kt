@@ -18,31 +18,31 @@ interface TravelJournalService {
         @Path("travelJournalId") travelJournalId: Long
     ): TravelJournalDTO
 
-    @GET("/api/v1/travel-journals/{size}/{lastId}")
+    @GET("/api/v1/travel-journals")
     suspend fun getTravelJournalList(
         @Query("size") size: Int? = 10,
         @Query("lastId") lastTravelJournalId: Long?
     ): ListResponse<TravelJournalListDTO>
 
-    @GET("/api/v1/travel-journals/me/{size}/{lastId}")
+    @GET("/api/v1/travel-journals/me")
     suspend fun getMyTravelJournalList(
         @Query("size") size: Int? = 10,
         @Query("lastId") lastTravelJournalId: Long?
     ): ListResponse<TravelJournalListDTO>
 
-    @GET("/api/v1/travel-journals/friends /{size}/{lastId}")
+    @GET("/api/v1/travel-journals/friends")
     suspend fun getFriendTravelJournalList(
         @Query("size") size: Int? = 10,
         @Query("lastId") lastTravelJournalId: Long?
     ): ListResponse<TravelJournalListDTO>
 
-    @GET("/api/v1/travel-journals/recommends/{size}/{lastId}")
+    @GET("/api/v1/travel-journals/recommends")
     suspend fun getRecommendTravelJournalList(
         @Query("size") size: Int? = 10,
         @Query("lastId") lastTravelJournalId: Long?
     ): ListResponse<TravelJournalListDTO>
 
-    @GET("/api/v1/travel-journals/tagged/{size}/{lastId}")
+    @GET("/api/v1/travel-journals/tagged")
     suspend fun getTaggedTravelJournalList(
         @Query("size") size: Int? = 10,
         @Query("lastId") lastTravelJournalId: Long?
@@ -52,18 +52,18 @@ interface TravelJournalService {
 
     // 여행일지 콘텐츠 수정 Api
 
-    @DELETE("/api/v1/travel-journals/")
+    @DELETE("/api/v1/travel-journals/{travelJournalId}")
     suspend fun deleteTravelJournal(
         @Path("travelJournalId") travelJournalId: Long
     ): Response<Unit>
 
-    @DELETE("")
+    @DELETE("/api/v1/travel-journals/{travelJournalId}}/{travelJournalContentId}}")
     suspend fun deleteTravelJournalContent(
         @Path("travelJournalId") travelJournalId: Long,
         @Path("travelJournalContentId") travelJournalContentId: Long
     ): Response<Unit>
 
-    @DELETE("/api/v1/travel-journals/1/travelCompanion")
+    @DELETE("/api/v1/travel-journals/{travelJournalId}/travelCompanion")
     suspend fun deleteTravelJournalFriend(
         @Path("travelJournalId") travelJournalId: Long,
     ) : Response<Unit>

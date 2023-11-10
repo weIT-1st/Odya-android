@@ -71,6 +71,14 @@ class MapFragment :
         binding.btnMapCurrentLocate.setOnClickListener {
             updateMap(coordinates)
         }
+        
+        binding.toggleMapLoogOdya.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked){
+                viewModel.changeOdyaToggleOn()
+            } else {
+                viewModel.changeOdyaToggleOff()
+            }
+        }
     }
 
     override fun initCollector() {
@@ -96,7 +104,7 @@ class MapFragment :
         }
 
         repeatOnStarted(viewLifecycleOwner){
-            viewModel.myOdyaList.collectLatest {
+            viewModel.odyaList.collectLatest {
                 for (item in it){
                     addMarker(item)
                 }

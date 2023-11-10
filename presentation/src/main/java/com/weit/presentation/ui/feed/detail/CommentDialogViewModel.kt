@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
-import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.comment.CommentContent
 import com.weit.domain.model.community.comment.CommentDeleteInfo
 import com.weit.domain.model.community.comment.CommentInfo
@@ -23,7 +22,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.util.concurrent.CopyOnWriteArrayList
 
 class CommentDialogViewModel @AssistedInject constructor(
     private val registerCommentsUseCase: RegisterCommentsUseCase,
@@ -40,13 +38,9 @@ class CommentDialogViewModel @AssistedInject constructor(
 
     private val _comments = MutableStateFlow<List<CommentContent>>(emptyList())
     val comments: StateFlow<List<CommentContent>> get() = _comments
-    private val commentList =  CopyOnWriteArrayList<CommentContent>()
 
     private var lastId :Long? = null
     private var currentPosition : Int = 0
-
-    private val _changedComment = MutableStateFlow<String>("")
-    val changedComment: StateFlow<String> get() = _changedComment
 
     private var commentJob: Job = Job().apply {
         complete()
@@ -84,12 +78,10 @@ class CommentDialogViewModel @AssistedInject constructor(
                 CommentInfo(feedId,DEFAULT_PAGE_SIZE,lastId))
             if (result.isSuccess) {
                 val newComments = result.getOrThrow()
-                lastId = newComments[newComments.lastIndex].communityCommentId
+                lastId = newComments.last().communityCommentId
                 if (newComments.isEmpty()) {
                     loadNextComments()
                 }
-                commentList.clear()
-                commentList.addAll(comments.value + newComments)
                 _comments.emit(comments.value + newComments)
             } else {
                 // TODO 에러 처리
@@ -118,7 +110,7 @@ class CommentDialogViewModel @AssistedInject constructor(
                 }
                 CommentDialogViewModel.commentUpdate ->{
                     commentState = CommentDialogViewModel.commentRegister
-                    val commentId = commentList[currentPosition].communityCommentId
+                    val commentId = comments.value[currentPosition].communityCommentId
                     val result = updateCommentsUseCase(
                         CommentUpdateInfo(
                             feedId, commentId, writedComment.value
@@ -136,7 +128,6 @@ class CommentDialogViewModel @AssistedInject constructor(
     }
 
     private fun beforeGetComments(){
-        _comments.value = emptyList()
         commentJob.cancel()
         lastId = null
         loadNextComments()
@@ -145,7 +136,7 @@ class CommentDialogViewModel @AssistedInject constructor(
     fun updateComment(position: Int){
         commentState = CommentDialogViewModel.commentUpdate
         viewModelScope.launch {
-            _changedComment.emit(commentList[position].content)
+            writedComment.value = comments.value[position].content
         }
         if (job.isCompleted) {
             currentPosition = position
@@ -154,7 +145,7 @@ class CommentDialogViewModel @AssistedInject constructor(
 
     fun deleteComment(position : Int) {
         viewModelScope.launch {
-            val commentId = commentList[position].communityCommentId
+            val commentId = comments.value[position].communityCommentId
             val result = deleteCommentsUseCase(
                 CommentDeleteInfo(
                     feedId, commentId

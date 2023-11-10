@@ -25,8 +25,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     private val feedAdapter = FeedAdapter(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
-        onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
-        onLikeChanged = { position, likeState -> viewModel.onLikeStateChange(position, likeState)},
+        onFollowChanged = { communityId -> viewModel.onFollowStateChange(communityId) },
+        onLikeChanged = { communityId -> viewModel.onLikeStateChange(communityId)},
         scrollListener = { viewModel.onNextFriends() }
         )
     private val topicAdapter = FavoriteTopicAdapter(
@@ -42,15 +42,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.vm = viewModel
         initTopicRecyclerView()
         initCommunityRecyclerView()
-        binding.btnFeedWrite.setOnClickListener {
-            viewModel.onSelectPictures(pickImageUseCase)
-        }
-        binding.btnFeedSortFriend.setOnClickListener {
-            viewModel.selectFeedFriend()
-        }
-        binding.btnFeedSortAll.setOnClickListener {
-            viewModel.selectFeedAll()
-        }
     }
 
     private fun initTopicRecyclerView() {
@@ -80,6 +71,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             viewModel.feed.collectLatest { feeds ->
                 feedAdapter.submitList(feeds)
             }
+        }
+    }
+
+    override fun initListener() {
+        binding.btnFeedWrite.setOnClickListener {
+            viewModel.onSelectPictures(pickImageUseCase)
         }
     }
 
@@ -129,5 +126,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
             else -> {}
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvCommunity.removeOnScrollListener(infinityScrollListener)
+        super.onDestroyView()
     }
 }

@@ -1,5 +1,7 @@
 package com.weit.domain.model.community
 
+import java.time.LocalDateTime
+
 
 interface CommunityMainContent {
     val communityId: Long
@@ -11,5 +13,5 @@ interface CommunityMainContent {
     val communityCommentCount: Int
     val communityLikeCount: Int
     val isUserLiked: Boolean
-    val createdDate: String
+    val createdDate: LocalDateTime
 }

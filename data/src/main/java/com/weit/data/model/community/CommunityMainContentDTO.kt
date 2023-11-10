@@ -2,7 +2,9 @@ package com.weit.data.model.community
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import com.weit.data.util.StringToLocalDateTime
 import com.weit.domain.model.community.CommunityMainContent
+import java.time.LocalDateTime
 
 @JsonClass(generateAdapter = true)
 data class CommunityMainContentDTO(
@@ -15,5 +17,5 @@ data class CommunityMainContentDTO(
     @field:Json(name = "communityLikeCount") override val communityLikeCount: Int,
     @field:Json(name = "travelJournalSimpleResponse") override val travelJournalSimpleResponse: TravelJournalDTO?,
     @field:Json(name = "isUserLiked") override val isUserLiked: Boolean,
-    @field:Json(name = "createdDate") override val createdDate: String,
+    @field:Json(name = "createdDate") @StringToLocalDateTime override val createdDate: LocalDateTime,
 ) : CommunityMainContent

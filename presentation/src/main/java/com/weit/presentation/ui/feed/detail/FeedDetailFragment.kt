@@ -43,7 +43,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val feedImageAdapter = FeedImageAdapter()
 
     private fun changeComment(position:Int){
-        binding.etFeedComment.setText(viewModel.commentList[position].content)
         viewModel.updateComment(position)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,20 +71,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun showCommentBottomSheet() {
         if(bottomSheetDialog==null){
             bottomSheetDialog = CommentDialogFragment(args.feedId)
-            Logger.t("MainTest").i("null")
-
-        }
-        Logger.t("MainTest").i("bottomsheet를 눌렀다!")
-
-
-            binding.btnFeedCommentMore.setOnClickListener {
-                Logger.t("MainTest").i("bottomsheet를 눌렀다!")
-                if(bottomSheetDialog?.isAdded?.not() == true){
-                bottomSheetDialog?.show(
-                    requireActivity().supportFragmentManager,
-                    CommentDialogFragment.TAG,
-                )
-            }
         }
     }
 
@@ -99,17 +84,19 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.tbFeedDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        binding.btnCommunityLike.setOnClickListener {
-            viewModel.onLikeStateChange(binding.btnCommunityLike.isChecked)
-        }
-        binding.btCommunityFollow.setOnClickListener {
-            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
-        }
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerAndUpdateComment()
         }
         binding.tbFeedDetail.setOnClickListener {
             viewModel.deleteFeed()
+        }
+        binding.btnFeedCommentMore.setOnClickListener {
+            if (bottomSheetDialog?.isAdded?.not() == true) {
+                bottomSheetDialog?.show(
+                    requireActivity().supportFragmentManager,
+                    CommentDialogFragment.TAG,
+                )
+            }
         }
     }
 
@@ -136,6 +123,12 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
+                val followImage = if(event.feed.writer.isFollowing) R.drawable.bt_following else R.drawable.bt_follow
+                binding.ivCommunityFollow.setImageResource(followImage)
+
+                val imageResource = if(event.feed.isUserLiked) R.drawable.ic_heart else R.drawable.ic_heart_blank
+                binding.ivCommunityLike.setImageResource(imageResource)
+
                 val uris = event.feed.communityContentImages.map{
                     it.imageUrl
                 }
@@ -149,9 +142,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 feedCommentAdapter.submitList(event.defaultComments)
                 showCommentBottomSheet()
             }
-            is FeedDetailViewModel.Event.OnChangeFollowState -> {
-                binding.btCommunityFollow.isChecked = event.followState
-            }
+
             is FeedDetailViewModel.Event.DeleteCommunitySuccess -> {
                 findNavController().popBackStack()
             }
@@ -181,8 +172,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
 
     override fun onDestroyView() {
+//                bottomSheetDialog?.dismiss()
+//        bottomSheetDialog = null
         super.onDestroyView()
-        bottomSheetDialog?.dismiss()
-        bottomSheetDialog = null
     }
 }

@@ -70,13 +70,13 @@ class FeedPostViewModel @AssistedInject constructor(
         }
     }
 
-    fun updateTopicUI(position: Int) {
+    fun updateTopicUI(topicId: Long) {
         viewModelScope.launch {
-            val newTopics = topicList.mapIndexed { index, feedTopic ->
-                if (index == position) {
-                    feedTopic.copy(isChecked = true)
-                } else {
-                    feedTopic.copy(isChecked = false)
+            val newTopics = topicList.map{
+                if(it.topicId == topicId){
+                    it.copy(isChecked = true)
+                }else{
+                    it.copy(isChecked = false)
                 }
             }
             topicList.clear()
@@ -85,8 +85,8 @@ class FeedPostViewModel @AssistedInject constructor(
         }
     }
 
-    fun selectTopic(topicId: Long, position:Int){
-        updateTopicUI(position)
+    fun selectTopic(topicId: Long){
+        updateTopicUI(topicId)
         selectedTopicId = topicId
     }
 

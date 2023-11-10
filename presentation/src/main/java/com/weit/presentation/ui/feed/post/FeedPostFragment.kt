@@ -29,8 +29,8 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     private val args: FeedPostFragmentArgs by navArgs()
     private val feedImageAdapter = FeedImageAdapter()
     private val feedPostTopicAdapter = FeedPostTopicAdapter(
-        selectTopic = { topicId, position ->
-            viewModel.selectTopic(topicId, position) }
+        selectTopic = { topicId->
+            viewModel.selectTopic(topicId) }
     )
 
     @Inject

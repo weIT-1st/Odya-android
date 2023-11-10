@@ -15,13 +15,10 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.User
 import com.weit.domain.usecase.community.ChangeLikeStateUseCase
-import com.weit.domain.usecase.community.DeleteCommunityLikeUseCase
 import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
-import com.weit.domain.usecase.community.RegisterCommunityLikeUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
@@ -120,9 +117,6 @@ class FeedDetailViewModel @AssistedInject constructor(
         _feed.value = feed
         _likeNum.value = feed.communityLikeCount
         _commentNum.value = feed.communityCommentCount
-        _followState.value = feed.writer.isFollowing ?: true
-        _likeState.value = feed.isUserLiked
-        //_createdDate.value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(feed.createdDate)
     }
 
 
@@ -182,6 +176,10 @@ class FeedDetailViewModel @AssistedInject constructor(
     }
 
     fun updateComment(position: Int){
+        viewModelScope.launch {
+            writedComment.emit(commentList[position].content)
+        }
+
         commentState = commentUpdate
         if (job.isCompleted) {
             currentPosition = position
@@ -216,34 +214,25 @@ class FeedDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun onFollowStateChange(followState : Boolean) {
+    fun onFollowStateChange() {
         viewModelScope.launch {
-            val result = changeFollowStateUseCase(userId, !followState)
+            val currentFollowState = _feed.value?.writer?.isFollowing
+            val result = changeFollowStateUseCase(userId, !currentFollowState!!)
             if (result.isSuccess) {
-                //이거 되는지 확인 만약 바뀌는게 성공한다면 changestate으로 바뀐다
-//                _followState.value = changeState
-                _event.emit(Event.OnChangeFollowState(!followState))
+                getFeed()
             } else {
-                //실패한다면 그대로 변경 !
-//                changeState = !followState
-                _event.emit(Event.OnChangeFollowState(followState))
                 handleError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
 
-    fun onLikeStateChange(originalState : Boolean) {
+    fun onLikeStateChange() {
         viewModelScope.launch {
-            val result = changeLikeStateUseCase(feedId, !originalState)
+            val currentLikeState = _feed.value?.isUserLiked
+            val result = changeLikeStateUseCase(feedId, !currentLikeState!!) //!! 이거 써두되나..
             if (result.isSuccess) {
-                    _likeState.value = !originalState
-//                _event.emit(Event.OnChangeFollowState(changeState))
+                getFeed()
             } else {
-                _likeState.value = originalState
-
-//                changeState = !followState
-//                _event.emit(Event.OnChangeFollowState(changeState))
                 handleError(result.exceptionOrNull() ?: UnKnownException())
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }

@@ -30,7 +30,6 @@ class FavoriteTopicAdapter(
             binding.tvTopic.setBackgroundResource(R.drawable.corners_all_20)
 
             val context = binding.root.context
-            val cornerRadius = 100f
 
             val textColor = if (topic.isChecked) {
                 ContextCompat.getColor(context, R.color.label_reversed)
@@ -46,7 +45,7 @@ class FavoriteTopicAdapter(
 
             val gradientDrawable = GradientDrawable()
             gradientDrawable.shape = GradientDrawable.RECTANGLE
-            gradientDrawable.cornerRadii = floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
+            gradientDrawable.cornerRadii = floatArrayOf(CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS, CORNER_RADIUS)
             gradientDrawable.setColor(bgColor)
 
             binding.tvTopic.setTextColor(textColor)
@@ -78,5 +77,6 @@ class FavoriteTopicAdapter(
                     return oldItem == newItem
                 }
             }
+        const val CORNER_RADIUS = 100f
     }
 }

@@ -62,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/background_normal"
+                android:onClick="@{()-> vm.selectFeedAll()}"
                 android:text="@string/feed_sort_all" />
 
             <com.google.android.material.button.MaterialButton
@@ -69,6 +70,7 @@
                 style="@style/btn_follow_sort"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{()-> vm.selectFeedFriend()}"
                 android:backgroundTint="@color/background_normal"
                 android:text="@string/feed_sort_friend" />
 

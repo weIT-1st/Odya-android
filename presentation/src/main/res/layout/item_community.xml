@@ -150,23 +150,21 @@
             android:textColor="@color/label_assistive"
             android:textSize="12dp"
             android:textStyle="bold"
+            app:text_created_date="@{feed.createdDate}"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-            app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_follow"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
             tools:text="" />
 
-        <ToggleButton
-            android:id="@+id/bt_community_follow"
+        <ImageView
+            android:id="@+id/iv_community_follow"
             android:layout_width="54dp"
             android:layout_height="29dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/selector_bt_follow"
-            android:textOff=""
-            android:textOn=""
-            android:checked="@{feed.writer.following}"
+            tools:src="@drawable/bt_following"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
@@ -184,7 +182,7 @@
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
-            app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
+            app:layout_constraintTop_toBottomOf="@+id/iv_community_follow"
             tools:text="@{feed.communityContent}" />
 
 
@@ -224,22 +222,19 @@
             android:maxLines="1"
             android:textColor="@color/label_assistive"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-            app:layout_constraintEnd_toStartOf="@+id/iv_community_heart"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_like"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/iv_community_location"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
             tools:text="@{feed.placeId}" />
 
 
-        <ToggleButton
-            android:id="@+id/btn_community_heart"
+        <ImageView
+            android:id="@+id/iv_community_like"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="4dp"
-            android:background="@drawable/selector_bt_heart"
-            android:checked="@{feed.userLiked}"
-            android:textOff=""
-            android:textOn=""
+            tools:src="@drawable/ic_heart_blank"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
             app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
@@ -255,7 +250,7 @@
             app:text_reaction_count="@{feed.communityLikeCount}"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
-            app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
+            app:layout_constraintLeft_toRightOf="@+id/iv_community_like"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
             tools:text="99" />
 

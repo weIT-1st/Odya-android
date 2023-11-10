@@ -6,14 +6,12 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.topic.TopicDetail
 import com.weit.presentation.R
-import com.weit.presentation.databinding.ItemFeedPostTopicBinding
 import com.weit.presentation.databinding.ItemTopicBinding
 import com.weit.presentation.model.feed.FeedTopic
 
 class FeedPostTopicAdapter(
-    private var selectTopic : (Long,Int) -> Unit,
+    private var selectTopic : (Long) -> Unit,
 ) :
     androidx.recyclerview.widget.ListAdapter<FeedTopic, FeedPostTopicAdapter.FeedPostTopicViewHolder>(
         FeedTopicDiffCallback,
@@ -25,7 +23,7 @@ class FeedPostTopicAdapter(
         fun bind(topic: FeedTopic) {
             binding.tvTopic.text = topic.topicWord
             binding.tvTopic.setOnClickListener {
-                selectTopic(topic.topicId,absoluteAdapterPosition)
+                selectTopic(topic.topicId)
             }
 
             binding.tvTopic.setBackgroundResource(R.drawable.corners_all_20)

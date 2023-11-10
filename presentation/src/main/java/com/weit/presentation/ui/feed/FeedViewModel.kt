@@ -103,13 +103,19 @@ class FeedViewModel @Inject constructor(
         makeFeedItems()
     }
 
-    fun updateTopicUI(position: Int) {
+    fun updateTopicUI(position: Int?) {
         viewModelScope.launch {
-            val newTopics = topicList.mapIndexed { index, feedTopic ->
-                if (index == position) {
-                    feedTopic.copy(isChecked = true)
-                } else {
-                    feedTopic.copy(isChecked = false)
+            val newTopics = if(position == null){
+                topicList.map{
+                    it.copy(isChecked = false)
+                }
+            }else{
+                topicList.mapIndexed { index, feedTopic ->
+                    if (index == position) {
+                        feedTopic.copy(isChecked = true)
+                    } else {
+                        feedTopic.copy(isChecked = false)
+                    }
                 }
             }
             topicList.clear()
@@ -177,12 +183,14 @@ class FeedViewModel @Inject constructor(
     fun selectFeedFriend() {
         feedState = feedFriend
         friendFeedLastId = null
+        updateTopicUI(null)
         onNextFeeds()
     }
 
     fun selectFeedAll() {
         feedState = feedAll
         feedLastId = null
+        updateTopicUI(null)
         onNextFeeds()
     }
 
@@ -194,7 +202,6 @@ class FeedViewModel @Inject constructor(
             return
         }
 
-        //토픽 눌렀을 때
         if (topicId != null) {
             feedState = feedTopic
             selectedTopicId = topicId
@@ -213,7 +220,8 @@ class FeedViewModel @Inject constructor(
                 it.travelJournalSimpleResponse,
                 it.communityCommentCount,
                 it.communityLikeCount,
-                it.isUserLiked
+                it.isUserLiked,
+                it.createdDate,
             )
         }
         val original = feedItems
@@ -308,7 +316,6 @@ class FeedViewModel @Inject constructor(
             )
             if (result.isSuccess) {
                 val newFriends = result.getOrThrow()
-//                Logger.t("MainTest").i("${newFriends}")
 
                 if (newFriends.size > 0) {
                     friendLastId = newFriends[newFriends.lastIndex].userId
@@ -342,29 +349,34 @@ class FeedViewModel @Inject constructor(
         }
         feedItems.clear()
         feedItems.addAll(newFeedItems)
-        makeFeedItems()
     }
 
-    fun onFollowStateChange(userId: Long, followState: Boolean) {
+    fun onFollowStateChange(communityId: Long) {
         viewModelScope.launch {
-            val result = changeFollowStateUseCase(userId, !followState)
-            if (result.isFailure) {
-                onChangeFeedAndFriendItems(userId, followState)
-                handleError(result.exceptionOrNull() ?: UnKnownException())
-            } else {
-                //알 수도 있는 친구를 다시 부른다
+            val userId = feedItems.find { it.communityId == communityId }?.writer?.userId ?:-1
+            val currentFollowState = feedItems.find { it.communityId == communityId }?.writer?.isFollowing ?:false
+            val result = changeFollowStateUseCase(userId,!currentFollowState)
+            if (result.isSuccess) {
                 friendLastId = null
-                loadNextFriends()
-                onChangeFeedAndFriendItems(userId, !followState)
+                topicFeedLastId = null
+                friendFeedLastId = null
+                feedLastId = null
+                onNextFriends()
+                onChangeFeedAndFriendItems(userId, !currentFollowState)
+                onNextFeeds()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
     }
 
-    private fun onChangeFeedsByLikeState(position: Int, likeState: Boolean) {
-
-        val newFeedItems = feedItems.mapIndexed { index, feed ->
-            if (index == position) {
-                feed.copy(isUserLiked = likeState)
+    private fun onChangeFeedsByLikeState(communityId:Long, changeLikeState: Boolean) {
+        val newFeedItems = feedItems.map { feed ->
+            if (communityId == feed.communityId) {
+                feed.copy(
+                    isUserLiked = changeLikeState,
+                    communityLikeCount = if(changeLikeState) feed.communityLikeCount + 1 else feed.communityLikeCount - 1
+                )
             } else {
                 feed
             }
@@ -374,14 +386,14 @@ class FeedViewModel @Inject constructor(
         makeFeedItems()
     }
 
-    fun onLikeStateChange(position: Int, originalState : Boolean) {
+    fun onLikeStateChange(communityId: Long) {
         viewModelScope.launch {
-            val result = changeLikeStateUseCase(feedItems[position].communityId,!originalState)
-            if (result.isFailure) {
-                onChangeFeedsByLikeState(position, originalState)
-                handleError(result.exceptionOrNull() ?: UnKnownException())
+            val currentLikeState = feedItems.find { it.communityId == communityId }?.isUserLiked ?:false
+            val result = changeLikeStateUseCase(communityId,!currentLikeState)
+            if (result.isSuccess) {
+                onChangeFeedsByLikeState(communityId,!currentLikeState)
             } else {
-                onChangeFeedsByLikeState(position, !originalState)
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
     }

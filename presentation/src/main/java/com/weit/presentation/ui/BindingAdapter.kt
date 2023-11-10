@@ -40,6 +40,19 @@ fun bindReactionCount(textView: TextView, count: Int?) {
                 count.toString()
             }
     }
+
+    textView.text =
+        if (count as Int > DEFAULT_REACTION_COUNT) {
+            textView.resources.getString(
+                R.string.feed_reaction_over_count,
+                DEFAULT_REACTION_COUNT,
+            )
+        } else {
+            textView.resources.getString(
+                R.string.feed_reaction_count,
+                count,
+            )
+        }
 }
 
 @BindingAdapter("text_created_date")

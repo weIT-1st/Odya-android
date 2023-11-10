@@ -8,6 +8,8 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
+import com.weit.domain.model.follow.ExperiencedFriendContent
+import com.weit.domain.model.follow.ExperiencedFriendInfo
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowNumDetail
 import com.weit.domain.model.follow.FollowUserContent
@@ -46,7 +48,8 @@ class FollowRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
-        val response = followDataSource.deleteFollow(FollowFollowingId(followFollowingIdInfo.followingId))
+        val response =
+            followDataSource.deleteFollow(FollowFollowingId(followFollowingIdInfo.followingId))
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
@@ -106,6 +109,7 @@ class FollowRepositoryImpl @Inject constructor(
         return followDataSource.getCachedFollowings().filterByNickname(query)
     }
 
+
     override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
         if(mayknowUserSearchInfo.lastId == null){
             hasNextUser.set(true)
@@ -123,6 +127,27 @@ class FollowRepositoryImpl @Inject constructor(
             Result.success(mayKnowUser.content)
         } else {
             Result.failure(result.exception())
+
+    override suspend fun getExperiencedFriend(placeId: String): Result<ExperiencedFriendInfo> {
+        val result = runCatching {
+            followDataSource.getExperiencedFriend(placeId)
+        }
+        return if (result.isSuccess) {
+            val info = result.getOrThrow()
+            Result.success(
+                ExperiencedFriendInfo(
+                    info.count,
+                    info.followings.map {
+                        ExperiencedFriendContent(
+                            it.userId,
+                            it.nickname,
+                            it.profile,
+                        )
+                    },
+                ),
+            )
+        } else {
+            Result.failure(handleFollowError(result.exception()))
         }
     }
 
@@ -137,6 +162,7 @@ class FollowRepositoryImpl @Inject constructor(
     private fun handleDeleteFollowError(response: Response<*>): Throwable {
         return handleCode(response.code())
     }
+
     private fun handleFollowError(t: Throwable): Throwable {
         return if (t is HttpException) {
             handleCode(t.code())

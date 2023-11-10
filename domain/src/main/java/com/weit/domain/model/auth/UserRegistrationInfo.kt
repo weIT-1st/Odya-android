@@ -9,4 +9,5 @@ data class UserRegistrationInfo(
     val nickname: String,
     val gender: String,
     val birthday: LocalDate,
+    val termsIdList: Set<Long>,
 )

@@ -13,6 +13,7 @@ import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
 import com.weit.presentation.model.Feed
 import com.weit.presentation.ui.util.InfinityScrollListener
+import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
@@ -127,6 +128,30 @@ class FeedAdapter(
             binding.viewCommunityTitle.setOnClickListener {
                 feed.travelJournalSimpleResponse?.let { log -> navigateTravelLog(log.travelJournalId) }
             }
+
+
+            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
+                binding.tvCommunityReply.text =
+                    binding.root.context.getString(
+                        R.string.feed_reaction_over_count,
+                        DEFAULT_REACTION_COUNT,
+                    )
+            } else {
+                binding.tvCommunityReply.text =
+                    binding.root.context.getString(R.string.feed_reaction_count, feed.commentNum)
+            }
+
+            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
+                binding.tvCommunityHeart.text =
+                    binding.root.context.getString(
+                        R.string.feed_reaction_over_count,
+                        DEFAULT_REACTION_COUNT,
+                    )
+            } else {
+                binding.tvCommunityHeart.text =
+                    binding.root.context.getString(R.string.feed_reaction_count, feed.likeNum)
+            }
+
 
             binding.viewCommunityContent.setOnClickListener {
                 navigateFeedDetail(feed.communityId)

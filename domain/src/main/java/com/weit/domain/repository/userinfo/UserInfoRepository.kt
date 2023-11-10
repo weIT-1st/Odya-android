@@ -25,4 +25,10 @@ interface UserInfoRepository {
     ): Result<Unit>
 
     suspend fun getGender(): Result<String?>
+
+    suspend fun setTermIdList(
+        termIdList: Set<String>,
+    ): Result<Unit>
+
+    suspend fun getTermIdList(): Result<Set<String>?>
 }

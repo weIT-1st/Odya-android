@@ -1,6 +1,7 @@
 package com.weit.data.service
 
 import com.weit.data.model.ListResponse
+import com.weit.data.model.follow.ExperiencedFriendDTO
 import com.weit.data.model.follow.FollowFollowingId
 import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
@@ -45,9 +46,16 @@ interface FollowService {
         @Query("sortType") sortType: String,
     ): ListResponse<FollowUserContentDTO>
 
+
     @GET("/api/v1/follows/may-know")
     suspend fun getMayknowUsers(
         @Query("size") size: Int?,
         @Query("lasId") lasId: Long?,
     ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/{placeId}")
+    suspend fun getExperiencedFriend(
+        @Path("placeId") placeId: String,
+    ): ExperiencedFriendDTO
+
 }

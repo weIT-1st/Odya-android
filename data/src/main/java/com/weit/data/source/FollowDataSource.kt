@@ -1,6 +1,7 @@
 package com.weit.data.source
 
 import com.weit.data.model.ListResponse
+import com.weit.data.model.follow.ExperiencedFriendDTO
 import com.weit.data.model.follow.FollowFollowingId
 import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
@@ -72,6 +73,7 @@ class FollowDataSource @Inject constructor(
 
     fun getCachedFollowings(): List<FollowUserContent> = followings
 
+
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo
     ): ListResponse<FollowUserContentDTO> {
@@ -80,4 +82,8 @@ class FollowDataSource @Inject constructor(
             lasId = mayknowUserSearchInfo.lastId,
         )
     }
+
+    suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
+        followService.getExperiencedFriend(placeId)
+
 }

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
+import com.weit.domain.usecase.placesearchhistory.DeleteAllRecentPlaceSearchUseCase
 import com.weit.domain.usecase.placesearchhistory.GetPlaceSearchHistoryUseCase
 import com.weit.domain.usecase.placesearchhistory.GetRecentPlaceSearchUseCase
 import com.weit.domain.usecase.placesearchhistory.SetRecentPlaceSearchUseCase
@@ -23,7 +24,8 @@ class MainSearchTopSheetViewModel @Inject constructor(
     private val getSearchPlaceUseCase: GetSearchPlaceUseCase,
     private val getRecentPlaceSearchUseCase: GetRecentPlaceSearchUseCase,
     private val setRecentPlaceSearchUseCase: SetRecentPlaceSearchUseCase,
-    private val getPlaceSearchHistoryUseCase: GetPlaceSearchHistoryUseCase
+    private val getPlaceSearchHistoryUseCase: GetPlaceSearchHistoryUseCase,
+    private val deleteAllRecentPlaceSearchUseCase: DeleteAllRecentPlaceSearchUseCase
 ): ViewModel() {
 
     val searchTerm = MutableStateFlow("")
@@ -37,6 +39,9 @@ class MainSearchTopSheetViewModel @Inject constructor(
     private val _odyaHotPlaceRank = MutableStateFlow<List<HotPlaceRank>>(emptyList())
     val odyaHotPlaceRank : StateFlow<List<HotPlaceRank>> get() = _odyaHotPlaceRank
 
+    private val _searchFocus = MutableStateFlow<Boolean>(false)
+    val searchFocus : StateFlow<Boolean> get() = _searchFocus
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -45,6 +50,12 @@ class MainSearchTopSheetViewModel @Inject constructor(
             val list : MutableList<HotPlaceRank> = mutableListOf()
             (TOP_RANK_MIN_COUNT..TOP_RANK_MAX_COUNT).forEach { list.add(HotPlaceRank(it, "")) }
             _odyaHotPlaceRank.emit(list)
+        }
+    }
+
+    fun changeMainSearchFocus(focus: Boolean){
+        viewModelScope.launch {
+            _searchFocus.emit(focus)
         }
     }
 
@@ -89,15 +100,21 @@ class MainSearchTopSheetViewModel @Inject constructor(
 
     fun deleteAllRecentPlaceSearch(){
         viewModelScope.launch{
-            deleteRecentPlace(emptyList())
+           val result = deleteAllRecentPlaceSearchUseCase()
+
+            if (result.isSuccess){
+                _recentSearchList.emit(emptyList())
+            } else {
+                Log.d("Delete Recent Place Search", "failed")
+            }
         }
     }
 
-    fun deleteSomethingRecentPlaceSearch(searchedPlace: String){
+    fun deleteRecentPlaceSearch(searchedPlace: String){
         viewModelScope.launch{
             val list = recentSearchList.value
-            val newSet = list.filterNot { it == searchedPlace }
-            deleteRecentPlace(newSet)
+            val newList = list.filterNot { it == searchedPlace }
+            deleteRecentPlace(newList)
         }
     }
 

@@ -36,9 +36,11 @@ class MainSearchTopSheetFragment(
     }
 
     private val recentPlaceSearchAdapter = RecentPlaceSearchAdapter {
-        viewModel.deleteSomethingRecentPlaceSearch(it)
+        viewModel.deleteRecentPlaceSearch(it)
     }
     private val odyaHotPlaceAdapter = OdyaHotPlaceAdapter()
+
+    private val hotPlaceRankLayoutManager = GridLayoutManager(context, 5, GridLayoutManager.HORIZONTAL, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,6 +94,20 @@ class MainSearchTopSheetFragment(
         }
 
         repeatOnStarted(viewLifecycleOwner){
+            viewModel.searchFocus.collectLatest {hasFocus ->
+                binding.btnPlaceSearchCancel.setOnClickListener {
+                    viewModel.setBTNPleaseSearchCancelOnClickListener(hasFocus)
+                }
+
+                binding.rvPlaceSearchAutoComplete.isVisible = hasFocus
+                binding.tvPlaceSearchRecent.isGone = hasFocus
+                binding.btnPlaceSearchDelete.isGone = hasFocus
+                binding.rvPlaceSearchRecent.isGone = hasFocus
+                binding.lyOdyaHotPlace.isGone = hasFocus
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
             }
@@ -108,16 +124,7 @@ class MainSearchTopSheetFragment(
 
     private fun onEditFocusChange(){
         binding.etPlaceSearchMain.setOnFocusChangeListener { _ , hasFocus ->
-
-            binding.btnPlaceSearchCancel.setOnClickListener {
-                viewModel.setBTNPleaseSearchCancelOnClickListener(hasFocus)
-            }
-
-            binding.rvPlaceSearchAutoComplete.isVisible = hasFocus
-            binding.tvPlaceSearchRecent.isGone = hasFocus
-            binding.btnPlaceSearchDelete.isGone = hasFocus
-            binding.rvPlaceSearchRecent.isGone = hasFocus
-            binding.lyOdyaHotPlace.isGone = hasFocus
+            viewModel.changeMainSearchFocus(hasFocus)
         }
     }
 
@@ -132,7 +139,7 @@ class MainSearchTopSheetFragment(
 
     private fun initOdyaHotPlaceRankRecyclerView(){
         binding.rvPlaceMainHotPlaceRank.adapter = odyaHotPlaceAdapter
-        binding.rvPlaceMainHotPlaceRank.layoutManager = GridLayoutManager(context, 5, GridLayoutManager.HORIZONTAL, false)
+        binding.rvPlaceMainHotPlaceRank.layoutManager = hotPlaceRankLayoutManager
         viewModel.getOdyaHotPlaceRank()
     }
 

@@ -127,6 +127,9 @@ class FollowRepositoryImpl @Inject constructor(
             Result.success(mayKnowUser.content)
         } else {
             Result.failure(result.exception())
+        }
+    }
+
 
     override suspend fun getExperiencedFriend(placeId: String): Result<ExperiencedFriendInfo> {
         val result = runCatching {

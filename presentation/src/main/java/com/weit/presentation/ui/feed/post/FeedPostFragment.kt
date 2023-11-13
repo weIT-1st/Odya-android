@@ -47,12 +47,13 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
+        initTopics()
     }
 
     override fun initListener() {
         super.initListener()
         binding.tbFeedPost.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.menu_iamge_update) {
+            if (item.itemId == R.id.menu_image_update) {
                 viewModel.onUpdatePictures(pickImageUseCase)
             }
             true
@@ -62,15 +63,12 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
     }
 
-    private fun initTopics(topics: List<FeedTopic>?){
+    private fun initTopics(){
         val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
             flexWrap = FlexWrap.WRAP
             flexDirection = FlexDirection.ROW
             alignItems = AlignItems.STRETCH
         }
-
-        feedPostTopicAdapter.submitList(topics)
-
         binding.rvTopic.run{
             layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter
@@ -98,9 +96,14 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 findNavController().navigate(action)
             }
             is FeedPostViewModel.Event.OnChangeTopics -> {
-                initTopics(event.topics)
+                feedPostTopicAdapter.submitList(event.topics)
             }
             else -> {}
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvTopic.adapter = null
+        super.onDestroyView()
     }
 }

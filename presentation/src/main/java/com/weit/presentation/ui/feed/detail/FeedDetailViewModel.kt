@@ -86,7 +86,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     var commentList =  CopyOnWriteArrayList<CommentContent>()
 
 
-    private var job: Job = Job().apply { complete() }
+    private var registerAndUpdateJob: Job = Job().apply { complete() }
 
     init {
         viewModelScope.launch {
@@ -105,7 +105,10 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val feed = result.getOrThrow()
                 userId = feed.writer.userId
                 setFeedDetail(feed)
-                _event.emit(Event.OnChangeFeed(feed))
+                val uris = feed.communityContentImages.map{
+                    it.imageUrl
+                }
+                _event.emit(Event.OnChangeFeed(feed,uris))
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
@@ -134,13 +137,13 @@ class FeedDetailViewModel @AssistedInject constructor(
                     .slice(0 until commentCount)
                 _event.emit(Event.OnChangeComments(defaultComments))
             } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+                //TODO 에러
             }
         }
     }
 
     fun registerAndUpdateComment() {
-       job =  viewModelScope.launch {
+        registerAndUpdateJob =  viewModelScope.launch {
            when(commentState){
                commentRegister ->{
                    val result = registerCommentsUseCase(
@@ -153,7 +156,7 @@ class FeedDetailViewModel @AssistedInject constructor(
                        getFeedDetailComments(feedId)
 
                    } else {
-                       Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+                        //TODO 에러
                    }
                }
                commentUpdate ->{
@@ -181,7 +184,7 @@ class FeedDetailViewModel @AssistedInject constructor(
         }
 
         commentState = commentUpdate
-        if (job.isCompleted) {
+        if (registerAndUpdateJob.isCompleted) {
             currentPosition = position
         }
     }
@@ -209,15 +212,14 @@ class FeedDetailViewModel @AssistedInject constructor(
                 _event.emit(Event.DeleteCommunitySuccess)
             } else {
                 // TODO 에러 처리
-                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
 
     fun onFollowStateChange() {
         viewModelScope.launch {
-            val currentFollowState = _feed.value?.writer?.isFollowing
-            val result = changeFollowStateUseCase(userId, !currentFollowState!!)
+            val currentFollowState = _feed.value?.writer?.isFollowing ?: return@launch
+            val result = changeFollowStateUseCase(userId, !currentFollowState)
             if (result.isSuccess) {
                 getFeed()
             } else {
@@ -228,13 +230,12 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     fun onLikeStateChange() {
         viewModelScope.launch {
-            val currentLikeState = _feed.value?.isUserLiked
-            val result = changeLikeStateUseCase(feedId, !currentLikeState!!) //!! 이거 써두되나..
+            val currentLikeState = _feed.value?.isUserLiked ?: return@launch
+            val result = changeLikeStateUseCase(feedId, !currentLikeState)
             if (result.isSuccess) {
                 getFeed()
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
@@ -252,12 +253,10 @@ class FeedDetailViewModel @AssistedInject constructor(
     sealed class Event {
         data class OnChangeFeed(
             val feed: CommunityContent,
+            val feedImages: List<String>,
         ) : Event()
         data class OnChangeComments(
             val defaultComments: List<CommentContent>,
-        ) : Event()
-        data class OnChangeFollowState(
-            val followState: Boolean
         ) : Event()
         object DeleteCommunitySuccess : Event()
 

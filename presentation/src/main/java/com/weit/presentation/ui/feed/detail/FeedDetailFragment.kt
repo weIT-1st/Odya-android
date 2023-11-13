@@ -129,10 +129,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 val imageResource = if(event.feed.isUserLiked) R.drawable.ic_heart else R.drawable.ic_heart_blank
                 binding.ivCommunityLike.setImageResource(imageResource)
 
-                val uris = event.feed.communityContentImages.map{
-                    it.imageUrl
-                }
-                feedImageAdapter.submitList(uris)
+                feedImageAdapter.submitList(event.feedImages)
                 binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
                 binding.btnFeedCommentMore.text =
                     getString(R.string.feed_detail_comment, event.feed.communityCommentCount)
@@ -174,6 +171,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     override fun onDestroyView() {
 //                bottomSheetDialog?.dismiss()
 //        bottomSheetDialog = null
+        binding.rvFeedComment.adapter = null
         super.onDestroyView()
     }
 }

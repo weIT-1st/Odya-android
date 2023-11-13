@@ -31,10 +31,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         )
     private val topicAdapter = FavoriteTopicAdapter(
         selectTopic = { topicId, position ->
-            viewModel.updateTopicUI(position)
+            viewModel.selectFeedTopic(topicId, position)
             binding.btnFeedSortAll.isChecked = false
             binding.btnFeedSortFriend.isChecked = false
-            viewModel.onNextFeeds(topicId)}
+        }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -130,6 +130,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
 
     override fun onDestroyView() {
         binding.rvCommunity.removeOnScrollListener(infinityScrollListener)
+        binding.rvCommunity.adapter = null
+        binding.rvTopic.adapter = null
         super.onDestroyView()
     }
 }

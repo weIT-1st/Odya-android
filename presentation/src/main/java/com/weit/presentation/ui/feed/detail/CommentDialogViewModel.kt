@@ -46,7 +46,7 @@ class CommentDialogViewModel @AssistedInject constructor(
         complete()
     }
 
-    private var job: Job = Job().apply { complete() }
+    private var registerAndUpdateJob: Job = Job().apply { complete() }
 
     @AssistedFactory
     interface FeedDetailFactory {
@@ -54,12 +54,9 @@ class CommentDialogViewModel @AssistedInject constructor(
     }
 
     init{
-
         viewModelScope.launch {
             getUserUseCase().onSuccess {
                 user.value = it
-                Logger.t("MainTest").i("user ${user.value}")
-
             }
         }
         onNextComments()
@@ -85,13 +82,12 @@ class CommentDialogViewModel @AssistedInject constructor(
                 _comments.emit(comments.value + newComments)
             } else {
                 // TODO 에러 처리
-                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
             }
         }
     }
 
     fun registerAndUpdateComment() {
-        job =  viewModelScope.launch {
+        registerAndUpdateJob =  viewModelScope.launch {
             when(commentState){
                 CommentDialogViewModel.commentRegister ->{
                     val result = registerCommentsUseCase(
@@ -103,9 +99,7 @@ class CommentDialogViewModel @AssistedInject constructor(
                         beforeGetComments()
                         writedComment.value = ""
                     } else {
-                        Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-
-                        //TODO 에러
+                    //TODO 에러
                     }
                 }
                 CommentDialogViewModel.commentUpdate ->{
@@ -138,7 +132,7 @@ class CommentDialogViewModel @AssistedInject constructor(
         viewModelScope.launch {
             writedComment.value = comments.value[position].content
         }
-        if (job.isCompleted) {
+        if (registerAndUpdateJob.isCompleted) {
             currentPosition = position
         }
     }

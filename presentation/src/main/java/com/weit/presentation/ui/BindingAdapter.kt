@@ -40,19 +40,6 @@ fun bindReactionCount(textView: TextView, count: Int?) {
                 count.toString()
             }
     }
-
-    textView.text =
-        if (count as Int > DEFAULT_REACTION_COUNT) {
-            textView.resources.getString(
-                R.string.feed_reaction_over_count,
-                DEFAULT_REACTION_COUNT,
-            )
-        } else {
-            textView.resources.getString(
-                R.string.feed_reaction_count,
-                count,
-            )
-        }
 }
 
 @BindingAdapter("text_created_date")
@@ -67,11 +54,23 @@ fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         val days = diff.toDays()
 
         when {
-            hours < 3 -> textView.text = "방금전"
-            hours < 24 -> textView.text = "오늘"
-            days < 30 -> textView.text = "${days}일전"
-            else -> textView.text =
-                date.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault()))
+            hours <= 3 -> textView.text =  textView.resources.getString(
+                R.string.feed_date_now
+            )
+            hours <= 24 -> textView.text = textView.resources.getString(
+                R.string.feed_date_today
+            )
+            days <= 30 -> textView.text = textView.resources.getString(
+                R.string.feed_date_days, days
+            )
+            else -> {
+                val formattedDate: String = if (date.year == now.year) {
+                    date.format(DateTimeFormatter.ofPattern("M월 d일", Locale.getDefault()))
+                } else {
+                    date.format(DateTimeFormatter.ofPattern("yyyy년 M월 d일", Locale.getDefault()))
+                }
+                textView.text = formattedDate
+            }
         }
     }
 }

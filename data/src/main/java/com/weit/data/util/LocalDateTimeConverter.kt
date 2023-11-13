@@ -14,7 +14,7 @@ import java.util.Locale
 annotation class StringToLocalDateTime
 class LocalDateTimeConverter {
 
-    private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+    private val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
     @ToJson
     fun toJson(@StringToLocalDateTime localDate: LocalDateTime): String {
@@ -24,8 +24,7 @@ class LocalDateTimeConverter {
     @FromJson
     @StringToLocalDateTime
     fun fromJson(source: String): LocalDateTime {
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return LocalDateTime.parse(source, formatter)
+        return LocalDateTime.parse(source, dateFormat)
     }
 
 

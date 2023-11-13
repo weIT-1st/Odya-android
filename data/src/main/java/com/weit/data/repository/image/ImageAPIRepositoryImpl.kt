@@ -11,6 +11,7 @@ import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.user.ImageUserType
 import com.weit.domain.repository.image.ImageAPIRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_NO_CONTENT
@@ -95,7 +96,7 @@ class ImageAPIRepositoryImpl @Inject constructor(
                     it.placeId,
                     it.latitude,
                     it.longitude,
-                    it.imageUserType,
+                    setImageUserType(it.imageUserType),
                     it.journalId,
                     it.communityId
                 )
@@ -125,4 +126,11 @@ class ImageAPIRepositoryImpl @Inject constructor(
             else -> UnKnownException()
         }
     }
+
+    private fun setImageUserType(type: String): ImageUserType =
+        when (type){
+            "USER" -> ImageUserType.USER
+            "FRIEND" -> ImageUserType.FRIEND
+            else -> ImageUserType.OTHER
+        }
 }

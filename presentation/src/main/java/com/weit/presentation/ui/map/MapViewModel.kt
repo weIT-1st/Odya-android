@@ -5,7 +5,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.weit.domain.model.image.CoordinateUserImageResponseInfo
+import com.weit.domain.model.image.ImageDoubleLatLng
+import com.weit.domain.model.image.ImageLatLng
 import com.weit.domain.model.place.PlaceDetail
+import com.weit.domain.model.user.ImageUserType
 import com.weit.domain.usecase.image.GetCoordinateUserImageUseCase
 import com.weit.domain.usecase.place.GetCurrentPlaceUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
@@ -77,29 +80,21 @@ class MapViewModel @Inject constructor(
     }
 
 
-    fun getOdyaList(
-        northeast: LatLng,
-        southwest: LatLng,
-    ) {
+    fun getOdyaList(northeast: LatLng, southwest: LatLng ) {
         viewModelScope.launch {
-            val toggle = odyaToggle.value
+            val toggleOdyaOnOff = odyaToggle.value
+            val rightUp = ImageDoubleLatLng(northeast.latitude, northeast.longitude)
+            val leftDown = ImageDoubleLatLng(southwest.latitude, southwest.longitude)
             val result = getCoordinateUserImageUseCase(
-                southwest.longitude,
-                southwest.latitude,
-                northeast.longitude,
-                northeast.latitude,
-                null
+                rightUp,
+                leftDown
             )
 
             if (result.isSuccess) {
                 val list = result.getOrThrow()
                 _odyaAllList.emit(list)
+                setOdyaByToggleOnOff(toggleOdyaOnOff, list)
 
-                if (toggle){
-                    _odyaList.emit(list.filterNot { it.imageUserType == OTHER })
-                } else {
-                    _odyaList.emit(list.filter { it.imageUserType == USER })
-                }
             } else {
                 Log.d("getCoordinateUserImage", "fail : ${result.exceptionOrNull()}")
             }
@@ -112,20 +107,20 @@ class MapViewModel @Inject constructor(
             _odyaToggle.emit(isChecked)
             val list = odyaAllList.value
 
-            if (isChecked){
-                _odyaList.emit(list.filter { it.imageUserType == USER })
-            } else {
-                _odyaList.emit(list.filterNot { it.imageUserType == OTHER })
-            }
+            setOdyaByToggleOnOff(isChecked, list)
+        }
+    }
+
+    private suspend fun setOdyaByToggleOnOff(isChecked: Boolean, list: List<CoordinateUserImageResponseInfo>){
+        if (isChecked){
+            _odyaList.emit(list.filter { it.imageUserType == ImageUserType.USER })
+        } else {
+            _odyaList.emit(list.filterNot { it.imageUserType == ImageUserType.OTHER })
         }
     }
 
     companion object {
         // 서울역
         private val DEFAULT_LAT_LNG = LatLng(37.55476719052827, 126.97082417355988)
-
-        private const val USER = "USER"
-        private const val FRIEND = "FRIEND"
-        private const val OTHER = "OTHER"
     }
 }

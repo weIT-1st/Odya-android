@@ -1,5 +1,7 @@
 package com.weit.domain.model.image
 
+import com.weit.domain.model.user.ImageUserType
+
 data class CoordinateUserImageResponseInfo(
     val imageId: Long,
     val userId: Long,
@@ -7,7 +9,7 @@ data class CoordinateUserImageResponseInfo(
     val placeId: Long,
     val latitude: Double,
     val longitude: Double,
-    val imageUserType: String,
+    val imageUserType: ImageUserType,
     val journalId: Long,
     val communityId: Long,
 )

@@ -2,7 +2,12 @@ package com.weit.data.repository.journal
 
 import android.content.res.Resources.NotFoundException
 import com.weit.data.model.ListResponse
+import com.weit.data.model.journal.TravelJournalCompanionsDTO
+import com.weit.data.model.journal.TravelJournalContentsDTO
+import com.weit.data.model.journal.TravelJournalContentsImagesDTO
+import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
+import com.weit.data.model.journal.TravelJournalWriterDTO
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.exception.ForbiddenException
@@ -44,46 +49,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
 
         return if (result.isSuccess) {
             val journal = result.getOrThrow()
-            Result.success(
-                TravelJournalInfo(
-                    journal.travelJournalId,
-                    journal.travelJournalTitle,
-                    journal.travelStartDate,
-                    journal.travelEndDate,
-                    journal.visibility,
-                    journal.isBookmarked,
-                    TravelJournalWriterInfo(
-                        journal.writer.userId,
-                        journal.writer.nickname,
-                        journal.writer.profile
-                    ),
-                    journal.travelJournalContents.map { content ->
-                        TravelJournalContentsInfo(
-                            content.travelJournalContentId,
-                            content.content,
-                            content.placeId,
-                            content.latitude,
-                            content.longitude,
-                            content.travelDate,
-                            content.travelJournalContentImages.map { image ->
-                                TravelJournalContentsImagesInfo(
-                                    image.travelJournalContentImageId,
-                                    image.contentImageName,
-                                    image.contentImageUrl
-                                )
-                            }
-                        )
-                    },
-                    journal.travelJournalCompanions.map { companion ->
-                        TravelJournalCompanionsInfo(
-                            companion.userId,
-                            companion.nickname,
-                            companion.profileUrl,
-                            companion.isRegistered
-                        )
-                    }
-                )
-            )
+            Result.success(journal.toTravelJournalInfo())
         } else {
             Result.failure(handleJournalError(result.exception()))
         }
@@ -215,4 +181,50 @@ class TravelJournalRepositoryImpl @Inject constructor(
             else -> UnKnownException()
         }
     }
+
+    private fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
+        TravelJournalInfo(
+            travelJournalId = travelJournalId,
+            travelJournalTitle = travelJournalTitle,
+            travelStartDate = travelStartDate,
+            travelEndDate = travelEndDate,
+            visibility = visibility,
+            isBookmarked = isBookmarked,
+            writer = writer.toTravelJournalWriterInfo(),
+            travelJournalContents.map { it.toTravelJournalContentsInfo() },
+            travelJournalCompanions.map { it.toTravelJournalCompanionsInfo() }
+        )
+
+    private fun TravelJournalWriterDTO.toTravelJournalWriterInfo(): TravelJournalWriterInfo =
+        TravelJournalWriterInfo(
+            userId = userId,
+            nickname = nickname,
+            profile = profile
+        )
+
+    private fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
+        TravelJournalContentsInfo(
+            travelJournalContentId = travelJournalContentId,
+            content = content,
+            placeId = placeId,
+            latitude = latitude,
+            longitude = longitude,
+            travelDate = travelDate,
+            travelJournalContentImages.map { it.toTravelJournalContentsImagesInfo() }
+        )
+
+    private fun TravelJournalContentsImagesDTO.toTravelJournalContentsImagesInfo(): TravelJournalContentsImagesInfo =
+        TravelJournalContentsImagesInfo(
+            travelJournalContentImageId = travelJournalContentImageId,
+            contentImageName = contentImageName,
+            contentImageUrl = contentImageUrl
+        )
+
+    private fun TravelJournalCompanionsDTO.toTravelJournalCompanionsInfo(): TravelJournalCompanionsInfo =
+        TravelJournalCompanionsInfo(
+            userId = userId,
+            nickname = nickname,
+            profileUrl = profileUrl,
+            isRegistered = isRegistered
+        )
 }

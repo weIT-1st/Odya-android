@@ -1,14 +1,22 @@
 package com.weit.presentation.ui.map
 
+import android.app.Notification
 import android.content.res.Resources
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.PixelCopy
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.app.NotificationCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
@@ -213,26 +221,50 @@ class MapFragment :
             .into(ivOdyaPin)
 
         val markerOption = MarkerOptions()
-            .position(position)
-            .icon(BitmapDescriptorFactory.fromBitmap(createDrawableFromView(odyaMarkerPin)))
+        getBitmapFromView(odyaMarkerPin){
+            if (it == null){
+                val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_odya_pin, null)
+                val bitmapDrawable = drawable as BitmapDrawable
+                val bitmap = bitmapDrawable.bitmap
+
+                markerOption
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            } else {
+                markerOption
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(it!!))
+            }
+        }
 
         return map!!.addMarker(markerOption)!!
     }
 
-    private fun createDrawableFromView(view: View): Bitmap {
-        view.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        view.measure(48, 88)
-        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
-        view.buildDrawingCache()
-        val bitmap =
-            Bitmap.createBitmap(view.measuredWidth, view.measuredHeight, Bitmap.Config.ARGB_8888)
+    private fun getBitmapFromView(view: View, callback: (Bitmap?) -> Unit) {
+        requireActivity().window?.let{window ->
+            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
 
-        val canvas = Canvas(bitmap)
-        view.draw(canvas)
-        return bitmap
+            val locationOfViewWindow = IntArray(2)
+            view.getLocationInWindow(locationOfViewWindow)
+
+            try {
+                PixelCopy.request(
+                    window,
+                    Rect(locationOfViewWindow[0],
+                        locationOfViewWindow[1],
+                        locationOfViewWindow[0] + view.width,
+                        locationOfViewWindow[1] + view.height),
+                    bitmap,
+                    { copyResult ->
+                        if (copyResult == PixelCopy.SUCCESS) callback.invoke(bitmap)
+                        else callback.invoke(null)
+                    },
+                    Handler(Looper.getMainLooper())
+                )
+            } catch (e: IllegalAccessException){
+                callback.invoke(null)
+            }
+        }
     }
 
 

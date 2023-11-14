@@ -8,9 +8,9 @@
         android:layout_height="wrap_content">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_tab_place_review"
+            android:id="@+id/rv_tab_feed_post_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             app:spanCount="3"
             android:scrollbars="vertical"
@@ -18,7 +18,6 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            tools:itemCount="3"
             tools:listitem="@layout/item_feed_my_activity_image"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

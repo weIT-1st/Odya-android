@@ -3,6 +3,8 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityContentDTO
 import com.weit.data.model.community.CommunityMainContentDTO
+import com.weit.data.model.community.CommunityMyActivityCommentContentDTO
+import com.weit.data.model.community.CommunityMyActivityContentDTO
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -48,7 +50,7 @@ interface CommunityService {
         @Query("size") size: Int?,
         @Query("lastId") lastCommunityId: Long?,
         @Query("sortType") sortType: String?,
-    ): ListResponse<CommunityMainContentDTO>
+    ): ListResponse<CommunityMyActivityContentDTO>
 
     @GET("/api/v1/communities/friends")
     suspend fun getFriendsCommunities(
@@ -70,5 +72,16 @@ interface CommunityService {
         @Path("communityId") communityId: Long,
     ): Response<Unit>
 
+    @GET("/api/v1/communities/like")
+    suspend fun getMyLikeCommunities(
+        @Query("size") size: Int?,
+        @Query("lastId") lastCommunityId: Long?,
+        @Query("sortType") sortType: String?,
+    ): ListResponse<CommunityMyActivityContentDTO>
 
+    @GET("/api/v1/communities/comment")
+    suspend fun getMyCommentCommunities(
+        @Query("size") size: Int?,
+        @Query("lastId") lastCommunityId: Long?,
+    ): ListResponse<CommunityMyActivityCommentContentDTO>
 }

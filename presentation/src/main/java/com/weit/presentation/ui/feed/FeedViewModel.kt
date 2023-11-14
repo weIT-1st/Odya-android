@@ -57,7 +57,9 @@ class FeedViewModel @Inject constructor(
     private val getFriendCommunitiesUseCase: GetFriendCommunitiesUseCase,
 ) : ViewModel() {
 
-    val user = MutableStateFlow<User?>(null)
+    private val _user = MutableStateFlow<User?>(null)
+    val user : StateFlow<User?> get() = _user
+
     private var feedState = feedAll
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
@@ -89,7 +91,7 @@ class FeedViewModel @Inject constructor(
 
         viewModelScope.launch {
             getUserUseCase().onSuccess {
-                user.value = it
+                _user.value = it
             }
         }
 

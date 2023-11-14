@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
@@ -41,6 +42,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.vm = viewModel
         initTopicRecyclerView()
         initCommunityRecyclerView()
+
+    }
+
+    override fun initListener() {
         binding.btnFeedWrite.setOnClickListener {
             viewModel.onSelectPictures(pickImageUseCase)
         }
@@ -50,6 +55,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.btnFeedSortAll.setOnClickListener {
             viewModel.selectFeedAll()
         }
+        binding.tvFeedUser.setOnClickListener {
+            val action = FeedFragmentDirections.actionFragmentFeedToFeedMyActivityFragment()
+             findNavController().navigate(action)
+
+        }
+
     }
 
     private fun initTopicRecyclerView() {
@@ -97,6 +108,8 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(uris.toTypedArray())
         findNavController().navigate(action)
     }
+
+
     private fun handleEvent(event: FeedViewModel.Event) {
         when (event) {
             is FeedViewModel.Event.OnChangeFavoriteTopics -> {

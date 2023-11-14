@@ -2,7 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <data>
+        <variable
+            name="content"
+            type="com.weit.domain.model.community.CommunityMyActivityCommentContent" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,6 +17,8 @@
             android:id="@+id/iv_feed_my_activity_content_profile"
             android:layout_height="32dp"
             android:layout_width="32dp"
+            app:image_uri="@{content.writer.profile.url}"
+            app:profile_background="@{content.writer.profile}"
             android:layout_marginStart="20dp"
             android:layout_marginTop="12dp"
             android:src="@drawable/ic_profile"
@@ -33,7 +39,7 @@
             android:textColor="@color/label_normal"
             app:layout_constraintStart_toEndOf="@+id/iv_feed_my_activity_content_profile"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="길동아밥먹자아아" />
+            android:text="@{content.writer.nickname}"  />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_feed_my_activity_post_content"
@@ -47,7 +53,7 @@
             android:textColor="@color/label_normal"
             app:layout_constraintStart_toEndOf="@+id/tv_feed_my_activity_post_nickname"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="형제는 오륜의" />
+            android:text="@{content.communityContent}" />
 
         <ImageView
             android:id="@+id/iv_feed_my_activity_post_image"
@@ -55,6 +61,7 @@
             android:layout_height="60dp"
             android:layout_marginTop="12dp"
             android:layout_marginEnd="22dp"
+            app:image_uri="@{content.communityMainImageUrl}"
             tools:src="@drawable/bg_popular_spot_summary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -81,6 +88,8 @@
             android:layout_marginTop="12dp"
             android:src="@drawable/ic_profile"
             android:scaleType="centerCrop"
+            app:image_uri="@{content.communityCommentSimpleResponse.user.profile.url}"
+            app:profile_background="@{content.communityCommentSimpleResponse.user.profile}"
             app:shapeAppearanceOverlay="@style/ShapeableImageViewCircle"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_feed_my_activity_post_date" />
@@ -97,7 +106,7 @@
             android:textColor="@color/label_normal"
             app:layout_constraintStart_toEndOf="@+id/iv_feed_my_activity_comment_profile"
             app:layout_constraintTop_toBottomOf="@+id/tv_feed_my_activity_post_date"
-            tools:text="길동아밥먹자아아" />
+            android:text="@{content.communityCommentSimpleResponse.user.nickname}" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_feed_my_activity_comment_content"
@@ -110,7 +119,7 @@
             android:layout_marginStart="108dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_feed_my_activity_comment_nickname"
-            tools:text="형제는 오륜의 ddjdldkdjdldkdjfldkfjdlfkj" />
+            tools:text="@{content.communityCommentSimpleResponse.content}" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_feed_my_activity_comment_date"

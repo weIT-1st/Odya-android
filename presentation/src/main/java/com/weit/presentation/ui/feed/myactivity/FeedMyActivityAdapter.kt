@@ -5,7 +5,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class FeedMyActivityAdapter(
-    fragment: BottomSheetDialogFragment,
+    fragment: Fragment,
     private val tabItem: ArrayList<Fragment>,
 ) : FragmentStateAdapter(fragment) {
 

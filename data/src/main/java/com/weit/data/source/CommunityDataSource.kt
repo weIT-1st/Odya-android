@@ -3,6 +3,8 @@ package com.weit.data.source
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityContentDTO
 import com.weit.data.model.community.CommunityMainContentDTO
+import com.weit.data.model.community.CommunityMyActivityCommentContentDTO
+import com.weit.data.model.community.CommunityMyActivityContentDTO
 import com.weit.data.service.CommunityService
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -32,7 +34,7 @@ class CommunityDataSource @Inject constructor(
         return service.getCommunities(size,communityId,sortType)
     }
 
-    suspend fun getMyCommunities(size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMainContentDTO> {
+    suspend fun getMyCommunities(size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMyActivityContentDTO> {
         return service.getMyCommunities(size,communityId,sortType)
     }
 
@@ -43,5 +45,11 @@ class CommunityDataSource @Inject constructor(
     suspend fun getCommunitiesByTopic(topicId: Long, size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMainContentDTO> {
         return service.getCommunitiesByTopic(topicId,size,communityId,sortType)
     }
+    suspend fun getMyLikeCommunities(size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMyActivityContentDTO> {
+        return service.getMyLikeCommunities(size,communityId,sortType)
+    }
 
+    suspend fun getMyCommentCommunities(size: Int?, communityId: Long?) : ListResponse<CommunityMyActivityCommentContentDTO> {
+        return service.getMyCommentCommunities(size,communityId)
+    }
 }

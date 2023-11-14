@@ -1,14 +1,15 @@
 package com.weit.data.di
 
+import com.weit.data.repository.report.ReportRepositoryImpl
 import com.weit.data.service.ReportService
 import com.weit.data.source.ReportDataSource
+import com.weit.domain.repository.report.ReportRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
-import retrofit2.create
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)

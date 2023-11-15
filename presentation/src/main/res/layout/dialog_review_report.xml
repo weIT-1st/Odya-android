@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report"
+        android:layout_width="wrap_content"
+        android:layout_height="?attr/actionBarSize"
+        android:text="@string/review_report_title"
+        android:textAppearance="@style/h6"
+        android:textColor="@color/label_normal"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btn_reivew_report_x"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_x_white"
+        android:layout_marginEnd="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_review_report"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_review_report"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_writer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_writer"
+        android:textAppearance="@style/h6"
+        android:textColor="@color/label_normal"
+        android:layout_marginTop="56dp"
+        android:layout_marginStart="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_report"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <View
+        android:id="@+id/view_review_report_writer_line"
+        android:layout_width="2dp"
+        android:layout_height="15dp"
+        android:background="@color/line_normal"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toEndOf="@id/tv_review_report_writer"
+        app:layout_constraintTop_toTopOf="@id/tv_review_report_writer"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_review_report_writer"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="홍길동"
+        android:textAppearance="@style/body2"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="8dp"
+        app:layout_constraintTop_toTopOf="@id/tv_review_report_writer"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_review_report_writer"
+        app:layout_constraintStart_toEndOf="@id/view_review_report_writer_line"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_reason"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_reason"
+        android:textAppearance="@style/body2"
+        android:textColor="@color/label_alternative"
+        android:layout_marginTop="44dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_report_writer"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_spam"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="12dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/tv_review_report_reason"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_spam"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_spam"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_spam"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_spam"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_spam"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_pornography"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_spam"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_pornography"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_pornography"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_pornography"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_pornography"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_pornography"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_swear_word"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_pornography"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_swear_word"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_swear_word"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_swear_word"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_swear_word"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_swear_word"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_over_post"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_swear_word"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_over_post"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_over_post"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_over_post"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_over_post"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_over_post"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_info_leak"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_over_post"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_info_leak"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_info_leak"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_info_leak"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_info_leak"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_info_leak"/>
+
+    <ToggleButton
+        android:id="@+id/toggle_review_report_other"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/selector_check_report_reason"
+        android:textOn=""
+        android:textOff=""
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="@+id/tv_review_report_writer"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_info_leak"
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_review_report_other"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/review_report_other"
+        android:textAppearance="@style/body1"
+        android:textColor="@color/label_normal"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@+id/toggle_review_report_other"
+        app:layout_constraintTop_toTopOf="@+id/toggle_review_report_other"
+        app:layout_constraintBottom_toBottomOf="@+id/toggle_review_report_other"/>
+
+    <EditText
+        android:id="@+id/et_review_report_other_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/review_report_input_other"
+        android:textAppearance="@style/body2"
+        android:textColor="@color/label_normal"
+        android:textColorHint="@color/label_assistive"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_review_report_other"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_review_report"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/corners_all_8"
+        android:text="@string/review_report_title"
+        android:textAppearance="@style/h6"
+        android:textColor="@color/label_reversed"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
+        android:layout_marginTop="84dp"
+        app:layout_constraintTop_toBottomOf="@id/et_review_report_other_reason"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

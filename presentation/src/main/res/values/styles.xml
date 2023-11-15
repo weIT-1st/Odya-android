@@ -109,5 +109,11 @@
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/corners_top_12_in_bottom_sheet</item>
     </style>
-</resources>
+
+    <style name="dialog_fullscreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+ </resources>
 

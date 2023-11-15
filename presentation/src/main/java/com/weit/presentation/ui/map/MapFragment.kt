@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
 import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,12 +35,8 @@ class MapFragment :
 
     private val viewModel: MapViewModel by viewModels()
 
-    private val adapter = PlacePredictionAdapter {
-        binding.rvPlacePrediction.visibility = View.GONE
-        viewModel.getDetailPlace(it)
-    }
-
     private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
+    private var mainSearchTopSheetFragment: MainSearchTopSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var coordinates: LatLng
@@ -49,18 +46,15 @@ class MapFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+    }
 
-        initRecyclerView()
-        initSearchView()
+    override fun initListener() {
+        binding.btnMapPopularOdya.setOnClickListener {
+            showMainSearchTopSheet()
+        }
     }
 
     override fun initCollector() {
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.searchPlaceList.collectLatest {
-                adapter.submitList(it)
-            }
-        }
-
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.detailPlace.collectLatest {
                 val latlng = LatLng(it.latitude!!, it.longitude!!)
@@ -81,31 +75,6 @@ class MapFragment :
                 showMap(it)
             }
         }
-    }
-
-    private fun initSearchView() {
-        binding.svSearch.run {
-            isIconified = false
-            queryHint = getString(R.string.search_a_place)
-            requestFocusFromTouch()
-        }
-
-        binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                binding.rvPlacePrediction.visibility = View.VISIBLE
-                viewModel.searchPlace(newText)
-                return true
-            }
-        })
-    }
-
-    private fun initRecyclerView() {
-        binding.rvPlacePrediction.adapter = adapter
-        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
     private fun showMap(latLng: LatLng) {
@@ -188,6 +157,21 @@ class MapFragment :
 
     private fun placeBottomSheetReset(){
         searchPlaceBottomSheetFragment = null
+    }
+
+    private fun showMainSearchTopSheet(){
+        if (mainSearchTopSheetFragment == null){
+            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
+                viewModel.getDetailPlace(it)
+            }
+        }
+        if (!mainSearchTopSheetFragment!!.isAdded){
+            mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
+        }
+    }
+
+    private fun onSearchPlace(){
+
     }
     companion object {
         private val TAG = "MapFragment"

@@ -2,10 +2,8 @@ package com.weit.presentation.ui.feed
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityMainContent
 import com.weit.domain.model.community.CommunityRequestInfo
-import com.weit.domain.model.community.CommunityUser
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
@@ -16,21 +14,19 @@ import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.MayknowUserSearchInfo
 import com.weit.domain.model.user.User
-import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.community.ChangeLikeStateUseCase
 import com.weit.domain.usecase.community.GetCommunitiesByTopicUseCase
 import com.weit.domain.usecase.community.GetCommunitiesUseCase
 import com.weit.domain.usecase.community.GetFriendCommunitiesUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
-import com.weit.domain.usecase.topic.GetTopicListUseCase
-import com.weit.domain.usecase.image.GetImagesUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
-import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
+import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
 import com.weit.presentation.model.PopularTravelLog
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.model.user.CommunityUserImpl
 import com.weit.presentation.model.user.UserProfileColorDTO
 import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.Constants.feedAll
@@ -57,7 +53,7 @@ class FeedViewModel @Inject constructor(
     private val getCommunitiesByTopicUseCase: GetCommunitiesByTopicUseCase,
     private val getFriendCommunitiesUseCase: GetFriendCommunitiesUseCase,
     private val changeLikeStateUseCase: ChangeLikeStateUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     val user = MutableStateFlow<User?>(null)
 
@@ -104,11 +100,11 @@ class FeedViewModel @Inject constructor(
 
     fun updateTopicUI(position: Int?) {
         viewModelScope.launch {
-            val newTopics = if(position == null){
-                topicList.map{
+            val newTopics = if (position == null) {
+                topicList.map {
                     it.copy(isChecked = false)
                 }
-            }else{
+            } else {
                 topicList.mapIndexed { index, feedTopic ->
                     if (index == position) {
                         feedTopic.copy(isChecked = true)
@@ -182,22 +178,22 @@ class FeedViewModel @Inject constructor(
     fun selectFeedFriend() {
         friendFeedLastId = null
         updateTopicUI(null)
-        onNextFeeds(null,feedFriend)
+        onNextFeeds(null, feedFriend)
     }
 
     fun selectFeedAll() {
         feedLastId = null
         updateTopicUI(null)
-        onNextFeeds(null,feedAll)
+        onNextFeeds(null, feedAll)
     }
 
-    fun selectFeedTopic(topicId: Long, position: Int){
+    fun selectFeedTopic(topicId: Long, position: Int) {
         topicFeedLastId = null
         updateTopicUI(position)
         onNextFeeds(topicId, feedTopic)
     }
 
-    fun onNextFeeds(topicId: Long? = null,feedState: String = feedAll) {
+    fun onNextFeeds(topicId: Long? = null, feedState: String = feedAll) {
         if (topicFeedLastId == null || feedLastId == null || friendFeedLastId == null) {
             feedItems.clear()
         }
@@ -208,7 +204,7 @@ class FeedViewModel @Inject constructor(
         if (topicId != null) {
             selectedTopicId = topicId
         }
-         loadNextFeeds(feedState)
+        loadNextFeeds(feedState)
     }
 
     private fun changeFeedItems(newContents: List<CommunityMainContent>) {
@@ -334,17 +330,19 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    private fun replaceFeedItems(newFeedItems: List<Feed.FeedItem>){
+    private fun replaceFeedItems(newFeedItems: List<Feed.FeedItem>) {
         viewModelScope.launch {
-            val newTotalFeed = CopyOnWriteArrayList(totalFeed)
-            newTotalFeed.replaceAll { existingFeed ->
-                if (existingFeed is Feed.FeedItem) {
-                    newFeedItems.find { it.communityId == existingFeed.communityId }
-                } else {
-                    existingFeed
+            val newTotalFeed = CopyOnWriteArrayList<Feed>(
+                totalFeed.map { existingFeed ->
+                    (existingFeed as? Feed.FeedItem)?.let {
+                        newFeedItems.find { it.communityId == existingFeed.communityId } ?: it
+                    } ?: existingFeed
                 }
-            }
+            )
+            totalFeed.clear()
+            totalFeed.addAll(newTotalFeed)
             _feed.emit(newTotalFeed.toList())
+
         }
     }
 
@@ -352,12 +350,12 @@ class FeedViewModel @Inject constructor(
         viewModelScope.launch {
             val newFeedItems = feedItems.map { feed ->
                 if (feed.writer.userId == userId) {
-                    val newWriter = object : CommunityUser {
-                        override val userId: Long = feed.writer.userId
-                        override val nickname: String = feed.writer.nickname
-                        override val profile: UserProfile = feed.writer.profile
-                        override val isFollowing: Boolean = followState
-                    }
+                    val newWriter = CommunityUserImpl(
+                        feed.writer.userId,
+                        feed.writer.nickname,
+                        feed.writer.profile,
+                        followState
+                    )
                     feed.copy(writer = newWriter)
                 } else {
                     feed
@@ -371,9 +369,10 @@ class FeedViewModel @Inject constructor(
 
     fun onFollowStateChange(communityId: Long) {
         viewModelScope.launch {
-            val userId = feedItems.find { it.communityId == communityId }?.writer?.userId ?:-1
-            val currentFollowState = feedItems.find { it.communityId == communityId }?.writer?.isFollowing ?:false
-            val result = changeFollowStateUseCase(userId,!currentFollowState)
+            val userId = feedItems.find { it.communityId == communityId }?.writer?.userId ?: -1
+            val currentFollowState =
+                feedItems.find { it.communityId == communityId }?.writer?.isFollowing ?: false
+            val result = changeFollowStateUseCase(userId, !currentFollowState)
             if (result.isSuccess) {
                 onNextFriends()
                 onChangeFeedAndFriendItems(userId, !currentFollowState)
@@ -403,10 +402,11 @@ class FeedViewModel @Inject constructor(
 
     fun onLikeStateChange(communityId: Long) {
         viewModelScope.launch {
-            val currentLikeState = feedItems.find { it.communityId == communityId }?.isUserLiked ?:false
-            val result = changeLikeStateUseCase(communityId,!currentLikeState)
+            val currentLikeState =
+                feedItems.find { it.communityId == communityId }?.isUserLiked ?: false
+            val result = changeLikeStateUseCase(communityId, !currentLikeState)
             if (result.isSuccess) {
-                onChangeFeedsByLikeState(communityId,!currentLikeState)
+                onChangeFeedsByLikeState(communityId, !currentLikeState)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }

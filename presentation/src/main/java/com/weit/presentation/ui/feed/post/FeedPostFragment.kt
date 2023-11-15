@@ -43,6 +43,14 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
 
+    private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
+        FlexboxLayoutManager(requireContext()).apply {
+            flexWrap = FlexWrap.WRAP
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.STRETCH
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
@@ -64,11 +72,6 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     }
 
     private fun initTopics(){
-        val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
-            flexWrap = FlexWrap.WRAP
-            flexDirection = FlexDirection.ROW
-            alignItems = AlignItems.STRETCH
-        }
         binding.rvTopic.run{
             layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter

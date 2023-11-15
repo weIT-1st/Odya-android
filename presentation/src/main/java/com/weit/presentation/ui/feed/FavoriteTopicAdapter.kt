@@ -25,8 +25,10 @@ class FavoriteTopicAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         val gradientDrawable = GradientDrawable()
         init{
-            gradientDrawable.shape = GradientDrawable.RECTANGLE
-            gradientDrawable.cornerRadii = floatArrayOf(TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS)
+            gradientDrawable.apply{
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = floatArrayOf(TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS)
+            }
         }
         fun bind(topic: FeedTopic) {
             binding.tvTopic.text = topic.topicWord

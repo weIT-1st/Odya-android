@@ -16,15 +16,19 @@ import javax.inject.Inject
 class PlaceSearchHistoryRepositoryImpl @Inject constructor(
     private val dataSource: PlaceSearchHistoryDataSource
 ): PlaceSearchHistoryRepository {
-    override suspend fun setRecentPlaceSearch(searchTermList: Set<String>): Result<Unit> {
+    override suspend fun setRecentPlaceSearch(searchTermList: List<String>): Result<Unit> {
         return runCatching {
-            dataSource.setRecentPlaceSearch(searchTermList)
+            dataSource.setRecentPlaceSearch(searchTermList.toSet())
         }
     }
 
-    override suspend fun getRecentPlaceSearch(): Result<Set<String>?> {
-        return runCatching {
-            dataSource.getRecentPlaceSearch()
+    override suspend fun getRecentPlaceSearch(): Result<List<String>> {
+        val result =  runCatching { dataSource.getRecentPlaceSearch() }
+        return if (result.isSuccess){
+            val list = result.getOrThrow()?.toList()?: emptyList()
+            Result.success(list)
+        } else {
+            Result.failure(handleReviewError(result.exception()))
         }
     }
 
@@ -38,25 +42,26 @@ class PlaceSearchHistoryRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPlaceSearchHistoryRank(): Result<Array<String>> {
+    override suspend fun getPlaceSearchHistoryRank(): Result<List<String>> {
         val result = runCatching { dataSource.getPlaceSearchHistoryRank() }
 
         return if (result.isSuccess){
             Result.success(result.getOrThrow())
         } else {
-            Result.failure(result.exception())
+            Result.failure(handleReviewError(result.exception()))
         }
     }
 
-    override suspend fun getPlaceSearchHistoryAgeRank(ageRange: Int?): Result<Array<String>> {
+    override suspend fun getPlaceSearchHistoryAgeRank(ageRange: Int?): Result<List<String>> {
         val result = runCatching { dataSource.getPlaceSearchHistoryAgeRank(ageRange) }
 
         return if (result.isSuccess){
             Result.success(result.getOrThrow())
         } else {
-            Result.failure(result.exception())
+            Result.failure(handleReviewError(result.exception()))
         }
     }
+
 
     private fun handleReviewError(t: Throwable): Throwable {
         return if (t is HttpException) {

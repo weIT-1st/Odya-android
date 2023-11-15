@@ -15,10 +15,10 @@ interface PlaceSearchHistoryService {
 
     @GET("/api/v1/place-search-histories/ranking")
     suspend fun getPlaceSearchHistoryRank(
-    ): Array<String>
+    ): List<String>
 
     @GET("/api/v1/place-search-histories/ranking/ageRange/2")
     suspend fun getPlaceSearchHistoryAgeRank(
         ageRange: Int?
-    ): Array<String>
+    ): List<String>
 }

@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetPlaceSearchHistoryAgeRank @Inject constructor(
     private val repository: PlaceSearchHistoryRepository
 ) {
-    suspend operator fun invoke(ageRange: Int?): Result<Array<String>> =
+    suspend operator fun invoke(ageRange: Int?): Result<List<String>> =
         repository.getPlaceSearchHistoryAgeRank(ageRange)
 }

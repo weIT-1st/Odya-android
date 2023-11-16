@@ -12,8 +12,6 @@ import dagger.hilt.android.components.ActivityRetainedComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ActivityRetainedScoped
 import retrofit2.Retrofit
-import retrofit2.create
-import javax.inject.Singleton
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)

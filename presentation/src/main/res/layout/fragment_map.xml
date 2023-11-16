@@ -46,6 +46,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/btn_map_popular_odya"
             app:layout_constraintEnd_toEndOf="parent"/>
 
+        <ImageButton
+            android:id="@+id/btn_map_current_locate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_current_location"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="5dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
 
         <fragment
             android:id="@+id/confirmation_map"

@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.weit.data.model.place.SearchTermDTO
 import com.weit.data.service.PlaceSearchHistoryService
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.firstOrNull
@@ -49,15 +50,15 @@ class PlaceSearchHistoryDataSource @Inject constructor(
         return flow.firstOrNull()
     }
     suspend fun registerPlaceSearchHistory(
-        searchTerm: String
+        searchTerm: SearchTermDTO
     ): Response<Unit> =
         service.registerPlaceSearchHistory(searchTerm)
 
-    suspend fun getPlaceSearchHistoryRank(): Array<String> =
+    suspend fun getPlaceSearchHistoryRank(): List<String> =
         service.getPlaceSearchHistoryRank()
 
     suspend fun getPlaceSearchHistoryAgeRank(
         ageRange: Int?
-    ): Array<String> =
+    ): List<String> =
         service.getPlaceSearchHistoryAgeRank(ageRange)
 }

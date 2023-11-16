@@ -6,7 +6,7 @@ import javax.inject.Inject
 class GetRecentPlaceSearchUseCase @Inject constructor(
     private val placeSearchHistoryRepository: PlaceSearchHistoryRepository
 ){
-    suspend operator fun invoke(): Result<Set<String>?> =
+    suspend operator fun invoke(): Result<List<String>> =
         placeSearchHistoryRepository.getRecentPlaceSearch()
 
 }

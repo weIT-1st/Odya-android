@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
@@ -11,11 +13,16 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.DialogMainSearchBinding
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainSearchTopSheetFragment(
-    val onSearchPlaceListener : (String) -> Unit
+    val onSearchPlace : (String) -> Unit
 ): DialogFragment() {
 
     private val viewModel: MainSearchTopSheetViewModel by viewModels()
@@ -24,15 +31,16 @@ class MainSearchTopSheetFragment(
     private val binding get() = _binding!!
 
     private val placePredictionAdapter = PlacePredictionAdapter{placeId, placeName ->
-        onSearchPlaceListener(placeId)
+        onSearchPlace(placeId)
         viewModel.plusRecentPlaceSearch(placeName)
-        dismiss()
     }
 
     private val recentPlaceSearchAdapter = RecentPlaceSearchAdapter {
-        viewModel.deleteSomethingRecentPlaceSearch(it)
+        viewModel.deleteRecentPlaceSearch(it)
     }
     private val odyaHotPlaceAdapter = OdyaHotPlaceAdapter()
+
+    private val hotPlaceRankLayoutManager = GridLayoutManager(context, 5, GridLayoutManager.HORIZONTAL, false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,34 +92,39 @@ class MainSearchTopSheetFragment(
                 odyaHotPlaceAdapter.submitList(odyaHotPlaceList)
             }
         }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.searchFocus.collectLatest {hasFocus ->
+                binding.btnPlaceSearchCancel.setOnClickListener {
+                    viewModel.setBTNPleaseSearchCancelOnClickListener(hasFocus)
+                }
+
+                binding.rvPlaceSearchAutoComplete.isVisible = hasFocus
+                binding.tvPlaceSearchRecent.isGone = hasFocus
+                binding.btnPlaceSearchDelete.isGone = hasFocus
+                binding.rvPlaceSearchRecent.isGone = hasFocus
+                binding.lyOdyaHotPlace.isGone = hasFocus
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.event.collectLatest { event ->
+                handleEvent(event)
+            }
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        binding.rvPlaceSearchRecent.adapter = null
+        binding.rvPlaceMainHotPlaceRank.adapter = null
+        binding.rvPlaceSearchAutoComplete.adapter = null
         _binding = null
     }
 
     private fun onEditFocusChange(){
         binding.etPlaceSearchMain.setOnFocusChangeListener { _ , hasFocus ->
-            if (hasFocus){
-                binding.rvPlaceSearchAutoComplete.visibility = View.VISIBLE
-                binding.tvPlaceSearchRecent.visibility = View.GONE
-                binding.btnPlaceSearchDelete.visibility = View.GONE
-                binding.rvPlaceSearchRecent.visibility = View.GONE
-                binding.lyOdyaHotPlace.visibility = View.GONE
-                binding.btnPlaceSearchCancel.setOnClickListener {
-                    binding.etPlaceSearchMain.clearFocus()
-                }
-            } else {
-                binding.rvPlaceSearchAutoComplete.visibility = View.GONE
-                binding.tvPlaceSearchRecent.visibility = View.VISIBLE
-                binding.btnPlaceSearchDelete.visibility = View.VISIBLE
-                binding.rvPlaceSearchRecent.visibility = View.VISIBLE
-                binding.lyOdyaHotPlace.visibility = View.VISIBLE
-                binding.btnPlaceSearchCancel.setOnClickListener {
-                    dismiss()
-                }
-            }
+            viewModel.changeMainSearchFocus(hasFocus)
         }
     }
 
@@ -126,7 +139,15 @@ class MainSearchTopSheetFragment(
 
     private fun initOdyaHotPlaceRankRecyclerView(){
         binding.rvPlaceMainHotPlaceRank.adapter = odyaHotPlaceAdapter
-        binding.rvPlaceMainHotPlaceRank.layoutManager = GridLayoutManager(context, 5, GridLayoutManager.HORIZONTAL, false)
+        binding.rvPlaceMainHotPlaceRank.layoutManager = hotPlaceRankLayoutManager
         viewModel.getOdyaHotPlaceRank()
+    }
+
+    private fun handleEvent(event: MainSearchTopSheetViewModel.Event){
+        when (event) {
+            MainSearchTopSheetViewModel.Event.ClinkSearchCancelHasFocus -> {binding.etPlaceSearchMain.clearFocus()}
+            MainSearchTopSheetViewModel.Event.ClinkSearchCancelHasNotFocus -> {dismiss()}
+            MainSearchTopSheetViewModel.Event.SuccessPlusRecentSearch -> {dismiss()}
+        }
     }
 }

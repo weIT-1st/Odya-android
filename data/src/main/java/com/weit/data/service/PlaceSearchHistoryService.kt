@@ -1,6 +1,8 @@
 package com.weit.data.service
 
+import com.weit.data.model.place.SearchTermDTO
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
@@ -8,7 +10,7 @@ interface PlaceSearchHistoryService {
 
     @POST("/api/v1/place-search-histories")
     suspend fun registerPlaceSearchHistory(
-        searchTerm: String
+        @Body searchTerm: SearchTermDTO
     ): Response<Unit>
 
     @GET("/api/v1/place-search-histories/ranking")

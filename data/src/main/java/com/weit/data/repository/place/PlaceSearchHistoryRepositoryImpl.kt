@@ -1,5 +1,6 @@
 package com.weit.data.repository.place
 
+import com.weit.data.model.place.SearchTermDTO
 import com.weit.data.source.PlaceSearchHistoryDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.exception.InvalidRequestException
@@ -32,7 +33,7 @@ class PlaceSearchHistoryRepositoryImpl @Inject constructor(
     }
 
     override suspend fun registerPlaceSearchHistory(searchTerm: String): Result<Unit> {
-        val response = dataSource.registerPlaceSearchHistory(searchTerm)
+        val response = dataSource.registerPlaceSearchHistory(SearchTermDTO(searchTerm))
 
         return if (response.isSuccessful){
             Result.success(Unit)

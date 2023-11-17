@@ -146,6 +146,11 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     fun onChangePeriod(period: TravelPeriod) {
         viewModelScope.launch {
             _travelPeriod.emit(period)
+        }
+    }
+
+    fun onDatePickerDismissed() {
+        viewModelScope.launch {
             _event.emit(Event.ClearDatePickerDialog)
         }
     }

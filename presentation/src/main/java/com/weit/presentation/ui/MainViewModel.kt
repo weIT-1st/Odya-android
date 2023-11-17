@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        // setUserId()
+        setUserId()
     }
 
     private fun setUserId() {

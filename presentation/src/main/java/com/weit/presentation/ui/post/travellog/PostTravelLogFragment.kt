@@ -5,10 +5,10 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
-import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentPostTravelLogBinding
+import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
 import com.weit.presentation.ui.util.SpaceDecoration
@@ -112,19 +112,24 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 findNavController().navigate(action)
             }
             is PostTravelLogViewModel.Event.ShowDatePicker -> {
-                if (datePickerDialog == null) {
-                    Logger.t("MainTest").i("초기화")
-                    datePickerDialog = DatePickerDialogFragment(event.currentPeriod) {
-                        viewModel.onChangePeriod(it)
-                    }
-                }
-                if (datePickerDialog?.isAdded == false) {
-                    datePickerDialog?.show(childFragmentManager, null)
-                }
+                showDatePickerDialog(event.currentPeriod)
             }
             PostTravelLogViewModel.Event.ClearDatePickerDialog -> {
                 datePickerDialog = null
             }
+        }
+    }
+
+    private fun showDatePickerDialog(period: TravelPeriod) {
+        if (datePickerDialog == null) {
+            datePickerDialog = DatePickerDialogFragment(
+                travelPeriod = period,
+                onComplete = { viewModel.onChangePeriod(it) },
+                onDismiss = { viewModel.onDatePickerDismissed() },
+            )
+        }
+        if (datePickerDialog?.isAdded == false) {
+            datePickerDialog?.show(childFragmentManager, null)
         }
     }
 
@@ -155,6 +160,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     }
 
     override fun onDestroyView() {
+        binding.includePostTravelLogFriends.rvTravelFriends.adapter = null
         binding.rvPostTravelLogDaily.adapter = null
         super.onDestroyView()
     }

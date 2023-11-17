@@ -68,7 +68,7 @@
     <string name="post_travel_log_friends_count">외 %d명</string>
     <string name="post_travel_log_daily">여행일지 및 사진</string>
     <string name="post_travel_log_daily_day">Day %d</string>
-    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요!</string>
+    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요</string>
     <string name="post_travel_log_daily_delete"><u>삭제하기</u></string>
     <string name="post_travel_log_daily_place">장소 태그하기</string>
     <string name="post_travel_log_daily_add">일정 추가하기</string>
@@ -91,6 +91,8 @@
     <string name="date_picker_complete">확인</string>
     <string name="date_picker_year">%d년</string>
     <string name="date_picker_date">%d월 %d일 (%s)</string>
+    <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
+    <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
 
     <string name="feed_reaction_count">99+</string>
 </resources>

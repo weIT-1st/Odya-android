@@ -5,11 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
+import com.weit.presentation.ui.util.toMillis
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
-import java.time.ZoneId
 import java.util.Calendar
 
 class DatePickerViewModel(initPeriod: TravelPeriod) : ViewModel() {
@@ -77,10 +77,6 @@ class DatePickerViewModel(initPeriod: TravelPeriod) : ViewModel() {
         viewModelScope.launch {
             _event.emit(Event.OnComplete(period.value))
         }
-    }
-
-    private fun LocalDate.toMillis(): Long {
-        return atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli()
     }
 
     sealed class Event {

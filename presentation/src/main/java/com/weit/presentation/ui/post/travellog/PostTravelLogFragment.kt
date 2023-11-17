@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.post.travellog
 
+import android.app.DatePickerDialog
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
@@ -72,7 +73,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.changeTravelLogEvent.collectLatest { logs ->
+            viewModel.dailyTravelLogs.collectLatest { logs ->
                 dailyTravelLogAdapter.submitList(logs)
             }
         }
@@ -80,11 +81,11 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             viewModel.travelPeriod.collectLatest { period ->
                 binding.includePostTravelLogStart.run {
                     tvDatePickerDate.text = period.start.toDateString()
-                    tvDatePickerDayOfWeek.text = period.start.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                    tvDatePickerDayOfWeek.text = period.start.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
                 }
                 binding.includePostTravelLogEnd.run {
                     tvDatePickerDate.text = period.end.toDateString()
-                    tvDatePickerDayOfWeek.text = period.end.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+                    tvDatePickerDayOfWeek.text = period.end.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault())
                 }
             }
         }
@@ -117,6 +118,36 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             PostTravelLogViewModel.Event.ClearDatePickerDialog -> {
                 datePickerDialog = null
             }
+            is PostTravelLogViewModel.Event.ShowDailyDatePicker -> {
+                getDailyDatePickerDialog(event.position, event.currentDate, event.minDateMillis, event.maxDateMillis).show()
+            }
+        }
+    }
+
+    private fun getDailyDatePickerDialog(
+        position: Int,
+        initDate: LocalDate?,
+        minDateMillis: Long,
+        maxDateMillis: Long,
+    ): DatePickerDialog {
+        val listener = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+            viewModel.onDailyDateSelected(position, year, month, dayOfMonth)
+        }
+        return if (initDate != null) {
+            DatePickerDialog(
+                requireContext(),
+                listener,
+                initDate.year,
+                initDate.monthValue,
+                initDate.dayOfMonth,
+            )
+        } else {
+            DatePickerDialog(requireContext()).apply {
+                setOnDateSetListener(listener)
+            }
+        }.apply {
+            datePicker.minDate = minDateMillis
+            datePicker.maxDate = maxDateMillis
         }
     }
 
@@ -138,7 +169,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             is DailyTravelLogAction.OnDeletePicture -> {
                 viewModel.onDeletePicture(action.position, action.imageIndex)
             }
-            is DailyTravelLogAction.OnSelectPictureClick -> {
+            is DailyTravelLogAction.OnSelectPicture -> {
                 viewModel.onSelectPictures(action.position, pickImageUseCase)
             }
             is DailyTravelLogAction.OnSelectPlace -> {
@@ -146,6 +177,9 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
             is DailyTravelLogAction.OnDeleteDailyTravelLog -> {
                 viewModel.onDeleteDailyTravelLog(action.position)
+            }
+            is DailyTravelLogAction.OnPickDate -> {
+                viewModel.onPickDailyDate(action.position)
             }
         }
     }

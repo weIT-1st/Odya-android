@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemDailyTravelLogBinding
 import com.weit.presentation.model.post.travellog.DailyTravelLog
+import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 class DailyTravelLogAdapter(
     private val action: (DailyTravelLogAction) -> Unit,
@@ -29,7 +32,10 @@ class DailyTravelLogAdapter(
                 getItem(absoluteAdapterPosition).contents = it.toString()
             }
             binding.btnDailyTravelLogSelectPicture.setOnClickListener {
-                action(DailyTravelLogAction.OnSelectPictureClick(absoluteAdapterPosition))
+                action(DailyTravelLogAction.OnSelectPicture(absoluteAdapterPosition))
+            }
+            binding.btnDailyTravelLogDate.setOnClickListener {
+                action(DailyTravelLogAction.OnPickDate(absoluteAdapterPosition))
             }
             binding.btnDailyTravelLogPlace.setOnClickListener {
                 val item = getItem(absoluteAdapterPosition)
@@ -50,13 +56,24 @@ class DailyTravelLogAdapter(
                 binding.root.context.getString(R.string.post_travel_log_daily_day, absoluteAdapterPosition + 1)
             binding.btnDailyTravelLogSelectPicture.text =
                 binding.root.context.getString(R.string.post_travel_log_daily_picture_count, item.images.size, MAX_PICTURES)
-
+            binding.btnDailyTravelLogDate.text =
+                item.date?.toDateString() ?: binding.root.context.getString(R.string.date_picker_daily_empty)
             val placeName = item.place?.name ?: binding.root.context.getString(R.string.post_travel_log_daily_place)
             binding.btnDailyTravelLogPlace.text = placeName
             binding.btnDailyTravelLogDelete.isVisible = absoluteAdapterPosition != 0
             binding.etDailyTravelLogContents.setText(item.contents)
             pictureAdapter.submitList(item.images)
             binding.rvDailyTravelLogPictures.adapter = pictureAdapter
+        }
+
+        private fun LocalDate.toDateString(): String {
+            return binding.root.context.getString(
+                R.string.date_picker_daily,
+                year,
+                monthValue,
+                dayOfMonth,
+                dayOfWeek.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+            )
         }
 
         private fun deleteSelectedPicture(imageIndex: Int) {

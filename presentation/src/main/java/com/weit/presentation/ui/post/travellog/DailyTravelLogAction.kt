@@ -1,7 +1,11 @@
 package com.weit.presentation.ui.post.travellog
 
 sealed class DailyTravelLogAction {
-    data class OnSelectPictureClick(
+    data class OnSelectPicture(
+        val position: Int,
+    ) : DailyTravelLogAction()
+
+    data class OnPickDate(
         val position: Int,
     ) : DailyTravelLogAction()
 

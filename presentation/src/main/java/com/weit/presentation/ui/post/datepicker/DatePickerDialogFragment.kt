@@ -29,7 +29,7 @@ class DatePickerDialogFragment(
     private val onComplete: (TravelPeriod) -> Unit,
     private val onDismiss: (() -> Unit)? = null,
 ) : BaseDialogFragment<FragmentDatePickerBinding>(
-    FragmentDatePickerBinding::inflate
+    FragmentDatePickerBinding::inflate,
 ) {
 
     private val viewModel: DatePickerViewModel by viewModels {
@@ -56,7 +56,6 @@ class DatePickerDialogFragment(
             viewModel.onChangeCalenderType(CalenderType.END)
         }
     }
-
 
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
@@ -152,7 +151,7 @@ class DatePickerDialogFragment(
             R.string.date_picker_date,
             monthValue,
             dayOfMonth,
-            dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault())
+            dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.getDefault()),
         )
     }
 

@@ -17,11 +17,8 @@ class DatePickerViewModel(initPeriod: TravelPeriod) : ViewModel() {
     private val _period = MutableStateFlow(initPeriod)
     val period: StateFlow<TravelPeriod> get() = _period
 
-    private val _entity = MutableStateFlow(
-        DatePickerEntity(0, initPeriod.start.toMillis(), initPeriod.start, CalenderType.START)
-    )
+    private val _entity = MutableStateFlow(DatePickerEntity(0, initPeriod.start.toMillis(), initPeriod.start, CalenderType.START))
     val entity: StateFlow<DatePickerEntity> get() = _entity
-
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()

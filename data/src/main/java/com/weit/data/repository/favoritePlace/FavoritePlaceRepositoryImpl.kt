@@ -10,8 +10,6 @@ import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceExce
 import com.weit.domain.model.favoritePlace.FavoritePlaceDetail
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
-import okhttp3.MediaType
-import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT

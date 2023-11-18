@@ -30,6 +30,9 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     private val friends = CopyOnWriteArrayList<FollowUserContent>()
 
+    private val _travelFriendsInfo = MutableStateFlow(TravelFriendsInfo())
+    val travelFriendsInfo: StateFlow<TravelFriendsInfo> get() = _travelFriendsInfo
+
     private val _travelPeriod = MutableStateFlow(TravelPeriod())
     val travelPeriod: StateFlow<TravelPeriod> get() = _travelPeriod
 
@@ -49,16 +52,14 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
-        friends.run {
-            clear()
-            addAll(travelFriends)
-        }
+        friends.clear()
+        friends.addAll(travelFriends)
         val friendsSummary = travelFriends
             .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
             .map { it.profile }
         val remainingFriendsCount = travelFriends.size - friendsSummary.size
         viewModelScope.launch {
-            _event.emit(Event.OnChangeTravelFriends(friendsSummary, remainingFriendsCount))
+            _travelFriendsInfo.emit(TravelFriendsInfo(friendsSummary, remainingFriendsCount))
         }
     }
 
@@ -184,10 +185,6 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
 
     sealed class Event {
-        data class OnChangeTravelFriends(
-            val friendsSummary: List<UserProfile>,
-            val remainingFriendsCount: Int,
-        ) : Event()
         data class OnEditTravelFriends(
             val travelFriends: List<FollowUserContentDTO>,
         ) : Event()
@@ -210,6 +207,11 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
         object ClearDatePickerDialog : Event()
     }
+
+    data class TravelFriendsInfo(
+        val friendsSummary: List<UserProfile> = emptyList(),
+        val remainingFriendsCount: Int = 0,
+    )
 
     companion object {
         private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 3

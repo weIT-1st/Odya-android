@@ -41,6 +41,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     private val travelFriendsAdapter = TravelFriendsAdapter()
 
     private var datePickerDialog: DatePickerDialogFragment? = null
+    private var dailyDatePickerDialog: DatePickerDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +79,15 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
+            viewModel.travelFriendsInfo.collectLatest { info ->
+                travelFriendsAdapter.submitList(info.friendsSummary)
+                if (info.remainingFriendsCount > 0) {
+                    binding.includePostTravelLogFriends.tvTravelFriendsCount.text =
+                        getString(R.string.post_travel_log_friends_count, info.remainingFriendsCount)
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.travelPeriod.collectLatest { period ->
                 binding.includePostTravelLogStart.run {
                     tvDatePickerDate.text = period.start.toDateString()
@@ -99,13 +109,6 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 )
                 findNavController().navigate(action)
             }
-            is PostTravelLogViewModel.Event.OnChangeTravelFriends -> {
-                travelFriendsAdapter.submitList(event.friendsSummary)
-                if (event.remainingFriendsCount > 0) {
-                    binding.includePostTravelLogFriends.tvTravelFriendsCount.text =
-                        getString(R.string.post_travel_log_friends_count, event.remainingFriendsCount)
-                }
-            }
             is PostTravelLogViewModel.Event.OnSelectPlace -> {
                 val action = PostTravelLogFragmentDirections.actionPostTravelLogFragmentToSelectPlaceFragment(
                     event.imagePlaces.toTypedArray(),
@@ -117,10 +120,43 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
             PostTravelLogViewModel.Event.ClearDatePickerDialog -> {
                 datePickerDialog = null
+                dailyDatePickerDialog = null
             }
             is PostTravelLogViewModel.Event.ShowDailyDatePicker -> {
-                getDailyDatePickerDialog(event.position, event.currentDate, event.minDateMillis, event.maxDateMillis).show()
+                showDailyDatePickerDialog(
+                    event.position,
+                    event.currentDate,
+                    event.minDateMillis,
+                    event.maxDateMillis,
+                )
             }
+        }
+    }
+
+    private fun showDatePickerDialog(period: TravelPeriod) {
+        if (datePickerDialog == null) {
+            datePickerDialog = DatePickerDialogFragment(
+                travelPeriod = period,
+                onComplete = { viewModel.onChangePeriod(it) },
+                onDismiss = { viewModel.onDatePickerDismissed() },
+            )
+        }
+        if (datePickerDialog?.isAdded == false) {
+            datePickerDialog?.show(childFragmentManager, null)
+        }
+    }
+
+    private fun showDailyDatePickerDialog(
+        position: Int,
+        currentDate: LocalDate?,
+        minDateMillis: Long,
+        maxDateMillis: Long,
+    ) {
+        if (dailyDatePickerDialog == null) {
+            dailyDatePickerDialog = getDailyDatePickerDialog(position, currentDate, minDateMillis, maxDateMillis)
+        }
+        if (dailyDatePickerDialog?.isShowing == false) {
+            dailyDatePickerDialog?.show()
         }
     }
 
@@ -148,19 +184,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
         }.apply {
             datePicker.minDate = minDateMillis
             datePicker.maxDate = maxDateMillis
-        }
-    }
-
-    private fun showDatePickerDialog(period: TravelPeriod) {
-        if (datePickerDialog == null) {
-            datePickerDialog = DatePickerDialogFragment(
-                travelPeriod = period,
-                onComplete = { viewModel.onChangePeriod(it) },
-                onDismiss = { viewModel.onDatePickerDismissed() },
-            )
-        }
-        if (datePickerDialog?.isAdded == false) {
-            datePickerDialog?.show(childFragmentManager, null)
+            setOnDismissListener { viewModel.onDatePickerDismissed() }
         }
     }
 

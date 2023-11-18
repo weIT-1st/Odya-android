@@ -1,7 +1,12 @@
 package com.weit.data.repository.place
 
 import com.weit.data.model.map.Place
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PlaceDateSource
+import com.weit.data.util.exception
+import com.weit.domain.model.CoordinateInfo
+import com.weit.domain.model.exception.ImageNotFoundException
+import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.repository.place.PlaceRepository
@@ -9,10 +14,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
     private val dataSource: PlaceDateSource,
+    private val imageDataSource: ImageDataSource
 ) : PlaceRepository {
 
     override suspend fun searchPlace(query: String): List<PlacePrediction> {
@@ -26,25 +34,60 @@ class PlaceRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPlaceDetail(placeId: String): PlaceDetail {
-        val result = dataSource.getPlace(placeId)
-        return PlaceDetail(
-            result?.id ?: "",
-            result?.name,
-            result?.address,
-            result?.latLng?.latitude,
-            result?.latLng?.longitude,
-        )
+    override suspend fun getPlaceDetail(placeId: String): Result<PlaceDetail> {
+        val result = runCatching {dataSource.getPlace(placeId)}
+
+        return if (result.isSuccess) {
+            val placeDetail = result.getOrThrow()
+            Result.success(
+                PlaceDetail(
+                    placeDetail.id,
+                    placeDetail.name,
+                    placeDetail.address,
+                    placeDetail.latLng?.latitude,
+                    placeDetail.latLng?.longitude
+                )
+            )
+        } else {
+            Result.failure(result.exception())
+        }
     }
 
-    override suspend fun getPlacesByCoordinate(latitude: Double, longitude: Double): List<PlacePrediction> {
+    override suspend fun getPlacesByCoordinate(
+        latitude: Double,
+        longitude: Double
+    ): Result<List<PlacePrediction>> {
         val geocodingResult = dataSource.getPlacesByCoordinate(latitude, longitude)
-        return geocodingResult.result.map { place ->
+        val result = geocodingResult.result.map { place ->
             CoroutineScope(Dispatchers.IO).async {
                 getPlacePrediction(place)
             }
         }.awaitAll().filterNotNull()
+
+        return if (result.isEmpty().not()){
+            Result.success(result)
+        } else {
+            Result.failure(InvalidRequestException())
+        }
     }
+
+    override suspend fun getPlaceImage(placeId: String): Result<ByteArray> {
+        val result = runCatching { dataSource.getPlaceImage(placeId) }
+        return if (result.isSuccess) {
+            val placeImage = result.getOrThrow().firstOrNull()
+
+            if (placeImage != null){
+                Result.success(imageDataSource.getCompressedBytes(placeImage))
+            } else {
+                Result.failure(ImageNotFoundException())
+            }
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
+    override suspend fun getCurrentPlaceDetail(): Result<CoordinateInfo> =
+        dataSource.getCurrentPlaceDetail()
 
     private suspend fun getPlacePrediction(place: Place): PlacePrediction? {
         // TODO 개선 필요. api를 두번 호출해야 업체명을 안다는게 말이안됨

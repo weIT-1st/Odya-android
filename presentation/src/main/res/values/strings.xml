@@ -23,6 +23,11 @@
         <item>남성</item>
         <item>여성</item>
     </string-array>
+    <string name="login_terms_consent">동의하기</string>
+    <string name="login_preview_third_title">한 눈에 담아보는\n나의 여행 동선</string>
+    <string name="login_preview_third_content">동선을 보여드려요</string>
+    <string name="login_preview_third_start">오댜 시작하기</string>
+    <string name="sign_up">등록하기</string>
 
 
     <string name="text_home">홈</string>
@@ -52,12 +57,12 @@
     <!--  review  -->
     <string name="create_review_title">리뷰 작성</string>
     <string name="edit_review_title">리뷰 수정</string>
-    <string name="review_star">별점 등록(%.1f/5)</string>
-    <string name="review_detail">리뷰 내용(%d/30)</string>
     <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
-    <string name="review_cancel">취소</string>
     <string name="create_review_register">등록하기</string>
     <string name="edit_review_register">수정하기</string>
+    <string name="item_update_review">리뷰 수정</string>
+    <string name="item_delete_review">리뷰 삭제</string>
+    <string name="item_report_review">신고하기</string>
 
 
     <!-- post travel log -->
@@ -94,5 +99,27 @@
     <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
     <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
 
-    <string name="feed_reaction_count">99+</string>
+    <!-- place bottom sheet   -->
+    <string name="place_score">%.1f</string>
+    <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
+
+    <string name="place_review">한줄리뷰</string>
+    <string name="place_how_about">%s의 방문 경험은 어떠셨나요?</string>
+    <string name="place_review_count">리뷰 총 %d개</string>
+    <string name="place_recent_review_sort">최신순</string>
+    <string name="place_write_review">리뷰 작성</string>
+    <string name="place_my_review">내가 작성한 리뷰</string>
+
+    <string name="place_journey">여행일지</string>
+    <string name="place_my_journal">나의 여행일지</string>
+    <string name="place_friend_journal">친구의 여행일지</string>
+    <string name="place_recommend_journal">추천 여행일지</string>
+
+    <string name="place_community">커뮤니티</string>
+
+    <!-- feed -->
+    <string name="feed_reaction_count">%d</string>
+    <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
 </resources>

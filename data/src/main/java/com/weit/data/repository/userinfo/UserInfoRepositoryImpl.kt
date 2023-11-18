@@ -56,4 +56,16 @@ class UserInfoRepositoryImpl @Inject constructor(
             userinfoDataSource.getGender()
         }
     }
+
+    override suspend fun setTermIdList(termIdList: Set<String>): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setTermIdList(termIdList)
+        }
+    }
+
+    override suspend fun getTermIdList(): Result<Set<String>?> {
+        return runCatching {
+            userinfoDataSource.getTermIdList()
+        }
+    }
 }

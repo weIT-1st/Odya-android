@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="log"
+            type="com.weit.presentation.model.TravelLogInFeed" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@drawable/corners_all_8"
+        android:id="@+id/layout_travel_log"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <ImageView
+            android:id="@+id/iv_travel_log"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:image_uri="@{log.travelLogImage}"
+            tools:src="@drawable/bg_popular_spot_summary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_travel_log_subject"
+            style="@style/h6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/label_normal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_max="wrap"
+            android:text="여행일지 더보기" />
+
+        <ImageView
+            android:id="@+id/iv_travel_log_diary"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_diary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tv_travel_log_title"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            />
+
+        <TextView
+            android:id="@+id/tv_travel_log_title"
+            style="@style/detail1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="@color/label_alternative"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_travel_log_diary"
+            app:layout_constraintEnd_toStartOf="@+id/tv_popular_spot_hot"
+            app:layout_constraintStart_toEndOf="@+id/iv_travel_log_diary"
+            app:layout_constraintTop_toTopOf="@+id/iv_travel_log_diary"
+            tools:text="@{log.travelLogTitle}" />
+
+        <TextView
+            android:id="@+id/tv_popular_spot_hot"
+            android:layout_width="33dp"
+            android:layout_height="14dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/corners_all_4"
+            android:backgroundTint="@color/warning"
+            android:gravity="center"
+            android:text="@string/popular_spot_hot"
+            android:textColor="@color/label_alternative"
+            android:textSize="8dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_travel_log_diary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_travel_log_diary" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

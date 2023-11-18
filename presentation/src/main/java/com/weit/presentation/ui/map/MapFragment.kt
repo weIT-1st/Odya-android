@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -37,6 +38,8 @@ class MapFragment :
         binding.rvPlacePrediction.visibility = View.GONE
         viewModel.getDetailPlace(it)
     }
+
+    private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var coordinates: LatLng
@@ -62,6 +65,20 @@ class MapFragment :
             viewModel.detailPlace.collectLatest {
                 val latlng = LatLng(it.latitude!!, it.longitude!!)
                 showMap(latlng)
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.touchPlaceId.collectLatest { placeId ->
+                if (placeId.isNotBlank()) {
+                    placeBottomSheetUp(placeId)
+                }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.currentLatLng.collectLatest {
+                showMap(it)
             }
         }
     }
@@ -136,12 +153,41 @@ class MapFragment :
         }
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(coordinates, 15f))
         marker = map!!.addMarker(MarkerOptions().position(coordinates))
+
+        if (map != null) {
+            map!!.setOnMapClickListener {
+                viewModel.getPlaceByCoordinate(it.latitude, it.longitude)
+            }
+
+            map!!.setOnPoiClickListener {
+                placeBottomSheetUp(it.placeId)
+            }
+
+        } else {
+            sendSnackBar("지도 정보를 받아오지 못했어요")
+        }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         map?.clear()
         mapFragment?.onDestroyView()
+    }
+
+    private fun placeBottomSheetUp(placeId: String) {
+        if (searchPlaceBottomSheetFragment == null){
+            searchPlaceBottomSheetFragment = SearchPlaceBottomSheetFragment(placeId) {
+                placeBottomSheetReset()
+            }
+        }
+
+        if (!searchPlaceBottomSheetFragment!!.isAdded) {
+            searchPlaceBottomSheetFragment!!.show(childFragmentManager, TAG)
+        }
+    }
+
+    private fun placeBottomSheetReset(){
+        searchPlaceBottomSheetFragment = null
     }
     companion object {
         private val TAG = "MapFragment"

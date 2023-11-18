@@ -11,4 +11,5 @@ data class UserRegistration(
     @field:Json(name = "nickname") val nickname: String,
     @field:Json(name = "gender") val gender: String,
     @field:Json(name = "birthday") val birthday: List<Int>,
+    @field:Json(name = "termsIdList") val termsIdList: Set<Long>,
 )

@@ -9,6 +9,7 @@ import kotlin.math.roundToInt
 
 class SpaceDecoration(
     private val resources: Resources,
+    @DimenRes private val topDP: Int? = null,
     @DimenRes private val rightDP: Int? = null,
     @DimenRes private val leftDP: Int? = null,
     @DimenRes private val bottomDP: Int? = null,
@@ -28,6 +29,9 @@ class SpaceDecoration(
         }
         bottomDP?.let {
             outRect.bottom = getSpace(it)
+        }
+        topDP?.let {
+            outRect.top = getSpace(it)
         }
     }
 

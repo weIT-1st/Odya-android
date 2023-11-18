@@ -18,5 +18,5 @@ interface UserRepository {
 
     suspend fun getUserId(): Long
 
-    suspend fun deleteUser() : Result<Unit>
+    suspend fun deleteUser(): Result<Unit>
 }

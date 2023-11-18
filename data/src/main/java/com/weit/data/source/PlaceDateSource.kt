@@ -27,10 +27,11 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.UnKnownException
 import dagger.hilt.android.qualifiers.ActivityContext
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
-import java.util.Locale
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 import javax.inject.Inject
 
 class PlaceDateSource @Inject constructor(
@@ -47,19 +48,19 @@ class PlaceDateSource @Inject constructor(
     )
 
     private val defaultPlaceField = listOf(
-        Place.Field.NAME,
-        Place.Field.ID,
-        Place.Field.ADDRESS,
-        Place.Field.LAT_LNG
+        Field.NAME,
+        Field.ID,
+        Field.ADDRESS,
+        Field.LAT_LNG,
     )
 
     private val detailPlaceField = listOf(
-        Place.Field.NAME,
-        Place.Field.ID,
-        Place.Field.ADDRESS,
-        Place.Field.ADDRESS_COMPONENTS,
-        Place.Field.LAT_LNG,
-        Place.Field.PHOTO_METADATAS,
+        Field.NAME,
+        Field.ID,
+        Field.ADDRESS,
+        Field.ADDRESS_COMPONENTS,
+        Field.LAT_LNG,
+        Field.PHOTO_METADATAS,
     )
 
     suspend fun getPlaceDetail(
@@ -136,7 +137,6 @@ class PlaceDateSource @Inject constructor(
             }
         awaitClose { }
     }.first()
-    }
 
     suspend fun getPlaceImage(placeId: String): Flow<Bitmap?> = callbackFlow {
         val fields = listOf(Field.PHOTO_METADATAS)
@@ -176,13 +176,13 @@ class PlaceDateSource @Inject constructor(
 
             fusedLocationProviderClient.lastLocation
                 .addOnCompleteListener {
-                    if (it.isSuccessful){
+                    if (it.isSuccessful) {
                         latitude = it.result.latitude.toFloat()
                         longitude = it.result.longitude.toFloat()
                     }
                 }.await()
 
-            if (latitude == null || longitude == null){
+            if (latitude == null || longitude == null) {
                 Result.failure(InvalidRequestException())
             } else {
                 Result.success(CoordinateInfo(latitude!!, longitude!!))

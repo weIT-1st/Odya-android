@@ -14,13 +14,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
     private val dataSource: PlaceDateSource,
-    private val imageDataSource: ImageDataSource
+    private val imageDataSource: ImageDataSource,
 ) : PlaceRepository {
 
     override suspend fun searchPlace(query: String): List<PlacePrediction> {
@@ -35,18 +34,18 @@ class PlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getPlaceDetail(placeId: String): Result<PlaceDetail> {
-        val result = runCatching {dataSource.getPlace(placeId)}
+        val result = runCatching { dataSource.getPlace(placeId) }
 
         return if (result.isSuccess) {
             val placeDetail = result.getOrThrow()
             Result.success(
                 PlaceDetail(
-                    placeDetail.id,
+                    placeDetail.id ?: "",
                     placeDetail.name,
                     placeDetail.address,
                     placeDetail.latLng?.latitude,
-                    placeDetail.latLng?.longitude
-                )
+                    placeDetail.latLng?.longitude,
+                ),
             )
         } else {
             Result.failure(result.exception())
@@ -55,7 +54,7 @@ class PlaceRepositoryImpl @Inject constructor(
 
     override suspend fun getPlacesByCoordinate(
         latitude: Double,
-        longitude: Double
+        longitude: Double,
     ): Result<List<PlacePrediction>> {
         val geocodingResult = dataSource.getPlacesByCoordinate(latitude, longitude)
         val result = geocodingResult.result.map { place ->
@@ -64,7 +63,7 @@ class PlaceRepositoryImpl @Inject constructor(
             }
         }.awaitAll().filterNotNull()
 
-        return if (result.isEmpty().not()){
+        return if (result.isEmpty().not()) {
             Result.success(result)
         } else {
             Result.failure(InvalidRequestException())
@@ -76,7 +75,7 @@ class PlaceRepositoryImpl @Inject constructor(
         return if (result.isSuccess) {
             val placeImage = result.getOrThrow().firstOrNull()
 
-            if (placeImage != null){
+            if (placeImage != null) {
                 Result.success(imageDataSource.getCompressedBytes(placeImage))
             } else {
                 Result.failure(ImageNotFoundException())
@@ -94,7 +93,7 @@ class PlaceRepositoryImpl @Inject constructor(
         // 역지오코딩 할 때 우리가 직접만든 place 객체가 아니라 구글 지도에서 제공하는 place 객체를 역직렬화 한다면
         // 더 정상적인 데이터가 나오지 않을까
         val placeId = place.placeId
-        val result = dataSource.getPlace(placeId) ?: return null
+        val result = dataSource.getPlace(placeId)
         return PlacePrediction(
             placeId = placeId,
             name = result.name ?: "",

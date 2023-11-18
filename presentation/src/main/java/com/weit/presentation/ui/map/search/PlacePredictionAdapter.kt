@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.map
+package com.weit.presentation.ui.map.search
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,33 +6,32 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.place.PlacePrediction
-import com.weit.presentation.databinding.PlacePredictionItemBinding
-import java.util.*
+import com.weit.presentation.databinding.ItemPlaceAutoCompleteBinding
 
 class PlacePredictionAdapter(
-    val onPlaceClickListener: (String) -> Unit,
-) : ListAdapter<PlacePrediction, PlacePredictionAdapter.PlacePredictionViewHolder>(PlaceDiffCallback) {
+    val onPlaceClickListener: (String, String) -> Unit,
+) : ListAdapter<PlacePrediction, PlacePredictionAdapter.ViewHolder>(PlaceDiffCallback) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlacePredictionViewHolder {
-        return PlacePredictionViewHolder(
-            PlacePredictionItemBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(
+            ItemPlaceAutoCompleteBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
     }
 
-    override fun onBindViewHolder(holder: PlacePredictionViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val place = getItem(position)
         holder.bind(place)
         holder.itemView.setOnClickListener {
-            onPlaceClickListener(place.placeId)
+            onPlaceClickListener(place.placeId, place.name)
         }
     }
 
-    class PlacePredictionViewHolder(
-        private val binding: PlacePredictionItemBinding,
+    class ViewHolder(
+        private val binding: ItemPlaceAutoCompleteBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(prediction: PlacePrediction) {
-            binding.tvTitle.text = prediction.name
-            binding.tvAddress.text = prediction.address
+            binding.tvItemPlaceTitle.text = prediction.name
+            binding.tvItemPlaceAddress.text = prediction.address
         }
     }
     companion object {

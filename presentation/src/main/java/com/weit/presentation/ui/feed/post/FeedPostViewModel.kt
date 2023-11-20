@@ -51,6 +51,8 @@ class FeedPostViewModel @AssistedInject constructor(
     private var topicList = CopyOnWriteArrayList<FeedTopic>()
     private var feedState = feedRegister
 
+    private var originalImageIds : List<Long> = emptyList()
+
     @AssistedFactory
     interface FeedPostFactory {
         fun create(imageUris: List<String>?,
@@ -77,6 +79,7 @@ class FeedPostViewModel @AssistedInject constructor(
                 val uris = feed.communityContentImages.map{
                     it.imageUrl
                 }
+                originalImageIds = feed.communityContentImages.map{ it.communityContentImageId }
                 _imageList.emit(uris)
                 content.value = feed.content  //content
                 feed.topic?.topicId?.let { updateTopicUI(it) } //토픽
@@ -147,8 +150,6 @@ class FeedPostViewModel @AssistedInject constructor(
                     if (result.isSuccess) {
                         _event.emit(Event.FeedPostSuccess)
                     } else {
-//                handleError(result.exceptionOrNull() ?: UnKnownException())
-                        Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
                     }
                 }
 
@@ -161,7 +162,7 @@ class FeedPostViewModel @AssistedInject constructor(
                             null,
                             null,
                             selectedTopicId,
-                            emptyList()
+                            originalImageIds
                         ),
                         _imageList.value?: emptyList()
                     )
@@ -169,7 +170,6 @@ class FeedPostViewModel @AssistedInject constructor(
                         _event.emit(Event.FeedUpdateSuccess)
                     } else {
 //                handleError(result.exceptionOrNull() ?: UnKnownException())
-                        Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
                     }
                 }
             }

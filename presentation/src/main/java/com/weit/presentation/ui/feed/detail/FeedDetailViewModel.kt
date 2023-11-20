@@ -15,9 +15,7 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.topic.TopicDetail
 import com.weit.domain.model.user.User
-import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
@@ -42,7 +40,6 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val deleteCommentsUseCase: DeleteCommentsUseCase,
     private val updateCommentsUseCase: UpdateCommentsUseCase,
-    private val deleteCommunityUseCase: DeleteCommunityUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val getUserUseCase: GetUserUseCase,
     @Assisted private val feedId: Long,
@@ -53,6 +50,9 @@ class FeedDetailViewModel @AssistedInject constructor(
         fun create(feedId: Long): FeedDetailViewModel
     }
     val user = MutableStateFlow<User?>(null)
+    private val _isWriter = MutableStateFlow<Boolean>(false)
+    val isWriter: StateFlow<Boolean> get() = _isWriter
+
 
     var writedComment = MutableStateFlow("")
 
@@ -101,6 +101,7 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val feed = result.getOrThrow()
                 userId = feed.writer.userId
                 setFeedDetail(feed)
+                _isWriter.emit(feed.isWriter)
                 _event.emit(Event.OnChangeFeed(feed))
             } else {
                 // TODO 에러 처리
@@ -201,17 +202,6 @@ class FeedDetailViewModel @AssistedInject constructor(
         }
     }
 
-    fun deleteFeed(){
-        viewModelScope.launch {
-            val result = deleteCommunityUseCase(feedId)
-            if (result.isSuccess) {
-                _event.emit(Event.DeleteCommunitySuccess)
-            } else {
-                // TODO 에러 처리
-                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
-            }
-        }
-    }
 
     fun onFollowStateChange(followState : Boolean) {
         viewModelScope.launch {

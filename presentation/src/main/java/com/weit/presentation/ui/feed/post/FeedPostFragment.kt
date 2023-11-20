@@ -31,15 +31,15 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     private val args: FeedPostFragmentArgs by navArgs()
     private val feedImageAdapter = FeedImageAdapter()
     private val feedPostTopicAdapter = FeedPostTopicAdapter(
-        selectTopic = { topicId, position ->
-            viewModel.selectTopic(topicId, position) }
+        selectTopic = { topicId ->
+            viewModel.selectTopic(topicId) }
     )
 
     @Inject
     lateinit var viewModelFactory: FeedPostViewModel.FeedPostFactory
 
     private val viewModel: FeedPostViewModel by viewModels {
-        FeedPostViewModel.provideFactory(viewModelFactory, args.feedImages?.toList() ?: emptyList())
+        FeedPostViewModel.provideFactory(viewModelFactory, args.feedImages?.toList() ?: emptyList(),args.feedId)
     }
 
     @Inject
@@ -115,11 +115,30 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 feedImageAdapter.submitList(images)
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.feed.collectLatest { feed ->
+                //여행일지 제목 변경
+                binding.tvFeedPostTitle.text = feed?.travelJournal?.title
+                //장소id변경
+                //토픽 변경
+
+                //공개여부 변경
+                when (feed?.visibility) {
+                    Visibility.PUBLIC.name -> binding.tlFeedPostVisibility.getTabAt(0)?.select()
+                    Visibility.FRIEND_ONLY.name -> binding.tlFeedPostVisibility.getTabAt(1)?.select()
+                    Visibility.PRIVATE.name -> binding.tlFeedPostVisibility.getTabAt(2)?.select()
+                }
+            }
+        }
     }
 
     private fun handleEvent(event: FeedPostViewModel.Event) {
         when (event) {
             is FeedPostViewModel.Event.FeedPostSuccess -> {
+                val action = FeedPostFragmentDirections.actionFragmentFeedPostToFragmentFeed()
+                findNavController().navigate(action)
+            }
+            is FeedPostViewModel.Event.FeedUpdateSuccess -> {
                 val action = FeedPostFragmentDirections.actionFragmentFeedPostToFragmentFeed()
                 findNavController().navigate(action)
             }

@@ -222,7 +222,7 @@ class CommunityRepositoryImpl @Inject constructor(
         communityUpdateInfo: CommunityUpdateInfo,
         communityImages: List<String>
     ): Result<Unit> {
-        val result = runCatching {
+
 
             val fileList : MutableList<MultipartBody.Part> = mutableListOf()
             for(uri in communityImages){
@@ -241,18 +241,19 @@ class CommunityRepositoryImpl @Inject constructor(
 
                 fileList.add(file)
             }
-            val communityInfoJson = Gson().toJson(communityUpdateInfo)
+            val adapter= moshi.adapter(CommunityUpdateInfo::class.java)
+            val communityInfoJson = adapter.toJson(communityUpdateInfo)
 
             val communityRequestBody = communityInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val communityPart = MultipartBody.Part.createFormData("update-community", "update-community", communityRequestBody)
 
-            communityDataSource.updateCommunity(communityId,communityPart,fileList)
-        }
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
+        val response = communityDataSource.updateCommunity(communityId,communityPart,fileList)
+
+        return if (response.isSuccessful) {
+            Result.success(Unit)
         } else {
-            Result.failure(handleRegisterAndGetCommentError(result.exception()))
+            Result.failure(handleDeleteError(response))
         }
     }
 
@@ -262,7 +263,8 @@ class CommunityRepositoryImpl @Inject constructor(
             Result.success(Unit)
         } else {
             Result.failure(handleDeleteError(response))
-        }    }
+        }
+    }
 
     private fun handleRegisterAndGetCommentError(t: Throwable): Throwable {
         return if (t is HttpException) {

@@ -12,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -26,12 +27,12 @@ interface CommunityService {
     )
 
     @Multipart
-    @PATCH("/api/v1/communities/{communityId}")
+    @PUT("/api/v1/communities/{communityId}")
     suspend fun updateCommunity(
         @Path("communityId") communityId: Long,
         @Part community : MultipartBody.Part,
         @Part images: List<MultipartBody.Part>?
-    )
+    ): Response<Unit>
 
     @GET("/api/v1/communities/{communityId}")
     suspend fun getDetailCommunity(

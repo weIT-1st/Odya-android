@@ -4,38 +4,25 @@ import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IntRange
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
-import com.bumptech.glide.Glide
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import com.orhanobut.logger.Logger
 import com.weit.presentation.R
-import com.weit.presentation.databinding.BottomSheetPlaceSearchBinding
-import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.databinding.FragmentFeedMyActivityBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.myactivity.comment.FeedMyActivityCommentFragment
-import com.weit.presentation.ui.feed.myactivity.comment.FeedMyActivityCommentViewModel
 import com.weit.presentation.ui.feed.myactivity.like.FeedMyActivityLikeFragment
 import com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragment
-import com.weit.presentation.ui.searchplace.community.PlaceCommunityFragment
-import com.weit.presentation.ui.searchplace.journey.PlaceJourneyFragment
-import com.weit.presentation.ui.searchplace.review.PlaceReviewFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
@@ -101,9 +88,22 @@ class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
                 tabLike -> tab.text = getString(R.string.feed_my_activity_like)
             }
         }.attach()
+        setTabItemMargin(tabLayout,20)
+
     }
 
-
+    private fun setTabItemMargin(tabLayout: TabLayout, marginEnd: Int = 20) {
+        for (i in 0 until 3) {
+            val tabs = tabLayout.getChildAt(0) as ViewGroup
+            for (i in 0 until tabs.childCount) {
+                val tab = tabs.getChildAt(i)
+                val lp = tab.layoutParams as LinearLayout.LayoutParams
+                lp.marginEnd = marginEnd
+                tab.layoutParams = lp
+                tabLayout.requestLayout()
+            }
+        }
+    }
 //    private fun handelEvent(event: SearchPlaceBottomSheetViewModel.Event) {
 //        when (event) {
 //

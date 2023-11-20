@@ -10,6 +10,7 @@ interface CommunityContent {
     val visibility: String
     val placeId: String?
     val writer: CommunityUser
+    val isWriter: Boolean
     val travelJournal: CommunityTravelJournal?
     val topic: TopicDetail?
     val communityContentImages: List<CommunityContentImage>

@@ -18,8 +18,8 @@ class CommunityDataSource @Inject constructor(
         service.registerCommunity(community,images)
     }
 
-    suspend fun updateCommunity(communityId:Long,community: MultipartBody.Part, images:List<MultipartBody.Part>) {
-        service.updateCommunity(communityId,community,images)
+    suspend fun updateCommunity(communityId:Long,community: MultipartBody.Part, images:List<MultipartBody.Part>): Response<Unit> {
+        return service.updateCommunity(communityId,community,images)
     }
 
     suspend fun deleteCommunity(communityId: Long): Response<Unit> {

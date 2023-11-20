@@ -105,7 +105,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     private fun navigateFeedPost(uris: List<String>) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(uris.toTypedArray())
+        val action = FeedFragmentDirections.actionFragmentFeedToFeedPostFragment(uris.toTypedArray(),-1)
         findNavController().navigate(action)
     }
 

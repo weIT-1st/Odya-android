@@ -12,29 +12,43 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@android:color/transparent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:behavior_draggable="true"
         app:behavior_hideable="true"
-        android:background="@android:color/transparent"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_other_feed_share"
+            android:id="@+id/tv_my_feed_update"
             style="@style/body2"
-            android:background="@drawable/corners_top_12_in_bottom_sheet"
-            android:backgroundTint="#A6545458"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:gravity="center"
             android:textColor="#0A84FF"
+            android:background="@drawable/corners_top_12_in_bottom_sheet"
+            android:backgroundTint="#A6545458"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="@string/feed_update"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_my_feed_share"
+            style="@style/body2"
+            android:textColor="#0A84FF"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="#A6545458"
+            android:gravity="center"
             android:textAlignment="center"
             android:text="@string/feed_share"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_my_feed_update" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_my_feed_delete"
@@ -46,10 +60,10 @@
             android:gravity="center"
             android:textColor="#FF453A"
             android:textAlignment="center"
-            android:text="@string/feed_reports"
+            android:text="@string/feed_delete"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_other_feed_share" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_my_feed_share" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_my_feed_close"

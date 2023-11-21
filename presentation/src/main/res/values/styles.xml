@@ -87,7 +87,7 @@
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingMultiplier">1.5</item>
     </style>
-    
+
     <style name="ShapeableImageViewCircle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
@@ -109,13 +109,11 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">8dp</item>
     </style>
-
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
         <item name="android:windowIsFloating">false</item>
     </style>
-
 
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
@@ -127,6 +125,10 @@
         <item name="android:textColor">@color/selector_my_activity_text</item>
     </style>
 
-
-</resources>
+    <style name="dialog_fullscreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+ </resources>
 

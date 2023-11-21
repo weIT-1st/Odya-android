@@ -1,25 +1,40 @@
 package com.weit.presentation.ui.map
 
+import android.app.Notification
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.PixelCopy
 import android.view.View
-import android.widget.SearchView
+import android.view.ViewGroup
+import android.widget.ImageView
+import androidx.core.app.NotificationCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
 import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,12 +49,8 @@ class MapFragment :
 
     private val viewModel: MapViewModel by viewModels()
 
-    private val adapter = PlacePredictionAdapter {
-        binding.rvPlacePrediction.visibility = View.GONE
-        viewModel.getDetailPlace(it)
-    }
-
     private var searchPlaceBottomSheetFragment: SearchPlaceBottomSheetFragment? = null
+    private var mainSearchTopSheetFragment: MainSearchTopSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
     private lateinit var coordinates: LatLng
@@ -49,18 +60,23 @@ class MapFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+    }
 
-        initRecyclerView()
-        initSearchView()
+    override fun initListener() {
+        binding.btnMapPopularOdya.setOnClickListener {
+            showMainSearchTopSheet()
+        }
+
+        binding.btnMapCurrentLocate.setOnClickListener {
+            updateMap(coordinates)
+        }
+
+        binding.toggleMapLoogOdya.setOnCheckedChangeListener { _, isChecked ->
+            viewModel.changeOdyaToggleOff(isChecked)
+        }
     }
 
     override fun initCollector() {
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.searchPlaceList.collectLatest {
-                adapter.submitList(it)
-            }
-        }
-
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.detailPlace.collectLatest {
                 val latlng = LatLng(it.latitude!!, it.longitude!!)
@@ -76,36 +92,19 @@ class MapFragment :
             }
         }
 
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.currentLatLng.collectLatest {
                 showMap(it)
             }
         }
-    }
 
-    private fun initSearchView() {
-        binding.svSearch.run {
-            isIconified = false
-            queryHint = getString(R.string.search_a_place)
-            requestFocusFromTouch()
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.odyaList.collectLatest {
+                for (item in it) {
+                    addMarker(item)
+                }
+            }
         }
-
-        binding.svSearch.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String): Boolean {
-                return false
-            }
-
-            override fun onQueryTextChange(newText: String): Boolean {
-                binding.rvPlacePrediction.visibility = View.VISIBLE
-                viewModel.searchPlace(newText)
-                return true
-            }
-        })
-    }
-
-    private fun initRecyclerView() {
-        binding.rvPlacePrediction.adapter = adapter
-        binding.rvPlacePrediction.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
     }
 
     private fun showMap(latLng: LatLng) {
@@ -134,6 +133,7 @@ class MapFragment :
             updateMap(coordinates)
         }
     }
+
     private fun updateMap(latLng: LatLng) {
         marker!!.position = latLng
         map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
@@ -166,6 +166,13 @@ class MapFragment :
         } else {
             sendSnackBar("지도 정보를 받아오지 못했어요")
         }
+
+        map?.setOnCameraIdleListener {
+            viewModel.getOdyaList(
+                map!!.projection.visibleRegion.latLngBounds.northeast,
+                map!!.projection.visibleRegion.latLngBounds.southwest
+            )
+        }
     }
 
     override fun onDestroyView() {
@@ -189,6 +196,78 @@ class MapFragment :
     private fun placeBottomSheetReset(){
         searchPlaceBottomSheetFragment = null
     }
+
+    private fun showMainSearchTopSheet(){
+        if (mainSearchTopSheetFragment == null){
+            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
+                viewModel.getDetailPlace(it)
+            }
+        }
+        if (!mainSearchTopSheetFragment!!.isAdded) {
+            mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
+        }
+    }
+
+
+    private fun addMarker(place: CoordinateUserImageResponseInfo): Marker {
+        val odyaMarkerPin =
+            LayoutInflater.from(requireContext()).inflate(R.layout.item_odya_pin, null, false)
+        val ivOdyaPin = odyaMarkerPin.findViewById<ImageView>(R.id.iv_item_odya_pin)
+        val position = LatLng(place.latitude, place.longitude)
+
+        Glide.with(requireContext())
+            .load(place.imageUrl)
+            .placeholder(R.layout.image_placeholder.toDrawable())
+            .into(ivOdyaPin)
+
+        val markerOption = MarkerOptions()
+        getBitmapFromView(odyaMarkerPin){
+            if (it == null){
+                val drawable = ResourcesCompat.getDrawable(resources, R.drawable.ic_odya_pin, null)
+                val bitmapDrawable = drawable as BitmapDrawable
+                val bitmap = bitmapDrawable.bitmap
+
+                markerOption
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(bitmap))
+            } else {
+                markerOption
+                    .position(position)
+                    .icon(BitmapDescriptorFactory.fromBitmap(it!!))
+            }
+        }
+
+        return map!!.addMarker(markerOption)!!
+    }
+
+    private fun getBitmapFromView(view: View, callback: (Bitmap?) -> Unit) {
+        requireActivity().window?.let{window ->
+            val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+
+            val locationOfViewWindow = IntArray(2)
+            view.getLocationInWindow(locationOfViewWindow)
+
+            try {
+                PixelCopy.request(
+                    window,
+                    Rect(locationOfViewWindow[0],
+                        locationOfViewWindow[1],
+                        locationOfViewWindow[0] + view.width,
+                        locationOfViewWindow[1] + view.height),
+                    bitmap,
+                    { copyResult ->
+                        if (copyResult == PixelCopy.SUCCESS) callback.invoke(bitmap)
+                        else callback.invoke(null)
+                    },
+                    Handler(Looper.getMainLooper())
+                )
+            } catch (e: IllegalAccessException){
+                callback.invoke(null)
+            }
+        }
+    }
+
+
     companion object {
         private val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"

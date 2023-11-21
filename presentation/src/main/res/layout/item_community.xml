@@ -21,7 +21,7 @@
             android:background="@drawable/corners_top_8"
             android:scaleType="centerCrop"
             android:src="@drawable/background"
-            app:image_uri="@{feed.feedImage}"
+            app:image_uri="@{feed.communityMainImageUrl}"
             app:layout_constraintDimensionRatio="1.2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -60,7 +60,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
             app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
             app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
-            tools:text="@{feed.travelLog.travelLogTitle}" />
+            tools:text="@{feed.travelJournalSimpleResponse.title}" />
 
 
         <ImageView
@@ -94,8 +94,9 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_profile"
-            app:image_uri="@{feed.userProfile.url}"
-            app:profile_background="@{feed.userProfile}"
+            app:shapeAppearance="@style/ShapeableImageViewCircle"
+            app:image_uri="@{feed.writer.profile.url}"
+            app:profile_background="@{feed.writer.profile}"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
             app:layout_constraintTop_toTopOf="@+id/view_community_content" />
 
@@ -114,7 +115,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
             app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-            tools:text="@{feed.userNickname}" />
+            tools:text="@{feed.writer.nickname}" />
 
         <ImageView
             android:id="@+id/iv_community_badge"
@@ -149,23 +150,21 @@
             android:textColor="@color/label_assistive"
             android:textSize="12dp"
             android:textStyle="bold"
+            app:text_created_date="@{feed.createdDate}"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-            app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_follow"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-            tools:text="@{feed.date}" />
+            tools:text="" />
 
-        <ToggleButton
-            android:id="@+id/bt_community_follow"
+        <ImageView
+            android:id="@+id/iv_community_follow"
             android:layout_width="54dp"
             android:layout_height="29dp"
             android:layout_marginEnd="20dp"
-            android:background="@drawable/selector_bt_follow"
-            android:textOff=""
-            android:textOn=""
-            android:checked="@{feed.followState}"
+            tools:src="@drawable/bt_following"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
@@ -183,8 +182,8 @@
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
-            app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
-            tools:text="@{feed.content}" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_community_follow"
+            tools:text="@{feed.communityContent}" />
 
 
         <View
@@ -223,21 +222,19 @@
             android:maxLines="1"
             android:textColor="@color/label_assistive"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-            app:layout_constraintEnd_toStartOf="@+id/iv_community_heart"
+            app:layout_constraintEnd_toStartOf="@+id/iv_community_like"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/iv_community_location"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
-            tools:text="@{feed.place}" />
+            tools:text="@{feed.placeId}" />
 
 
-        <ToggleButton
-            android:id="@+id/iv_community_heart"
+        <ImageView
+            android:id="@+id/iv_community_like"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginEnd="4dp"
-            android:background="@drawable/selector_bt_heart"
-            android:textOff=""
-            android:textOn=""
+            tools:src="@drawable/ic_heart_blank"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
             app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
@@ -250,9 +247,10 @@
             android:layout_marginStart="4dp"
             android:layout_marginEnd="12dp"
             android:textColor="@color/label_assistive"
+            app:text_reaction_count="@{feed.communityLikeCount}"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
-            app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
+            app:layout_constraintLeft_toRightOf="@+id/iv_community_like"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
             tools:text="99" />
 
@@ -275,6 +273,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="8dp"
+            app:text_reaction_count="@{feed.communityCommentCount}"
             android:textColor="@color/label_assistive"
             app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
             app:layout_constraintEnd_toEndOf="@+id/view_community_reply"

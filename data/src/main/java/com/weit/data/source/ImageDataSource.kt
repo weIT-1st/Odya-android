@@ -105,6 +105,22 @@ class ImageDataSource @Inject constructor(
             imageName ?: throw ImageNotFoundException()
         }
 
+    suspend fun getRotate(uri: String): Float {
+        var orientation : Float = 0f
+        contentResolver.openInputStream(Uri.parse(uri))?.use { inputStream ->
+            val exif = ExifInterface(inputStream)
+            orientation = when (exif.getAttributeInt(androidx.exifinterface.media.ExifInterface.TAG_ORIENTATION, 0)) {
+                androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                androidx.exifinterface.media.ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                else -> 0f
+            }
+        }
+        return orientation
+    }
+
+
+
     companion object {
         private const val DEFAULT_QUALITY = 90
         private const val DEFAULT_RESIZE = 1024

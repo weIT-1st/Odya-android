@@ -82,5 +82,13 @@
     <fragment
         android:id="@+id/fragment_feed_post"
         android:name="com.weit.presentation.ui.feed.FeedPostFragment"
-        android:label="FeedPostFragment" />
+        android:label="FeedPostFragment" >
+        <argument
+            android:name="feedImages"
+            app:argType="string[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_fragment_feed"
+            app:destination="@id/fragment_feed" />
+    </fragment>
 </navigation>

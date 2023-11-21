@@ -1,105 +1,241 @@
 package com.weit.presentation.ui.feed.detail
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.community.CommunityContent
+import com.weit.domain.model.community.comment.CommentContent
+import com.weit.domain.model.community.comment.CommentDeleteInfo
+import com.weit.domain.model.community.comment.CommentInfo
+import com.weit.domain.model.community.comment.CommentRegistrationInfo
+import com.weit.domain.model.community.comment.CommentUpdateInfo
 import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
-import com.weit.domain.model.follow.FollowFollowingIdInfo
-import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
-import com.weit.domain.usecase.follow.DeleteFollowUseCase
-import com.weit.presentation.model.FeedComment
-import com.weit.presentation.model.FeedDetail
-import com.weit.presentation.model.TravelLogInFeed
-import com.weit.presentation.model.user.UserProfileColorDTO
-import com.weit.presentation.model.user.UserProfileDTO
+import com.weit.domain.model.user.User
+import com.weit.domain.usecase.community.ChangeLikeStateUseCase
+import com.weit.domain.usecase.community.DeleteCommunityUseCase
+import com.weit.domain.usecase.community.GetDetailCommunityUseCase
+import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
+import com.weit.domain.usecase.community.comment.GetCommentsUseCase
+import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
+import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
+import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import java.util.concurrent.CopyOnWriteArrayList
 
-@HiltViewModel
-class FeedDetailViewModel @Inject constructor(
-    private val createFollowCreateUseCase: CreateFollowCreateUseCase,
-    private val deleteFollowUseCase: DeleteFollowUseCase,
+class FeedDetailViewModel @AssistedInject constructor(
+    private val changeFollowStateUseCase: ChangeFollowStateUseCase,
+    private val registerCommentsUseCase: RegisterCommentsUseCase,
+    private val getCommentsUseCase: GetCommentsUseCase,
+    private val deleteCommentsUseCase: DeleteCommentsUseCase,
+    private val updateCommentsUseCase: UpdateCommentsUseCase,
+    private val deleteCommunityUseCase: DeleteCommunityUseCase,
+    private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val changeLikeStateUseCase: ChangeLikeStateUseCase,
+    @Assisted private val feedId: Long,
 ) : ViewModel() {
 
-    private val _feed = MutableStateFlow<FeedDetail?>(null)
-    val feed: StateFlow<FeedDetail?> get() = _feed
+    @AssistedFactory
+    interface FeedDetailFactory {
+        fun create(feedId: Long): FeedDetailViewModel
+    }
+    val user = MutableStateFlow<User?>(null)
 
-    private val _likeNum = MutableStateFlow<Int?>(null)
-    val likeNum: StateFlow<Int?> get() = _likeNum
+    var writedComment = MutableStateFlow("")
 
-    private val _commentNum = MutableStateFlow<Int?>(null)
-    val commentNum: StateFlow<Int?> get() = _commentNum
+    private val _feed = MutableStateFlow<CommunityContent?>(null)
+    val feed: StateFlow<CommunityContent?> get() = _feed
 
-    private val _event = MutableEventFlow<FeedDetailViewModel.Event>()
+    private val _likeNum = MutableStateFlow<Int>(0)
+    val likeNum: StateFlow<Int> get() = _likeNum
+
+    private val _commentNum = MutableStateFlow<Int>(0)
+    val commentNum: StateFlow<Int> get() = _commentNum
+
+    private val _followState = MutableStateFlow<Boolean>(false)
+    val followState: StateFlow<Boolean> get() = _followState
+
+    private val _createdDate = MutableStateFlow<String>("")
+    val creadtedDate: StateFlow<String> get() = _createdDate
+
+    private val _likeState = MutableStateFlow<Boolean>(false)
+    val likeState: StateFlow<Boolean> get() = _likeState
+
+    private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
-    var userId: Long = 0
+    private var userId: Long = -1
+
+    private var commentState = commentRegister
+
+    private var currentPosition : Int = 0
+
+    var commentList =  CopyOnWriteArrayList<CommentContent>()
+
+
+    private var registerAndUpdateJob: Job = Job().apply { complete() }
+
     init {
+        viewModelScope.launch {
+            getUserUseCase().onSuccess {
+                user.value = it
+            }
+        }
         getFeed()
+        getFeedDetailComments(feedId)
     }
 
     private fun getFeed() {
-        // TODO feedId로 상세 정보 가져오기
         viewModelScope.launch {
-            val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-            val travelLog = TravelLogInFeed(1, "ddd", "")
-
-            val comments = listOf<FeedComment>(
-                FeedComment(1, 1, profile, "dd", "wowwow"),
-                FeedComment(1, 1, profile, "dd", "wowwow"),
-                FeedComment(1, 1, profile, "dd", "wowwow"),
-            )
-
-            val feed = FeedDetail(1, 1, profile, "dd", true, "dd", null, "Dd", "dd", 100, 100, "dd", comments)
-            userId = feed.userId
-            val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
-            val defaultComments = comments
-                .slice(0 until commentCount)
-            val remainingCommentsCount = comments.size - defaultComments.size
-            setFeedDetail(feed)
-            _event.emit(Event.OnChangeFeed(feed.travelLog, defaultComments, remainingCommentsCount, comments))
-        }
-    }
-
-    private fun setFeedDetail(feed: FeedDetail) {
-        _feed.value = feed
-        _likeNum.value = feed.likeNum
-        _commentNum.value = feed.commentNum
-    }
-
-    fun registerComment() {
-        viewModelScope.launch {
-            // TODO 댓글 등록 API
-        }
-    }
-
-    fun onFollowStateChange(isChecked: Boolean) {
-        viewModelScope.launch {
-            Logger.t("MainTest").i("feed like $userId")
-            if (isChecked) {
-                val result = createFollowCreateUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.CreateFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            val result = getDetailCommunityUseCase(feedId)
+            if (result.isSuccess) {
+                val feed = result.getOrThrow()
+                userId = feed.writer.userId
+                setFeedDetail(feed)
+                val uris = feed.communityContentImages.map{
+                    it.imageUrl
                 }
+                _event.emit(Event.OnChangeFeed(feed,uris))
             } else {
-                val result = deleteFollowUseCase(FollowFollowingIdInfo(userId))
-                if (result.isSuccess) {
-                    _event.emit(Event.DeleteFollowSuccess)
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                    Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-                }
+                // TODO 에러 처리
+                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    private fun setFeedDetail(feed: CommunityContent) {
+        _feed.value = feed
+        _likeNum.value = feed.communityLikeCount
+        _commentNum.value = feed.communityCommentCount
+    }
+
+
+    private fun getFeedDetailComments(feedId: Long) {
+        viewModelScope.launch {
+            val result = getCommentsUseCase(
+                CommentInfo(feedId)
+            )
+            if (result.isSuccess) {
+                commentList.clear()
+                val comments = result.getOrThrow()
+                commentList.addAll(comments)
+                val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
+                val defaultComments = comments
+                    .slice(0 until commentCount)
+                _event.emit(Event.OnChangeComments(defaultComments))
+            } else {
+                //TODO 에러
+            }
+        }
+    }
+
+    fun registerAndUpdateComment() {
+        registerAndUpdateJob =  viewModelScope.launch {
+           when(commentState){
+               commentRegister ->{
+                   val result = registerCommentsUseCase(
+                       CommentRegistrationInfo(
+                           feedId, writedComment.value
+                       )
+                   )
+                   if (result.isSuccess) {
+                       writedComment.emit("")
+                       getFeedDetailComments(feedId)
+
+                   } else {
+                        //TODO 에러
+                   }
+               }
+               commentUpdate ->{
+                   commentState = commentRegister
+                   val commentId = commentList[currentPosition].communityCommentId
+                   val result = updateCommentsUseCase(
+                           CommentUpdateInfo(
+                               feedId, commentId, writedComment.value
+                           )
+                   )
+                   if (result.isSuccess) {
+                       getFeedDetailComments(feedId)
+                   } else {
+                       //TODO 에러
+                   }
+
+               }
+           }
+        }
+    }
+
+    fun updateComment(position: Int){
+        viewModelScope.launch {
+            writedComment.emit(commentList[position].content)
+        }
+
+        commentState = commentUpdate
+        if (registerAndUpdateJob.isCompleted) {
+            currentPosition = position
+        }
+    }
+
+    fun deleteComment(position : Int) {
+        viewModelScope.launch {
+            val commentId = commentList[position].communityCommentId
+            val result = deleteCommentsUseCase(
+                CommentDeleteInfo(
+                    feedId, commentId
+                )
+            )
+            if (result.isSuccess) {
+                getFeedDetailComments(feedId)
+            } else {
+                //TODO 에러
+            }
+        }
+    }
+
+    fun deleteFeed(){
+        viewModelScope.launch {
+            val result = deleteCommunityUseCase(feedId)
+            if (result.isSuccess) {
+                _event.emit(Event.DeleteCommunitySuccess)
+            } else {
+                // TODO 에러 처리
+            }
+        }
+    }
+
+    fun onFollowStateChange() {
+        viewModelScope.launch {
+            val currentFollowState = _feed.value?.writer?.isFollowing ?: return@launch
+            val result = changeFollowStateUseCase(userId, !currentFollowState)
+            if (result.isSuccess) {
+                getFeed()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
+    fun onLikeStateChange() {
+        viewModelScope.launch {
+            val currentLikeState = _feed.value?.isUserLiked ?: return@launch
+            val result = changeLikeStateUseCase(feedId, !currentLikeState)
+            if (result.isSuccess) {
+                getFeed()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
     }
@@ -116,13 +252,14 @@ class FeedDetailViewModel @Inject constructor(
 
     sealed class Event {
         data class OnChangeFeed(
-            val travelLog: TravelLogInFeed?,
-            val defaultComments: List<FeedComment>,
-            val remainingCommentsCount: Int,
-            val comments: List<FeedComment>,
+            val feed: CommunityContent,
+            val feedImages: List<String>,
         ) : Event()
-        object CreateFollowSuccess : Event()
-        object DeleteFollowSuccess : Event()
+        data class OnChangeComments(
+            val defaultComments: List<CommentContent>,
+        ) : Event()
+        object DeleteCommunitySuccess : Event()
+
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()
         object NotHavePermissionException : Event()
@@ -131,5 +268,16 @@ class FeedDetailViewModel @Inject constructor(
     }
     companion object {
         private const val DEFAULT_COMMENT_COUNT = 2
+        const val commentRegister = "register"
+        const val commentUpdate = "update"
+        fun provideFactory(
+            assistedFactory: FeedDetailViewModel.FeedDetailFactory,
+            feedId: Long,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(feedId) as T
+            }
+        }
+
     }
 }

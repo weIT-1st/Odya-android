@@ -29,7 +29,6 @@
     <string name="login_preview_third_start">오댜 시작하기</string>
     <string name="sign_up">등록하기</string>
 
-
     <string name="text_home">홈</string>
     <string name="text_memory">내추억</string>
     <string name="text_feed">피드</string>
@@ -41,7 +40,7 @@
 
     <!-- myinfo_friend -->
     <string name="myinfo_friend_title">친구 관리</string>
-    <string name="follower">팔로워</string>
+    <string name="follower">팔로우</string>
     <string name="following">팔로잉</string>
     <string name="hint_find_friend">친구를 찾아보세요!</string>
     <string name="sort_new">• 최신순</string>
@@ -87,6 +86,38 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
+
+    <!-- feed -->
+    <string name="feed_detail_topic"># %s</string>
+    <string name="feed_comment_update">수정</string>
+    <string name="feed_share">공유</string>
+    <string name="feed_update">편집</string>
+    <string name="feed_close">닫기</string>
+    <string name="feed_delete">삭제</string>
+    <string name="feed_reports">신고하기</string>
+    <string name="post_feed_title">피드 작성하기</string>
+    <string name="post_feed_travellog_title">여행일지</string>
+    <string name="post_feed_travellog_upload">여행일지 불러오기</string>
+    <string name="post_feed_no_tavellog_write">여행일지 작성하러가기</string>
+    <string name="post_feed_no_tavellog_hint1">작성된 여행일지가 없어요!</string>
+    <string name="post_feed_no_tavellog_hint2">현재 작성 중인 피드 글은 사라집니다.</string>
+    <string name="post_feed_post_compelete">작성 완료</string>
+    <string name="feed_comment_delete">삭제</string>
+    <string name="post_feed_write">게시글 작성하기</string>
+    <string name="post_feed_write_hint">글 작성하기 (최대 200 자)</string>
+    <string name="post_feed_write_hint2">(최대 200 자)</string>
+    <string name="topic_title">토픽</string>
+    <string name="feed_my_activity_title">내 활동</string>
+    <string name="feed_my_activity_hint">%s 님의 모든 활동을\n한곳에서 관리해보세요</string>
+    <string name="feed_sort_all">• 전체 보기</string>
+    <string name="feed_sort_friend">• 친구글만 보기</string>
+
+    <string name="feed_post_content_size">%d</string>
+    <string name="feed_post_image_update">사진편집</string>
+    <string name="feed_date_now">방금전</string>
+    <string name="feed_date_today">오늘</string>
+    <string name="feed_date_days">%d일전</string>
+
     <!-- place bottom sheet   -->
     <string name="place_score">%.1f</string>
     <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
@@ -126,4 +157,5 @@
     <string name="feed_reaction_over_count">%d+</string>
     <string name="feed_detail_comment">%d개의 댓글 더보기</string>
     <string name="feed_comment_hint">댓글을 입력해주세요</string>
+
 </resources>

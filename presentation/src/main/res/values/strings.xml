@@ -136,6 +136,22 @@
 
     <string name="place_community">커뮤니티</string>
 
+
+    <!--  main  -->
+    <string name="place_main_popular_odya">지금 인기있는 오댜는?</string>
+    <string name="place_main_only_my_odya">내 오댜만 보기</string>
+    <string name="place_main_with_friend_odya">친구 오댜도 보기</string>
+
+    <string name="place_main_search">⚡️어디에 가고싶으신가요?</string>
+    <string name="place_main_search_cancel">취소</string>
+    <string name="place_main_search_recent">최근검색</string>
+    <string name="place_main_search_delete">모두삭제</string>
+
+    <string name="place_main_hot_place">🔥 오댜 핫플</string>
+        <!--  api연동 수 string 수정 필요  -->
+    <string name="place_main_hot_place_standard">09.09 10:00 기준</string>
+    <string name="place_main_hot_place_rank">%d위</string>
+
     <!-- feed -->
     <string name="feed_reaction_count">%d</string>
     <string name="feed_reaction_over_count">%d+</string>

@@ -11,6 +11,7 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceReviewBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.searchplace.editreview.EditPlaceReviewFragment
+import com.weit.presentation.ui.searchplace.report.ReviewReportFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,8 +37,11 @@ class PlaceReviewFragment(
         PlaceReviewAdapter(
             { viewModel.onClickCreateReview() },
             { viewModel.deleteMyReview() },
+            { showReviewReport(it)}
         )
     }
+
+    private var reviewReportFragment: ReviewReportFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -113,6 +117,16 @@ class PlaceReviewFragment(
 
     private fun updateReviewList() {
         viewModel.getReviewInfo()
+    }
+
+    private fun showReviewReport(placeReviewId: Long){
+        if (reviewReportFragment == null){
+            reviewReportFragment = ReviewReportFragment(placeReviewId)
+        }
+
+        if (!reviewReportFragment!!.isAdded){
+            reviewReportFragment!!.show(childFragmentManager, "Report Dialog")
+        }
     }
 
     private fun handelEvent(event: PlaceReviewViewModel.Event) {

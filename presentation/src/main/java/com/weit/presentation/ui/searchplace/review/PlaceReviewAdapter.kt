@@ -16,6 +16,7 @@ import java.time.LocalDateTime
 class PlaceReviewAdapter(
     private val updateItem: () -> Unit,
     private val deleteItem: () -> Unit,
+    private val reportItem: (placeReviewId: Long) -> Unit,
 ) : ListAdapter<PlaceReviewInfo, RecyclerView.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -49,33 +50,24 @@ class PlaceReviewAdapter(
     inner class ReviewViewHolder(
         private val binding: ItemPlaceReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.btnItemPlaceMenu.setOnClickListener {
-                showPopUpMenu(friendReviewType, it)
-            }
-        }
-
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
+            showPopUpMenu(friendReviewType, binding.root.rootView, item.placeReviewId)
         }
     }
 
     inner class MyReviewViewHolder(
         private val binding: ItemMyPlaceReviewBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.btnItemPlaceMenu.setOnClickListener {
-                showPopUpMenu(myReviewType, it)
-            }
-        }
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
+            showPopUpMenu(myReviewType, binding.root.rootView, item.placeReviewId)
         }
     }
 
-    private fun showPopUpMenu(type: Int, it: View) {
+    private fun showPopUpMenu(type: Int, it: View, placeReviewId: Long) {
         PopupMenu(it.context, it).apply {
             when (type) {
                 friendReviewType -> menuInflater.inflate(R.menu.friend_place_review, this.menu)
@@ -91,6 +83,7 @@ class PlaceReviewAdapter(
                         deleteItem()
                     }
                     R.id.item_report_review -> {
+                        reportItem(placeReviewId)
                     }
                 }
                 false

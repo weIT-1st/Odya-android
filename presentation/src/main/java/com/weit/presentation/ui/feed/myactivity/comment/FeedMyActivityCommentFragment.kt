@@ -54,6 +54,7 @@ class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBindi
 
     override fun onDestroyView() {
         binding.rvTabFeedComment.removeOnScrollListener(infinityScrollListener)
+        binding.rvTabFeedComment.adapter = null
         super.onDestroyView()
     }
 }

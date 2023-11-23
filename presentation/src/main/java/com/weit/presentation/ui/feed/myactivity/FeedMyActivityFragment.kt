@@ -88,11 +88,11 @@ class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
                 tabLike -> tab.text = getString(R.string.feed_my_activity_like)
             }
         }.attach()
-        setTabItemMargin(tabLayout,20)
+        setTabItemMargin(tabLayout,resources.getDimension(R.dimen.feed_my_activity_tab_margin).toInt())
 
     }
 
-    private fun setTabItemMargin(tabLayout: TabLayout, marginEnd: Int = 20) {
+    private fun setTabItemMargin(tabLayout: TabLayout, marginEnd: Int) {
         for (i in 0 until 3) {
             val tabs = tabLayout.getChildAt(0) as ViewGroup
             for (i in 0 until tabs.childCount) {

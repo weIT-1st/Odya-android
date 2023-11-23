@@ -45,33 +45,19 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
 
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            viewModel.selectVisibility(Visibility.fromPosition(tab.position))
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
-        initVisibilityTab()
-
-    }
-
-    private fun initVisibilityTab(){
-        binding.tlFeedPostVisibility.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> {
-                        viewModel.selectVisibility(Visibility.PUBLIC)
-                    }
-                    1 -> {
-                        viewModel.selectVisibility(Visibility.FRIEND_ONLY)
-                    }
-                    else -> {
-                        viewModel.selectVisibility(Visibility.PRIVATE)
-                    }
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
     }
 
 
@@ -147,5 +133,10 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
             }
             else -> {}
         }
+    }
+
+    override fun onDestroyView() {
+        binding.tlFeedPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
+        super.onDestroyView()
     }
 }

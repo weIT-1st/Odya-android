@@ -75,6 +75,7 @@ class SearchPlaceBottomSheetFragment(
         tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
         tabItem.add(tabCommunity, PlaceCommunityFragment())
 
+
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriendNum.collectLatest {
                 binding.tvBsPlaceExperiencedFriend.text = String.format(

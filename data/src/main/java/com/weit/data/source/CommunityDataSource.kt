@@ -51,5 +51,12 @@ class CommunityDataSource @Inject constructor(
 
     suspend fun getMyCommentCommunities(size: Int?, communityId: Long?) : ListResponse<CommunityMyActivityCommentContentDTO> {
         return service.getMyCommentCommunities(size,communityId)
+    
+      suspend fun registerCommunityLike(communityId: Long): Response<Unit> {
+        return service.registerCommunityLike(communityId)
+    }
+
+    suspend fun deleteCommunityLike(communityId: Long): Response<Unit> {
+        return service.deleteCommunityLike(communityId)
     }
 }

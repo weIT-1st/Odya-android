@@ -17,5 +17,5 @@ interface CommunityContent {
     val communityCommentCount: Int
     val communityLikeCount: Int
     val isUserLiked: Boolean
-    val createdDate: String
+    val createdDate: LocalDateTime
 }

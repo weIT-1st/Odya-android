@@ -38,8 +38,8 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _feed = MutableStateFlow<CommunityContent?>(null)
     val feed: StateFlow<CommunityContent?> get() = _feed
 
-    private val _imageList = MutableStateFlow<List<String>?>(emptyList())
-    val imageList : StateFlow<List<String>?> get() = _imageList
+    private val _imageList = MutableStateFlow<List<String>>(emptyList())
+    val imageList : StateFlow<List<String>> get() = _imageList
 
 
     private var selectedTopicId :Long? = null

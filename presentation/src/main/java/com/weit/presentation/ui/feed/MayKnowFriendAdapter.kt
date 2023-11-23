@@ -31,11 +31,14 @@ class MayKnowFriendAdapter(private val onFollowChanged: (Int, Long, Boolean) -> 
         private val binding: ItemMayknowFriendSummaryBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
+        init{
+            binding.btnMayknowFriendSummaryFollow.setOnClickListener {
+                val item = getItem(absoluteAdapterPosition)
+                onFollowChanged(absoluteAdapterPosition, item.userId, false)
+            }
+        }
         fun bind(mayKnowFriend: FollowUserContent) {
             binding.friend = mayKnowFriend
-            binding.btnMayknowFriendSummaryFollow.setOnClickListener {
-                onFollowChanged(absoluteAdapterPosition, mayKnowFriend.userId, false)
-            }
         }
     }
 

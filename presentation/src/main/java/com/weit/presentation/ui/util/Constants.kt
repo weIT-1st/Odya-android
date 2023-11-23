@@ -6,4 +6,6 @@ object Constants {
     const val feedAll = "feedAll"
     const val feedFriend = "feedFriend"
     const val feedTopic = "feedTopic"
+    const val TOPIC_CORNER_RADIUS = 100f
+
 }

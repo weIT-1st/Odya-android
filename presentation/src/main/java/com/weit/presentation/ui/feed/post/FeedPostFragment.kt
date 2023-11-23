@@ -31,7 +31,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     private val args: FeedPostFragmentArgs by navArgs()
     private val feedImageAdapter = FeedImageAdapter()
     private val feedPostTopicAdapter = FeedPostTopicAdapter(
-        selectTopic = { topicId ->
+        selectTopic = { topicId->
             viewModel.selectTopic(topicId) }
     )
 
@@ -53,18 +53,29 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
+    
+    private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
+        FlexboxLayoutManager(requireContext()).apply {
+            flexWrap = FlexWrap.WRAP
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.STRETCH
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
         binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
+        initTopics()
+
     }
 
 
     override fun initListener() {
         super.initListener()
         binding.tbFeedPost.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.menu_iamge_update) {
+            if (item.itemId == R.id.menu_image_update) {
                 viewModel.onUpdatePictures(pickImageUseCase)
             }
             true
@@ -74,15 +85,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
     }
 
-    private fun initTopics(topics: List<FeedTopic>?){
-        val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
-            flexWrap = FlexWrap.WRAP
-            flexDirection = FlexDirection.ROW
-            alignItems = AlignItems.STRETCH
-        }
-
-        feedPostTopicAdapter.submitList(topics)
-
+    private fun initTopics(){
         binding.rvTopic.run{
             layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter
@@ -129,7 +132,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 findNavController().navigate(action)
             }
             is FeedPostViewModel.Event.OnChangeTopics -> {
-                initTopics(event.topics)
+                feedPostTopicAdapter.submitList(event.topics)
             }
             else -> {}
         }
@@ -137,6 +140,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
 
     override fun onDestroyView() {
         binding.tlFeedPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
+        binding.rvTopic.adapter = null
         super.onDestroyView()
     }
 }

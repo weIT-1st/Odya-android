@@ -11,7 +11,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/corners_all_12"
-        android:clipToOutline="true"
+        android:backgroundTint="@color/background_normal"
+        android:clipToOutline="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -134,6 +135,16 @@
                 android:drawableStart="@drawable/selector_check_report_reason"/>
 
             <RadioButton
+                android:id="@+id/radio_btn_review_report_copyright_violation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/review_report_copyright_violation"
+                android:textAppearance="@style/body1"
+                android:textColor="@color/label_normal"
+                android:button="@android:color/transparent"
+                android:drawableStart="@drawable/selector_check_report_reason"/>
+
+            <RadioButton
                 android:id="@+id/radio_btn_review_report_info_leak"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -159,6 +170,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@={vm.otherReason}"
+            android:maxLength="20"
             android:hint="@string/review_report_input_other"
             android:textAppearance="@style/body2"
             android:textColor="@color/label_normal"

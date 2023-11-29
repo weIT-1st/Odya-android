@@ -1,21 +1,29 @@
 package com.weit.presentation.ui.searchplace.journey
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class PlaceJourneyFragment(
-
+    private val placeId: String
 ) : BaseFragment<FragmentTabPlaceJourneyBinding> (
     FragmentTabPlaceJourneyBinding::inflate,
 ) {
-    private val viewModel: PlaceJourneyViewModel by viewModels()
+    @Inject
+    lateinit var viewModelFactory: PlaceJourneyViewModel.PlaceIdFactory
+
+    private val viewModel: PlaceJourneyViewModel by viewModels{
+        PlaceJourneyViewModel.provideFactory(viewModelFactory, placeId)
+    }
 
     private val myJournalAdapter: MyJournalAdapter by lazy { MyJournalAdapter() }
     private val friendJournalAdapter: FriendJournalAdapter by lazy { FriendJournalAdapter() }
@@ -29,14 +37,12 @@ class PlaceJourneyFragment(
         setRecommendJournalRecyclerView()
     }
 
-    override fun initListener() {
-        super.initListener()
-    }
 
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             viewModel.myJournalList.collectLatest { myJournals ->
                 myJournalAdapter.submitList(myJournals)
+                binding.tvTabPlaceMyJourneyContent.text = myJournals.first().content
             }
         }
 
@@ -61,6 +67,20 @@ class PlaceJourneyFragment(
     }
 
     private fun setMyJournalRecyclerView(){
+        binding.rvTabPlaceMyJourney.addItemDecoration(object : RecyclerView.ItemDecoration(){
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                val position = parent.getChildAdapterPosition(view)
+
+                if (position != 0){
+                    outRect.left = DimensionUtils.dpToPx(requireContext(), 10).toInt() * -1
+                }
+            }
+        })
         binding.rvTabPlaceMyJourney.adapter = myJournalAdapter
     }
 

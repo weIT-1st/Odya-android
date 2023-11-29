@@ -27,7 +27,8 @@ interface TravelJournalService {
     @GET("/api/v1/travel-journals/me")
     suspend fun getMyTravelJournalList(
         @Query("size") size: Int? = 10,
-        @Query("lastId") lastTravelJournalId: Long?
+        @Query("lastId") lastTravelJournalId: Long?,
+        @Query("placeId") placeId: String?
     ): ListResponse<TravelJournalListDTO>
 
     @GET("/api/v1/travel-journals/friends")

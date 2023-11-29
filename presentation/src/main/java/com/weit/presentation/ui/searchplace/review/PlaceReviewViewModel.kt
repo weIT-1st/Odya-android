@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.searchplace.review
 
 import android.content.res.Resources.NotFoundException
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -114,15 +115,10 @@ class PlaceReviewViewModel @AssistedInject constructor(
                     val list = placeReviewList.value.filterNot { it.isMine }
                     _placeReviewList.emit(list.toList())
                 } else {
+                    Log.d("jomi", "delete fail : ${result.exceptionOrNull()}")
                     handleError(result.exceptionOrNull() ?: UnknownError())
                 }
             }
-        }
-    }
-
-    fun reportReview(){
-        viewModelScope.launch {
-
         }
     }
 

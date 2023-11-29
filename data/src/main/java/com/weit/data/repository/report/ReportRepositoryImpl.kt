@@ -61,9 +61,10 @@ class ReportRepositoryImpl @Inject constructor(
             ReportReason.PORNOGRAPHY -> "PORNOGRAPHY"
             ReportReason.SWEAR_WORD -> "SWEAR_WORD"
             ReportReason.OVER_POST -> "OVER_POST"
+            ReportReason.COPYRIGHT_VIOLATION -> "COPYRIGHT_VIOLATION"
             ReportReason.INFO_LEAK -> "INFO_LEAK"
             ReportReason.OTHER -> "OTHER"
-         }
+        }
 
     private fun handleReportError(t: Throwable): Throwable =
         if (t is HttpException){

@@ -37,7 +37,7 @@ class PlaceReviewFragment(
         PlaceReviewAdapter(
             { viewModel.onClickCreateReview() },
             { viewModel.deleteMyReview() },
-            { showReviewReport(it)}
+            { id, writer -> showReviewReport(id, writer)}
         )
     }
 
@@ -119,9 +119,9 @@ class PlaceReviewFragment(
         viewModel.getReviewInfo()
     }
 
-    private fun showReviewReport(placeReviewId: Long){
+    private fun showReviewReport(placeReviewId: Long, writer: String){
         if (reviewReportFragment == null){
-            reviewReportFragment = ReviewReportFragment(placeReviewId)
+            reviewReportFragment = ReviewReportFragment(placeReviewId, writer)
         }
 
         if (!reviewReportFragment!!.isAdded){

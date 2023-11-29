@@ -71,7 +71,7 @@ class SearchPlaceBottomSheetFragment(
         initExperiencedFriendRV()
         initTabViewPager()
 
-        tabItem.add(tabJourney, PlaceJourneyFragment())
+        tabItem.add(tabJourney, PlaceJourneyFragment(placeId))
         tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
         tabItem.add(tabCommunity, PlaceCommunityFragment())
 
@@ -132,7 +132,7 @@ class SearchPlaceBottomSheetFragment(
         val viewPager = binding.viewPagerBsPlace
         val tabLayout = binding.tlBsPlace
 
-        tabItem.add(tabJourney, PlaceJourneyFragment())
+        tabItem.add(tabJourney, PlaceJourneyFragment(placeId))
         tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
         tabItem.add(tabCommunity, PlaceCommunityFragment())
 

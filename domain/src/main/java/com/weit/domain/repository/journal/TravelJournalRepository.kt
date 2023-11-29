@@ -18,7 +18,8 @@ interface TravelJournalRepository {
 
     suspend fun getMyTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>>
 
     suspend fun getFriendTravelJournalList(

@@ -66,11 +66,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
 
     override suspend fun getMyTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextMyJournal,
-            runCatching { dataSource.getMyTravelJournalList(size, lastTravelJournal) }
+            runCatching { dataSource.getMyTravelJournalList(size, lastTravelJournal, placeId) }
         )
 
     override suspend fun getFriendTravelJournalList(

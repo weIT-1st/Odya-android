@@ -1,7 +1,8 @@
 package com.weit.data.repository.place
 
 import android.content.res.Resources.NotFoundException
-import com.weit.data.model.place.PlaceReviewDTO
+import com.weit.data.model.ListResponse
+import com.weit.data.model.place.PlaceReviewContentDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.source.PlaceReviewDateSource
@@ -40,7 +41,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
     private val hasNextReviewByUserID = AtomicBoolean(true)
 
     override suspend fun register(info: PlaceReviewRegistrationInfo): Result<Unit> {
-        val response = dataSource.register(info.toPlaceReviewRegistraion())
+        val response = dataSource.register(info.toPlaceReviewRegistration())
         return if (response.isSuccessful) {
             Result.success(Unit)
         } else {
@@ -67,42 +68,18 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): Result<PlaceReviewBySearching> {
-        if (info.lastPlaceReviewId == null) {
-            hasNextReviewByPlaceID.set(true)
-        }
-
-        val result = kotlin.runCatching { dataSource.getByPlaceId(info) }
-
-        if (hasNextReviewByPlaceID.get().not()) {
-            return Result.failure(NoMoreItemException())
-        }
-
-        return if (result.isSuccess) {
-            val placeReview = result.getOrThrow()
-            hasNextReviewByPlaceID.set(placeReview.hasNext)
-            Result.success(placeReview.toPlaceReviewBySearching())
-        } else {
-            Result.failure(handleReviewError(result.exception()))
-        }
+    override suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): Result<List<PlaceReviewContent>> {
+        return getInfinitePlaceReviewList(
+            hasNextReviewByPlaceID,
+            result = kotlin.runCatching { dataSource.getByPlaceId(info) }
+        )
     }
 
-    override suspend fun getByUserId(info: PlaceReviewByUserIdQuery): Result<PlaceReviewBySearching> {
-        if (info.lastPlaceReviewId == null) {
-            hasNextReviewByUserID.set(true)
-        }
-
-        if (hasNextReviewByUserID.get().not()) {
-            return Result.failure(NoMoreItemException())
-        }
-        val result = runCatching { dataSource.getByUserId(info) }
-        return if (result.isSuccess) {
-            val placeReview = result.getOrThrow()
-            hasNextReviewByPlaceID.set(placeReview.hasNext)
-            Result.success(placeReview.toPlaceReviewBySearching())
-        } else {
-            Result.failure(handleReviewError(result.exception()))
-        }
+    override suspend fun getByUserId(info: PlaceReviewByUserIdQuery): Result<List<PlaceReviewContent>> {
+        return getInfinitePlaceReviewList(
+            hasNextReviewByUserID,
+            result = kotlin.runCatching { dataSource.getByUserId(info) }
+        )
     }
 
     override suspend fun isExistReview(placeId: String): Result<Boolean> {
@@ -131,10 +108,11 @@ class PlaceReviewRepositoryImpl @Inject constructor(
 
     override suspend fun getAverageRating(placeId: String): Result<Float> {
         val result = runCatching {
-            dataSource.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId))
+            dataSource.getAverageRating(placeId)
         }
         return if (result.isSuccess) {
-            Result.success(result.getOrThrow().averageRating)
+            val averageRating = result.getOrThrow().averageRating
+            Result.success(averageRating)
         } else {
             Result.failure(handleReviewError(result.exception()))
         }
@@ -163,7 +141,7 @@ class PlaceReviewRepositoryImpl @Inject constructor(
         return handleCode(response.code())
     }
 
-    private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistraion(): PlaceReviewRegistration =
+    private fun PlaceReviewRegistrationInfo.toPlaceReviewRegistration(): PlaceReviewRegistration =
         PlaceReviewRegistration(
             placeId = placeId,
             rating = rating,
@@ -177,23 +155,33 @@ class PlaceReviewRepositoryImpl @Inject constructor(
             review = review,
         )
 
-    private fun PlaceReviewDTO.toPlaceReviewBySearching(): PlaceReviewBySearching =
-        PlaceReviewBySearching(
-            hasNext = hasNext,
-            averageRating = averageRating,
-            content = reviews.map {
+    private fun getInfinitePlaceReviewList(
+        hasNext: AtomicBoolean,
+        result: Result<ListResponse<PlaceReviewContentDTO>>
+    ): Result<List<PlaceReviewContent>> {
+        if (hasNext.get().not()){
+            return Result.failure(NoMoreItemException())
+        }
+
+        return if (result.isSuccess){
+            val listReview = result.getOrThrow()
+            hasNext.set(listReview.hasNext)
+            Result.success(listReview.content.map {
                 PlaceReviewContent(
                     it.placeReviewId,
                     it.placeId,
                     UserInfo(
                         it.userInfo.userId,
                         it.userInfo.nickname,
-                        it.userInfo.profile,
+                        it.userInfo.profile
                     ),
                     it.starRating,
                     it.review,
-                    LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME),
+                    LocalDateTime.parse(it.createdAt, DateTimeFormatter.ISO_DATE_TIME)
                 )
-            },
-        )
+            })
+        } else {
+            Result.failure(handleReviewError(result.exception()))
+        }
+    }
 }

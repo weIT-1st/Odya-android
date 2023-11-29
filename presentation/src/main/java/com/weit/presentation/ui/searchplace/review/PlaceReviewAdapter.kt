@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.searchplace.review
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +17,7 @@ import java.time.LocalDateTime
 class PlaceReviewAdapter(
     private val updateItem: () -> Unit,
     private val deleteItem: () -> Unit,
-    private val reportItem: (placeReviewId: Long) -> Unit,
+    private val reportItem: (placeReviewId: Long, writer: String) -> Unit,
 ) : ListAdapter<PlaceReviewInfo, RecyclerView.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -53,7 +54,9 @@ class PlaceReviewAdapter(
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
-            showPopUpMenu(friendReviewType, binding.root.rootView, item.placeReviewId)
+            binding.btnItemPlaceMenu.setOnClickListener {
+                showPopUpMenu(friendReviewType, binding.btnItemPlaceMenu, item.placeReviewId,item.writerNickname)
+            }
         }
     }
 
@@ -63,11 +66,13 @@ class PlaceReviewAdapter(
         fun bind(item: PlaceReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
-            showPopUpMenu(myReviewType, binding.root.rootView, item.placeReviewId)
+            binding.btnItemPlaceMenu.setOnClickListener {
+                showPopUpMenu(myReviewType, binding.btnItemPlaceMenu, item.placeReviewId, item.writerNickname)
+            }
         }
     }
 
-    private fun showPopUpMenu(type: Int, it: View, placeReviewId: Long) {
+    private fun showPopUpMenu(type: Int, it: View, placeReviewId: Long, writer: String) {
         PopupMenu(it.context, it).apply {
             when (type) {
                 friendReviewType -> menuInflater.inflate(R.menu.friend_place_review, this.menu)
@@ -83,7 +88,7 @@ class PlaceReviewAdapter(
                         deleteItem()
                     }
                     R.id.item_report_review -> {
-                        reportItem(placeReviewId)
+                        reportItem(placeReviewId, writer)
                     }
                 }
                 false

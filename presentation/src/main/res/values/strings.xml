@@ -154,6 +154,7 @@
     <string name="review_report_pornography">음란성이 포함된 글</string>
     <string name="review_report_swear_word">욕설/생명경시/혐오/차별적인 글</string>
     <string name="review_report_over_post">게시글 도배</string>
+    <string name="review_report_copyright_violation">저작권 위배</string>
     <string name="review_report_info_leak">개인정보 노출 및 불법 정보</string>
     <string name="review_report_other">기타</string>
     <string name="review_report_input_other">기타 사유를 입력해주세요(20자 이내)</string>

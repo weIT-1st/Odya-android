@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.weit.domain.model.user.UserProfile
+import com.weit.domain.model.user.search.UserProfileInfo
 import com.weit.presentation.R
 import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
@@ -24,6 +25,11 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
     }
 }
 
+@BindingAdapter("search_profile_background")
+fun bindSearchProfileBackground(view: ImageView, profile: UserProfileInfo) {
+    view.setBackgroundColor(Color.rgb(profile.color.red, profile.color.green, profile.color.blue))
+}
+
 @BindingAdapter("text_reaction_count")
 fun bindReactionCount(textView: TextView, count: Int?) {
     count?.let { count ->
@@ -37,17 +43,4 @@ fun bindReactionCount(textView: TextView, count: Int?) {
                 count.toString()
             }
     }
-
-    textView.text =
-        if (count as Int > DEFAULT_REACTION_COUNT) {
-            textView.resources.getString(
-                R.string.feed_reaction_over_count,
-                DEFAULT_REACTION_COUNT,
-            )
-        } else {
-            textView.resources.getString(
-                R.string.feed_reaction_count,
-                count,
-            )
-        }
 }

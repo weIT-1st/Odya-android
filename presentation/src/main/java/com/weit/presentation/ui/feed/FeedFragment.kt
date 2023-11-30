@@ -55,10 +55,14 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.btnFeedSortAll.setOnClickListener {
             viewModel.selectFeedAll()
         }
-        binding.tvFeedUser.setOnClickListener {
+        binding.ivFeedUser.setOnClickListener {
             val action = FeedFragmentDirections.actionFragmentFeedToFeedMyActivityFragment()
              findNavController().navigate(action)
 
+        }
+        binding.ivFeedSearch.setOnClickListener {
+            val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedSearch()
+            findNavController().navigate(action)
         }
 
     }

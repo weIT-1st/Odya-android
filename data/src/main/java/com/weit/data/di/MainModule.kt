@@ -68,16 +68,6 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideImageRepository(dataSource: ImageDataSource): ImageRepository =
-        ImageRepositoryImpl(dataSource)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
-        ImageDataSource(context.contentResolver)
-
-    @ActivityRetainedScoped
-    @Provides
     fun providePlaceReviewService(@AuthNetworkObject retrofit: Retrofit): PlaceReviewService =
         retrofit.create(PlaceReviewService::class.java)
 
@@ -106,27 +96,6 @@ class MainModule {
     fun provideFavoritePlaceRepository(dataSource: FavoritePlaceDateSource): FavoritePlaceRepository =
         FavoritePlaceRepositoryImpl(dataSource)
 
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
-        retrofit.create(UserService::class.java)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserDataSource(
-        @ApplicationContext context: Context,
-        userService: UserService,
-    ): UserDataSource = UserDataSource(context, userService)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserRepository(
-        userDataSource: UserDataSource,
-        imageDataSource: ImageDataSource,
-        imageRepositoryImpl: ImageRepositoryImpl,
-        userInfoDataSource: UserInfoDataSource,
-    ): UserRepository =
-        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
 
     @ActivityRetainedScoped
     @Provides
@@ -198,4 +167,34 @@ class MainModule {
     ): CommunityRepository =
         CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource,moshi)
 
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserDataSource(
+        @ApplicationContext context: Context,
+        userService: UserService,
+    ): UserDataSource = UserDataSource(context, userService)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserRepository(
+        userDataSource: UserDataSource,
+        imageDataSource: ImageDataSource,
+        imageRepositoryImpl: ImageRepositoryImpl,
+        userInfoDataSource: UserInfoDataSource,
+    ): UserRepository =
+        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideImageRepository(dataSource: ImageDataSource): ImageRepository =
+        ImageRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
+        ImageDataSource(context.contentResolver)
 }

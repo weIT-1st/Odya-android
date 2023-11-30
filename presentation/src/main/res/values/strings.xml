@@ -119,6 +119,9 @@
     <string name="feed_my_activity_post">게시물</string>
     <string name="feed_my_activity_comment">댓글</string>
     <string name="feed_my_activity_like">좋아요</string>
+    <string name="feed_search_hint">친구를 찾아보세요!</string>
+    <string name="feed_search_title">최근 검색</string>
+
 
 
     <!--접근권한 관련 -->
@@ -165,5 +168,13 @@
     <string name="place_main_hot_place_standard">09.09 10:00 기준</string>
     <string name="place_main_hot_place_rank">%d위</string>
 
+
+    <!-- profile -->
+    <string name="profile_my_lifeshot">내 인생 샷</string>
+    <string name="profile_rep_travel_journal">대표 여행일지</string>
+    <string name="profile_bookmark_travel_jouranl">즐겨찾기 여행일지</string>
+    <string name="profile_favorite_place">관심장소</string>
+    <string name="profile_my_community">내 커뮤니티 활동</string>
+    <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
 
 </resources>

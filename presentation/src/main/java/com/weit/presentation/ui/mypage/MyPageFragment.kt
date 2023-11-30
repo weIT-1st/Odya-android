@@ -3,13 +3,13 @@ package com.weit.presentation.ui.mypage
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import com.weit.presentation.databinding.FragmentMyPageBinding
+import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MyPageFragment : BaseFragment<FragmentMyPageBinding>(
-    FragmentMyPageBinding::inflate,
+class MyPageFragment : BaseFragment<FragmentMyProfileBinding>(
+    FragmentMyProfileBinding::inflate,
 ) {
 
     private val viewModel: MyPageViewModel by viewModels()

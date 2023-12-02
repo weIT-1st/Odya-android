@@ -109,6 +109,26 @@ class FollowRepositoryImpl @Inject constructor(
         return followDataSource.getCachedFollowings().filterByNickname(query)
     }
 
+    override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
+        if(mayknowUserSearchInfo.lastId == null){
+            hasNextUser.set(true)
+        }
+
+        if (hasNextUser.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getMayknowUsers(mayknowUserSearchInfo)
+        }
+        return if (result.isSuccess) {
+            val mayKnowUser = result.getOrThrow()
+            hasNextUser.set(mayKnowUser.hasNext)
+            Result.success(mayKnowUser.content)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
     override suspend fun getExperiencedFriend(placeId: String): Result<ExperiencedFriendInfo> {
         val result = runCatching {
             followDataSource.getExperiencedFriend(placeId)

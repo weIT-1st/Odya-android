@@ -45,7 +45,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private val feedImageAdapter = FeedImageAdapter()
 
     private fun changeComment(position:Int){
-        binding.etFeedComment.setText(viewModel.commentList[position].content)
         viewModel.updateComment(position)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -72,17 +71,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
 
     private fun showCommentBottomSheet() {
-        if(commentDialog==null){
-            commentDialog = CommentDialogFragment(args.feedId)
-
-        }
-            binding.btnFeedCommentMore.setOnClickListener {
-                if(commentDialog?.isAdded?.not() == true){
-                    commentDialog?.show(
-                    requireActivity().supportFragmentManager,
-                    CommentDialogFragment.TAG,
-                )
-            }
+        if(bottomSheetDialog==null){
+            bottomSheetDialog = CommentDialogFragment(args.feedId)
         }
     }
 
@@ -96,11 +86,20 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.tbFeedDetail.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        binding.btCommunityFollow.setOnClickListener {
-            viewModel.onFollowStateChange(binding.btCommunityFollow.isChecked)
-        }
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerAndUpdateComment()
+        }
+
+        binding.tbFeedDetail.setOnClickListener {
+            viewModel.deleteFeed()
+        }
+        binding.btnFeedCommentMore.setOnClickListener {
+            if (bottomSheetDialog?.isAdded?.not() == true) {
+                bottomSheetDialog?.show(
+                    requireActivity().supportFragmentManager,
+                    CommentDialogFragment.TAG,
+                )
+            }
         }
     }
 
@@ -164,29 +163,23 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     private fun handleEvent(event: FeedDetailViewModel.Event) {
         when (event) {
             is FeedDetailViewModel.Event.OnChangeFeed -> {
-                val uris = event.feed.communityContentImages.map{
-                    it.imageUrl
-                }
-                feedImageAdapter.submitList(uris)
-                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
+                val followImage = if(event.feed.writer.isFollowing) R.drawable.bt_following else R.drawable.bt_follow
+                binding.ivCommunityFollow.setImageResource(followImage)
 
+                val imageResource = if(event.feed.isUserLiked) R.drawable.ic_heart else R.drawable.ic_heart_blank
+                binding.ivCommunityLike.setImageResource(imageResource)
+
+                feedImageAdapter.submitList(event.feedImages)
+                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
+                binding.btnFeedCommentMore.text =
+                    getString(R.string.feed_detail_comment, event.feed.communityCommentCount)
                 setTravelLog(event.feed.travelJournal)
             }
             is FeedDetailViewModel.Event.OnChangeComments -> {
                 feedCommentAdapter.submitList(event.defaultComments)
-
-                if(event.remainingCommentsCount == 0){
-                    binding.btnFeedCommentMore.visibility = View.GONE
-                }else{
-                    binding.btnFeedCommentMore.visibility = View.VISIBLE
-                    binding.btnFeedCommentMore.text =
-                        getString(R.string.feed_detail_comment, event.remainingCommentsCount)
-                }
                 showCommentBottomSheet()
             }
-            is FeedDetailViewModel.Event.OnChangeFollowState -> {
-                binding.btCommunityFollow.isChecked = event.followState
-            }
+
             is FeedDetailViewModel.Event.DeleteCommunitySuccess -> {
                 findNavController().popBackStack()
             }
@@ -216,8 +209,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
 
     override fun onDestroyView() {
+        binding.rvFeedComment.adapter = null
         super.onDestroyView()
 //        commentDialog?.dismiss()
 //        commentDialog = null
+
     }
 }

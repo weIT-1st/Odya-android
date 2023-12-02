@@ -73,6 +73,7 @@ interface CommunityService {
         @Path("communityId") communityId: Long,
     ): Response<Unit>
 
+
     @GET("/api/v1/communities/like")
     suspend fun getMyLikeCommunities(
         @Query("size") size: Int?,
@@ -85,4 +86,15 @@ interface CommunityService {
         @Query("size") size: Int?,
         @Query("lastId") lastCommunityId: Long?,
     ): ListResponse<CommunityMyActivityCommentContentDTO>
+
+    @POST("/api/v1/communities/{communityId}/likes")
+    suspend fun registerCommunityLike(
+        @Path("communityId") communityId: Long,
+    ): Response<Unit>
+
+    @DELETE("/api/v1/communities/{communityId}/likes")
+    suspend fun deleteCommunityLike(
+        @Path("communityId") communityId: Long,
+    ): Response<Unit>
+
 }

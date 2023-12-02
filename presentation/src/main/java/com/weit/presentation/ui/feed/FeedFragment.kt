@@ -47,7 +47,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
 
     override fun initListener() {
         binding.btnFeedWrite.setOnClickListener {
-            viewModel.onSelectPictures(pickImageUseCase)
+            viewModel.selectPictures(pickImageUseCase)
         }
         binding.btnFeedSortFriend.setOnClickListener {
             viewModel.selectFeedFriend()

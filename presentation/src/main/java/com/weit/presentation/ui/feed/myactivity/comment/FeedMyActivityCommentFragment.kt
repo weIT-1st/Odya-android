@@ -34,7 +34,7 @@ class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBindi
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
-                viewModel.onNextImages()
+                viewModel.onNextComments()
             }
         }
     }

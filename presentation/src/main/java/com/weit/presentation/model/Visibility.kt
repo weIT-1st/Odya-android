@@ -7,7 +7,10 @@ enum class Visibility(val position: Int) {
 
     companion object {
         fun fromPosition(position: Int): Visibility {
-            return values().firstOrNull { it.position == position } ?: PUBLIC
+            return values().first { it.position == position }
+        }
+        fun getPosition(visibility: Visibility): Int {
+            return visibility.position
         }
     }
 }

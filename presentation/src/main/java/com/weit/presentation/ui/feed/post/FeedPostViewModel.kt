@@ -76,10 +76,9 @@ class FeedPostViewModel @AssistedInject constructor(
                 val uris = feed.communityContentImages.map{
                     it.imageUrl
                 }
-//                originalImageIds = feed.communityContentImages.map{ it.communityContentImageId }
                 _imageList.emit(uris)
-                content.value = feed.content  //content
-                feed.topic?.topicId?.let { updateTopicUI(it) } //토픽
+                content.value = feed.content
+                feed.topic?.topicId?.let { updateTopicUI(it) }
                 _feed.emit(feed)
             } else {
                 // TODO 에러 처리
@@ -109,11 +108,7 @@ class FeedPostViewModel @AssistedInject constructor(
     fun updateTopicUI(topicId: Long) {
         viewModelScope.launch {
             val newTopics = topicList.map { feedTopic ->
-                if (feedTopic.topicId == topicId) {
-                    feedTopic.copy(isChecked = true)
-                } else {
-                    feedTopic.copy(isChecked = false)
-                }
+                feedTopic.copy(isChecked = feedTopic.topicId == topicId)
             }
             topicList.clear()
             topicList.addAll(newTopics)

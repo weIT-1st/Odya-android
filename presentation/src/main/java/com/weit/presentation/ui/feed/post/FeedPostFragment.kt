@@ -103,17 +103,9 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.feed.collectLatest { feed ->
-                //여행일지 제목 변경
                 binding.tvFeedPostTitle.text = feed?.travelJournal?.title
-                //장소id변경
-                //토픽 변경
-
-                //공개여부 변경
-                when (feed?.visibility) {
-                    Visibility.PUBLIC.name -> binding.tlFeedPostVisibility.getTabAt(0)?.select()
-                    Visibility.FRIEND_ONLY.name -> binding.tlFeedPostVisibility.getTabAt(1)?.select()
-                    Visibility.PRIVATE.name -> binding.tlFeedPostVisibility.getTabAt(2)?.select()
-                }
+                //TODO 장소id변경
+                feed?.visibility?.let { binding.tlFeedPostVisibility.getTabAt(Visibility.valueOf(it).position)?.select() }
             }
         }
     }

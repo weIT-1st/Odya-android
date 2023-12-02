@@ -373,7 +373,7 @@ private suspend fun handleError(error: Throwable) {
         else -> _event.emit(Event.UnknownException)
     }
 }
-    fun onSelectPictures(pickImageUseCase: PickImageUseCase) {
+    fun selectPictures(pickImageUseCase: PickImageUseCase) {
         viewModelScope.launch {
             val images = pickImageUseCase()
              _event.emit(Event.OnSelectPictures(images))

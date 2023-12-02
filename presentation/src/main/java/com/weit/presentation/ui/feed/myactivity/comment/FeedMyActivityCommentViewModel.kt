@@ -40,17 +40,17 @@ class FeedMyActivityCommentViewModel @Inject constructor(
     private val _postContents = MutableStateFlow<List<CommunityMyActivityCommentContent>>(emptyList())
     val postContents: StateFlow<List<CommunityMyActivityCommentContent>> get() = _postContents
     init{
-        onNextImages()
+        onNextComments()
     }
 
-    fun onNextImages() {
+    fun onNextComments() {
         if (getJob.isCompleted.not()) {
             return
         }
-        loadNextFriends()
+        loadNextComments()
     }
 
-    private fun loadNextFriends() {
+    private fun loadNextComments() {
         getJob = viewModelScope.launch {
             val result = getMyCommentCommunitiesUseCase(
                 CommunityRequestInfo(DEFAULT_PAGE_SIZE, communityLastId?.toLong())
@@ -58,9 +58,7 @@ class FeedMyActivityCommentViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newContents = result.getOrThrow()
                 communityLastId = AtomicLong(newContents.last().communityId)
-                if (newContents.isEmpty()) {
-                    onNextImages()
-                }
+
                 _postContents.emit(postContents.value + newContents)
 
             } else {

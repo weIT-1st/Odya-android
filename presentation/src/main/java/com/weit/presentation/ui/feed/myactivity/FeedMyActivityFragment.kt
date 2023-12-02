@@ -104,11 +104,6 @@ class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
             }
         }
     }
-//    private fun handelEvent(event: SearchPlaceBottomSheetViewModel.Event) {
-//        when (event) {
-//
-//        }
-//    }
 
 
     companion object {

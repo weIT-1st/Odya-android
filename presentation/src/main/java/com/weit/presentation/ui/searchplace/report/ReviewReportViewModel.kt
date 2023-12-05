@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.searchplace.report
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -11,7 +10,6 @@ import com.weit.domain.model.exception.RequestResourceAlreadyExistsException
 import com.weit.domain.model.report.ReportReason
 import com.weit.domain.model.report.ReviewReportRequestInfo
 import com.weit.domain.usecase.report.ReviewReportUseCase
-import com.weit.presentation.ui.searchplace.review.PlaceReviewViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -64,7 +62,7 @@ class ReviewReportViewModel @AssistedInject constructor(
             }
             if (reportReason == ReportReason.OTHER && info.otherReason.isNullOrBlank()){
                 _event.emit(Event.EmptyOtherReason)
-            } else if (reportReason == ReportReason.OTHER && info.otherReason!!.length > 20){
+            } else if (reportReason == ReportReason.OTHER && info.otherReason!!.length > maxOtherReasonLength){
                 _event.emit(Event.TooLongOtherReason)
             } else {
                 val result = reviewReportReasonUseCase(info)
@@ -109,5 +107,7 @@ class ReviewReportViewModel @AssistedInject constructor(
                 return assistedFactory.create(placeReviewId) as T
             }
         }
+
+        const val maxOtherReasonLength: Int = 20
     }
 }

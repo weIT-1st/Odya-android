@@ -9,7 +9,6 @@ import com.weit.domain.model.exception.RequestResourceAlreadyExistsException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.report.CommunityReportRequestInfo
 import com.weit.domain.model.report.JournalReportRequestInfo
-import com.weit.domain.model.report.ReportReason
 import com.weit.domain.model.report.ReviewReportRequestInfo
 import com.weit.domain.repository.report.ReportRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
@@ -18,7 +17,6 @@ import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
 import retrofit2.Response
-import javax.annotation.meta.When
 import javax.inject.Inject
 
 class ReportRepositoryImpl @Inject constructor(
@@ -28,7 +26,7 @@ class ReportRepositoryImpl @Inject constructor(
         report(dataSource.reviewReport(
             ReviewReportRequestDTO(
                 info.placeReviewId,
-                handleReportReason(info.reportReason),
+                info.reportReason.type,
                 info.otherReason
             )))
 
@@ -36,7 +34,7 @@ class ReportRepositoryImpl @Inject constructor(
         report(dataSource.reviewReport(
             ReviewReportRequestDTO(
                 info.travelJournalId,
-                handleReportReason(info.reportReason),
+                info.reportReason.type,
                 info.otherReason
             )))
 
@@ -44,7 +42,7 @@ class ReportRepositoryImpl @Inject constructor(
         report(dataSource.reviewReport(
             ReviewReportRequestDTO(
                 info.communityId,
-                handleReportReason(info.reportReason),
+                info.reportReason.type,
                 info.otherReason
             )))
 
@@ -55,16 +53,6 @@ class ReportRepositoryImpl @Inject constructor(
             Result.failure(handleReportError(handleResponseError(response)))
         }
 
-    private fun handleReportReason(reportReason: ReportReason): String =
-        when(reportReason){
-            ReportReason.SPAM -> "SPAM"
-            ReportReason.PORNOGRAPHY -> "PORNOGRAPHY"
-            ReportReason.SWEAR_WORD -> "SWEAR_WORD"
-            ReportReason.OVER_POST -> "OVER_POST"
-            ReportReason.COPYRIGHT_VIOLATION -> "COPYRIGHT_VIOLATION"
-            ReportReason.INFO_LEAK -> "INFO_LEAK"
-            ReportReason.OTHER -> "OTHER"
-        }
 
     private fun handleReportError(t: Throwable): Throwable =
         if (t is HttpException){

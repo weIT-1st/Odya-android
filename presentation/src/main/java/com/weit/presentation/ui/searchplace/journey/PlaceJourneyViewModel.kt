@@ -44,6 +44,8 @@ class PlaceJourneyViewModel @AssistedInject constructor(
 
     private fun getMyJournalList(){
         viewModelScope.launch {
+
+            // todo 무한 스크롤
             val result = getMyTravelJournalListUseCase(null, null, placeId)
             if (result.isSuccess){
                 val list = result.getOrThrow()
@@ -56,6 +58,7 @@ class PlaceJourneyViewModel @AssistedInject constructor(
 
     private fun getFriendJournalList(){
         viewModelScope.launch{
+            // todo 무한 스크롤
             val result = getFriendTravelJournalListUseCase(null, null)
             if (result.isSuccess){
                 val list = result.getOrThrow()
@@ -68,6 +71,7 @@ class PlaceJourneyViewModel @AssistedInject constructor(
 
     private fun getRecommendJournalList(){
         viewModelScope.launch {
+            // todo 무한 스크롤
             val result = getRecommendTravelJournalListUseCase(null, null)
             if (result.isSuccess){
                 val list = result.getOrThrow()

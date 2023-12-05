@@ -1,6 +1,7 @@
 package com.weit.data.repository.journal
 
 import android.content.res.Resources.NotFoundException
+import com.squareup.moshi.Moshi
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalCompanionsDTO
 import com.weit.data.model.journal.TravelJournalContentsDTO
@@ -8,6 +9,8 @@ import com.weit.data.model.journal.TravelJournalContentsImagesDTO
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalWriterDTO
+import com.weit.data.repository.image.ImageRepositoryImpl
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.exception.ForbiddenException
@@ -17,12 +20,19 @@ import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.journal.TravelCompanionSimpleResponsesInfo
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
+import com.weit.domain.model.journal.TravelJournalContentUpdateInfo
 import com.weit.domain.model.journal.TravelJournalContentsImagesInfo
 import com.weit.domain.model.journal.TravelJournalContentsInfo
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
+import com.weit.domain.model.journal.TravelJournalRegistrationInfo
+import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
 import com.weit.domain.repository.journal.TravelJournalRepository
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -33,7 +43,10 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class TravelJournalRepositoryImpl @Inject constructor(
-    private val dataSource: TravelJournalDataSource
+    private val travelJournalDataSource: TravelJournalDataSource,
+    private val imageRepositoryImpl: ImageRepositoryImpl,
+    private val imageDataSource: ImageDataSource,
+    private val moshi: Moshi
 ) : TravelJournalRepository {
 
     private val hasNextJournal = AtomicBoolean(true)
@@ -42,10 +55,48 @@ class TravelJournalRepositoryImpl @Inject constructor(
     private val hasNextRecommendJournal = AtomicBoolean(true)
     private val hasNextTaggedJournal = AtomicBoolean(true)
 
-    // 여행일지 생성 API
+    override suspend fun registerTravelJournal(
+        travelJournalRegistrationInfo: TravelJournalRegistrationInfo,
+        travelJournalImages: List<String>
+    ): Result<Unit> {
+        val result = runCatching {
+            val files = travelJournalImages.map {
+                val bytes = imageRepositoryImpl.getImageBytes(it)
+                val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+                val fileName = try{
+                    imageDataSource.getImageName(it)
+                } catch (e: Exception) {
+                    return Result.failure(e)
+                }
+                MultipartBody.Part.createFormData(
+                    "travel-journal-content-image",
+                    "$fileName.webp",
+                    requestFile
+                )
+            }
+            val adapter = moshi.adapter(TravelJournalRegistrationInfo::class.java)
+            val travelJournalInfoJson = adapter.toJson(travelJournalRegistrationInfo)
+
+            val travelJournalRequestBody =
+                travelJournalInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+
+            val travelJournalPart = MultipartBody.Part.createFormData(
+                "travel-journal",
+                "travel-journal",
+                travelJournalRequestBody
+            )
+            travelJournalDataSource.registerTravelJournal(travelJournalPart, files)
+        }
+        return if (result.isSuccess){
+            Result.success(result.getOrThrow())
+        } else {
+            Result.failure(handleJournalError(result.exception()))
+        }
+    }
+
 
     override suspend fun getTravelJournal(travelJournalId: Long): Result<TravelJournalInfo> {
-        val result = runCatching { dataSource.getTravelJournal(travelJournalId) }
+        val result = runCatching { travelJournalDataSource.getTravelJournal(travelJournalId) }
 
         return if (result.isSuccess) {
             val journal = result.getOrThrow()
@@ -61,7 +112,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextJournal,
-            runCatching { dataSource.getTravelJournalList(size, lastTravelJournal) }
+            lastTravelJournal,
+            runCatching { travelJournalDataSource.getTravelJournalList(size, lastTravelJournal) }
         )
 
     override suspend fun getMyTravelJournalList(
@@ -71,7 +123,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextMyJournal,
-            runCatching { dataSource.getMyTravelJournalList(size, lastTravelJournal, placeId) }
+            lastTravelJournal,
+            runCatching { travelJournalDataSource.getMyTravelJournalList(size, lastTravelJournal, placeId) }
         )
 
     override suspend fun getFriendTravelJournalList(
@@ -80,7 +133,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextFriendJournal,
-            runCatching { dataSource.getFriendTravelJournalList(size, lastTravelJournal) }
+            lastTravelJournal,
+            runCatching { travelJournalDataSource.getFriendTravelJournalList(size, lastTravelJournal) }
         )
 
     override suspend fun getRecommendTravelJournalList(
@@ -89,7 +143,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextRecommendJournal,
-            runCatching { dataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+            lastTravelJournal,
+            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
         )
 
     override suspend fun getTaggedTravelJournalList(
@@ -98,29 +153,98 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextTaggedJournal,
-            runCatching { dataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+            lastTravelJournal,
+            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
         )
 
     // 여행일지 수정 Api
+    override suspend fun updateTravelJournal(
+        travelJournalId: Long,
+        travelJournalUpdateInfo: TravelJournalUpdateInfo,
+    ): Result<Unit> {
+        val result = runCatching {
+            val adapter = moshi.adapter(TravelJournalUpdateInfo::class.java)
+            val travelJournalUpdateInfoJson = adapter.toJson(travelJournalUpdateInfo)
+
+            val travelJournalUpdateRequestBody = travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+
+            val travelJournalUpdatePart = MultipartBody.Part.createFormData(
+                "travel-journal-update",
+                "travel-journal-update",
+                travelJournalUpdateRequestBody
+            )
+            travelJournalDataSource.updateTravelJournal(travelJournalId, travelJournalUpdatePart)
+        }
+
+        return if (result.isSuccess){
+            Result.success(result.getOrThrow())
+        } else {
+            Result.failure(result.exception())
+        }
+    }
 
     // 여행일지 콘텐츠 수정 Api
+    override suspend fun updateTravelJournalContent(
+        travelJournalId: Long,
+        travelJournalContentId: Long,
+        travelJournalContentUpdateInfo: TravelJournalContentUpdateInfo,
+        travelJournalContentImages: List<String>
+    ): Result<Unit> {
+        val result = runCatching {
+            val files = travelJournalContentImages.map {
+                val bytes = imageRepositoryImpl.getImageBytes(it)
+                val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+                val fileName = try {
+                    imageDataSource.getImageName(it)
+                } catch (e: Exception) {
+                    return Result.failure(e)
+                }
+                MultipartBody.Part.createFormData(
+                    "travel-journal-content-image-update",
+                    "$fileName.webp",
+                    requestFile
+                )
+            }
+            val adapter = moshi.adapter(TravelJournalContentUpdateInfo::class.java)
+            val travelJournalContentUpdateInfoJson = adapter.toJson(travelJournalContentUpdateInfo)
+
+            val travelJournalContentRequestBody = travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+
+            val travelJournalContentPart = MultipartBody.Part.createFormData(
+                "travel-journal-content-update",
+                "travel-journal-content-update",
+                travelJournalContentRequestBody)
+            travelJournalDataSource.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentPart, files)
+        }
+
+        return if (result.isSuccess){
+            Result.success(result.getOrThrow())
+        } else {
+            Result.failure(handleJournalError(result.exception()))
+        }
+    }
 
     override suspend fun deleteTravelJournal(travelJournalId: Long): Result<Unit> =
-        delete(dataSource.deleteTravelJournal(travelJournalId))
+        delete(travelJournalDataSource.deleteTravelJournal(travelJournalId))
 
     override suspend fun deleteTravelJournalContent(
         travelJournalId: Long,
         travelJournalContentId: Long
     ): Result<Unit> =
-        delete(dataSource.deleteTravelJournalContent(travelJournalId, travelJournalContentId))
+        delete(travelJournalDataSource.deleteTravelJournalContent(travelJournalId, travelJournalContentId))
 
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
-        delete(dataSource.deleteTravelJournalFriend(travelJournalId))
+        delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
 
     private fun getInfiniteJournalList(
         hasNext: AtomicBoolean,
+        lastId: Long?,
         result: Result<ListResponse<TravelJournalListDTO>>
     ): Result<List<TravelJournalListInfo>> {
+        if (lastId == null){
+            hasNext.set(true)
+        }
+
         if (hasNext.get().not()) {
             return Result.failure(NoMoreItemException())
         }

@@ -5,7 +5,9 @@ import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.service.TravelJournalService
 import com.weit.domain.model.journal.TravelJournalListInfo
+import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Multipart
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
@@ -13,7 +15,12 @@ class TravelJournalDataSource @Inject constructor(
     private val service: TravelJournalService
 ) {
 
-    // 여행일지 생성 API
+    suspend fun registerTravelJournal(
+        travelJournal: MultipartBody.Part,
+        images: List<MultipartBody.Part>
+        ) {
+        service.registerJournal(travelJournal, images)
+    }
 
     suspend fun getTravelJournal(travelJournalId: Long): TravelJournalDTO =
         service.getTravelJournal(travelJournalId)
@@ -49,9 +56,21 @@ class TravelJournalDataSource @Inject constructor(
     ): ListResponse<TravelJournalListDTO> =
         service.getTaggedTravelJournalList(size, lastTravelJournal)
 
-    // 여행일지 수정 Api
+    suspend fun updateTravelJournal(
+        travelJournalId: Long,
+        travelJournalUpdate: MultipartBody.Part,
+    ) {
+        service.updateTravelJournal(travelJournalId, travelJournalUpdate)
+    }
 
-    // 여행일지 콘텐츠 수정 Api
+    suspend fun updateTravelJournalContent(
+        travelJournalId: Long,
+        travelJournalContentId: Long,
+        travelJournalContentUpdate: MultipartBody.Part,
+        images: List<MultipartBody.Part>
+    ) {
+        service.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentUpdate, images)
+    }
 
     suspend fun deleteTravelJournal(
         travelJournalId: Long

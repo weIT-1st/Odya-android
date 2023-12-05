@@ -56,15 +56,16 @@ class ReviewReportFragment(
         binding.tvReviewReportMe.text = writer
 
         binding.radioGroupReviewReport.setOnCheckedChangeListener { _, checkedId ->
-            when(checkedId){
-                R.id.radio_btn_review_report_spam -> viewModel.setReportReason(ReportReason.SPAM)
-                R.id.radio_btn_review_report_pornography -> viewModel.setReportReason(ReportReason.PORNOGRAPHY)
-                R.id.radio_btn_review_report_swear_word -> viewModel.setReportReason(ReportReason.SWEAR_WORD)
-                R.id.radio_btn_review_report_over_post -> viewModel.setReportReason(ReportReason.OVER_POST)
-                R.id.radio_btn_review_report_copyright_violation -> viewModel.setReportReason(ReportReason.COPYRIGHT_VIOLATION)
-                R.id.radio_btn_review_report_info_leak -> viewModel.setReportReason(ReportReason.INFO_LEAK)
-                else -> viewModel.setReportReason(ReportReason.OTHER)
+            val reportReason = when(checkedId){
+                R.id.radio_btn_review_report_spam -> ReportReason.SPAM
+                R.id.radio_btn_review_report_pornography -> ReportReason.PORNOGRAPHY
+                R.id.radio_btn_review_report_swear_word -> ReportReason.SWEAR_WORD
+                R.id.radio_btn_review_report_over_post -> ReportReason.OVER_POST
+                R.id.radio_btn_review_report_copyright_violation -> ReportReason.COPYRIGHT_VIOLATION
+                R.id.radio_btn_review_report_info_leak -> ReportReason.INFO_LEAK
+                else -> ReportReason.OTHER
             }
+            viewModel.setReportReason(reportReason)
         }
 
         binding.btnReviewReport.setOnClickListener {
@@ -73,6 +74,21 @@ class ReviewReportFragment(
 
         binding.btnReivewReportX.setOnClickListener {
             dismiss()
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.reportReason.collectLatest { reportReason ->
+                val reportReasonId = when(reportReason){
+                    ReportReason.SPAM-> R.id.radio_btn_review_report_spam
+                    ReportReason.PORNOGRAPHY -> R.id.radio_btn_review_report_pornography
+                    ReportReason.SWEAR_WORD -> R.id.radio_btn_review_report_swear_word
+                    ReportReason.OVER_POST -> R.id.radio_btn_review_report_over_post
+                    ReportReason.COPYRIGHT_VIOLATION -> R.id.radio_btn_review_report_copyright_violation
+                    ReportReason.INFO_LEAK -> R.id.radio_btn_review_report_info_leak
+                    else -> R.id.et_review_report_other_reason
+                }
+                binding.radioGroupReviewReport.check(reportReasonId)
+            }
         }
 
         repeatOnStarted(viewLifecycleOwner){

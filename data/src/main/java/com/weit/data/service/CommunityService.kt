@@ -3,6 +3,8 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityContentDTO
 import com.weit.data.model.community.CommunityMainContentDTO
+import com.weit.data.model.community.CommunityMyActivityCommentContentDTO
+import com.weit.data.model.community.CommunityMyActivityContentDTO
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.DELETE
@@ -10,6 +12,7 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -24,12 +27,12 @@ interface CommunityService {
     )
 
     @Multipart
-    @PATCH("/api/v1/communities/{communityId}")
+    @PUT("/api/v1/communities/{communityId}")
     suspend fun updateCommunity(
         @Path("communityId") communityId: Long,
         @Part community : MultipartBody.Part,
         @Part images: List<MultipartBody.Part>?
-    )
+    ): Response<Unit>
 
     @GET("/api/v1/communities/{communityId}")
     suspend fun getDetailCommunity(
@@ -48,7 +51,7 @@ interface CommunityService {
         @Query("size") size: Int?,
         @Query("lastId") lastCommunityId: Long?,
         @Query("sortType") sortType: String?,
-    ): ListResponse<CommunityMainContentDTO>
+    ): ListResponse<CommunityMyActivityContentDTO>
 
     @GET("/api/v1/communities/friends")
     suspend fun getFriendsCommunities(
@@ -70,6 +73,20 @@ interface CommunityService {
         @Path("communityId") communityId: Long,
     ): Response<Unit>
 
+
+    @GET("/api/v1/communities/like")
+    suspend fun getMyLikeCommunities(
+        @Query("size") size: Int?,
+        @Query("lastId") lastCommunityId: Long?,
+        @Query("sortType") sortType: String?,
+    ): ListResponse<CommunityMyActivityContentDTO>
+
+    @GET("/api/v1/communities/comment")
+    suspend fun getMyCommentCommunities(
+        @Query("size") size: Int?,
+        @Query("lastId") lastCommunityId: Long?,
+    ): ListResponse<CommunityMyActivityCommentContentDTO>
+
     @POST("/api/v1/communities/{communityId}/likes")
     suspend fun registerCommunityLike(
         @Path("communityId") communityId: Long,
@@ -79,4 +96,5 @@ interface CommunityService {
     suspend fun deleteCommunityLike(
         @Path("communityId") communityId: Long,
     ): Response<Unit>
+
 }

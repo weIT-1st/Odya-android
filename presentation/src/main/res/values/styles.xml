@@ -77,6 +77,16 @@
         <item name="android:textStyle">normal</item>
         <item name="android:lineSpacingMultiplier">1.5</item>
     </style>
+
+    <style name="btn_feed_my_activity" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="strokeWidth">0dp</item>
+        <item name="android:textColor">@color/selector_my_activity_text</item>
+        <item name="android:backgroundTint">@color/selector_my_activity_background</item>
+        <item name="android:strokeColor">@color/selector_my_activity_stoke</item>
+        <item name="android:textSize">@dimen/detail2</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:lineSpacingMultiplier">1.5</item>
+    </style>
     
     <style name="ShapeableImageViewCircle">
         <item name="cornerFamily">rounded</item>
@@ -99,12 +109,6 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">8dp</item>
     </style>
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
-        <item name="android:windowIsFloating">false</item>
-    </style>
-
 
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
@@ -112,8 +116,8 @@
     </style>
 
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
-        <item name="chipBackgroundColor">@color/selector_chip_background</item>
-        <item name="android:textColor">@color/selector_chip_text</item>
+        <item name="chipBackgroundColor">@color/selector_my_activity_background</item>
+        <item name="android:textColor">@color/selector_my_activity_text</item>
     </style>
     <style name="dialog_fullscreen" parent="Theme.AppCompat.Dialog">
         <item name="android:windowIsFloating">false</item>

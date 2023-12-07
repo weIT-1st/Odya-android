@@ -46,6 +46,11 @@ interface FollowService {
         @Query("sortType") sortType: String,
     ): ListResponse<FollowUserContentDTO>
 
+    @GET("/api/v1/follows/{placeId}")
+    suspend fun getExperiencedFriend(
+        @Path("placeId") placeId: String,
+    ): ExperiencedFriendDTO
+
 
     @GET("/api/v1/follows/may-know")
     suspend fun getMayknowUsers(
@@ -53,9 +58,5 @@ interface FollowService {
         @Query("lasId") lasId: Long?,
     ): ListResponse<FollowUserContentDTO>
 
-    @GET("/api/v1/follows/{placeId}")
-    suspend fun getExperiencedFriend(
-        @Path("placeId") placeId: String,
-    ): ExperiencedFriendDTO
 
 }

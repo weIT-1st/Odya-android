@@ -55,7 +55,11 @@ class FeedViewModel @Inject constructor(
     private val changeLikeStateUseCase: ChangeLikeStateUseCase,
 ) : ViewModel() {
 
-    val user = MutableStateFlow<User?>(null)
+    private val _user = MutableStateFlow<User?>(null)
+    val user : StateFlow<User?> get() = _user
+
+    private var feedState = feedAll
+
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -87,7 +91,7 @@ class FeedViewModel @Inject constructor(
 
         viewModelScope.launch {
             getUserUseCase().onSuccess {
-                user.value = it
+                _user.value = it
             }
         }
 
@@ -458,12 +462,12 @@ class FeedViewModel @Inject constructor(
         object UnknownException : Event()
     }
 
-    companion object {
-        private const val MINIMUM_FEED_SIZE = 2
-        private const val MINIMUM_FEED_SIZE_DOUBLE = 4
-        private const val DEFAULT_PAGE_SIZE = 20
+companion object {
+    private const val MINIMUM_FEED_SIZE = 2
+    private const val MINIMUM_FEED_SIZE_DOUBLE = 4
+    private const val DEFAULT_PAGE_SIZE = 20
 
-    }
+}
 }
 
 

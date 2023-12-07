@@ -302,7 +302,7 @@
                     app:layout_constraintTop_toTopOf="@+id/view_community_comment"
                     app:strokeColor="@color/line_alternative"
                     app:strokeWidth="1dp"
-                    tools:text="@string/feed_detail_comment" />
+                    android:text="@string/feed_detail_comment" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_feed_comment"

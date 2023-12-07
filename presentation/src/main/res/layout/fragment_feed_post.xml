@@ -170,8 +170,9 @@
                     android:layout_marginBottom="24dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:text="@string/post_travel_log_daily_place"
-                    android:textAppearance="@style/detail1"
+                    android:hint="@string/post_travel_log_daily_place"
+                    android:textColorHint="@color/label_assistive"
+                    android:textAppearance="@style/body1"
                     android:textColor="@color/label_assistive"
                     android:textAlignment="textStart"
                     android:maxLines="1"
@@ -210,12 +211,65 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_feed_post_topic_title"/>
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_feed_post_visibility_title"
+                    style="@style/h6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/visibility_title"
+                    android:textColor="?attr/colorOnSurface"
+                    android:layout_marginTop="25dp"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_topic"
+                    app:layout_constraintStart_toStartOf="@+id/gl_feed_post_start"
+                    />
+
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tl_feed_post_visibility"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="44dp"
+                    android:layout_marginTop="18dp"
+                    android:layout_marginEnd="44dp"
+                    android:background="@drawable/corners_all_61"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_feed_post_visibility_title"
+                    app:tabBackground="@drawable/selector_tl_place_background"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabSelectedTextColor="@color/label_reversed_normal"
+                    app:tabTextColor="@color/label_inactive">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_feed_post_visibility_all"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_61"
+                        android:text="@string/visibility_all" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_feed_post_visibility_friend"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_33"
+                        android:text="@string/visibility_friend" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:id="@+id/tab_feed_post_visibility_private"
+                        style="@style/body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/corners_all_61"
+                        android:text="@string/visibility_private" />
+                </com.google.android.material.tabs.TabLayout>
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_post_travel_log_post"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="40dp"
                     android:layout_marginBottom="20dp"
                     android:text="@string/post_feed_post_compelete"
                     android:onClick="@{()->vm.registerCommunity()}"
@@ -226,8 +280,9 @@
                     app:cornerRadius="@dimen/button_large_radius"
                     app:layout_constraintStart_toStartOf="@id/gl_feed_post_start"
                     app:layout_constraintEnd_toEndOf="@id/gl_feed_post_end"
-                    app:layout_constraintTop_toBottomOf="@id/rv_topic"
+                    app:layout_constraintTop_toBottomOf="@id/tl_feed_post_visibility"
                     app:layout_constraintBottom_toBottomOf="parent" />
+
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

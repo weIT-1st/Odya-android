@@ -111,6 +111,18 @@
     <string name="feed_my_activity_hint">%s 님의 모든 활동을\n한곳에서 관리해보세요</string>
     <string name="feed_sort_all">• 전체 보기</string>
     <string name="feed_sort_friend">• 친구글만 보기</string>
+    <string name="feed_reaction_count">%d</string>
+    <string name="feed_my_activity_post">게시물</string>
+    <string name="feed_my_activity_comment">댓글</string>
+    <string name="feed_my_activity_like">좋아요</string>
+
+
+    <!--접근권한 관련 -->
+    <string name="visibility_title">접근권한</string>
+    <string name="visibility_all">전체공개</string>
+    <string name="visibility_friend">친구공개</string>
+    <string name="visibility_private">비공개</string>
+
 
     <string name="feed_post_content_size">%d</string>
     <string name="feed_post_image_update">사진편집</string>
@@ -135,7 +147,6 @@
     <string name="place_recommend_journal">추천 여행일지</string>
 
     <string name="place_community">커뮤니티</string>
-
 
     <!--  main  -->
     <string name="place_main_popular_odya">지금 인기있는 오댜는?</string>

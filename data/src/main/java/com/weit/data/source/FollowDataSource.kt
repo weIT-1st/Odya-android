@@ -73,6 +73,9 @@ class FollowDataSource @Inject constructor(
 
     fun getCachedFollowings(): List<FollowUserContent> = followings
 
+    suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
+        followService.getExperiencedFriend(placeId)
+
 
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo
@@ -82,8 +85,5 @@ class FollowDataSource @Inject constructor(
             lasId = mayknowUserSearchInfo.lastId,
         )
     }
-
-    suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
-        followService.getExperiencedFriend(placeId)
 
 }

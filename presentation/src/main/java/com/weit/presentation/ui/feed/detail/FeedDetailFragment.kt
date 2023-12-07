@@ -7,16 +7,15 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.orhanobut.logger.Logger
-import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.detail.CommentDialogFragment
 import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
+import com.weit.presentation.ui.feed.detail.menu.FeedDetailMyMenuFragment
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
-import com.weit.presentation.ui.feed.detail.FeedTopicAdapter
+import com.weit.presentation.ui.feed.detail.menu.FeedDetailOtherMenuFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,7 +38,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         updateItem = { position -> changeComment(position) },
         deleteItem = { position -> viewModel.deleteComment(position)},
     )
-    private var bottomSheetDialog: CommentDialogFragment? = null
+    private var commentDialog: CommentDialogFragment? = null
+    private var myMenuDialog: FeedDetailMyMenuFragment? = null
+    private var otherMenuDialog: FeedDetailOtherMenuFragment? = null
+
     private val feedImageAdapter = FeedImageAdapter()
 
     private fun changeComment(position:Int){
@@ -87,6 +89,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerAndUpdateComment()
         }
+
         binding.tbFeedDetail.setOnClickListener {
             viewModel.deleteFeed()
         }
@@ -100,11 +103,48 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         }
     }
 
+
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handleEvent(event)
             }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.isWriter.collectLatest { isWriter ->
+                initMenu(isWriter)
+            }
+        }
+    }
+
+    private fun initMenu(isWriter: Boolean) {
+        binding.tbFeedDetail.setOnMenuItemClickListener { item ->
+            if (item.itemId == R.id.feed_detail_menu) {
+                if (isWriter) {
+                    if (myMenuDialog == null) {
+                        myMenuDialog = FeedDetailMyMenuFragment(args.feedId)
+
+                    }
+                    if (myMenuDialog?.isAdded?.not() == true) {
+                        myMenuDialog?.show(
+                            requireActivity().supportFragmentManager,
+                            FeedDetailMyMenuFragment.TAG,
+                        )
+                    }
+                } else {
+                    if (otherMenuDialog == null) {
+                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId)
+
+                    }
+                    if (otherMenuDialog?.isAdded?.not() == true) {
+                        otherMenuDialog?.show(
+                            requireActivity().supportFragmentManager,
+                            FeedDetailOtherMenuFragment.TAG,
+                        )
+                    }
+                }
+            }
+            true
         }
     }
 
@@ -169,9 +209,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
 
     override fun onDestroyView() {
-//                bottomSheetDialog?.dismiss()
-//        bottomSheetDialog = null
         binding.rvFeedComment.adapter = null
         super.onDestroyView()
+//        commentDialog?.dismiss()
+//        commentDialog = null
+
     }
 }

@@ -129,30 +129,6 @@ class FeedAdapter(
                 feed.travelJournalSimpleResponse?.let { log -> navigateTravelLog(log.travelJournalId) }
             }
 
-
-            if (feed.communityCommentCount > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.communityCommentCount)
-            }
-
-            if (feed.communityLikeCount > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.communityLikeCount)
-            }
-
-
             binding.viewCommunityContent.setOnClickListener {
                 navigateFeedDetail(feed.communityId)
             }

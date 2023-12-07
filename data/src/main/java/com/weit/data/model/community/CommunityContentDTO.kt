@@ -19,5 +19,6 @@ data class CommunityContentDTO(
     @field:Json(name = "communityCommentCount") override val communityCommentCount: Int,
     @field:Json(name = "communityLikeCount") override val communityLikeCount: Int,
     @field:Json(name = "isUserLiked") override val isUserLiked: Boolean,
+    @field:Json(name = "isWriter") override val isWriter: Boolean,
     @field:Json(name = "createdDate") @StringToLocalDateTime override val createdDate: LocalDateTime,
 ) : CommunityContent

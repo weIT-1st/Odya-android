@@ -42,7 +42,6 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val getCommentsUseCase: GetCommentsUseCase,
     private val deleteCommentsUseCase: DeleteCommentsUseCase,
     private val updateCommentsUseCase: UpdateCommentsUseCase,
-    private val deleteCommunityUseCase: DeleteCommunityUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val changeLikeStateUseCase: ChangeLikeStateUseCase,
@@ -54,6 +53,9 @@ class FeedDetailViewModel @AssistedInject constructor(
         fun create(feedId: Long): FeedDetailViewModel
     }
     val user = MutableStateFlow<User?>(null)
+    private val _isWriter = MutableStateFlow<Boolean>(false)
+    val isWriter: StateFlow<Boolean> get() = _isWriter
+
 
     var writedComment = MutableStateFlow("")
 
@@ -105,6 +107,8 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val feed = result.getOrThrow()
                 userId = feed.writer.userId
                 setFeedDetail(feed)
+                _isWriter.emit(feed.isWriter)
+                _event.emit(Event.OnChangeFeed(feed))
                 val uris = feed.communityContentImages.map{
                     it.imageUrl
                 }
@@ -201,17 +205,6 @@ class FeedDetailViewModel @AssistedInject constructor(
                 getFeedDetailComments(feedId)
             } else {
                 //TODO 에러
-            }
-        }
-    }
-
-    fun deleteFeed(){
-        viewModelScope.launch {
-            val result = deleteCommunityUseCase(feedId)
-            if (result.isSuccess) {
-                _event.emit(Event.DeleteCommunitySuccess)
-            } else {
-                // TODO 에러 처리
             }
         }
     }

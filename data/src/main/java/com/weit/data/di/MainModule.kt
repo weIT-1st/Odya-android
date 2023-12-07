@@ -29,9 +29,9 @@ import com.weit.data.source.PlaceReviewDateSource
 import com.weit.data.source.TermDataSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
+import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.community.comment.CommentRepository
 import com.weit.domain.repository.community.comment.CommunityRepository
-import com.weit.data.source.UserInfoDataSource
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -150,6 +150,21 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
+    fun provideTermService(@AuthNetworkObject retrofit: Retrofit): TermService =
+        retrofit.create(TermService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideTermDataSource(service: TermService): TermDataSource =
+        TermDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideTermRepository(dataSource: TermDataSource): TermRepository =
+        TermRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
     fun provideCommentService(@AuthNetworkObject retrofit: Retrofit): CommentService =
         retrofit.create(CommentService::class.java)
 
@@ -182,21 +197,5 @@ class MainModule {
         moshi: Moshi
     ): CommunityRepository =
         CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource,moshi)
-
-        
-    @ActivityRetainedScoped
-    @Provides
-    fun provideTermService(@AuthNetworkObject retrofit: Retrofit): TermService =
-        retrofit.create(TermService::class.java)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideTermDataSource(service: TermService): TermDataSource =
-        TermDataSource(service)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideTermRepository(dataSource: TermDataSource): TermRepository =
-        TermRepositoryImpl(dataSource)
 
 }

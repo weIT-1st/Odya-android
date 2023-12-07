@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_fragment_feed_to_feedPostFragment"
             app:destination="@id/fragment_feed_post" />
+        <action
+            android:id="@+id/action_fragment_feed_to_feedMyActivityFragment"
+            app:destination="@id/fragment_feed_my_activity" />
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
@@ -78,6 +81,9 @@
         <argument
             android:name="feedId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
+            app:destination="@id/fragment_feed_post" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -90,5 +96,47 @@
         <action
             android:id="@+id/action_fragment_feed_post_to_fragment_feed"
             app:destination="@id/fragment_feed" />
+        <argument
+            android:name="feedId"
+            app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/fragment_feed_my_activity"
+        android:name="com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragment"
+        android:label="FeedMyActivityFragment" />
+    <fragment
+        android:id="@+id/fragment_feed_my_activity_post"
+        android:name="com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragment"
+        android:label="FeedMyActivityPostFragment" >
+        <action
+            android:id="@+id/action_feedMyActivityPostFragment_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_feed_my_activity_like"
+        android:name="com.weit.presentation.ui.feed.myactivity.like.FeedMyActivityLikeFragment"
+        android:label="FeedMyActivityLikeFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_my_activity_like_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_feed_my_activity_comment"
+        android:name="com.weit.presentation.ui.feed.myactivity.comment.FeedMyActivityCommentFragment"
+        android:label="FeedMyActivityCommentFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_my_activity_comment_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
+    <dialog
+        android:id="@+id/fragment_feed_detail_my_menu"
+        android:name="com.weit.presentation.ui.feed.detail.menu.FeedDetailMyMenuFragment"
+        android:label="FeedDetailMyMenuFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_detail_my_menu_to_fragment_feed_post"
+            app:destination="@id/fragment_feed_post" />
+        <action
+            android:id="@+id/action_fragment_feed_detail_my_menu_to_fragment_feed"
+            app:destination="@id/fragment_feed" />
+    </dialog>
 </navigation>

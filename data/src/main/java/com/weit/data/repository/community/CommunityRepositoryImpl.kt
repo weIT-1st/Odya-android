@@ -10,6 +10,8 @@ import com.weit.data.util.exception
 import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.CommunityMainContent
+import com.weit.domain.model.community.CommunityMyActivityCommentContent
+import com.weit.domain.model.community.CommunityMyActivityContent
 import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
@@ -46,6 +48,8 @@ class CommunityRepositoryImpl @Inject constructor(
     private val hasNextMyCommunity = AtomicBoolean(true)
     private val hasNextFriendCommunity = AtomicBoolean(true)
     private val hasNextTopicCommunity = AtomicBoolean(true)
+    private val hasNextMyLikeCommunity = AtomicBoolean(true)
+    private val hasNextMyCommentCommunity = AtomicBoolean(true)
 
 
     override suspend fun registerCommunity(
@@ -115,7 +119,7 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMyCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMainContent>> {
+    override suspend fun getMyCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMyActivityContent>> {
         if(communityRequestInfo.lastId == null){
             hasNextMyCommunity.set(true)
         }
@@ -178,12 +182,51 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getMyLikeCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMyActivityContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextMyLikeCommunity.set(true)
+        }
+
+        if (hasNextMyLikeCommunity.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            communityDataSource.getMyLikeCommunities(communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType)
+        }
+        return if (result.isSuccess) {
+            val communities = result.getOrThrow()
+            hasNextMyLikeCommunity.set(communities.hasNext)
+            Result.success(communities.content)
+        } else {
+            Result.failure(handleRegisterAndGetCommentError(result.exception()))
+        }
+    }
+
+    override suspend fun getMyCommentCommunities(communityRequestInfo: CommunityRequestInfo): Result<List<CommunityMyActivityCommentContent>> {
+        if(communityRequestInfo.lastId == null){
+            hasNextMyCommentCommunity.set(true)
+        }
+
+        if (hasNextMyCommentCommunity.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            communityDataSource.getMyCommentCommunities(communityRequestInfo.size,communityRequestInfo.lastId)
+        }
+        return if (result.isSuccess) {
+            val communities = result.getOrThrow()
+            hasNextMyCommentCommunity.set(communities.hasNext)
+            Result.success(communities.content)
+        } else {
+            Result.failure(handleRegisterAndGetCommentError(result.exception()))
+        }    }
+
     override suspend fun updateCommunity(
         communityId: Long,
         communityUpdateInfo: CommunityUpdateInfo,
         communityImages: List<String>
     ): Result<Unit> {
-        val result = runCatching {
+
 
             val fileList : MutableList<MultipartBody.Part> = mutableListOf()
             for(uri in communityImages){
@@ -202,18 +245,19 @@ class CommunityRepositoryImpl @Inject constructor(
 
                 fileList.add(file)
             }
-            val communityInfoJson = Gson().toJson(communityUpdateInfo)
+            val adapter= moshi.adapter(CommunityUpdateInfo::class.java)
+            val communityInfoJson = adapter.toJson(communityUpdateInfo)
 
             val communityRequestBody = communityInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val communityPart = MultipartBody.Part.createFormData("update-community", "update-community", communityRequestBody)
 
-            communityDataSource.updateCommunity(communityId,communityPart,fileList)
-        }
-        return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
+        val response = communityDataSource.updateCommunity(communityId,communityPart,fileList)
+
+        return if (response.isSuccessful) {
+            Result.success(Unit)
         } else {
-            Result.failure(handleRegisterAndGetCommentError(result.exception()))
+            Result.failure(handleDeleteError(response))
         }
     }
 
@@ -223,7 +267,8 @@ class CommunityRepositoryImpl @Inject constructor(
             Result.success(Unit)
         } else {
             Result.failure(handleDeleteError(response))
-        }    }
+        }
+    }
 
     override suspend fun registerCommunityLike(communityId: Long): Result<Unit> {
         val response = communityDataSource.registerCommunityLike(communityId)

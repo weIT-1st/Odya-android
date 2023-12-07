@@ -9,9 +9,11 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.tabs.TabLayout
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedPostBinding
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.post.FeedPostTopicAdapter
@@ -37,12 +39,21 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     lateinit var viewModelFactory: FeedPostViewModel.FeedPostFactory
 
     private val viewModel: FeedPostViewModel by viewModels {
-        FeedPostViewModel.provideFactory(viewModelFactory, args.feedImages?.toList() ?: emptyList())
+        FeedPostViewModel.provideFactory(viewModelFactory, args.feedImages?.toList() ?: emptyList(),args.feedId)
     }
 
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
 
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            viewModel.selectVisibility(Visibility.fromPosition(tab.position))
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
+    }
+    
     private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
         FlexboxLayoutManager(requireContext()).apply {
             flexWrap = FlexWrap.WRAP
@@ -55,8 +66,11 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
+        binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
         initTopics()
+
     }
+
 
     override fun initListener() {
         super.initListener()
@@ -90,11 +104,22 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 feedImageAdapter.submitList(images)
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.feed.collectLatest { feed ->
+                binding.tvFeedPostTitle.text = feed?.travelJournal?.title
+                //TODO 장소id변경
+                feed?.visibility?.let { binding.tlFeedPostVisibility.getTabAt(Visibility.valueOf(it).position)?.select() }
+            }
+        }
     }
 
     private fun handleEvent(event: FeedPostViewModel.Event) {
         when (event) {
             is FeedPostViewModel.Event.FeedPostSuccess -> {
+                val action = FeedPostFragmentDirections.actionFragmentFeedPostToFragmentFeed()
+                findNavController().navigate(action)
+            }
+            is FeedPostViewModel.Event.FeedUpdateSuccess -> {
                 val action = FeedPostFragmentDirections.actionFragmentFeedPostToFragmentFeed()
                 findNavController().navigate(action)
             }
@@ -106,6 +131,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     }
 
     override fun onDestroyView() {
+        binding.tlFeedPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
         binding.rvTopic.adapter = null
         super.onDestroyView()
     }

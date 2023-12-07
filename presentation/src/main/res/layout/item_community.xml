@@ -60,7 +60,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_direction"
             app:layout_constraintStart_toEndOf="@+id/iv_community_bookmark"
             app:layout_constraintTop_toTopOf="@+id/iv_community_bookmark"
-            tools:text="@{feed.travelJournalSimpleResponse.title}" />
+            android:text="@{feed.travelJournalSimpleResponse.title}" />
 
 
         <ImageView
@@ -115,7 +115,7 @@
             app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
             app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
             app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-            tools:text="@{feed.writer.nickname}" />
+            android:text="@{feed.writer.nickname}" />
 
         <ImageView
             android:id="@+id/iv_community_badge"
@@ -182,8 +182,8 @@
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
-            app:layout_constraintTop_toBottomOf="@+id/iv_community_follow"
-            tools:text="@{feed.communityContent}" />
+            app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
+            android:text="@{feed.communityContent}" />
 
 
         <View
@@ -226,7 +226,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/iv_community_location"
             app:layout_constraintTop_toTopOf="@id/view_community_reply"
-            tools:text="@{feed.placeId}" />
+            android:text="@{feed.placeId}" />
 
 
         <ImageView

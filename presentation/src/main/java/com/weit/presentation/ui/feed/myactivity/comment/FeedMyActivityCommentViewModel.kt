@@ -22,6 +22,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicLong
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,31 +36,29 @@ class FeedMyActivityCommentViewModel @Inject constructor(
     private var getJob: Job = Job().apply {
         complete()
     }
-    private var communityLastId: Long? = null
+    private var communityLastId: AtomicLong? = null
     private val _postContents = MutableStateFlow<List<CommunityMyActivityCommentContent>>(emptyList())
     val postContents: StateFlow<List<CommunityMyActivityCommentContent>> get() = _postContents
     init{
-        onNextImages()
+        onNextComments()
     }
 
-    fun onNextImages() {
+    fun onNextComments() {
         if (getJob.isCompleted.not()) {
             return
         }
-        loadNextFriends()
+        loadNextComments()
     }
 
-    private fun loadNextFriends() {
+    private fun loadNextComments() {
         getJob = viewModelScope.launch {
             val result = getMyCommentCommunitiesUseCase(
-                CommunityRequestInfo(DEFAULT_PAGE_SIZE, communityLastId)
+                CommunityRequestInfo(DEFAULT_PAGE_SIZE, communityLastId?.toLong())
             )
             if (result.isSuccess) {
                 val newContents = result.getOrThrow()
-                communityLastId = newContents.last().communityId
-                if (newContents.isEmpty()) {
-                    onNextImages()
-                }
+                communityLastId = AtomicLong(newContents.last().communityId)
+
                 _postContents.emit(postContents.value + newContents)
 
             } else {

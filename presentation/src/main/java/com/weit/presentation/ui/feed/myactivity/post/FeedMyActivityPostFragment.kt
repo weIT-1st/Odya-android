@@ -56,6 +56,7 @@ class FeedMyActivityPostFragment() : BaseFragment<FragmentTabFeedPostBinding>(
 
     override fun onDestroyView() {
         binding.rvTabFeedPostImage.removeOnScrollListener(infinityScrollListener)
+        binding.rvTabFeedPostImage.adapter = null
         super.onDestroyView()
     }
 }

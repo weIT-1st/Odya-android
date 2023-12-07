@@ -38,20 +38,17 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _feed = MutableStateFlow<CommunityContent?>(null)
     val feed: StateFlow<CommunityContent?> get() = _feed
 
-    private val _imageList = MutableStateFlow<List<String>?>(emptyList())
-    val imageList : StateFlow<List<String>?> get() = _imageList
+    private val _imageList = MutableStateFlow<List<String>>(emptyList())
+    val imageList : StateFlow<List<String>> get() = _imageList
 
-    private var postImages = emptyList<String>()
 
     private var selectedTopicId :Long? = null
-    private var selectedVisibility :String = Visibility.PUBLIC.name
+    private var selectedVisibility :Visibility = Visibility.PUBLIC
 
     val content = MutableStateFlow("")
 
-    private var topicList = CopyOnWriteArrayList<FeedTopic>()
+    private val topicList = CopyOnWriteArrayList<FeedTopic>()
     private var feedState = feedRegister
-
-    private var originalImageIds : List<Long> = emptyList()
 
     @AssistedFactory
     interface FeedPostFactory {
@@ -79,10 +76,9 @@ class FeedPostViewModel @AssistedInject constructor(
                 val uris = feed.communityContentImages.map{
                     it.imageUrl
                 }
-                originalImageIds = feed.communityContentImages.map{ it.communityContentImageId }
                 _imageList.emit(uris)
-                content.value = feed.content  //content
-                feed.topic?.topicId?.let { updateTopicUI(it) } //토픽
+                content.value = feed.content
+                feed.topic?.topicId?.let { updateTopicUI(it) }
                 _feed.emit(feed)
             } else {
                 // TODO 에러 처리
@@ -112,11 +108,7 @@ class FeedPostViewModel @AssistedInject constructor(
     fun updateTopicUI(topicId: Long) {
         viewModelScope.launch {
             val newTopics = topicList.map { feedTopic ->
-                if (feedTopic.topicId == topicId) {
-                    feedTopic.copy(isChecked = true)
-                } else {
-                    feedTopic.copy(isChecked = false)
-                }
+                feedTopic.copy(isChecked = feedTopic.topicId == topicId)
             }
             topicList.clear()
             topicList.addAll(newTopics)
@@ -130,7 +122,7 @@ class FeedPostViewModel @AssistedInject constructor(
     }
 
     fun selectVisibility(visibility: Visibility){
-        selectedVisibility = visibility.name
+        selectedVisibility = visibility
     }
 
     fun registerCommunity() {
@@ -140,7 +132,7 @@ class FeedPostViewModel @AssistedInject constructor(
                     val result = registerCommunityUseCase(
                         CommunityRegistrationInfo(
                             content.value,
-                            selectedVisibility,
+                            selectedVisibility.name,
                             null,
                             null,
                             selectedTopicId
@@ -154,16 +146,17 @@ class FeedPostViewModel @AssistedInject constructor(
                 }
 
                 feedUpdate -> {
+                    val originalImageIds = feed.value?.communityContentImages?.map{ it.communityContentImageId } ?: emptyList()
+
                     val result = updateCommunityUseCase(
                         feedId,
                         CommunityUpdateInfo(
                             content.value,
-                            selectedVisibility,
+                            selectedVisibility.name,
                             null,
                             null,
                             selectedTopicId,
-                            originalImageIds
-                        ),
+                            originalImageIds),
                         _imageList.value?: emptyList()
                     )
                     if (result.isSuccess) {
@@ -179,19 +172,11 @@ class FeedPostViewModel @AssistedInject constructor(
 
     fun onUpdatePictures(pickImageUseCase: PickImageUseCase) {
         viewModelScope.launch {
-            when(feedState){
-                feedUpdate ->{
-                    val images = pickImageUseCase()
-                    _imageList.value= emptyList()
-                    _imageList.emit(images)
-
-                }else-> {
-                val images = pickImageUseCase()
-                postImages = images
-                _imageList.emit(images)
-                }
+            val images = pickImageUseCase()
+            when (feedState) {
+                feedUpdate -> _imageList.value = emptyList()
             }
-
+            _imageList.emit(images)
         }
     }
 

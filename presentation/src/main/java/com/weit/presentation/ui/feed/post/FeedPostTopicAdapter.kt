@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemTopicBinding
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.ui.util.Constants.TOPIC_CORNER_RADIUS
 
 class FeedPostTopicAdapter(
     private var selectTopic : (Long) -> Unit,
@@ -16,10 +17,17 @@ class FeedPostTopicAdapter(
     androidx.recyclerview.widget.ListAdapter<FeedTopic, FeedPostTopicAdapter.FeedPostTopicViewHolder>(
         FeedTopicDiffCallback,
     ) {
-
     inner class FeedPostTopicViewHolder(
         private val binding: ItemTopicBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        val gradientDrawable = GradientDrawable()
+        init{
+            gradientDrawable.apply{
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = floatArrayOf(TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS)
+            }
+        }
         fun bind(topic: FeedTopic) {
             binding.tvTopic.text = topic.topicWord
             binding.tvTopic.setOnClickListener {
@@ -43,9 +51,6 @@ class FeedPostTopicAdapter(
                 ContextCompat.getColor(context, R.color.system_inactive)
             }
 
-            val gradientDrawable = GradientDrawable()
-            gradientDrawable.shape = GradientDrawable.RECTANGLE
-            gradientDrawable.cornerRadii = floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
             gradientDrawable.setColor(bgColor)
 
             binding.tvTopic.setTextColor(textColor)

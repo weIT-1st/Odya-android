@@ -16,6 +16,8 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.user.User
+import com.weit.domain.usecase.community.ChangeLikeStateUseCase
+import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
@@ -42,6 +44,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val updateCommentsUseCase: UpdateCommentsUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val getUserUseCase: GetUserUseCase,
+    private val changeLikeStateUseCase: ChangeLikeStateUseCase,
     @Assisted private val feedId: Long,
 ) : ViewModel() {
 
@@ -71,6 +74,9 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val _createdDate = MutableStateFlow<String>("")
     val creadtedDate: StateFlow<String> get() = _createdDate
 
+    private val _likeState = MutableStateFlow<Boolean>(false)
+    val likeState: StateFlow<Boolean> get() = _likeState
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
     private var userId: Long = -1
@@ -82,7 +88,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     var commentList =  CopyOnWriteArrayList<CommentContent>()
 
 
-    private var job: Job = Job().apply { complete() }
+    private var registerAndUpdateJob: Job = Job().apply { complete() }
 
     init {
         viewModelScope.launch {
@@ -103,6 +109,10 @@ class FeedDetailViewModel @AssistedInject constructor(
                 setFeedDetail(feed)
                 _isWriter.emit(feed.isWriter)
                 _event.emit(Event.OnChangeFeed(feed))
+                val uris = feed.communityContentImages.map{
+                    it.imageUrl
+                }
+                _event.emit(Event.OnChangeFeed(feed,uris))
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
@@ -114,8 +124,6 @@ class FeedDetailViewModel @AssistedInject constructor(
         _feed.value = feed
         _likeNum.value = feed.communityLikeCount
         _commentNum.value = feed.communityCommentCount
-        _followState.value = feed.writer.isFollowing ?: true
-        //_createdDate.value = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()).format(feed.createdDate)
     }
 
 
@@ -131,20 +139,15 @@ class FeedDetailViewModel @AssistedInject constructor(
                 val commentCount = minOf(comments.size, DEFAULT_COMMENT_COUNT)
                 val defaultComments = comments
                     .slice(0 until commentCount)
-
-                var remainingCommentsCount = 0
-                if(comments.size > DEFAULT_COMMENT_COUNT){
-                    remainingCommentsCount = comments.size - DEFAULT_COMMENT_COUNT
-                }
-                _event.emit(Event.OnChangeComments(defaultComments, remainingCommentsCount))
+                _event.emit(Event.OnChangeComments(defaultComments))
             } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+                //TODO 에러
             }
         }
     }
 
     fun registerAndUpdateComment() {
-       job =  viewModelScope.launch {
+        registerAndUpdateJob =  viewModelScope.launch {
            when(commentState){
                commentRegister ->{
                    val result = registerCommentsUseCase(
@@ -157,7 +160,7 @@ class FeedDetailViewModel @AssistedInject constructor(
                        getFeedDetailComments(feedId)
 
                    } else {
-                       Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+                        //TODO 에러
                    }
                }
                commentUpdate ->{
@@ -180,8 +183,12 @@ class FeedDetailViewModel @AssistedInject constructor(
     }
 
     fun updateComment(position: Int){
+        viewModelScope.launch {
+            writedComment.emit(commentList[position].content)
+        }
+
         commentState = commentUpdate
-        if (job.isCompleted) {
+        if (registerAndUpdateJob.isCompleted) {
             currentPosition = position
         }
     }
@@ -202,18 +209,26 @@ class FeedDetailViewModel @AssistedInject constructor(
         }
     }
 
-
-    fun onFollowStateChange(followState : Boolean) {
+    fun onFollowStateChange() {
         viewModelScope.launch {
-            var changeState = !followState
-            val result = changeFollowStateUseCase(userId, changeState)
+            val currentFollowState = _feed.value?.writer?.isFollowing ?: return@launch
+            val result = changeFollowStateUseCase(userId, !currentFollowState)
             if (result.isSuccess) {
-                _event.emit(Event.OnChangeFollowState(changeState))
+                getFeed()
             } else {
-                changeState = !followState
-                _event.emit(Event.OnChangeFollowState(changeState))
                 handleError(result.exceptionOrNull() ?: UnKnownException())
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    fun onLikeStateChange() {
+        viewModelScope.launch {
+            val currentLikeState = _feed.value?.isUserLiked ?: return@launch
+            val result = changeLikeStateUseCase(feedId, !currentLikeState)
+            if (result.isSuccess) {
+                getFeed()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
     }
@@ -231,13 +246,10 @@ class FeedDetailViewModel @AssistedInject constructor(
     sealed class Event {
         data class OnChangeFeed(
             val feed: CommunityContent,
+            val feedImages: List<String>,
         ) : Event()
         data class OnChangeComments(
             val defaultComments: List<CommentContent>,
-            val remainingCommentsCount: Int,
-        ) : Event()
-        data class OnChangeFollowState(
-            val followState: Boolean
         ) : Event()
         object DeleteCommunitySuccess : Event()
 

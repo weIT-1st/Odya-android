@@ -56,9 +56,6 @@ class FeedMyActivityLikeViewModel  @Inject constructor(
             if (result.isSuccess) {
                 val newImages = result.getOrThrow()
                 communityLastId = newImages.last().communityId
-                if (newImages.isEmpty()) {
-                    onNextImages()
-                }
                 _postImages.emit(postImages.value + newImages)
 
             } else {

@@ -31,7 +31,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     private val args: FeedPostFragmentArgs by navArgs()
     private val feedImageAdapter = FeedImageAdapter()
     private val feedPostTopicAdapter = FeedPostTopicAdapter(
-        selectTopic = { topicId ->
+        selectTopic = { topicId->
             viewModel.selectTopic(topicId) }
     )
 
@@ -45,40 +45,37 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
 
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            viewModel.selectVisibility(Visibility.fromPosition(tab.position))
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        override fun onTabReselected(tab: TabLayout.Tab?) {}
+    }
+    
+    private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
+        FlexboxLayoutManager(requireContext()).apply {
+            flexWrap = FlexWrap.WRAP
+            flexDirection = FlexDirection.ROW
+            alignItems = AlignItems.STRETCH
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
-        initVisibilityTab()
+        binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
+        initTopics()
 
-    }
-
-    private fun initVisibilityTab(){
-        binding.tlFeedPostVisibility.addOnTabSelectedListener(object :
-            TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> {
-                        viewModel.selectVisibility(Visibility.PUBLIC)
-                    }
-                    1 -> {
-                        viewModel.selectVisibility(Visibility.FRIEND_ONLY)
-                    }
-                    else -> {
-                        viewModel.selectVisibility(Visibility.PRIVATE)
-                    }
-                }
-            }
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
     }
 
 
     override fun initListener() {
         super.initListener()
         binding.tbFeedPost.setOnMenuItemClickListener { item ->
-            if (item.itemId == R.id.menu_iamge_update) {
+            if (item.itemId == R.id.menu_image_update) {
                 viewModel.onUpdatePictures(pickImageUseCase)
             }
             true
@@ -88,15 +85,7 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
     }
 
-    private fun initTopics(topics: List<FeedTopic>?){
-        val flexboxLayoutManager = FlexboxLayoutManager(requireContext()).apply {
-            flexWrap = FlexWrap.WRAP
-            flexDirection = FlexDirection.ROW
-            alignItems = AlignItems.STRETCH
-        }
-
-        feedPostTopicAdapter.submitList(topics)
-
+    private fun initTopics(){
         binding.rvTopic.run{
             layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter
@@ -117,17 +106,9 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.feed.collectLatest { feed ->
-                //여행일지 제목 변경
                 binding.tvFeedPostTitle.text = feed?.travelJournal?.title
-                //장소id변경
-                //토픽 변경
-
-                //공개여부 변경
-                when (feed?.visibility) {
-                    Visibility.PUBLIC.name -> binding.tlFeedPostVisibility.getTabAt(0)?.select()
-                    Visibility.FRIEND_ONLY.name -> binding.tlFeedPostVisibility.getTabAt(1)?.select()
-                    Visibility.PRIVATE.name -> binding.tlFeedPostVisibility.getTabAt(2)?.select()
-                }
+                //TODO 장소id변경
+                feed?.visibility?.let { binding.tlFeedPostVisibility.getTabAt(Visibility.valueOf(it).position)?.select() }
             }
         }
     }
@@ -143,9 +124,15 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 findNavController().navigate(action)
             }
             is FeedPostViewModel.Event.OnChangeTopics -> {
-                initTopics(event.topics)
+                feedPostTopicAdapter.submitList(event.topics)
             }
             else -> {}
         }
+    }
+
+    override fun onDestroyView() {
+        binding.tlFeedPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
+        binding.rvTopic.adapter = null
+        super.onDestroyView()
     }
 }

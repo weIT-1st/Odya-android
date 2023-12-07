@@ -124,6 +124,12 @@
         <item name="chipBackgroundColor">@color/selector_my_activity_background</item>
         <item name="android:textColor">@color/selector_my_activity_text</item>
     </style>
+    <style name="dialog_fullscreen" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+ </resources>
 
     <style name="dialog_fullscreen" parent="Theme.AppCompat.Dialog">
         <item name="android:windowIsFloating">false</item>
@@ -131,4 +137,5 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
  </resources>
+
 

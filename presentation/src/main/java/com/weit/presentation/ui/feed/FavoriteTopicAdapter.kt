@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemTopicBinding
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.ui.util.Constants.TOPIC_CORNER_RADIUS
 
 class FavoriteTopicAdapter(
     private val selectTopic: (Long,Int) -> Unit,
@@ -18,9 +19,17 @@ class FavoriteTopicAdapter(
         FavoriteTopicDiffCallback,
     ) {
 
+
     inner class FavoriteTopicViewHolder(
         private val binding: ItemTopicBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        val gradientDrawable = GradientDrawable()
+        init{
+            gradientDrawable.apply{
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = floatArrayOf(TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS)
+            }
+        }
         fun bind(topic: FeedTopic) {
             binding.tvTopic.text = topic.topicWord
             binding.tvTopic.setOnClickListener {
@@ -30,7 +39,6 @@ class FavoriteTopicAdapter(
             binding.tvTopic.setBackgroundResource(R.drawable.corners_all_20)
 
             val context = binding.root.context
-            val cornerRadius = 100f
 
             val textColor = if (topic.isChecked) {
                 ContextCompat.getColor(context, R.color.label_reversed)
@@ -44,11 +52,7 @@ class FavoriteTopicAdapter(
                 ContextCompat.getColor(context, R.color.elevation4)
             }
 
-            val gradientDrawable = GradientDrawable()
-            gradientDrawable.shape = GradientDrawable.RECTANGLE
-            gradientDrawable.cornerRadii = floatArrayOf(cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius, cornerRadius)
             gradientDrawable.setColor(bgColor)
-
             binding.tvTopic.setTextColor(textColor)
             binding.tvTopic.background = gradientDrawable
         }

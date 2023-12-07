@@ -36,6 +36,11 @@ class FeedDetailMyMenuFragment(val feedId: Long) : BottomSheetDialogFragment() {
         _binding = BottomSheetFeedMyMenuBinding.inflate(inflater, container, false)
         initCollector()
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.tvMyFeedUpdate.setOnClickListener {
             dismiss()
             val action = FeedDetailFragmentDirections.actionFragmentFeedDetailToFragmentFeedPost(
@@ -48,8 +53,6 @@ class FeedDetailMyMenuFragment(val feedId: Long) : BottomSheetDialogFragment() {
         binding.tvMyFeedClose.setOnClickListener {
             dismiss()
         }
-
-        return binding.root
     }
 
     fun initCollector() {

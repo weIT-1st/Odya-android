@@ -6,6 +6,6 @@ data class CommunityUpdateInfo(
     val placeId: String?,
     val travelJournalId: Long?,
     val topicId: Long?,
-    val deleteCommunityContentImageIds: List<Long>?,
+    val deleteCommunityContentImageIds: List<Long>,
  ) {
 }

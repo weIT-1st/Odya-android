@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
@@ -47,7 +46,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
 
     override fun initListener() {
         binding.btnFeedWrite.setOnClickListener {
-            viewModel.selectPictures(pickImageUseCase)
+            viewModel.onSelectPictures(pickImageUseCase)
         }
         binding.btnFeedSortFriend.setOnClickListener {
             viewModel.selectFeedFriend()
@@ -91,13 +90,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
         }
     }
-
-    override fun initListener() {
-        binding.btnFeedWrite.setOnClickListener {
-            viewModel.onSelectPictures(pickImageUseCase)
-        }
-    }
-
 
     private fun navigateTravelLog(travelLogId: Long) {
         val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)

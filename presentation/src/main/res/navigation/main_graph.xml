@@ -102,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_detail"
-        android:name="com.weit.presentation.ui.feed.FeedDetailFragment"
+        android:name="com.weit.presentation.ui.feed.detail.FeedDetailFragment"
         android:label="FeedDetailFragment" >
         <argument
             android:name="feedId"

@@ -155,26 +155,6 @@ class FollowRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
-        if(mayknowUserSearchInfo.lastId == null){
-            hasNextUser.set(true)
-        }
-
-        if (hasNextUser.get().not()) {
-            return Result.failure(NoMoreItemException())
-        }
-        val result = runCatching {
-            followDataSource.getMayknowUsers(mayknowUserSearchInfo)
-        }
-        return if (result.isSuccess) {
-            val mayKnowUser = result.getOrThrow()
-            hasNextUser.set(mayKnowUser.hasNext)
-            Result.success(mayKnowUser.content)
-        } else {
-            Result.failure(result.exception())
-        }
-    }
-
     private fun List<FollowUserContent>.filterByNickname(query: String) =
         if (query.isBlank()) {
             this

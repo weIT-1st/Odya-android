@@ -169,6 +169,9 @@
     <string name="feed_sort_all">• 전체 보기</string>
     <string name="feed_sort_friend">• 친구글만 보기</string>
     <string name="feed_reaction_count">%d</string>
+    <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
     <string name="feed_my_activity_post">게시물</string>
     <string name="feed_my_activity_comment">댓글</string>
     <string name="feed_my_activity_like">좋아요</string>

@@ -36,6 +36,9 @@
     <dimen name="item_topic_spacing">8dp</dimen>
     <dimen name="item_feed_comment_space">16dp</dimen>
 
+    <!-- margin -->
+    <dimen name="feed_my_activity_tab_margin">20dp</dimen>
+
     <dimen name="marker_width">30dp</dimen>
     <dimen name="marker_height">36dp</dimen>
 </resources>

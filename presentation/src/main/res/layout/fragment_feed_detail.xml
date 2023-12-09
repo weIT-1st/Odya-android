@@ -28,18 +28,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <ImageView
-                    android:id="@+id/iv_community_bg"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:background="@drawable/corners_top_8"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/background"
-                    app:image_uri="@{vm.feed.feedImage}"
-                    app:layout_constraintDimensionRatio="1.2"
-                    app:layout_constraintEnd_toEndOf="parent"
+                <androidx.viewpager2.widget.ViewPager2
+                    android:id="@+id/vp_community_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="347dp"
+                    android:orientation="horizontal"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"/>
 
                 <View
                     android:id="@+id/view_community_content"
@@ -52,7 +48,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/iv_community_bg"
+                    app:layout_constraintTop_toBottomOf="@+id/vp_community_images"
                     app:layout_constraintVertical_bias="0.0" />
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -62,11 +58,12 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="32dp"
+                    app:shapeAppearance="@style/ShapeableImageViewCircle"
                     android:src="@drawable/ic_profile"
-                    app:image_uri="@{vm.feed.userProfile.url}"
+                    app:image_uri="@{vm.feed.writer.profile.url}"
                     app:layout_constraintStart_toStartOf="@+id/view_community_content"
                     app:layout_constraintTop_toTopOf="@+id/view_community_content"
-                    app:profile_background="@{vm.feed.userProfile}" />
+                    app:profile_background="@{vm.feed.writer.profile}" />
 
 
                 <com.google.android.material.textview.MaterialTextView
@@ -83,7 +80,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/iv_community_badge"
                     app:layout_constraintStart_toEndOf="@+id/iv_community_profile"
                     app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-                    tools:text="@{vm.feed.userNickname}" />
+                    android:text="@{vm.feed.writer.nickname}" />
 
                 <ImageView
                     android:id="@+id/iv_community_badge"
@@ -118,23 +115,22 @@
                     android:textColor="@color/label_assistive"
                     android:textSize="12dp"
                     android:textStyle="bold"
+                    app:text_created_date="@{vm.feed.createdDate}"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
-                    app:layout_constraintEnd_toStartOf="@+id/bt_community_follow"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_community_follow"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/tv_community_dot"
                     app:layout_constraintTop_toTopOf="@+id/iv_community_profile"
-                    tools:text="@{vm.feed.date}" />
+                    />
 
-                <ToggleButton
-                    android:id="@+id/bt_community_follow"
+                <ImageView
+                    android:id="@+id/iv_community_follow"
                     android:layout_width="54dp"
                     android:layout_height="29dp"
                     android:layout_marginEnd="20dp"
-                    android:background="@drawable/selector_bt_follow"
-                    android:checked="@{vm.feed.followState}"
-                    android:textOff=""
-                    android:textOn=""
+                    tools:src="@drawable/bt_following"
+                    android:onClick="@{()->vm.onFollowStateChange()}"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
                     app:layout_constraintEnd_toEndOf="@+id/view_community_content"
                     app:layout_constraintTop_toTopOf="@+id/iv_community_profile" />
@@ -164,18 +160,31 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/include_travel_log"
-                    tools:text="@{vm.feed.content}" />
+                    android:text="@{vm.feed.content}" />
 
+                <TextView
+                    android:id="@+id/tv_topic"
+                    style="@style/detail1"
+                    android:layout_marginTop="20dp"
+                    android:padding="9dp"  android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/elevation2"
+                    android:background="@drawable/corners_all_20"
+                    android:layout_marginStart="20dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_community_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textColor="@color/label_assistive"
+                    tools:text="@string/feed_detail_topic" />
 
                 <View
                     android:id="@+id/view_community_reply"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="32dp"
+                    android:layout_marginTop="18dp"
                     android:background="@drawable/corners_all_8"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_community_content" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_topic" />
 
                 <ImageView
                     android:id="@+id/iv_community_location"
@@ -198,21 +207,20 @@
                     android:maxLines="1"
                     android:textColor="@color/label_assistive"
                     app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
-                    app:layout_constraintEnd_toStartOf="@+id/iv_community_heart"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_community_like"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/iv_community_location"
                     app:layout_constraintTop_toTopOf="@id/view_community_reply"
-                    tools:text="@{vm.feed.place}" />
+                    android:text="@{vm.feed.placeId}" />
 
 
-                <ToggleButton
-                    android:id="@+id/iv_community_heart"
+                <ImageView
+                    android:id="@+id/iv_community_like"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_marginEnd="4dp"
-                    android:background="@drawable/selector_bt_heart"
-                    android:textOff=""
-                    android:textOn=""
+                    tools:src="@drawable/selector_bt_heart"
+                    android:onClick="@{()-> vm.onLikeStateChange()}"
                     app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
                     app:layout_constraintEnd_toStartOf="@+id/tv_community_heart"
                     app:layout_constraintTop_toTopOf="@+id/view_community_reply" />
@@ -227,7 +235,7 @@
                     android:textColor="@color/label_assistive"
                     app:layout_constraintBottom_toBottomOf="@+id/view_community_reply"
                     app:layout_constraintEnd_toStartOf="@+id/iv_community_reply"
-                    app:layout_constraintLeft_toRightOf="@+id/iv_community_heart"
+                    app:layout_constraintLeft_toRightOf="@+id/iv_community_like"
                     app:layout_constraintTop_toTopOf="@id/view_community_reply"
                     app:text_reaction_count="@{vm.likeNum}"
                     tools:text="99" />
@@ -294,12 +302,12 @@
                     app:layout_constraintTop_toTopOf="@+id/view_community_comment"
                     app:strokeColor="@color/line_alternative"
                     app:strokeWidth="1dp"
-                    tools:text="@string/feed_detail_comment" />
+                    android:text="@string/feed_detail_comment" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_feed_comment"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="40dp"
@@ -329,14 +337,16 @@
                     android:id="@+id/iv_write_comment_profile"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    app:shapeAppearance="@style/ShapeableImageViewCircle"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_profile"
-                    app:image_uri="@{vm.feed.userProfile.url}"
+                    app:image_uri="@{vm.user.profile.url}"
+                    app:profile_background="@{vm.user.profile}"
                     app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
                     app:layout_constraintEnd_toStartOf="@+id/ti_feed_comment"
                     app:layout_constraintStart_toStartOf="@+id/view_write_comment"
                     app:layout_constraintTop_toTopOf="@+id/view_write_comment"
-                    app:profile_background="@{vm.feed.userProfile}" />
+                    />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ti_feed_comment"
@@ -364,7 +374,7 @@
                         android:textColorHint="@color/label_assistive"
                         app:layout_constrainedWidth="true"
                         app:layout_constraintHorizontal_bias="0.0"
-                        tools:text="dddddhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhdddddddddddddgggggggg" />
+                        android:text="@={vm.writedComment}" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -375,6 +385,7 @@
                     android:layout_marginEnd="13dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_comment_write"
+                    android:onClick="@{()-> vm.registerAndUpdateComment()}"
                     app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"
                     app:layout_constraintEnd_toEndOf="@+id/view_write_comment"
                     app:layout_constraintTop_toTopOf="@+id/view_write_comment" />

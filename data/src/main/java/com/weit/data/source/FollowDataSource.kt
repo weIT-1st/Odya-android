@@ -10,6 +10,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
+import com.weit.domain.model.follow.MayknowUserSearchInfo
 import retrofit2.Response
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
@@ -74,4 +75,15 @@ class FollowDataSource @Inject constructor(
 
     suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
         followService.getExperiencedFriend(placeId)
+
+
+    suspend fun getMayknowUsers(
+        mayknowUserSearchInfo: MayknowUserSearchInfo
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.getMayknowUsers(
+            size = mayknowUserSearchInfo.size,
+            lasId = mayknowUserSearchInfo.lastId,
+        )
+    }
+
 }

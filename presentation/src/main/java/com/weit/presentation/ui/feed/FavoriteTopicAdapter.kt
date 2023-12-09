@@ -1,24 +1,60 @@
 package com.weit.presentation.ui.feed
 
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.topic.TopicDetail
+import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemTopicBinding
+import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.ui.util.Constants.TOPIC_CORNER_RADIUS
 
-class FavoriteTopicAdapter() :
-    androidx.recyclerview.widget.ListAdapter<TopicDetail, FavoriteTopicAdapter.FavoriteTopicViewHolder>(
+class FavoriteTopicAdapter(
+    private val selectTopic: (Long,Int) -> Unit,
+) :
+    ListAdapter<FeedTopic, FavoriteTopicAdapter.FavoriteTopicViewHolder>(
         FavoriteTopicDiffCallback,
     ) {
 
-    class FavoriteTopicViewHolder(
+
+    inner class FavoriteTopicViewHolder(
         private val binding: ItemTopicBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(topic: TopicDetail) {
-            itemView.apply {
-                binding.tvTopic.text = topic.topicWord
+        val gradientDrawable = GradientDrawable()
+        init{
+            gradientDrawable.apply{
+                shape = GradientDrawable.RECTANGLE
+                cornerRadii = floatArrayOf(TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS, TOPIC_CORNER_RADIUS)
             }
+        }
+        fun bind(topic: FeedTopic) {
+            binding.tvTopic.text = topic.topicWord
+            binding.tvTopic.setOnClickListener {
+                selectTopic(topic.topicId,absoluteAdapterPosition)
+            }
+
+            binding.tvTopic.setBackgroundResource(R.drawable.corners_all_20)
+
+            val context = binding.root.context
+
+            val textColor = if (topic.isChecked) {
+                ContextCompat.getColor(context, R.color.label_reversed)
+            } else {
+                ContextCompat.getColor(context, R.color.label_assistive)
+            }
+
+            val bgColor = if (topic.isChecked) {
+                ContextCompat.getColor(context, R.color.primary)
+            } else {
+                ContextCompat.getColor(context, R.color.elevation4)
+            }
+
+            gradientDrawable.setColor(bgColor)
+            binding.tvTopic.setTextColor(textColor)
+            binding.tvTopic.background = gradientDrawable
         }
     }
 
@@ -33,13 +69,16 @@ class FavoriteTopicAdapter() :
     }
 
     companion object {
-        private val FavoriteTopicDiffCallback: DiffUtil.ItemCallback<TopicDetail> =
-            object : DiffUtil.ItemCallback<TopicDetail>() {
-                override fun areItemsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
-                    return oldItem.topicWord == newItem.topicWord
+        private val FavoriteTopicDiffCallback: DiffUtil.ItemCallback<FeedTopic> =
+            object : DiffUtil.ItemCallback<FeedTopic>() {
+                override fun areItemsTheSame(oldItem: FeedTopic, newItem: FeedTopic): Boolean {
+                    return oldItem.topicId == newItem.topicId
                 }
 
-                override fun areContentsTheSame(oldItem: TopicDetail, newItem: TopicDetail): Boolean {
+                override fun areContentsTheSame(
+                    oldItem: FeedTopic,
+                    newItem: FeedTopic
+                ): Boolean {
                     return oldItem == newItem
                 }
             }

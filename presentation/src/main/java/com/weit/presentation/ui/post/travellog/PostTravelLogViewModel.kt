@@ -52,8 +52,10 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
-        friends.clear()
-        friends.addAll(travelFriends)
+        friends.run {
+            clear()
+            addAll(travelFriends)
+        }
         val friendsSummary = travelFriends
             .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
             .map { it.profile }

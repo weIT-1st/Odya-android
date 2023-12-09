@@ -155,7 +155,6 @@ class SelectPlaceFragment :
         googleMap.setOnPoiClickListener {
             viewModel.onClickPointOfInterest(it)
         }
-        googleMap.projection.visibleRegion.latLngBounds
     }
 
     override fun onDestroyView() {

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/fragment_map">
+    app:startDestination="@id/post_graph">
 
     <fragment
         android:id="@+id/fragment_memory"
@@ -48,6 +48,14 @@
                 app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
                 app:nullable="true"
                 android:defaultValue="@null" />
+            <argument
+                android:name="selectPlace"
+                app:argType="com.weit.presentation.model.post.place.SelectPlaceDTO"
+                app:nullable="true"
+                android:defaultValue="@null" />
+            <action
+                android:id="@+id/action_postTravelLogFragment_to_selectPlaceFragment"
+                app:destination="@id/selectPlaceFragment" />
         </fragment>
 
         <fragment
@@ -65,6 +73,24 @@
                 app:nullable="true"
                 android:defaultValue="@null" />
         </fragment>
+
+        <fragment
+            android:id="@+id/selectPlaceFragment"
+            android:name="com.weit.presentation.ui.post.selectplace.SelectPlaceFragment"
+            android:label="SelectPlaceFragment" >
+            <action
+                android:id="@+id/action_selectPlaceFragment_to_postTravelLogFragment"
+                app:destination="@id/postTravelLogFragment"
+                app:popUpTo="@id/selectPlaceFragment"
+                app:popUpToInclusive="true" />
+            <argument
+                android:name="imagePlaces"
+                app:argType="com.weit.presentation.model.post.place.PlacePredictionDTO[]" />
+            <argument
+                android:name="dailyTravelLogPosition"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </fragment>
     </navigation>
     <fragment
         android:id="@+id/fragment_travellog"
@@ -76,7 +102,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_detail"
-        android:name="com.weit.presentation.ui.feed.FeedDetailFragment"
+        android:name="com.weit.presentation.ui.feed.detail.FeedDetailFragment"
         android:label="FeedDetailFragment" >
         <argument
             android:name="feedId"

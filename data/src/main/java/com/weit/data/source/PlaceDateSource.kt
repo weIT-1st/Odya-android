@@ -16,8 +16,10 @@ import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRe
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
+import com.orhanobut.logger.Logger
 import com.weit.data.BuildConfig
 import com.weit.data.model.map.GeocodingResult
+import com.weit.data.model.map.PlaceDetailResponse
 import com.weit.data.service.PlaceService
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.exception.InvalidPermissionException
@@ -29,6 +31,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
+import java.util.Locale
 import javax.inject.Inject
 
 class PlaceDateSource @Inject constructor(
@@ -45,11 +48,33 @@ class PlaceDateSource @Inject constructor(
     )
 
     private val defaultPlaceField = listOf(
-        Place.Field.NAME,
-        Place.Field.ID,
-        Place.Field.ADDRESS,
-        Place.Field.LAT_LNG
+        Field.NAME,
+        Field.ID,
+        Field.ADDRESS,
+        Field.LAT_LNG,
     )
+
+    private val detailPlaceField = listOf(
+        Field.NAME,
+        Field.ID,
+        Field.ADDRESS,
+        Field.ADDRESS_COMPONENTS,
+        Field.LAT_LNG,
+        Field.PHOTO_METADATAS,
+    )
+
+    suspend fun getPlaceDetail(
+        placeId: String,
+        language: String = "ko",
+    ): PlaceDetailResponse {
+        val result = service.getPlaceDetail(
+            BuildConfig.GOOGLE_MAP_KEY,
+            placeId,
+            language,
+        )
+        Logger.t("MainTest").i("$result")
+        return result
+    }
 
     suspend fun getPlace(placeId: String): Place = callbackFlow {
         val request = FetchPlaceRequest.builder(placeId, defaultPlaceField).build()
@@ -62,6 +87,21 @@ class PlaceDateSource @Inject constructor(
         }
         awaitClose { }
     }.first()
+
+    suspend fun getPlaceDetailWithFields(
+        placeId: String,
+        language: String = "ko",
+        fields: List<String>,
+    ): PlaceDetailResponse {
+        val result = service.getPlaceDetailWithFields(
+            BuildConfig.GOOGLE_MAP_KEY,
+            placeId,
+            language,
+            fields.joinToString(","),
+        )
+        Logger.t("MainTest").i("$result")
+        return result
+    }
 
     suspend fun getPlacesByCoordinate(
         latitude: Double,
@@ -77,9 +117,13 @@ class PlaceDateSource @Inject constructor(
         )
     }
 
-    suspend fun searchPlaces(query: String): Flow<List<AutocompletePrediction>> = callbackFlow {
+    suspend fun searchPlaces(
+        query: String,
+        language: String = "ko",
+        types: List<String> = defaultResultTypes,
+    ): List<AutocompletePrediction> = callbackFlow<List<AutocompletePrediction>> {
         val newRequest = FindAutocompletePredictionsRequest.builder()
-            .setCountries("KR")
+            .setCountries(Locale.getDefault().country)
             .setTypesFilter(listOf(PlaceTypes.ESTABLISHMENT))
             .setSessionToken(sessionToken)
             .setQuery(query)
@@ -92,7 +136,7 @@ class PlaceDateSource @Inject constructor(
                 trySend(emptyList())
             }
         awaitClose { }
-    }
+    }.first()
 
     suspend fun getPlaceImage(placeId: String): Flow<Bitmap?> = callbackFlow {
         val fields = listOf(Field.PHOTO_METADATAS)
@@ -132,13 +176,13 @@ class PlaceDateSource @Inject constructor(
 
             fusedLocationProviderClient.lastLocation
                 .addOnCompleteListener {
-                    if (it.isSuccessful){
+                    if (it.isSuccessful) {
                         latitude = it.result.latitude.toFloat()
                         longitude = it.result.longitude.toFloat()
                     }
                 }.await()
 
-            if (latitude == null || longitude == null){
+            if (latitude == null || longitude == null) {
                 Result.failure(InvalidRequestException())
             } else {
                 Result.success(CoordinateInfo(latitude!!, longitude!!))

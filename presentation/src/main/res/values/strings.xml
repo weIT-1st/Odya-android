@@ -72,13 +72,13 @@
     <string name="post_travel_log_friends_count">외 %d명</string>
     <string name="post_travel_log_daily">여행일지 및 사진</string>
     <string name="post_travel_log_daily_day">Day %d</string>
-    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요!</string>
+    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요</string>
     <string name="post_travel_log_daily_delete"><u>삭제하기</u></string>
     <string name="post_travel_log_daily_place">장소 태그하기</string>
     <string name="post_travel_log_daily_add">일정 추가하기</string>
     <string name="post_travel_log_daily_save">임시저장</string>
     <string name="post_travel_log_daily_post">등록하기</string>
-    <string name="post_travel_log_upload_feed">피드 공개</string>
+    <string name="post_travel_log_upload_feed">공개 여부</string>
     <string name="post_travel_log_daily_picture_count">%d / %d</string>
 
     <!-- travel friend search -->
@@ -86,36 +86,17 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
+    <!-- select place -->
+    <string name="select_place_title">장소 태그하기</string>
+    <string name="select_place_search">장소를 검색해보세요</string>
 
-    <!-- feed -->
-    <string name="feed_detail_topic"># %s</string>
-    <string name="feed_comment_update">수정</string>
-    <string name="feed_share">공유</string>
-    <string name="feed_update">편집</string>
-    <string name="feed_close">닫기</string>
-    <string name="feed_delete">삭제</string>
-    <string name="feed_reports">신고하기</string>
-    <string name="post_feed_title">피드 작성하기</string>
-    <string name="post_feed_travellog_title">여행일지</string>
-    <string name="post_feed_travellog_upload">여행일지 불러오기</string>
-    <string name="post_feed_no_tavellog_write">여행일지 작성하러가기</string>
-    <string name="post_feed_no_tavellog_hint1">작성된 여행일지가 없어요!</string>
-    <string name="post_feed_no_tavellog_hint2">현재 작성 중인 피드 글은 사라집니다.</string>
-    <string name="post_feed_post_compelete">작성 완료</string>
-    <string name="feed_comment_delete">삭제</string>
-    <string name="post_feed_write">게시글 작성하기</string>
-    <string name="post_feed_write_hint">글 작성하기 (최대 200 자)</string>
-    <string name="post_feed_write_hint2">(최대 200 자)</string>
-    <string name="topic_title">토픽</string>
-    <string name="feed_my_activity_title">내 활동</string>
-    <string name="feed_my_activity_hint">%s 님의 모든 활동을\n한곳에서 관리해보세요</string>
-    <string name="feed_sort_all">• 전체 보기</string>
-    <string name="feed_sort_friend">• 친구글만 보기</string>
-    <string name="feed_reaction_count">%d</string>
-    <string name="feed_my_activity_post">게시물</string>
-    <string name="feed_my_activity_comment">댓글</string>
-    <string name="feed_my_activity_like">좋아요</string>
-
+    <!-- date picker -->
+    <string name="date_picker_cancel">취소</string>
+    <string name="date_picker_complete">확인</string>
+    <string name="date_picker_year">%d년</string>
+    <string name="date_picker_date">%d월 %d일 (%s)</string>
+    <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
+    <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
 
     <!--접근권한 관련 -->
     <string name="visibility_title">접근권한</string>
@@ -164,9 +145,34 @@
     <string name="place_main_hot_place_rank">%d위</string>
 
     <!-- feed -->
+    <string name="feed_detail_topic"># %s</string>
+    <string name="feed_comment_update">수정</string>
+    <string name="feed_share">공유</string>
+    <string name="feed_update">편집</string>
+    <string name="feed_close">닫기</string>
+    <string name="feed_delete">삭제</string>
+    <string name="feed_reports">신고하기</string>
+    <string name="post_feed_title">피드 작성하기</string>
+    <string name="post_feed_travellog_title">여행일지</string>
+    <string name="post_feed_travellog_upload">여행일지 불러오기</string>
+    <string name="post_feed_no_tavellog_write">여행일지 작성하러가기</string>
+    <string name="post_feed_no_tavellog_hint1">작성된 여행일지가 없어요!</string>
+    <string name="post_feed_no_tavellog_hint2">현재 작성 중인 피드 글은 사라집니다.</string>
+    <string name="post_feed_post_compelete">작성 완료</string>
+    <string name="feed_comment_delete">삭제</string>
+    <string name="post_feed_write">게시글 작성하기</string>
+    <string name="post_feed_write_hint">글 작성하기 (최대 200 자)</string>
+    <string name="post_feed_write_hint2">(최대 200 자)</string>
+    <string name="topic_title">토픽</string>
+    <string name="feed_my_activity_title">내 활동</string>
+    <string name="feed_my_activity_hint">%s 님의 모든 활동을\n한곳에서 관리해보세요</string>
+    <string name="feed_sort_all">• 전체 보기</string>
+    <string name="feed_sort_friend">• 친구글만 보기</string>
     <string name="feed_reaction_count">%d</string>
     <string name="feed_reaction_over_count">%d+</string>
     <string name="feed_detail_comment">%d개의 댓글 더보기</string>
     <string name="feed_comment_hint">댓글을 입력해주세요</string>
-
+    <string name="feed_my_activity_post">게시물</string>
+    <string name="feed_my_activity_comment">댓글</string>
+    <string name="feed_my_activity_like">좋아요</string>
 </resources>

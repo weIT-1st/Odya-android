@@ -1,13 +1,9 @@
 package com.weit.data.di
 
 import android.content.Context
-import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.userinfo.UserInfoRepositoryImpl
-import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.UserInfoDataSource
-import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.userinfo.UserInfoRepository
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,6 +23,5 @@ class DataStoreModule {
     @Provides
     @Singleton
     fun provideUserInfoDataSource(@ApplicationContext context: Context): UserInfoDataSource =
-       UserInfoDataSource(context)
-
+        UserInfoDataSource(context)
 }

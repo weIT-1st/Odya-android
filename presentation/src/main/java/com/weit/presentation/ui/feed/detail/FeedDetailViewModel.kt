@@ -17,7 +17,6 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.user.User
 import com.weit.domain.usecase.community.ChangeLikeStateUseCase
-import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.comment.DeleteCommentsUseCase
 import com.weit.domain.usecase.community.comment.GetCommentsUseCase
@@ -108,7 +107,6 @@ class FeedDetailViewModel @AssistedInject constructor(
                 userId = feed.writer.userId
                 setFeedDetail(feed)
                 _isWriter.emit(feed.isWriter)
-                _event.emit(Event.OnChangeFeed(feed))
                 val uris = feed.communityContentImages.map{
                     it.imageUrl
                 }
@@ -264,13 +262,12 @@ class FeedDetailViewModel @AssistedInject constructor(
         const val commentRegister = "register"
         const val commentUpdate = "update"
         fun provideFactory(
-            assistedFactory: FeedDetailViewModel.FeedDetailFactory,
+            assistedFactory: FeedDetailFactory,
             feedId: Long,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(feedId) as T
             }
         }
-
     }
 }

@@ -44,6 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private val exceptBottomNavigationSet = hashSetOf(
         R.id.postTravelLogFragment,
         R.id.travelFriendFragment,
+        R.id.selectPlaceFragment,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

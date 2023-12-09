@@ -66,10 +66,10 @@ class UserRepositoryImpl @Inject constructor(
         userInfoDataSource.getUserId() ?: throw NotFoundException()
 
     override suspend fun deleteUser(): Result<Unit> {
-       val result = userDataSource.deleteUser()
-        return if(result.isSuccessful){
+        val result = userDataSource.deleteUser()
+        return if (result.isSuccessful) {
             Result.success(Unit)
-        }else{
+        } else {
             Result.failure(handleUserError(result))
         }
     }

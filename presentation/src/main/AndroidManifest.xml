@@ -33,7 +33,6 @@
 
         <activity
             android:name=".ui.splash.SplashActivity"
-            android:theme="@style/Theme.Splash"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

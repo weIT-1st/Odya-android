@@ -4,6 +4,6 @@
     android:shape="oval">
 
     <solid
-        android:color="@color/interaction_inactive"/>
+        android:color="@color/label_inactive"/>
 
 </shape>

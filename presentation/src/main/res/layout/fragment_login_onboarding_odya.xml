@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.login.onboarding.odya.LoginOnboardingOdyaViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/iv_login_explain_app_first"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="28dp"
+            android:src="@drawable/ic_dot_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tv_login_explain_app_odya"
+            />
+
+        <ImageView
+            android:id="@+id/iv_login_explain_app_second"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_dot_gray"
+            app:layout_constraintStart_toEndOf="@+id/iv_login_explain_app_first"
+            app:layout_constraintTop_toTopOf="@+id/iv_login_explain_app_first"/>
+
+        <ImageView
+            android:id="@+id/iv_login_explain_app_third"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_dot_gray"
+            app:layout_constraintStart_toEndOf="@+id/iv_login_explain_app_second"
+            app:layout_constraintTop_toTopOf="@+id/iv_login_explain_app_first"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_login_explain_app_odya"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/h3"
+            android:textColor="@color/label_normal"
+            android:text="@string/login_explain_odya_app"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintStart_toStartOf="@+id/iv_login_explain_app_first"
+            app:layout_constraintBottom_toTopOf="@+id/tv_login_explain_easy_look_for" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_login_explain_easy_look_for"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_normal"
+            android:text="@string/login_explain_easy_look_for"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintStart_toStartOf="@+id/iv_login_explain_app_first"
+            app:layout_constraintBottom_toTopOf="@+id/iv_login_explain_odya"/>
+
+        <ImageView
+            android:id="@+id/iv_login_explain_odya"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintDimensionRatio="1"
+            android:src="@drawable/image_onboarding_odya"
+            app:layout_constraintBottom_toTopOf="@+id/btn_login_explain_app_odya"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login_explain_app_odya"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/h6"
+            android:textColor="@color/label_reversed_normal"
+            android:text="@string/go_next_step"
+            android:onClickListener="@{() -> vm.goNextStep()}"
+            android:background="@drawable/corners_top_8"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

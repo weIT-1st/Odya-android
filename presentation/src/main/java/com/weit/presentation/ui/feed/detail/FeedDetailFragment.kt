@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.feed
+package com.weit.presentation.ui.feed.detail
 
 import android.os.Bundle
 import android.view.View
@@ -11,10 +11,9 @@ import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.detail.CommentDialogFragment
-import com.weit.presentation.ui.feed.detail.FeedCommentAdapter
+import com.weit.presentation.ui.feed.FeedFragmentDirections
+import com.weit.presentation.ui.feed.FeedImageAdapter
 import com.weit.presentation.ui.feed.detail.menu.FeedDetailMyMenuFragment
-import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.feed.detail.menu.FeedDetailOtherMenuFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -51,7 +50,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         initCommentRecyclerView()
-        initListener()
     }
 
     private fun initCommentRecyclerView() {
@@ -71,8 +69,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     }
 
     private fun showCommentBottomSheet() {
-        if(bottomSheetDialog==null){
-            bottomSheetDialog = CommentDialogFragment(args.feedId)
+        if(commentDialog == null){
+            commentDialog = CommentDialogFragment(args.feedId)
         }
     }
 
@@ -89,13 +87,9 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         binding.btnWriteComment.setOnClickListener {
             viewModel.registerAndUpdateComment()
         }
-
-        binding.tbFeedDetail.setOnClickListener {
-            viewModel.deleteFeed()
-        }
         binding.btnFeedCommentMore.setOnClickListener {
-            if (bottomSheetDialog?.isAdded?.not() == true) {
-                bottomSheetDialog?.show(
+            if (commentDialog?.isAdded?.not() == true) {
+                commentDialog?.show(
                     requireActivity().supportFragmentManager,
                     CommentDialogFragment.TAG,
                 )
@@ -203,8 +197,6 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
             is FeedDetailViewModel.Event.ExistedFollowingIdException -> {
                 sendSnackBar("이미 팔로우 중입니다")
             }
-
-            else -> {}
         }
     }
 

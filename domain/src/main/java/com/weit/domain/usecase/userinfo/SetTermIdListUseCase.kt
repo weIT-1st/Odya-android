@@ -6,6 +6,6 @@ import javax.inject.Inject
 class SetTermIdListUseCase @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
 ) {
-    suspend operator fun invoke(termIdList : Set<String>): Result<Unit> =
+    suspend operator fun invoke(termIdList: Set<String>): Result<Unit> =
         userInfoRepository.setTermIdList(termIdList)
 }

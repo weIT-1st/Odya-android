@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/corners_all_4"
+    android:backgroundTint="@color/primary"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:layout_width="150dp">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_year"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/background_normal"
+        android:textAppearance="@style/detail1"
+        android:textAlignment="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="2023년"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_date"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="10dp"
+        android:textColor="@color/background_normal"
+        android:textAppearance="@style/body1"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_year"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="8월 1일 (화)" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

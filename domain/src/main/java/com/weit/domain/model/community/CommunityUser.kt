@@ -7,5 +7,5 @@ interface CommunityUser {
     val userId: Long
     val nickname: String
     val profile: UserProfile
-    val isFollowing: Boolean?
+    val isFollowing: Boolean
 }

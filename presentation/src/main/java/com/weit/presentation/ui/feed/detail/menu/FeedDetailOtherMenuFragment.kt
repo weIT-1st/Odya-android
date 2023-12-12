@@ -29,15 +29,14 @@ class FeedDetailOtherMenuFragment(val feedId: Long) : BottomSheetDialogFragment(
     ): View {
         _binding = BottomSheetFeedOtherMenuBinding.inflate(inflater, container, false)
 
-        binding.tvMyFeedClose.setOnClickListener {
-            dismiss()
-        }
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.tvMyFeedClose.setOnClickListener {
+            dismiss()
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.databinding.FragmentFeedBinding
 import com.weit.presentation.ui.base.BaseFragment
@@ -26,15 +25,16 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     private val feedAdapter = FeedAdapter(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
         navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
-        onFollowChanged = { userId, isChecked -> viewModel.onFollowStateChange(userId, isChecked) },
+        onFollowChanged = { communityId -> viewModel.onFollowStateChange(communityId) },
+        onLikeChanged = { communityId -> viewModel.onLikeStateChange(communityId)},
         scrollListener = { viewModel.onNextFriends() }
         )
     private val topicAdapter = FavoriteTopicAdapter(
         selectTopic = { topicId, position ->
-            viewModel.updateTopicUI(position)
+            viewModel.selectFeedTopic(topicId, position)
             binding.btnFeedSortAll.isChecked = false
             binding.btnFeedSortFriend.isChecked = false
-            viewModel.onNextFeeds(topicId)}
+        }
     )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,7 +42,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
         binding.vm = viewModel
         initTopicRecyclerView()
         initCommunityRecyclerView()
-
     }
 
     override fun initListener() {
@@ -64,7 +63,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedSearch()
             findNavController().navigate(action)
         }
-
     }
 
     private fun initTopicRecyclerView() {
@@ -96,7 +94,6 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
         }
     }
-
 
     private fun navigateTravelLog(travelLogId: Long) {
         val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)
@@ -145,5 +142,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             }
             else -> {}
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvCommunity.removeOnScrollListener(infinityScrollListener)
+        binding.rvCommunity.adapter = null
+        binding.rvTopic.adapter = null
+        super.onDestroyView()
     }
 }

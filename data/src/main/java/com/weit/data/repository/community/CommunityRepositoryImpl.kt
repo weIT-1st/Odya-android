@@ -16,15 +16,19 @@ import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
 import com.weit.domain.model.exception.InvalidPermissionException
+import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.community.ExistedCommunityIdException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.repository.community.comment.CommunityRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_CONFLICT
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
@@ -266,6 +270,24 @@ class CommunityRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun registerCommunityLike(communityId: Long): Result<Unit> {
+        val response = communityDataSource.registerCommunityLike(communityId)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleDeleteError(response))
+        }
+    }
+
+    override suspend fun deleteCommunityLike(communityId: Long): Result<Unit> {
+        val response = communityDataSource.deleteCommunityLike(communityId)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleDeleteError(response))
+        }
+    }
+
     private fun handleRegisterAndGetCommentError(t: Throwable): Throwable {
         return if (t is HttpException) {
             Logger.t("MainTest").i("실패 ${t.response()?.getErrorMessage()}")
@@ -285,6 +307,8 @@ class CommunityRepositoryImpl @Inject constructor(
             HTTP_NOT_FOUND -> NotExistCommunityIdOrCommunityCommentsException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
             HTTP_FORBIDDEN -> InvalidPermissionException()
+            HTTP_CONFLICT -> ExistedCommunityIdException()
+            HTTP_BAD_REQUEST -> InvalidRequestException()
             else -> {
                 UnKnownException()
             }

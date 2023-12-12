@@ -54,6 +54,7 @@ class FeedMyActivityLikeFragment() : BaseFragment<FragmentTabFeedLikeBinding>(
 
     override fun onDestroyView() {
         binding.rvTabFeedLike.removeOnScrollListener(infinityScrollListener)
+        binding.rvTabFeedLike.adapter = null
         super.onDestroyView()
     }
 }

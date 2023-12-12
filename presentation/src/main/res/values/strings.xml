@@ -73,13 +73,13 @@
     <string name="post_travel_log_friends_count">외 %d명</string>
     <string name="post_travel_log_daily">여행일지 및 사진</string>
     <string name="post_travel_log_daily_day">Day %d</string>
-    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요!</string>
+    <string name="post_travel_log_daily_contents_hint">여행일지를 작성해주세요</string>
     <string name="post_travel_log_daily_delete"><u>삭제하기</u></string>
     <string name="post_travel_log_daily_place">장소 태그하기</string>
     <string name="post_travel_log_daily_add">일정 추가하기</string>
     <string name="post_travel_log_daily_save">임시저장</string>
     <string name="post_travel_log_daily_post">등록하기</string>
-    <string name="post_travel_log_upload_feed">피드 공개</string>
+    <string name="post_travel_log_upload_feed">공개 여부</string>
     <string name="post_travel_log_daily_picture_count">%d / %d</string>
 
     <!-- travel friend search -->
@@ -87,11 +87,77 @@
     <string name="travel_friend_search">닉네임 검색</string>
     <string name="travel_friend_complete">완료</string>
 
+    <!-- select place -->
+    <string name="select_place_title">장소 태그하기</string>
+    <string name="select_place_search">장소를 검색해보세요</string>
+
+    <!-- date picker -->
+    <string name="date_picker_cancel">취소</string>
+    <string name="date_picker_complete">확인</string>
+    <string name="date_picker_year">%d년</string>
+    <string name="date_picker_date">%d월 %d일 (%s)</string>
+    <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
+    <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
+
+    <!--접근권한 관련 -->
+    <string name="visibility_title">접근권한</string>
+    <string name="visibility_all">전체공개</string>
+    <string name="visibility_friend">친구공개</string>
+    <string name="visibility_private">비공개</string>
+
+
+    <string name="feed_post_content_size">%d</string>
+    <string name="feed_post_image_update">사진편집</string>
+    <string name="feed_date_now">방금전</string>
+    <string name="feed_date_today">오늘</string>
+    <string name="feed_date_days">%d일전</string>
+
+    <!-- place bottom sheet   -->
+    <string name="place_score">%.1f</string>
+    <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
+
+    <string name="place_review">한줄리뷰</string>
+    <string name="place_how_about">%s의 방문 경험은 어떠셨나요?</string>
+    <string name="place_review_count">리뷰 총 %d개</string>
+    <string name="place_recent_review_sort">최신순</string>
+    <string name="place_write_review">리뷰 작성</string>
+    <string name="place_my_review">내가 작성한 리뷰</string>
+
+    <string name="place_journey">여행일지</string>
+    <string name="place_my_journal">나의 여행일지</string>
+    <string name="place_friend_journal">친구의 여행일지</string>
+    <string name="place_recommend_journal">추천 여행일지</string>
+
+    <string name="place_community">커뮤니티</string>
+
+    <!--  main  -->
+    <string name="place_main_popular_odya">지금 인기있는 오댜는?</string>
+    <string name="place_main_only_my_odya">내 오댜만 보기</string>
+    <string name="place_main_with_friend_odya">친구 오댜도 보기</string>
+
+
+    <string name="place_main_search">⚡️어디에 가고싶으신가요?</string>
+    <string name="place_main_search_cancel">취소</string>
+    <string name="place_main_search_recent">최근검색</string>
+    <string name="place_main_search_delete">모두삭제</string>
+
+    <!-- profile -->
+    <string name="profile_my_lifeshot">내 인생 샷</string>
+    <string name="profile_friend_lifeshot">인생 샷</string>
+    <string name="profile_rep_travel_journal">대표 여행일지</string>
+    <string name="profile_bookmark_travel_jouranl">즐겨찾기 여행일지</string>
+    <string name="profile_favorite_place">관심장소</string>
+    <string name="profile_my_community">내 커뮤니티 활동</string>
+    <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
+    <string name="profile_bookmark_place">%d개의 관심장소 더보기</string>
+
+
+    <string name="place_main_hot_place">🔥 오댜 핫플</string>
+        <!--  api연동 수 string 수정 필요  -->
+    <string name="place_main_hot_place_standard">09.09 10:00 기준</string>
+    <string name="place_main_hot_place_rank">%d위</string>
 
     <!-- feed -->
-    <string name="feed_reaction_over_count">%d+</string>
-    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
-    <string name="feed_comment_hint">댓글을 입력해주세요</string>
     <string name="feed_detail_topic"># %s</string>
     <string name="feed_comment_update">수정</string>
     <string name="feed_share">공유</string>
@@ -121,62 +187,4 @@
     <string name="feed_my_activity_like">좋아요</string>
     <string name="feed_search_hint">친구를 찾아보세요!</string>
     <string name="feed_search_title">최근 검색</string>
-
-
-
-    <!--접근권한 관련 -->
-    <string name="visibility_title">접근권한</string>
-    <string name="visibility_all">전체공개</string>
-    <string name="visibility_friend">친구공개</string>
-    <string name="visibility_private">비공개</string>
-
-
-    <string name="feed_post_content_size">%d</string>
-    <string name="feed_post_image_update">사진편집</string>
-
-    <!-- place bottom sheet   -->
-    <string name="place_score">%.1f</string>
-    <string name="place_experienced_friend_count">내 친구 %d명이 다녀갔어요!</string>
-
-    <string name="place_review">한줄리뷰</string>
-    <string name="place_how_about">%s의 방문 경험은 어떠셨나요?</string>
-    <string name="place_review_count">리뷰 총 %d개</string>
-    <string name="place_recent_review_sort">최신순</string>
-    <string name="place_write_review">리뷰 작성</string>
-    <string name="place_my_review">내가 작성한 리뷰</string>
-
-    <string name="place_journey">여행일지</string>
-    <string name="place_my_journal">나의 여행일지</string>
-    <string name="place_friend_journal">친구의 여행일지</string>
-    <string name="place_recommend_journal">추천 여행일지</string>
-
-    <string name="place_community">커뮤니티</string>
-
-
-    <!--  main  -->
-    <string name="place_main_popular_odya">지금 인기있는 오댜는?</string>
-    <string name="place_main_only_my_odya">내 오댜만 보기</string>
-    <string name="place_main_with_friend_odya">친구 오댜도 보기</string>
-
-    <string name="place_main_search">⚡️어디에 가고싶으신가요?</string>
-    <string name="place_main_search_cancel">취소</string>
-    <string name="place_main_search_recent">최근검색</string>
-    <string name="place_main_search_delete">모두삭제</string>
-
-    <string name="place_main_hot_place">🔥 오댜 핫플</string>
-        <!--  api연동 수 string 수정 필요  -->
-    <string name="place_main_hot_place_standard">09.09 10:00 기준</string>
-    <string name="place_main_hot_place_rank">%d위</string>
-
-
-    <!-- profile -->
-    <string name="profile_my_lifeshot">내 인생 샷</string>
-    <string name="profile_friend_lifeshot">인생 샷</string>
-    <string name="profile_rep_travel_journal">대표 여행일지</string>
-    <string name="profile_bookmark_travel_jouranl">즐겨찾기 여행일지</string>
-    <string name="profile_favorite_place">관심장소</string>
-    <string name="profile_my_community">내 커뮤니티 활동</string>
-    <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
-    <string name="profile_bookmark_place">%d개의 관심장소 더보기</string>
-
 </resources>

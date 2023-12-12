@@ -7,11 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetFeedMyMenuBinding
-import com.weit.presentation.ui.feed.FeedDetailFragmentArgs
-import com.weit.presentation.ui.feed.FeedDetailFragmentDirections
-import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -36,10 +32,17 @@ class FeedDetailMyMenuFragment(val feedId: Long) : BottomSheetDialogFragment() {
         _binding = BottomSheetFeedMyMenuBinding.inflate(inflater, container, false)
         initCollector()
 
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         binding.tvMyFeedUpdate.setOnClickListener {
+            // TODO dismiss하면서 이동 금지
             dismiss()
-            val action = FeedDetailFragmentDirections.actionFragmentFeedDetailToFragmentFeedPost(
-                emptyArray() ,feedId)
+            val action = FeedDetailMyMenuFragmentDirections.actionFragmentFeedDetailMyMenuToFragmentFeedPost(
+                emptyArray(), feedId
+            )
             findNavController().navigate(action)
         }
         binding.tvMyFeedDelete.setOnClickListener {
@@ -48,8 +51,6 @@ class FeedDetailMyMenuFragment(val feedId: Long) : BottomSheetDialogFragment() {
         binding.tvMyFeedClose.setOnClickListener {
             dismiss()
         }
-
-        return binding.root
     }
 
     fun initCollector() {

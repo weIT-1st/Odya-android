@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.weit.domain.model.community.CommunityContent
 import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetFeedCommentBinding
 import com.weit.presentation.ui.util.InfinityScrollListener
@@ -64,11 +63,6 @@ class CommentDialogFragment(val feedId: Long) : BottomSheetDialogFragment() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.comments.collectLatest { comments ->
                 feedCommentAdapter.submitList(comments)
-            }
-        }
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.changedComment.collectLatest { content ->
-                binding.etFeedComment.setText(content)
             }
         }
     }

@@ -67,6 +67,9 @@ class FollowRepositoryImpl @Inject constructor(
         followingSearchInfo: FollowingSearchInfo,
         query: String,
     ): Result<List<FollowUserContent>> {
+        if (followingSearchInfo.page == 0) {
+            hasNextFollowing.set(true)
+        }
         if (hasNextFollowing.get().not()) {
             return Result.failure(NoMoreItemException())
         }
@@ -109,6 +112,26 @@ class FollowRepositoryImpl @Inject constructor(
         return followDataSource.getCachedFollowings().filterByNickname(query)
     }
 
+    override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
+        if(mayknowUserSearchInfo.lastId == null){
+            hasNextUser.set(true)
+        }
+
+        if (hasNextUser.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getMayknowUsers(mayknowUserSearchInfo)
+        }
+        return if (result.isSuccess) {
+            val mayKnowUser = result.getOrThrow()
+            hasNextUser.set(mayKnowUser.hasNext)
+            Result.success(mayKnowUser.content)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
     override suspend fun getExperiencedFriend(placeId: String): Result<ExperiencedFriendInfo> {
         val result = runCatching {
             followDataSource.getExperiencedFriend(placeId)
@@ -129,26 +152,6 @@ class FollowRepositoryImpl @Inject constructor(
             )
         } else {
             Result.failure(handleFollowError(result.exception()))
-        }
-    }
-
-    override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
-        if(mayknowUserSearchInfo.lastId == null){
-            hasNextUser.set(true)
-        }
-
-        if (hasNextUser.get().not()) {
-            return Result.failure(NoMoreItemException())
-        }
-        val result = runCatching {
-            followDataSource.getMayknowUsers(mayknowUserSearchInfo)
-        }
-        return if (result.isSuccess) {
-            val mayKnowUser = result.getOrThrow()
-            hasNextUser.set(mayKnowUser.hasNext)
-            Result.success(mayKnowUser.content)
-        } else {
-            Result.failure(result.exception())
         }
     }
 

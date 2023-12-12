@@ -16,12 +16,12 @@ interface BookMarkService {
     ): Response<Unit>
 
 
-//    @GET("/api/v1/travel-journal-bookmarks/me")
-//    suspend fun getMyJournalBookMark(
-//        @Query("size") size: Int? = 10,
-//        @Query("lastId") lastId: Long?,
-//        @Query("sortType") sortType: String?
-//    ): ListResponse<JournalBookMarkDTO>
+    @GET("/api/v1/travel-journal-bookmarks/me")
+    suspend fun getMyJournalBookMark(
+        @Query("size") size: Int? = 10,
+        @Query("lastId") lastId: Long?,
+        @Query("sortType") sortType: String?
+    ): ListResponse<JournalBookMarkDTO>
 
     @DELETE("/api/v1/travel-journal-bookmarks/{travelJournalId}")
     suspend fun deleteJournalBookMark(

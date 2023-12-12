@@ -22,16 +22,18 @@ class UserSearchRepositoryImpl @Inject constructor(
 
     private fun UserSearchInfo.toUserSearch(): UserSearch =
         UserSearch(
-            userId = userId,
-            nickname = nickname,
-            profile = UserSearchProfile(
-                profileUrl = profile.url,
-                profileColor = UserSearchProfileColor(
-                    colorHex = profile.color.colorHex,
-                    red = profile.color.red,
-                    blue = profile.color.blue,
-                    green = profile.color.green
-                )
+            userId,
+            nickname,
+            UserSearchProfile(
+                profile.url,
+                profile.color?.let {
+                    UserSearchProfileColor(
+                        it.colorHex,
+                        it.red,
+                        it.blue,
+                        it.green
+                    )
+                }
             )
         )
 
@@ -48,10 +50,13 @@ class UserSearchRepositoryImpl @Inject constructor(
         return result.map {
             UserSearchInfo(it.userId,it.nickname,
                 UserProfileInfo(it.profile.profileUrl,
-                    UserProfileColorInfo(it.profile.profileColor.colorHex,
-                        it.profile.profileColor.red,
-                        it.profile.profileColor.blue,
-                        it.profile.profileColor.green)
+                    it.profile.profileColor?.let {
+                        UserProfileColorInfo(
+                            it.colorHex,
+                            it.red,
+                            it.blue,
+                            it.green)
+                    }
                 )
             )
         }

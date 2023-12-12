@@ -137,12 +137,8 @@ class UserRepositoryImpl @Inject constructor(
 
     private fun handleGetError(t: Throwable): Throwable {
         return if (t is HttpException) {
-            Logger.t("MainTest").i("${t.message}")
-
             handleCode(t.code())
         } else {
-            Logger.t("MainTest").i("${t.message}")
-
             t
         }
     }

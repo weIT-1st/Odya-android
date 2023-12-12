@@ -5,5 +5,5 @@ import androidx.room.Embedded
 data class UserSearchProfile(
     val profileUrl: String,
     @Embedded
-    val profileColor: UserSearchProfileColor,
+    val profileColor: UserSearchProfileColor?,
 )

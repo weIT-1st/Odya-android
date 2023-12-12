@@ -50,18 +50,21 @@ class FeedSearchViewModel @Inject constructor(
         getRecentUserSearch()
     }
 
-    fun plusRecentUserSearch(user: SearchUserContent) {
+    fun onSelectUser(user: SearchUserContent) {
         viewModelScope.launch {
             val newSearchInfo = UserSearchInfo(user.userId,user.nickname,
                 UserProfileInfo(user.profile.url,
-                    UserProfileColorInfo(user.profile.color!!.colorHex,
-                        user.profile.color!!.red,
-                        user.profile.color!!.blue,
-                        user.profile.color!!.green)
+                    user.profile.color?.let {
+                        UserProfileColorInfo(
+                            it.colorHex,
+                            it.red,
+                            it.blue,
+                            it.green)
+                    }
                 )
             )
             insertUserSearchUseCase(newSearchInfo)
-            _recentSearchUsers.value = _recentSearchUsers.value.plus(newSearchInfo)
+            _event.emit(Event.MoveToProfile)
         }
     }
 
@@ -70,7 +73,6 @@ class FeedSearchViewModel @Inject constructor(
             val list = recentSearchUsers.value
             val newList = list.filterNot { it == user }
             deleteUserSearchUseCase(user.userId)
-            _recentSearchUsers.value = emptyList()
             _recentSearchUsers.emit(newList)
         }
     }
@@ -107,7 +109,7 @@ class FeedSearchViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newUsers = result.getOrThrow()
 
-                if (newUsers.size > 0) {
+                if (newUsers.isNotEmpty()) {
                     userLastId = newUsers.last().userId
                 }
                 _searchResultUsers.emit(_searchResultUsers.value + newUsers)
@@ -116,8 +118,7 @@ class FeedSearchViewModel @Inject constructor(
     }
 
     sealed class Event {
-
+        object MoveToProfile : Event()
     }
 
-    companion object{}
 }

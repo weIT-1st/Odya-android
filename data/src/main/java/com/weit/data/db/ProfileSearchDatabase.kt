@@ -9,6 +9,6 @@ import com.weit.data.model.user.search.UserSearch
     version = 1,
     exportSchema = false,
 )
-abstract class UserSearchDatabase : RoomDatabase() {
+abstract class ProfileSearchDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 }

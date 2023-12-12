@@ -8,6 +8,7 @@ import androidx.navigation.fragment.findNavController
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedSearchBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.feed.FeedViewModel
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -25,8 +26,7 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
     )
     private val searchUserResultAdapter = SearchUserResultAdapter(
         selectUser = { user ->
-            navigateToProfile()
-            viewModel.plusRecentUserSearch(user)},
+            viewModel.onSelectUser(user)},
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -48,13 +48,14 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
     }
 
     private fun initRecyclerView() {
+        val spaceDecoration = SpaceDecoration(resources, bottomDP = R.dimen.item_travel_friend_search_space)
         binding.rvFeedSearchResult.run {
-            addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_travel_friend_search_space))
+            addItemDecoration(spaceDecoration)
             addOnScrollListener(infinityScrollListener)
             adapter = searchUserResultAdapter
         }
         binding.rvFeedRecentSearch.run {
-            addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_travel_friend_search_space))
+            addItemDecoration(spaceDecoration)
             adapter = recentUserSearchAdapter
         }
 
@@ -70,6 +71,7 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
+                handleEvent(event)
             }
         }
 
@@ -93,6 +95,15 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
             viewModel.searchResultUsers.collectLatest { users ->
                 searchUserResultAdapter.submitList(users)
             }
+        }
+    }
+
+    private fun handleEvent(event: FeedSearchViewModel.Event) {
+        when (event) {
+            is FeedSearchViewModel.Event.MoveToProfile -> {
+               navigateToProfile()
+            }
+            else -> {}
         }
     }
 

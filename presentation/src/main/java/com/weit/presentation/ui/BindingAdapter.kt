@@ -26,8 +26,10 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
 }
 
 @BindingAdapter("search_profile_background")
-fun bindSearchProfileBackground(view: ImageView, profile: UserProfileInfo) {
-    view.setBackgroundColor(Color.rgb(profile.color.red, profile.color.green, profile.color.blue))
+fun bindSearchProfileBackground(view: ImageView, profile: UserProfileInfo?) {
+   profile?.color?.let { color ->
+       view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
+   }
 }
 
 @BindingAdapter("text_reaction_count")

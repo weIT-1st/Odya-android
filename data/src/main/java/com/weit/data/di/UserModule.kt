@@ -2,13 +2,9 @@ package com.weit.data.di
 
 import android.content.Context
 import androidx.room.Room
-import com.weit.data.db.CoordinateDatabase
-import com.weit.data.db.UserSearchDatabase
-import com.weit.data.repository.coordinate.CoordinateRepositoryImpl
+import com.weit.data.db.ProfileSearchDatabase
 import com.weit.data.repository.user.UserSearchRepositoryImpl
-import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.UserSearchDataSource
-import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.user.UserSearchRepository
 import dagger.Module
 import dagger.Provides
@@ -22,10 +18,10 @@ import javax.inject.Singleton
 class UserModule {
     @Singleton
     @Provides
-    fun provideUserDatabase(@ApplicationContext context: Context): UserSearchDatabase =
+    fun provideProfileSearchDatabase(@ApplicationContext context: Context): ProfileSearchDatabase =
         Room.databaseBuilder(
             context.applicationContext,
-            UserSearchDatabase::class.java,
+            ProfileSearchDatabase::class.java,
             "user-database",
         ).build()
 
@@ -39,7 +35,7 @@ class UserModule {
     @Singleton
     @Provides
     fun provideUserSearchDataSource(
-        database: UserSearchDatabase,
+        database: ProfileSearchDatabase,
     ): UserSearchDataSource =
         UserSearchDataSource(database)
 }

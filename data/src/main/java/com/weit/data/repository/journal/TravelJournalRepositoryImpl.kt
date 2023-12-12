@@ -69,7 +69,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     return Result.failure(e)
                 }
                 MultipartBody.Part.createFormData(
-                    "travel-journal-content-image",
+                    TRAVEL_JOURNAL_CONTENT_IMAGE,
                     "$fileName.webp",
                     requestFile
                 )
@@ -81,8 +81,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
                 travelJournalInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalPart = MultipartBody.Part.createFormData(
-                "travel-journal",
-                "travel-journal",
+                TRAVEL_JOURNAL,
+                TRAVEL_JOURNAL,
                 travelJournalRequestBody
             )
             travelJournalDataSource.registerTravelJournal(travelJournalPart, files)
@@ -169,8 +169,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val travelJournalUpdateRequestBody = travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalUpdatePart = MultipartBody.Part.createFormData(
-                "travel-journal-update",
-                "travel-journal-update",
+                TRAVEL_JOURNAL_UPDATE,
+                TRAVEL_JOURNAL_UPDATE,
                 travelJournalUpdateRequestBody
             )
             travelJournalDataSource.updateTravelJournal(travelJournalId, travelJournalUpdatePart)
@@ -200,7 +200,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     return Result.failure(e)
                 }
                 MultipartBody.Part.createFormData(
-                    "travel-journal-content-image-update",
+                    TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE,
                     "$fileName.webp",
                     requestFile
                 )
@@ -211,8 +211,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val travelJournalContentRequestBody = travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalContentPart = MultipartBody.Part.createFormData(
-                "travel-journal-content-update",
-                "travel-journal-content-update",
+                TRAVEL_JOURNAL_CONTENT_UPDATE,
+                TRAVEL_JOURNAL_CONTENT_UPDATE,
                 travelJournalContentRequestBody)
             travelJournalDataSource.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentPart, files)
         }
@@ -352,4 +352,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
             profileUrl = profileUrl,
             isRegistered = isRegistered
         )
+
+    companion object{
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
+        private const val TRAVEL_JOURNAL = "travel-journal"
+        private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE = "travel-journal-content-image-update"
+        private const val TRAVEL_JOURNAL_CONTENT_UPDATE = "travel-journal-content-update"
+    }
 }

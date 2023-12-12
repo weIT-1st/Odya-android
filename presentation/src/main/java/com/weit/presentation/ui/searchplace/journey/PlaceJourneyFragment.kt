@@ -7,6 +7,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.DimensionUtils
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -25,9 +26,9 @@ class PlaceJourneyFragment(
         PlaceJourneyViewModel.provideFactory(viewModelFactory, placeId)
     }
 
-    private val myJournalAdapter: MyJournalAdapter by lazy { MyJournalAdapter() }
-    private val friendJournalAdapter: FriendJournalAdapter by lazy { FriendJournalAdapter() }
-    private val recommendJournalAdapter: RecommendJournalAdapter by lazy { RecommendJournalAdapter() }
+    private val myJournalAdapter: MyJournalAdapter = MyJournalAdapter()
+    private val friendJournalAdapter: FriendJournalAdapter = FriendJournalAdapter()
+    private val recommendJournalAdapter: RecommendJournalAdapter = RecommendJournalAdapter() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

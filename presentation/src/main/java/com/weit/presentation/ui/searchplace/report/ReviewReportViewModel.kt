@@ -62,7 +62,7 @@ class ReviewReportViewModel @AssistedInject constructor(
             }
             if (reportReason == ReportReason.OTHER && info.otherReason.isNullOrBlank()){
                 _event.emit(Event.EmptyOtherReason)
-            } else if (reportReason == ReportReason.OTHER && info.otherReason!!.length > maxOtherReasonLength){
+            } else if (reportReason == ReportReason.OTHER && info.otherReason!!.length > MAX_OTHER_REASON_LENGTH){
                 _event.emit(Event.TooLongOtherReason)
             } else {
                 val result = reviewReportReasonUseCase(info)
@@ -108,6 +108,6 @@ class ReviewReportViewModel @AssistedInject constructor(
             }
         }
 
-        const val maxOtherReasonLength: Int = 20
+        private const val MAX_OTHER_REASON_LENGTH: Int = 20
     }
 }

@@ -60,6 +60,11 @@ class PlaceCommunityViewModel @AssistedInject constructor(
 
             if (result.isSuccess) {
                 val newImages = result.getOrThrow()
+
+                if (newImages.isEmpty()){
+                    return@launch
+                }
+
                 communityLastId = newImages.last().communityId
                 if (newImages.isEmpty()){
                     onNextImages()

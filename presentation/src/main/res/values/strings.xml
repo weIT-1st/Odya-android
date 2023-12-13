@@ -150,6 +150,10 @@
     <string name="profile_my_community">내 커뮤니티 활동</string>
     <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
     <string name="profile_bookmark_place">%d개의 관심장소 더보기</string>
+    <string name="profile_image_select">앨범에서 사진 선택</string>
+    <string name="profile_image_none">기본 이미지로 변경</string>
+    <string name="profile_image_cancel">취소</string>
+
 
 
     <string name="place_main_hot_place">🔥 오댜 핫플</string>
@@ -187,4 +191,7 @@
     <string name="feed_my_activity_like">좋아요</string>
     <string name="feed_search_hint">친구를 찾아보세요!</string>
     <string name="feed_search_title">최근 검색</string>
+    <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
 </resources>

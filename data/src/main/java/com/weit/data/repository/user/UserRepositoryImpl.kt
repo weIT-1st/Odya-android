@@ -18,6 +18,7 @@ import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityC
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserStatistics
 import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
@@ -104,6 +105,15 @@ class UserRepositoryImpl @Inject constructor(
             val users = result.getOrThrow()
             hasNextUser.set(users.hasNext)
             Result.success(users.content)
+        } else {
+            Result.failure(handleGetError(result.exception()))
+        }
+    }
+
+    override suspend fun getUserStatistics(userId: Long): Result<UserStatistics> {
+        val result = runCatching { userDataSource.getUserStatistics(userId) }
+        return if (result.isSuccess) {
+            Result.success(result.getOrThrow())
         } else {
             Result.failure(handleGetError(result.exception()))
         }

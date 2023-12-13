@@ -3,6 +3,7 @@ package com.weit.domain.repository.user
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserStatistics
 
 interface UserRepository {
 
@@ -14,7 +15,7 @@ interface UserRepository {
 
     suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
 
-    suspend fun updateProfile(uri: String): Result<Unit>
+    suspend fun updateProfile(uri: String?): Result<Unit>
 
     suspend fun setUserId(userId: Long)
 
@@ -24,4 +25,7 @@ interface UserRepository {
 
     suspend fun searchUser(searchUserRequestInfo: SearchUserRequestInfo): Result<List<SearchUserContent>>
 
-    }
+    suspend fun getUserStatistics(userId: Long): Result<UserStatistics>
+
+
+}

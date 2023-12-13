@@ -4,6 +4,7 @@ import android.content.Context
 import com.weit.data.model.ListResponse
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
+import com.weit.data.model.user.UserStatisticsDTO
 import com.weit.data.service.UserService
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
@@ -50,4 +51,7 @@ class UserDataSource @Inject constructor(
         )
     }
 
+    suspend fun getUserStatistics(userId: Long): UserStatisticsDTO {
+        return userService.getUserStatistics(userId)
+    }
 }

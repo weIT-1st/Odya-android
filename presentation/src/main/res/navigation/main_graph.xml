@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
-        android:name="com.weit.presentation.ui.mypage.MyPageFragment"
+        android:name="com.weit.presentation.ui.profile.MyProfileFragment"
         android:label="MyPageFragment" />
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">

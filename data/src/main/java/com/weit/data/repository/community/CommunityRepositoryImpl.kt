@@ -97,7 +97,7 @@ class CommunityRepositoryImpl @Inject constructor(
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
-            communityDataSource.getCommunities(communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType)
+            communityDataSource.getCommunities(communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType,communityRequestInfo.placeId)
         }
         return if (result.isSuccess) {
             val communities = result.getOrThrow()

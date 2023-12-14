@@ -10,7 +10,8 @@ import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.weit.presentation.databinding.ItemPlaceRecentSearchBinding
 
 class RecentPlaceSearchAdapter(
-    private val deleteItem: (String) -> Unit
+    private val deleteItem: (String) -> Unit,
+    private val touchItem: (String) -> Unit
 ): ListAdapter<String, RecentPlaceSearchAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,6 +28,11 @@ class RecentPlaceSearchAdapter(
     inner class ViewHolder(
         private val binding: ItemPlaceRecentSearchBinding
     ): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.tvItemPlaceRecentSearch.setOnClickListener {
+                touchItem(getItem(absoluteAdapterPosition))
+            }
+        }
         fun bind(recentPlaceSearch: String){
             binding.btnItemPlaceRecentSearchDelete.setOnClickListener { deleteItem(recentPlaceSearch) }
             binding.tvItemPlaceRecentSearch.text = recentPlaceSearch

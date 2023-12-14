@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -198,11 +199,12 @@ class MapFragment :
     }
 
     private fun showMainSearchTopSheet(){
-        if (mainSearchTopSheetFragment == null){
-            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
-                viewModel.getDetailPlace(it)
-            }
+        mainSearchTopSheetFragment = null
+        mainSearchTopSheetFragment = MainSearchTopSheetFragment{placeId ->
+            viewModel.getDetailPlace(placeId)
+            placeBottomSheetUp(placeId)
         }
+
         if (!mainSearchTopSheetFragment!!.isAdded) {
             mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
         }

@@ -142,7 +142,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
             if (result.isSuccess) {
                 _recentSearchWords.emit(newList)
             } else {
-                Log.d("Delete Recent Place Search", "failed")
+                Log.d("Delete Recent Place Search", "failed : ${result.exceptionOrNull()}")
             }
         }
     }

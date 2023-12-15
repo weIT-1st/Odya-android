@@ -14,9 +14,6 @@
         android:id="@+id/fragment_map"
         android:name="com.weit.presentation.ui.map.MapFragment"
         android:label="MapFragment" >
-        <action
-            android:id="@+id/action_fragment_map_to_fragment_main_search_top_sheet"
-            app:destination="@id/fragment_main_search_top_sheet" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed"
@@ -170,6 +167,5 @@
             android:id="@+id/action_fragment_feed_detail_my_menu_to_fragment_feed"
             app:destination="@id/fragment_feed" />
     </dialog>
-
 
 </navigation>

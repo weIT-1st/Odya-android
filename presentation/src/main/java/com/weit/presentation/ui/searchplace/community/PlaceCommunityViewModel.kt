@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.community.CommunityMainContent
-import com.weit.domain.model.community.CommunityMyActivityContent
 import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.usecase.community.GetCommunitiesUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -13,7 +12,6 @@ import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

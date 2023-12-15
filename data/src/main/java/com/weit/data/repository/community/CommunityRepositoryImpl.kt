@@ -1,6 +1,5 @@
 package com.weit.data.repository.community
 
-import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import com.squareup.moshi.Moshi
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -50,7 +49,6 @@ class CommunityRepositoryImpl @Inject constructor(
     private val hasNextTopicCommunity = AtomicBoolean(true)
     private val hasNextMyLikeCommunity = AtomicBoolean(true)
     private val hasNextMyCommentCommunity = AtomicBoolean(true)
-
 
     override suspend fun registerCommunity(
         communityRegistrationInfo: CommunityRegistrationInfo,

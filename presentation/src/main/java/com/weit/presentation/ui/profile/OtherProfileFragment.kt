@@ -9,11 +9,15 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.weit.presentation.R
+import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.FeedFragmentDirections
+import com.weit.presentation.ui.feed.detail.FeedDetailFragmentArgs
+import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.feed.detail.menu.FeedDetailMyMenuFragment
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -21,47 +25,24 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import java.time.format.TextStyle
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
-    FragmentMyProfileBinding::inflate,
+class OtherProfileFragment : BaseFragment<FragmentFriendProfileBinding>(
+    FragmentFriendProfileBinding::inflate,
 ) {
 
-    private val viewModel: MyProfileViewModel by viewModels()
-    private var profileMenuDialog: ProfileMenuFragment? = null
+//    private val args: Other by navArgs()
 
+    private val viewModel: OtherProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var viewModelFactory: FeedDetailViewModel.FeedDetailFactory
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = viewModel
-
-
-
-
     }
 
     override fun initListener() {
-        binding.ivProfileImage.setOnClickListener {
-            if (profileMenuDialog == null) {
-                profileMenuDialog = ProfileMenuFragment { uri ->
-                    Glide.with(binding.root)
-                        .load(uri)
-                        .into(binding.ivProfileUser)
-                }
-
-            }
-            if (profileMenuDialog?.isAdded?.not() == true) {
-                profileMenuDialog?.show(
-                    requireActivity().supportFragmentManager,
-                    ProfileMenuFragment.TAG,
-                )
-            }
-
-        }
-
-        binding.tvProfileMyCommunity.setOnClickListener {
-            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentFeedMyActivity()
-            findNavController().navigate(action)
-        }
     }
 
     override fun initCollector() {
@@ -72,10 +53,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     }
 
-    private fun handleEvent(event: MyProfileViewModel.Event) {
+    private fun handleEvent(event: OtherProfileViewModel.Event) {
 
         when (event) {
-            is MyProfileViewModel.Event.GetUserStatisticsSuccess -> {
+            is OtherProfileViewModel.Event.GetUserStatisticsSuccess -> {
                 binding.tvProfileTotalOdyaCount.text = event.statistics.odyaCount.toString()
                 binding.tvProfileTotalFollowingCount.text = event.statistics.followingsCount.toString()
                 binding.tvProfileTotalFollowCount.text = event.statistics.followersCount.toString()

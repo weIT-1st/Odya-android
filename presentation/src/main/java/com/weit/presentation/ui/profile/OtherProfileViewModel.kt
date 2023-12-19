@@ -8,47 +8,63 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserStatistics
+import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.user.DeleteUserUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
+import com.weit.domain.usecase.user.GetUserSearchUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
-class MyProfileViewModel @Inject constructor(
+class OtherProfileViewModel @AssistedInject constructor(
     private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
-    private val getUserUseCase: GetUserUseCase,
+    private val getUserSearchUseCase: GetUserSearchUseCase,
+    private val changeFollowStateUseCase: ChangeFollowStateUseCase,
+    @Assisted private val userName: String,
+
     ) : ViewModel() {
 
-    private val _event = MutableEventFlow<MyProfileViewModel.Event>()
+
+//    @AssistedFactory
+//    interface FeedDetailFactory {
+//        fun create(feedId: Long): FeedDetailViewModel
+//    }
+//    val user = MutableStateFlow<User?>(null)
+
+    private val _event = MutableEventFlow<OtherProfileViewModel.Event>()
     val event = _event.asEventFlow()
-    private lateinit var user : User
 
     init {
-        viewModelScope.launch {
-            getUserUseCase().onSuccess {
-                user = it
-            }
-        }
+        getUserInfo()
         getUserStatistics()
 
     }
 
+    private fun getUserInfo(){
+        //팔로우 여부
+
+    }
+
+
     private fun getUserStatistics() {
-        viewModelScope.launch {
-            val result = getUserStatisticsUseCase(user.userId)
-                if (result.isSuccess) {
-                    _event.emit(Event.GetUserStatisticsSuccess(result.getOrThrow(),user))
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                }
-            }
+//        viewModelScope.launch {
+//            val result = getUserStatisticsUseCase(user.userId)
+//                if (result.isSuccess) {
+//                    _event.emit(Event.GetUserStatisticsSuccess(result.getOrThrow(),user))
+//                } else {
+//                    handleError(result.exceptionOrNull() ?: UnKnownException())
+//                }
+//            }
         }
 
 

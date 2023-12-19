@@ -118,24 +118,27 @@ class UserRepositoryImpl @Inject constructor(
             Result.failure(handleGetError(result.exception()))
         }
     }
+    private suspend fun getMultipartFile(uri: String): MultipartBody.Part{
+        val bytes = imageRepositoryImpl.getImageBytes(uri)
+        val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
 
-    override suspend fun updateProfile(uri: String): Result<Unit> {
+        val fileName = try {
+            imageDataSource.getImageName(uri)
+        } catch (_: Exception) {
+        }
+
+        return MultipartBody.Part.createFormData(
+            "profile",
+            "$fileName.webp",
+            requestFile,
+        )
+    }
+    override suspend fun updateProfile(uri: String?): Result<Unit> {
         return kotlin.runCatching {
-            val bytes = imageRepositoryImpl.getImageBytes(uri)
-            val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
-
-            val fileName = try {
-                imageDataSource.getImageName(uri)
-            } catch (e: Exception) {
-                return Result.failure(e)
+            var file : MultipartBody.Part?= null
+            if (uri != null) {
+                file = getMultipartFile(uri)
             }
-
-            val file = MultipartBody.Part.createFormData(
-                "profile",
-                "$fileName.webp",
-                requestFile,
-            )
-
             val result = userDataSource.updateProfile(file)
             if (result.isSuccessful) {
                 Result.success(Unit)

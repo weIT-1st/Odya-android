@@ -35,7 +35,7 @@ class UserDataSource @Inject constructor(
         userService.updateInformation(informationUpdateUser)
     }
 
-    suspend fun updateProfile(profile: MultipartBody.Part): Response<Unit> {
+    suspend fun updateProfile(profile: MultipartBody.Part?): Response<Unit> {
         return userService.updateUserProfile(profile)
     }
 

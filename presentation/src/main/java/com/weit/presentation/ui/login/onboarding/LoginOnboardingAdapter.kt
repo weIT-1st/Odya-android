@@ -19,7 +19,7 @@ class LoginOnboardingAdapter(
         val item = getItem(position)
         holder.bind(item)
     }
-    inner class ViewHolder(
+    class ViewHolder(
         private val binding: ItemLoginOnboardingBinding
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: LoginOnboardingModel){

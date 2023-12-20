@@ -2,22 +2,18 @@ package com.weit.presentation.ui.login.input.userinfo
 
 import android.app.DatePickerDialog
 import android.app.DatePickerDialog.OnDateSetListener
-import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.domain.model.GenderType
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentLoginInputUserInfoBinding
-import com.weit.presentation.ui.MainActivity
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -57,7 +53,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                TODO("Not yet implemented")
+                // 정의할 필요 없음
             }
 
         }

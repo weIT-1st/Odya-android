@@ -1,7 +1,6 @@
 package com.weit.presentation.ui.login.onboarding
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -10,7 +9,6 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentLoginOnboardingBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.login.LoginFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -23,14 +21,12 @@ class LoginOnboardingFragment: BaseFragment<FragmentLoginOnboardingBinding>(
     private val loginOnboardingAdapter = LoginOnboardingAdapter()
     private val pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
-            Log.d("jomi", "listener : $position")
             viewModel.changeCurrentPage(position)
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel
         initLoginOnboardingViewPager()
     }
 
@@ -43,8 +39,6 @@ class LoginOnboardingFragment: BaseFragment<FragmentLoginOnboardingBinding>(
 
         repeatOnStarted(viewLifecycleOwner){
             viewModel.currentPage.collectLatest {current ->
-                Log.d("jomi", "current : $current")
-
                 if (current == loginOnboardingAdapter.itemCount - 1) {
                     binding.btnLoginOnboardingGoNext.apply {
                         text = context.getText(R.string.login_start_odya)
@@ -65,7 +59,10 @@ class LoginOnboardingFragment: BaseFragment<FragmentLoginOnboardingBinding>(
     }
 
     override fun onDestroyView() {
-        binding.viewPagerLoginOnbarding.adapter = null
+        binding.viewPagerLoginOnbarding.apply {
+            adapter = null
+            unregisterOnPageChangeCallback(pageChangeCallback)
+        }
         super.onDestroyView()
     }
 

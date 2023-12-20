@@ -1,23 +1,35 @@
 package com.weit.data.repository.user
 
 import android.content.res.Resources.NotFoundException
+import com.orhanobut.logger.Logger
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.data.source.UserInfoDataSource
+import com.weit.data.util.exception
+import com.weit.data.util.getErrorMessage
+import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
+import com.weit.domain.model.user.SearchUserContent
+import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
 import com.weit.domain.repository.user.UserRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
+import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.HttpException
 import retrofit2.Response
+import java.util.concurrent.atomic.AtomicBoolean
 import java.util.regex.Pattern
 import javax.inject.Inject
 
@@ -27,6 +39,7 @@ class UserRepositoryImpl @Inject constructor(
     private val imageRepositoryImpl: ImageRepositoryImpl,
     private val userInfoDataSource: UserInfoDataSource,
 ) : UserRepository {
+    private val hasNextUser = AtomicBoolean(true)
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
@@ -74,6 +87,28 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
+
+
+    override suspend fun searchUser(searchUserRequestInfo: SearchUserRequestInfo): Result<List<SearchUserContent>> {
+        if(searchUserRequestInfo.lastId == null){
+            hasNextUser.set(true)
+        }
+
+        if (hasNextUser.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            userDataSource.searchUser(searchUserRequestInfo)
+        }
+        return if (result.isSuccess) {
+            val users = result.getOrThrow()
+            hasNextUser.set(users.hasNext)
+            Result.success(users.content)
+        } else {
+            Result.failure(handleGetError(result.exception()))
+        }
+    }
+
     override suspend fun updateProfile(uri: String): Result<Unit> {
         return kotlin.runCatching {
             val bytes = imageRepositoryImpl.getImageBytes(uri)
@@ -100,13 +135,26 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun handleUserError(response: Response<Unit>): Throwable {
-        return when (response.code()) {
+    private fun handleGetError(t: Throwable): Throwable {
+        return if (t is HttpException) {
+            handleCode(t.code())
+        } else {
+            t
+        }
+    }
+
+    private fun handleCode(code: Int): Throwable {
+        return when (code) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
-            HTTP_INTERNAL_SERVER_ERROR -> UnKnownException()
-            else -> UnKnownException()
+            else -> {
+                UnKnownException()
+            }
         }
+    }
+
+    private fun handleUserError(response: Response<Unit>): Throwable {
+        return handleCode(response.code())
     }
 
     companion object {

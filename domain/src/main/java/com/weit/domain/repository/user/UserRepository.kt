@@ -1,5 +1,7 @@
 package com.weit.domain.repository.user
 
+import com.weit.domain.model.user.SearchUserContent
+import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
 
 interface UserRepository {
@@ -18,5 +20,8 @@ interface UserRepository {
 
     suspend fun getUserId(): Long
 
-    suspend fun deleteUser(): Result<Unit>
-}
+    suspend fun deleteUser() : Result<Unit>
+
+    suspend fun searchUser(searchUserRequestInfo: SearchUserRequestInfo): Result<List<SearchUserContent>>
+
+    }

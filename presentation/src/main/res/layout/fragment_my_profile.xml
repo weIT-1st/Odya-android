@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.mypage.MyPageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_profile"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:id="@+id/iv_profile_bg"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:background="@drawable/corners_top_8"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/background"
+                    app:layout_constraintDimensionRatio="1.2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/iv_profile_setting"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="14dp"
+                    android:src="@drawable/ic_setting"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_bg" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_profile_user"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_marginTop="73dp"
+                    android:src="@drawable/ic_profile"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
+                    app:layout_constraintStart_toStartOf="@+id/iv_profile_bg"
+                    app:layout_constraintTop_toTopOf="@+id/iv_profile_bg"
+                    app:shapeAppearance="@style/ShapeableImageViewCircle" />
+
+                <ImageView
+                    android:id="@+id/iv_profile_camera"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/ic_profile_camera"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_user"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_profile_user" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_nickname"
+                    style="@style/h3"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="23dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:textColor="?attr/colorOnSurface"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
+                    app:layout_constraintStart_toStartOf="@+id/iv_profile_bg"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_profile_user"
+                    tools:text="홍길동" />
+
+
+                <View
+                    android:id="@+id/view_profile_total_count"
+                    android:layout_width="336dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/corners_all_16"
+                    android:backgroundTint="@color/line_alternative"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_profile_bg"
+                    app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
+                    app:layout_constraintHorizontal_bias="0.493"
+                    app:layout_constraintStart_toStartOf="@+id/iv_profile_bg" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_odya"
+                    style="@style/body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="60dp"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="총오댜"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="@+id/view_profile_total_count"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_count" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_odya_count"
+                    style="@style/h4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_profile_total_odya"
+                    app:layout_constraintStart_toStartOf="@+id/tv_profile_total_odya"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_total_odya"
+                    tools:text="119" />
+
+                <View
+                    android:id="@+id/view_profile_bar1"
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@color/label_alternative"
+                    app:layout_constraintStart_toEndOf="@+id/tv_profile_total_odya"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_count" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_following"
+                    style="@style/body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="팔로잉"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toEndOf="@+id/view_profile_bar1"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_count" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_following_count"
+                    style="@style/h4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_profile_total_following"
+                    app:layout_constraintStart_toStartOf="@+id/tv_profile_total_following"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_total_following"
+                    tools:text="119" />
+
+                <View
+                    android:id="@+id/view_profile_bar2"
+                    android:layout_width="1dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="25dp"
+                    android:background="@color/label_alternative"
+                    app:layout_constraintStart_toEndOf="@+id/tv_profile_total_following"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_count" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_follow"
+                    style="@style/body1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="18dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:text="팔로우"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toEndOf="@+id/view_profile_bar2"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_count" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_follow_count"
+                    style="@style/h4"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintEnd_toEndOf="@+id/tv_profile_total_follow"
+                    app:layout_constraintStart_toStartOf="@+id/tv_profile_total_follow"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_total_follow"
+                    tools:text="119" />
+
+                <View
+                    android:id="@+id/view_profile_total_travel"
+                    android:layout_width="0dp"
+                    android:layout_height="212dp"
+                    android:layout_marginStart="19dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="19dp"
+                    android:background="@drawable/corners_all_16"
+                    android:backgroundTint="@color/elevation3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_profile_total_count" />
+
+                <ImageView
+                    android:id="@+id/iv_profile_image"
+                    android:layout_width="300dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/odya32"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_travel"
+                    app:layout_constraintStart_toStartOf="@+id/view_profile_total_travel"
+                    app:layout_constraintEnd_toEndOf="@+id/view_profile_total_travel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_total_travel_count"
+                    style="@style/body1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:textAlignment="center"
+                    android:text="@string/profile_total_travel_count"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_profile_image"
+                    app:layout_constraintStart_toStartOf="@+id/view_profile_total_travel"
+                    app:layout_constraintEnd_toEndOf="@+id/view_profile_total_travel" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_lifeshot_title"
+                    style="@style/h4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:drawableEnd="@drawable/ic_plus"
+                    android:text="@string/profile_my_lifeshot"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_profile_total_travel" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_profile_lifeshot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    android:layout_marginStart="20dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_lifeshot_title"
+                    tools:itemCount="8"
+                    tools:listitem="@layout/item_profile_lifeshot" />
+
+
+                <View
+                    android:id="@+id/view_line1"
+                    android:layout_width="0dp"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/elevation3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_lifeshot" />
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_rep_travel_journal"
+                    style="@style/h4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:drawableEnd="@drawable/ic_writing_pen"
+                    android:text="@string/profile_rep_travel_journal"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_line1" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_profile_travel_journal"
+                    android:layout_width="match_parent"
+                    android:layout_height="280dp"
+                    android:layout_marginTop="27dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_rep_travel_journal"
+                    tools:itemCount="8"/>
+
+                <View
+                    android:id="@+id/view_profile_travel_journal"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/corners_all_12"
+                    android:backgroundTint="@color/elevation4"
+                    android:minHeight="56dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_travel_journal" />
+
+
+                <ImageView
+                    android:id="@+id/iv_profile_travel_journal_pencil"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="36dp"
+                    android:src="@drawable/ic_pencil"
+                    app:layout_constraintStart_toStartOf="@+id/view_profile_travel_journal"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_travel_journal" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_travel_journal_content"
+                    style="@style/detail2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/label_assistive"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_travel_journal"
+                    app:layout_constraintEnd_toEndOf="@+id/view_profile_travel_journal"
+                    app:layout_constraintStart_toEndOf="@+id/iv_profile_travel_journal_pencil"
+                    tools:text="일반적인 Android 앱에는 활동, 프래그먼트, 서비스, 콘텐츠 제공자, broadcast receiver를 비롯하여 " />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_bookmark_travel_journal"
+                    style="@style/h4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/profile_bookmark_travel_jouranl"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_profile_travel_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_profile_bookmark_travel_journal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp"
+                    android:orientation="horizontal"
+                    android:layout_marginStart="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_marginTop="22dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_travel_journal"
+                    tools:listitem="@layout/item_bookmark_travel_journal"
+                    tools:itemCount="10"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_bookmark_place"
+                    style="@style/h4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/profile_favorite_place"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_bookmark_travel_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_profile_boomark_place"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginStart="20dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_marginTop="22dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_place"
+                    tools:listitem="@layout/item_profile_favorite_place"
+                    tools:itemCount="4"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_profile_bookmark_place_more"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="@color/elevation4"
+                    android:maxLines="1"
+                    android:textAlignment="center"
+                    android:textAppearance="@style/detail1"
+                    android:textColor="@color/label_assistive"
+                    app:backgroundTint="@color/elevation3"
+                    app:cornerRadius="@dimen/button_large_radius"
+                    app:icon="@drawable/ic_right_arrow"
+                    app:iconGravity="textEnd"
+                    app:iconTint="@color/label_assistive"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_boomark_place"
+                    app:strokeColor="@color/line_alternative"
+                    app:strokeWidth="1dp"
+                    tools:text="@string/profile_bookmark_place" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_my_community"
+                    style="@style/h4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="20dp"
+                    android:drawableEnd="@drawable/ic_go_right_arrow"
+                    android:text="@string/profile_my_community"
+                    android:textColor="@color/label_alternative"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btn_profile_bookmark_place_more" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

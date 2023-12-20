@@ -134,4 +134,5 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
-</resources>
+ </resources>
+

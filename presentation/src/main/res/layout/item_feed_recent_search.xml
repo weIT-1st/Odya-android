@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="user"
+            type="com.weit.domain.model.user.search.UserSearchInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_feed_user_search_image"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:scaleType="centerCrop"
+            app:image_uri="@{user.profile.url}"
+            app:search_profile_background="@{user.profile}"
+            app:shapeAppearance="@style/ShapeableImageViewCircle"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_feed_user_search_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:drawablePadding="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{user.nickname}"
+            android:textAppearance="@style/body1"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/iv_feed_user_search_badge"
+            app:layout_constraintStart_toEndOf="@+id/iv_feed_user_search_image"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="홍길동" />
+
+        <ImageView
+            android:id="@+id/iv_feed_user_search_badge"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/ic_badge"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintBottom_toBottomOf="@id/tv_feed_user_search_name"
+            app:layout_constraintEnd_toStartOf="@id/btn_feed_user_search_delete"
+            app:layout_constraintStart_toEndOf="@id/tv_feed_user_search_name"
+            app:layout_constraintTop_toTopOf="@id/tv_feed_user_search_name" />
+
+        <ImageButton
+            android:id="@+id/btn_feed_user_search_delete"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:src="@drawable/ic_cancel"
+            android:backgroundTint="@android:color/transparent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

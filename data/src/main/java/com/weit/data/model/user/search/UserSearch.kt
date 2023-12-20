@@ -11,4 +11,5 @@ data class UserSearch(
     val nickname: String,
     @Embedded
     val profile: UserSearchProfile,
+    val time: Long,
 )

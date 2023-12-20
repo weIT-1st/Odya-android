@@ -53,7 +53,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // 정의할 필요 없음
+                // 그냥 비워둘것
             }
 
         }

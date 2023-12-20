@@ -17,7 +17,7 @@ class GetPlaceReviewContentUseCase @Inject constructor(
         val placeReviewResult = placeReviewRepository.getByPlaceId(PlaceReviewByPlaceIdQuery(placeId))
 
         return if (placeReviewResult.isSuccess) {
-            val review = placeReviewResult.getOrThrow().content
+            val review = placeReviewResult.getOrThrow()
             val list = review.map {
                 PlaceReviewInfo(
                     it.userInfo.nickname,

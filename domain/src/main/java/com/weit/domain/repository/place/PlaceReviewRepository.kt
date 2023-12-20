@@ -3,6 +3,7 @@ package com.weit.domain.repository.place
 import com.weit.domain.model.place.PlaceReviewByPlaceIdQuery
 import com.weit.domain.model.place.PlaceReviewBySearching
 import com.weit.domain.model.place.PlaceReviewByUserIdQuery
+import com.weit.domain.model.place.PlaceReviewContent
 import com.weit.domain.model.place.PlaceReviewRegistrationInfo
 import com.weit.domain.model.place.PlaceReviewUpdateInfo
 
@@ -21,11 +22,11 @@ interface PlaceReviewRepository {
 
     suspend fun getByPlaceId(
         info: PlaceReviewByPlaceIdQuery,
-    ): Result<PlaceReviewBySearching>
+    ): Result<List<PlaceReviewContent>>
 
     suspend fun getByUserId(
         info: PlaceReviewByUserIdQuery,
-    ): Result<PlaceReviewBySearching>
+    ): Result<List<PlaceReviewContent>>
 
     suspend fun isExistReview(
         placeId: String,

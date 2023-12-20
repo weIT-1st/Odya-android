@@ -9,36 +9,11 @@
         android:name="com.weit.presentation.ui.login.login.LoginFragment"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_loginFragment_to_loginOnboardingOdyaFragment"
-            app:destination="@id/loginOnboardingOdyaFragment" />
+            android:id="@+id/action_loginFragment_to_loginOnboardingFragment"
+            app:destination="@id/loginOnboardingFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/loginOnboardingOdyaFragment"
-        android:name="com.weit.presentation.ui.login.onboarding.odya.LoginOnboardingOdyaFragment"
-        android:label="LoginExplianOdyaFragment">
-        <action
-            android:id="@+id/action_loginOnboardingOdyaFragment_to_loginOnboardingJournalFragment"
-            app:destination="@id/loginOnboardingJournalFragment" />
-    </fragment>
 
-    <fragment
-        android:id="@+id/loginOnboardingJournalFragment"
-        android:name="com.weit.presentation.ui.login.onboarding.journal.LoginOnboardingJournalFragment"
-        android:label="LoginOnboardingJournalFragment">
-        <action
-            android:id="@+id/action_loginOnboardingJournalFragment_to_loginOnboardingRoutineFragment"
-            app:destination="@id/loginOnboardingRoutineFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/loginOnboardingRoutineFragment"
-        android:name="com.weit.presentation.ui.login.onboarding.routine.LoginOnboardingRoutineFragment"
-        android:label="LoginOnboardingRoutineFragment">
-        <action
-            android:id="@+id/action_loginOnboardingRoutineFragment_to_loginConsentDeviceFragment"
-            app:destination="@id/loginConsentDeviceFragment" />
-    </fragment>
 
     <fragment
         android:id="@+id/loginConsentDeviceFragment"
@@ -91,5 +66,13 @@
             android:id="@+id/action_loginConsentDialogFragment_to_loginNicknameFragment"
             app:destination="@id/loginNicknameFragment" />
     </dialog>
+    <fragment
+        android:id="@+id/loginOnboardingFragment"
+        android:name="com.weit.presentation.ui.login.onboarding.LoginOnboardingFragment"
+        android:label="LoginOnboardingFragment" >
+        <action
+            android:id="@+id/action_loginOnboardingFragment_to_loginConsentDeviceFragment"
+            app:destination="@id/loginConsentDeviceFragment" />
+    </fragment>
 
 </navigation>

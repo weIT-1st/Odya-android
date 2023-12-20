@@ -42,7 +42,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
     }
 
     private fun moveToLogin(){
-        val action = LoginFragmentDirections.actionLoginFragmentToLoginOnboardingOdyaFragment()
+        val action = LoginFragmentDirections.actionLoginFragmentToLoginOnboardingFragment()
         findNavController().navigate(action)
     }
 

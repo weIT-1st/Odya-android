@@ -44,7 +44,6 @@ class LoginLoadingFragment: BaseFragment<FragmentLoginLoadingBinding>(
     private fun handelEvent(event: LoginLoadingViewModel.Event) {
         when(event){
             LoginLoadingViewModel.Event.SuccessRegister -> {
-                sendSnackBar("정상적으로 회원가입이 되었습니다.")
                 moveToMain()
             }
             LoginLoadingViewModel.Event.DuplicatedSomethingException -> {

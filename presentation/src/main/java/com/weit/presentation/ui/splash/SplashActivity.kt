@@ -52,7 +52,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding> (
     private fun handleEvent(event: SplashViewModel.Event){
         when(event){
             SplashViewModel.Event.LoginFail -> {moveToLogin()}
-            SplashViewModel.Event.LoginSuccess -> {moveToMain()}
+            SplashViewModel.Event.LoginSuccess -> {
+                moveToMain()
+            }
             is SplashViewModel.Event.UserRegistrationRequired -> {}
         }
     }

@@ -28,6 +28,7 @@ import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
+import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -44,7 +45,7 @@ import javax.inject.Inject
 
 class TravelJournalRepositoryImpl @Inject constructor(
     private val travelJournalDataSource: TravelJournalDataSource,
-    private val imageRepositoryImpl: ImageRepositoryImpl,
+    private val imageRepository: ImageRepository,
     private val imageDataSource: ImageDataSource,
     private val moshi: Moshi
 ) : TravelJournalRepository {
@@ -61,8 +62,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         val result = runCatching {
             val files = travelJournalImages.map {
-                val bytes = imageRepositoryImpl.getImageBytes(it)
-                val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+                val requestFile = imageDataSource.getRequestBody(it)
                 val fileName = try{
                     imageDataSource.getImageName(it)
                 } catch (e: Exception) {
@@ -192,8 +192,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     ): Result<Unit> {
         val result = runCatching {
             val files = travelJournalContentImages.map {
-                val bytes = imageRepositoryImpl.getImageBytes(it)
-                val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
+                val requestFile = imageDataSource.getRequestBody(it)
                 val fileName = try {
                     imageDataSource.getImageName(it)
                 } catch (e: Exception) {

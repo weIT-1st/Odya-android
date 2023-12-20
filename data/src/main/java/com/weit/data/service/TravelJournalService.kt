@@ -81,7 +81,7 @@ interface TravelJournalService {
         @Path("travelJournalId") travelJournalId: Long
     ): Response<Unit>
 
-    @DELETE("/api/v1/travel-journals/{travelJournalId}}/{travelJournalContentId}}")
+    @DELETE("/api/v1/travel-journals/{travelJournalId}}/{travelJournalContentId}")
     suspend fun deleteTravelJournalContent(
         @Path("travelJournalId") travelJournalId: Long,
         @Path("travelJournalContentId") travelJournalContentId: Long

@@ -26,14 +26,8 @@ class ImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getImageBytes(uri: String): ByteArray {
-        val bitmap = dataSource.getBitmapByUri(uri)
-        val rotatedBitmap = bitmap.getRotatedBitmap(dataSource.getRotate(uri))
-        val scaledBitmap = dataSource.getScaledBitmap(rotatedBitmap)
-        val bytes = dataSource.getCompressedBytes(scaledBitmap)
-        scaledBitmap.recycle()
-        return bytes
-    }
+    override suspend fun getImageBytes(uri: String): ByteArray =
+        dataSource.getImageByte(uri)
 
     fun Bitmap.getRotatedBitmap(degree: Float): Bitmap {
         val matrix = Matrix().apply { postRotate(degree) }

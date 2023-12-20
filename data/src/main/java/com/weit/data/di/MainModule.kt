@@ -77,7 +77,8 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
+    fun provideImageDataSource(
+        @ApplicationContext context: Context): ImageDataSource =
         ImageDataSource(context.contentResolver)
 
     @ActivityRetainedScoped

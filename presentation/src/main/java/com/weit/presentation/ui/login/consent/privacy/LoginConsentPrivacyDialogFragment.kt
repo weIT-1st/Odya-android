@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -43,7 +44,7 @@ class LoginConsentPrivacyDialogFragment : BottomSheetDialogFragment() {
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.termContent.collectLatest { content ->
-                binding.tvTermsContent.text = content
+                binding.tvTermsContent.text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_COMPACT)
             }
         }
     }

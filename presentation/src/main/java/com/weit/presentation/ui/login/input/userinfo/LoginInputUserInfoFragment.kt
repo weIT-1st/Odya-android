@@ -14,6 +14,7 @@ import android.widget.ArrayAdapter
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.weit.domain.model.GenderType
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentLoginInputUserInfoBinding
 import com.weit.presentation.ui.MainActivity
@@ -41,6 +42,25 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             DEFAULT_DAY,
         )
     }
+
+    private val genderSpinnerItemSelectedListener = object :
+        AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                val gender = when (position) {
+                    1 -> GenderType.MALE
+                    2 -> GenderType.FEMALE
+                    else -> GenderType.IDLE
+                }
+                viewModel.setGender(gender)
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("Not yet implemented")
+            }
+
+        }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -89,7 +109,8 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
     }
 
     private fun moveToMainLoading() {
-        val action = LoginInputUserInfoFragmentDirections.actionLoginInputUserInfoFragmentToLoginLoadingFragment()
+        val action =
+            LoginInputUserInfoFragmentDirections.actionLoginInputUserInfoFragmentToLoginLoadingFragment()
         findNavController().navigate(action)
     }
 
@@ -113,17 +134,7 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
         binding.spinnerLoginInputUserInfoGender.adapter =
             GenderOptionSpinnerAdapter(requireContext(), R.layout.dropdown_login_gender, list)
         binding.spinnerLoginInputUserInfoGender.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
-                ) {
-                    viewModel.setGender(position)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                    TODO("Not yet implemented")
-                }
-            }
+            genderSpinnerItemSelectedListener
     }
 
     private fun handleEvent(event: LoginInputUserInfoViewModel.Event) {
@@ -131,9 +142,11 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
             LoginInputUserInfoViewModel.Event.BirthNotSelected -> {
                 sendSnackBar("생년월일이 제대로 입력되지 않았어요. 생년월일을 입력해주세요")
             }
+
             LoginInputUserInfoViewModel.Event.GenderNotSelected -> {
                 sendSnackBar("성별이 제대로 입력되지 않았어요. 성별을 입력해주세")
             }
+
             LoginInputUserInfoViewModel.Event.NotReadyToRegister -> {}
             LoginInputUserInfoViewModel.Event.ReadyToRegister -> {
                 moveToMainLoading()

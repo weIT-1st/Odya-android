@@ -7,12 +7,12 @@
     <!-- login -->
     <string name="text_login_kakao">카카오로 로그인</string>
 
-    <string name="login_explain_odya_app">저번에 너가 갔던 그곳,\n어디야?</string>
-    <string name="login_explain_easy_look_for">친구가 방문했던 장소를\n쉽게 찾아봐요</string>
-    <string name="login_explain_travel_journal">지도에 쓰는\n나의 인생장소 여행일지</string>
-    <string name="login_explain_visit_share">오댜에서 기억에 남는 장소들을\n방문하고 공유해보세요</string>
-    <string name="login_explain_travel_route">한 눈에 담아보는\n나의 여행 동선</string>
-    <string name="login_explain_show_travel_route">동선을 보여드려요</string>
+    <string name="login_onboarding_odya_main">저번에 너가 갔던 그곳,\n어디야?</string>
+    <string name="login_onboarding_odya_detail">친구가 방문했던 장소를\n쉽게 찾아봐요</string>
+    <string name="login_onboarding_journal_main">지도에 쓰는\n나의 인생장소 여행일지</string>
+    <string name="login_onboarding_journal_detail">오댜에서 기억에 남는 장소들을\n방문하고 공유해보세요</string>
+    <string name="login_onboarding_route_main">한 눈에 담아보는\n나의 여행 동선</string>
+    <string name="login_onboarding_route_detail">동선을 보여드려요</string>
     <string name="login_start_odya">오댜 시작하기</string>
 
     <string name="go_back_step">뒤로가기</string>
@@ -36,6 +36,7 @@
     <string name="login_terms_consent">동의하기</string>
 
     <string name="login_what_name">오댜에서 활동할 \n이름을 알려주세요!</string>
+    <string name="login_what_name_detail">최소 2자~최대 8자, 특수문자 불가능</string>
     <string name="login_name_hint">홍길동</string>
     <string name="login_who_you">%s님이\n궁금해요!</string>
     <string name="login_who_you_warning">성별과 생년월일은 수정할 수 없어요\n정확한 정보를 입력해 주세요!</string>
@@ -46,6 +47,7 @@
         <item>남성</item>
         <item>여성</item>
     </string-array>
+    <string name="login_loading">메인페이지를\n생성중이에요</string>
     
     <string name="login_topic_sea">바다여행</string>
     <string name="login_topic_camping">캠핑여행</string>

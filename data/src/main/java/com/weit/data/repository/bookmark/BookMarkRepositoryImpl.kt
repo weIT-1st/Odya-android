@@ -22,7 +22,8 @@ class BookMarkRepositoryImpl @Inject constructor(
     private val dataSource: BookMarkDataSource
 ): BookMarkRepository {
 
-    private val hasNextBookMark = AtomicBoolean(true)
+    private val hasNextMyBookMark = AtomicBoolean(true)
+    private val hasNextUserBookMark = AtomicBoolean(true)
     override suspend fun createJournalBookmark(travelJournalId: Long): Result<Unit> =
         handleBookMark(dataSource.createJournalBookMark(travelJournalId))
 
@@ -31,7 +32,7 @@ class BookMarkRepositoryImpl @Inject constructor(
         lastId: Long?,
         sortType: String?
     ): Result<List<JournalBookMarkInfo>> {
-        if (hasNextBookMark.get().not()){
+        if (hasNextMyBookMark.get().not()){
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
@@ -44,7 +45,7 @@ class BookMarkRepositoryImpl @Inject constructor(
 
         return if (result.isSuccess){
             val myJournals = result.getOrThrow()
-            hasNextBookMark.set(myJournals.hasNext)
+            hasNextMyBookMark.set(myJournals.hasNext)
             Result.success(myJournals.content.map {
                 JournalBookMarkInfo(
                     it.travelJournalBookMarkId,
@@ -63,6 +64,48 @@ class BookMarkRepositoryImpl @Inject constructor(
         } else {
             Result.failure(handleBookMarkError(result.exception()))
         }
+    }
+
+    override suspend fun getUserJournalBookmark(
+        userId: Long,
+        size: Int?,
+        lastId: Long?,
+        sortType: String?
+    ): Result<List<JournalBookMarkInfo>> {
+        if (hasNextUserBookMark.get().not()){
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            dataSource.getUserJournalBookmark(
+                userId,
+                size,
+                lastId,
+                sortType
+            )
+        }
+
+        return if (result.isSuccess){
+            val userJournal = result.getOrThrow()
+            hasNextUserBookMark.set(userJournal.hasNext)
+            Result.success(userJournal.content.map{
+                JournalBookMarkInfo(
+                    it.travelJournalBookMarkId,
+                    it.travelJournalId,
+                    it.title,
+                    it.travelStartDate,
+                    it.travelJournalMainImageUrl,
+                    Writer(
+                        it.writer.userId,
+                        it.writer.nickname,
+                        it.writer.profile,
+                        it.writer.isFollowing
+                    )
+                )
+            })
+        } else {
+            Result.failure(handleBookMarkError(result.exception()))
+        }
+
     }
 
     override suspend fun deleteJournalBookMark(travelJournalId: Long): Result<Unit> =

@@ -25,5 +25,17 @@
             app:layout_constraintTop_toTopOf="parent"
             android:text="memory fragment입니다" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_travel_log_write"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:backgroundTint="@color/primary"
+            android:src="@drawable/ic_writing_pen"
+            android:tint="@color/label_reversed"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

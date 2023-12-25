@@ -6,9 +6,11 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import com.google.android.material.tabs.TabLayout
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentPostTravelLogBinding
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
@@ -43,6 +45,20 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     private var datePickerDialog: DatePickerDialogFragment? = null
     private var dailyDatePickerDialog: DatePickerDialog? = null
 
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            viewModel.selectTravelLogVisibility(Visibility.fromPosition(tab.position))
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {
+            // 비워둠
+        }
+
+        override fun onTabReselected(tab: TabLayout.Tab?) {
+            // 비워둠
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
@@ -52,6 +68,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             adapter = travelFriendsAdapter
         }
         viewModel.initViewState(args.followers?.toList(), args.selectPlace)
+        binding.includePostTravelLogVisibility.tlPostVisibility.addOnTabSelectedListener(tabSelectedListener)
     }
 
     override fun initListener() {
@@ -220,6 +237,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     override fun onDestroyView() {
         binding.includePostTravelLogFriends.rvTravelFriends.adapter = null
         binding.rvPostTravelLogDaily.adapter = null
+        binding.includePostTravelLogVisibility.tlPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
         super.onDestroyView()
     }
 }

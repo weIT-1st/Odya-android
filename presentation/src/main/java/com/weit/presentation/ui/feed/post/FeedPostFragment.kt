@@ -14,7 +14,6 @@ import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedPostBinding
 import com.weit.presentation.model.Visibility
-import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.post.FeedPostTopicAdapter
 import com.weit.presentation.ui.feed.post.FeedPostViewModel
@@ -68,7 +67,6 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         binding.vpFeedPost.adapter = feedImageAdapter
         binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
         initTopics()
-
     }
 
 

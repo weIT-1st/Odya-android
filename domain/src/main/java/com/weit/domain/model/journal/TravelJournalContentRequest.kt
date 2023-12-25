@@ -5,6 +5,6 @@ data class TravelJournalContentRequest(
     val placeId: String?,
     val latitudes: List<Double>?,
     val longitudes: List<Double>?,
-    val travelDate: List<String>,
-    val updateContentImageNames: List<String>,
+    val travelDate: String,
+    val contentImageNames: List<String>,
 )

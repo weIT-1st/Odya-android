@@ -1,11 +1,16 @@
 package com.weit.presentation.ui.post.travellog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.model.journal.TravelJournalContentRequest
+import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.domain.usecase.journal.RegisterTravelJournalUseCase
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.post.place.PlacePredictionDTO
 import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.model.post.travellog.DailyTravelLog
@@ -24,7 +29,9 @@ import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
 @HiltViewModel
-class PostTravelLogViewModel @Inject constructor() : ViewModel() {
+class PostTravelLogViewModel @Inject constructor(
+    private val registerTravelJournalUseCase: RegisterTravelJournalUseCase
+) : ViewModel() {
 
     val title = MutableStateFlow("")
 
@@ -35,6 +42,12 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     private val _travelPeriod = MutableStateFlow(TravelPeriod())
     val travelPeriod: StateFlow<TravelPeriod> get() = _travelPeriod
+
+    private val _visibility = MutableStateFlow(Visibility.PUBLIC)
+    val visibility: StateFlow<Visibility> get() = _visibility
+
+    private val _imageList = MutableStateFlow<List<String>>(emptyList())
+    val imageList: StateFlow<List<String>> get() = _imageList
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -160,8 +173,63 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun selectTravelLogVisibility(selectedVisibility: Visibility){
+        viewModelScope.launch{
+            _visibility.emit(selectedVisibility)
+        }
+    }
+
     fun onPost() {
-        // TODO 여행일지 작성
+        viewModelScope.launch {
+            val journalTitle: String = title.value
+            val startDate: String = travelPeriod.value.start.toString()
+            val startEnd: String = travelPeriod.value.end.toString()
+            val visibility = visibility.value.name
+            val companionIds: List<Long> = friends.map { it.userId }
+            val dailyTravelLog = dailyTravelLogs.value
+            val travelJournalRegistration = TravelJournalRegistrationInfo(
+                title = journalTitle,
+                travelStartDate = startDate,
+                travelEndDate = startEnd,
+                visibility = visibility,
+                travelCompanionIds = companionIds,
+                travelJournalContentRequestsList = dailyTravelLog.map {log ->
+                    TravelJournalContentRequest(
+                        content = log.contents,
+                        placeId = log.place?.placeId,
+                        latitudes = null,
+                        longitudes = null,
+                        travelDate = log.date.toString(),
+                        contentImageNames = log.images
+                    )
+                }
+            )
+            val travelJournalImages = emptyList<String>().toMutableList()
+
+            for (log in dailyTravelLog){
+                log.images.forEach { image ->
+                    travelJournalImages.add(image)
+                }
+            }
+
+            val result = registerTravelJournalUseCase(
+                travelJournalRegistrationInfo = travelJournalRegistration,
+                travelJournalImages = travelJournalImages)
+
+            if (result.isSuccess) {
+                Log.d("jomi", "Register Travel Journal Success")
+            } else {
+                Log.d("jomi", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
+            }
+
+            Log.d("jomi", "title : $journalTitle")
+            Log.d("jomi", "start : $startDate")
+            Log.d("jomi", "end : $startEnd")
+            Log.d("jomi", "visibility : $visibility")
+            Log.d("jomi", "companionIds : $companionIds")
+            Log.d("jomi", "travelLog : $dailyTravelLog")
+            Log.d("jomi", "travelLogImage : $travelJournalImages")
+        }
     }
 
     fun onPickDailyDate(position: Int) {

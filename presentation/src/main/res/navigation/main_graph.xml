@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/fragment_memory"
         android:name="com.weit.presentation.ui.memory.MemoryFragment"
-        android:label="MemoryFragment" />
+        android:label="MemoryFragment" >
+        <action
+            android:id="@+id/action_fragment_memory_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_map"
         android:name="com.weit.presentation.ui.map.MapFragment"
@@ -18,8 +22,8 @@
         android:name="com.weit.presentation.ui.feed.FeedFragment"
         android:label="FeedFragment" >
         <action
-            android:id="@+id/action_fragment_feed_to_fragment_travellog"
-            app:destination="@id/fragment_travellog" />
+            android:id="@+id/action_fragment_feed_to_fragment_TravelJournal"
+            app:destination="@id/fragment_travel_Journal" />
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail" />
@@ -93,11 +97,11 @@
         </fragment>
     </navigation>
     <fragment
-        android:id="@+id/fragment_travellog"
-        android:name="com.weit.presentation.ui.travellog.TravelLogFragment"
-        android:label="TravelLogFragment" >
+        android:id="@+id/fragment_travel_Journal"
+        android:name="com.weit.presentation.ui.journal.travel_journal.TravelJournalFragment"
+        android:label="TravelJournalFragment" >
         <argument
-            android:name="travelLogId"
+            android:name="travelJournalId"
             app:argType="long" />
     </fragment>
     <fragment

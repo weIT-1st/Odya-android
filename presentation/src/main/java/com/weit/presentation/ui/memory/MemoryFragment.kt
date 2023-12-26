@@ -5,6 +5,9 @@ import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import com.bumptech.glide.Glide
+import com.weit.domain.model.bookmark.JournalBookMarkInfo
+import com.weit.domain.model.journal.TravelJournalListInfo
+import com.weit.domain.model.place.PlaceMyReviewInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMemoryBinding
 import com.weit.presentation.ui.base.BaseFragment
@@ -95,18 +98,21 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
         repeatOnStarted(viewLifecycleOwner){
             otherJournalViewModel.bookMarkTravelJournals.collectLatest {
+                binding.tvJournalMemoryBookmarkJournal.isGone = (it == emptyList<JournalBookMarkInfo>())
                 bookmarkJournalAdapter.submitList(it)
             }
         }
 
         repeatOnStarted(viewLifecycleOwner){
             otherJournalViewModel.taggedTravelJournals.collectLatest{
+                binding.tvJournalMemoryTagJournal.isGone = (it == emptyList<TravelJournalListInfo>())
                 taggedJournalAdapter.submitList(it)
             }
         }
 
         repeatOnStarted(viewLifecycleOwner){
             reviewViewModel.myReviews.collectLatest {
+                binding.tvJournalMemoryMyReview.isGone = (it == emptyList<PlaceMyReviewInfo>())
                 myReviewAdapter.submitList(it)
             }
         }

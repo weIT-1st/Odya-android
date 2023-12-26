@@ -89,6 +89,11 @@
     <string name="journal_memory_tag_travel">태그된 여행일지</string>
     <string name="journal_memory_my_review">내가 쓴 한줄 리뷰</string>
 
+    <!--  journal detail  -->
+    <string name="journal_detail_more_friends">더보기</string>
+    <string name="journal_detail_all_journal">전부 펼처보기</string>
+    <string name="journal_detail_day">Day %d</string>
+
     <!-- travel friend search -->
     <string name="travel_friend_title">함께 간 친구</string>
     <string name="travel_friend_search">닉네임 검색</string>

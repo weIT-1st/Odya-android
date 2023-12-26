@@ -182,27 +182,32 @@ class PostTravelLogViewModel @Inject constructor(
     fun onPost() {
         viewModelScope.launch {
             val journalTitle: String = title.value
-            val startDate: String = travelPeriod.value.start.toString()
-            val startEnd: String = travelPeriod.value.end.toString()
+            val date = travelPeriod.value
+            val start: List<Int> = listOf(date.start.year, date.start.monthValue, date.start.dayOfMonth)
+            val end: List<Int> = listOf(date.end.year, date.end.monthValue, date.end.dayOfMonth)
             val visibility = visibility.value.name
             val companionIds: List<Long> = friends.map { it.userId }
             val dailyTravelLog = dailyTravelLogs.value
+
             val travelJournalRegistration = TravelJournalRegistrationInfo(
                 title = journalTitle,
-                travelStartDate = startDate,
-                travelEndDate = startEnd,
+                travelStartDate = start,
+                travelEndDate = end,
                 visibility = visibility,
-                travelCompanionIds = companionIds,
-                travelJournalContentRequestsList = dailyTravelLog.map {log ->
+                travelCompanionIds = emptyList(),
+                travelCompanionNames = emptyList(),
+                travelJournalContentRequests = dailyTravelLog.map {log ->
                     TravelJournalContentRequest(
                         content = log.contents,
                         placeId = log.place?.placeId,
                         latitudes = null,
                         longitudes = null,
-                        travelDate = log.date.toString(),
-                        contentImageNames = log.images
+                        travelDate = listOf(log.date!!.year, log.date.monthValue, log.date.dayOfMonth),
+                        contentImageNames = log.images.map { it.split("/").last() + IMAGE_EXTENSION_WEBP }
                     )
-                }
+                },
+                travelDurationDays = dailyTravelLog.count(),
+                contentImageNameTotalCount = dailyTravelLog.sumOf { it.images.count() }
             )
             val travelJournalImages = emptyList<String>().toMutableList()
 
@@ -221,14 +226,6 @@ class PostTravelLogViewModel @Inject constructor(
             } else {
                 Log.d("jomi", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
             }
-
-            Log.d("jomi", "title : $journalTitle")
-            Log.d("jomi", "start : $startDate")
-            Log.d("jomi", "end : $startEnd")
-            Log.d("jomi", "visibility : $visibility")
-            Log.d("jomi", "companionIds : $companionIds")
-            Log.d("jomi", "travelLog : $dailyTravelLog")
-            Log.d("jomi", "travelLogImage : $travelJournalImages")
         }
     }
 
@@ -285,5 +282,6 @@ class PostTravelLogViewModel @Inject constructor(
 
     companion object {
         private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 3
+        private const val IMAGE_EXTENSION_WEBP = ".webp"
     }
 }

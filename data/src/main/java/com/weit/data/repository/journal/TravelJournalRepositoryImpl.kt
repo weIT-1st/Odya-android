@@ -1,6 +1,7 @@
 package com.weit.data.repository.journal
 
 import android.content.res.Resources.NotFoundException
+import android.util.Log
 import com.squareup.moshi.Moshi
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalCompanionsDTO
@@ -68,6 +69,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
                 } catch (e: Exception) {
                     return Result.failure(e)
                 }
+                Log.d("jomi", "filesName : $fileName")
                 MultipartBody.Part.createFormData(
                     TRAVEL_JOURNAL_CONTENT_IMAGE,
                     "$fileName.webp",
@@ -76,6 +78,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             }
             val adapter = moshi.adapter(TravelJournalRegistrationInfo::class.java)
             val travelJournalInfoJson = adapter.toJson(travelJournalRegistrationInfo)
+            Log.d("jomi", "travelJournalInfoJson : $travelJournalInfoJson")
+            Log.d("jomi", "files : ${files.forEach { it }}")
 
             val travelJournalRequestBody =
                 travelJournalInfoJson.toRequestBody("application/json".toMediaTypeOrNull())

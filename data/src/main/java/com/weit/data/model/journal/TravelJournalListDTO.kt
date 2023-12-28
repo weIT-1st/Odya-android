@@ -11,6 +11,7 @@ data class TravelJournalListDTO(
     @field:Json(name = "contentImageUrl") val contentImageUrl: String,
     @field:Json(name = "travelStartDate") val travelStartDate: String,
     @field:Json(name = "travelEndDate") val travelEndDate: String,
+    @field:Json(name = "placeIds") val placeIds: List<String>,
     @field:Json(name = "writer") val writer: TravelJournalWriterDTO,
     @field:Json(name = "travelCompanionSimpleResponses") val travelCompanionSimpleResponses: List<TravelCompanionSimpleResponsesDTO>,
 )

@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TravelJournalContentsImagesDTO(
-    @field:Json(name = "ravelJournalContentImageId") val travelJournalContentImageId: Long,
+    @field:Json(name = "travelJournalContentImageId") val travelJournalContentImageId: Long,
     @field:Json(name = "contentImageName") val contentImageName: String,
     @field:Json(name = "contentImageUrl") val contentImageUrl: String,
 )

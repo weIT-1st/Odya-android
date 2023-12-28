@@ -30,6 +30,7 @@ import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
+import com.weit.domain.repository.place.PlaceRepository
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -47,6 +48,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     private val travelJournalDataSource: TravelJournalDataSource,
     private val imageRepository: ImageRepository,
     private val imageDataSource: ImageDataSource,
+    private val placeRepository: PlaceRepository,
     private val moshi: Moshi
 ) : TravelJournalRepository {
 
@@ -235,7 +237,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
 
-    private fun getInfiniteJournalList(
+    private suspend fun getInfiniteJournalList(
         hasNext: AtomicBoolean,
         lastId: Long?,
         result: Result<ListResponse<TravelJournalListDTO>>
@@ -259,6 +261,9 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
+                    it.placeIds.map { placeId ->
+                        placeRepository.getPlaceDetail(placeId).getOrThrow()
+                    },
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
@@ -306,7 +311,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
+    private suspend fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
         TravelJournalInfo(
             travelJournalId = travelJournalId,
             travelJournalTitle = travelJournalTitle,
@@ -326,11 +331,11 @@ class TravelJournalRepositoryImpl @Inject constructor(
             profile = profile
         )
 
-    private fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
+    private suspend fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
         TravelJournalContentsInfo(
             travelJournalContentId = travelJournalContentId,
             content = content,
-            placeId = placeId,
+            placeDetail = placeRepository.getPlaceDetail(placeId).getOrThrow(),
             latitude = latitude,
             longitude = longitude,
             travelDate = travelDate,

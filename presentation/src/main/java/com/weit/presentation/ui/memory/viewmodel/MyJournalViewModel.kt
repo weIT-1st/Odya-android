@@ -7,6 +7,9 @@ import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.presentation.ui.util.EventFlow
+import com.weit.presentation.ui.util.MutableEventFlow
+import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -33,6 +36,9 @@ class MyJournalViewModel @Inject constructor(
     private val _isEmptyMyJournal = MutableStateFlow<Boolean>(true)
     val isEmptyMyJournal: StateFlow<Boolean> get() = _isEmptyMyJournal
 
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
+
     init {
         getMyInfo()
         getMyJournal()
@@ -55,6 +61,7 @@ class MyJournalViewModel @Inject constructor(
     private fun getMyJournal() {
         viewModelScope.launch {
             val result =  getMyTravelJournalListUseCase(null, null, null)
+            // todo 무한 스크롤 적용 필요
 
             if (result.isSuccess){
                 val list = result.getOrThrow()
@@ -70,5 +77,21 @@ class MyJournalViewModel @Inject constructor(
                 Log.d("getMyJournal", "Get My Journal fail : ${result.exceptionOrNull()}")
             }
         }
+    }
+
+    fun onClickRandomJournal() {
+        viewModelScope.launch {
+            val id = randomJournal.value?.travelJournalId
+
+            if (id != null){
+                _event.emit(Event.MoveToRandomJournal(id))
+            }
+        }
+    }
+
+    sealed class Event {
+        data class MoveToRandomJournal(
+            val randomJournalId: Long
+        ) : Event()
     }
 }

@@ -140,6 +140,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="서울틀별시 중구"/>
 
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -103,6 +103,9 @@
         <argument
             android:name="travelJournalId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_travel_Journal_to_travelJournalDetailFragment"
+            app:destination="@id/travelJournalDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_detail"
@@ -169,4 +172,9 @@
             android:id="@+id/action_fragment_feed_detail_my_menu_to_fragment_feed"
             app:destination="@id/fragment_feed" />
     </dialog>
+    <dialog
+        android:id="@+id/travelJournalDetailFragment"
+        android:name="com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment"
+        android:label="TravelJournalDetailFragment" />
+
 </navigation>

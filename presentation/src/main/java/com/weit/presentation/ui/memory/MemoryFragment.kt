@@ -1,9 +1,11 @@
 package com.weit.presentation.ui.memory
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
@@ -44,20 +46,23 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
         initMyJournalRV()
         initBookmarkJournalRV()
-        initBookmarkJournalRV()
         initTaggedJournalRV()
         initMyReviewsRV()
+    }
+
+    override fun initListener() {
+        binding.includeJournalMemoryLastJournal.root.setOnClickListener {
+            myJournalViewModel.onClickRandomJournal()
+        }
     }
 
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.isEmptyMyJournal.collectLatest {isEmpty ->
-                binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.includeJournalMemoryNoJournal.tvFeedNoTravelLogHint2.isGone = true
+                binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.tvJournalMemory.isGone = isEmpty
                 binding.includeJournalMemoryLastJournal.root.isGone = isEmpty
-                binding.tvJournalMemoryMyJournal.isGone = isEmpty
-                binding.tvJournalMemoryMyJournal.isGone = isEmpty
             }
         }
 
@@ -69,6 +74,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
                         .into(binding.includeJournalMemoryLastJournal.ivItemJournalMemoryLastJournal)
 
                     binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxTitle.text = it.travelJournalTitle
+                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxPlace.text = it.placeDetail.firstOrNull()?.name ?: ""
                     binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text = requireContext().getString(R.string.journal_memory_my_travel_date, it.travelStartDate, it.travelEndDate)
                 }
             }
@@ -92,6 +98,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
         repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.myJournals.collectLatest {
+                binding.tvJournalMemoryMyJournal.isGone = (it == emptyList<TravelJournalListInfo>())
                 myJournalAdapter.submitList(it)
             }
         }
@@ -116,6 +123,12 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
                 myReviewAdapter.submitList(it)
             }
         }
+
+        repeatOnStarted(viewLifecycleOwner){
+            myJournalViewModel.event.collectLatest { event ->
+                handelEvent(event)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -126,6 +139,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     }
 
     private fun initMyJournalRV() {
+        // todo 이거 왜 작동 안함?
         binding.rvJournalMemoryMyReview.adapter = myJournalAdapter
     }
 
@@ -139,5 +153,18 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
     private fun initMyReviewsRV(){
         binding.rvJournalMemoryMyReview.adapter = myReviewAdapter
+    }
+
+    private fun moveToJournalDetail(travelId: Long){
+        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
+        findNavController().navigate(action)
+    }
+
+    private fun handelEvent(event: MyJournalViewModel.Event){
+        when (event){
+            is MyJournalViewModel.Event.MoveToRandomJournal -> {
+                moveToJournalDetail(event.randomJournalId)
+            }
+        }
     }
 }

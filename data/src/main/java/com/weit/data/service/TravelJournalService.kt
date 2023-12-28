@@ -24,7 +24,7 @@ interface TravelJournalService {
     )
 
 
-    @GET("/api/v1/travel-journals/")
+    @GET("/api/v1/travel-journals/{travelJournalId}")
     suspend fun getTravelJournal(
         @Path("travelJournalId") travelJournalId: Long
     ): TravelJournalDTO

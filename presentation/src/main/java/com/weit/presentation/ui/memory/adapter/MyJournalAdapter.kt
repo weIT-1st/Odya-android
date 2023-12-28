@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.memory.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -13,7 +14,6 @@ import com.weit.presentation.databinding.ItemJournalMemoryMyJournalBinding
 class MyJournalAdapter: ListAdapter<TravelJournalListInfo, MyJournalAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalMemoryMyJournalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -29,6 +29,7 @@ class MyJournalAdapter: ListAdapter<TravelJournalListInfo, MyJournalAdapter.View
                 .into(binding.ivItemJournalMemoryMyJournal)
 
             binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxTitle.text = item.travelJournalTitle
+            binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text = item.placeDetail.firstOrNull()?.name ?: ""
             binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text =
                 binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
         }

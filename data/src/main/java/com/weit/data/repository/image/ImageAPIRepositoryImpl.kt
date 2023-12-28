@@ -30,6 +30,10 @@ class ImageAPIRepositoryImpl @Inject constructor(
         size: Int?,
         lastId: Long?
     ): Result<List<UserImageResponseInfo>> {
+        if(lastId == null){
+            hasNextUserImage.set(true)
+        }
+
         if (hasNextUserImage.get().not()){
             return Result.failure(NoMoreItemException())
         }

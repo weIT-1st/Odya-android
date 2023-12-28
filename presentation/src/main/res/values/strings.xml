@@ -148,11 +148,18 @@
     <string name="profile_bookmark_travel_jouranl">즐겨찾기 여행일지</string>
     <string name="profile_favorite_place">관심장소</string>
     <string name="profile_my_community">내 커뮤니티 활동</string>
-    <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
+    <string name="profile_total_travel_count">%s님은 &lt;span style=\"color:#FFD41F\">%d곳을&lt;/span> 여행하고,&lt;br>총 &lt;span style=\"color:#FFD41F\">%d개의&lt;/span> 여행일지를 작성했어요!</string>
     <string name="profile_bookmark_place">%d개의 관심장소 더보기</string>
     <string name="profile_image_select">앨범에서 사진 선택</string>
     <string name="profile_image_none">기본 이미지로 변경</string>
     <string name="profile_image_cancel">취소</string>
+
+
+    <!-- lifeshot -->
+    <string name="lifeshot_title">인생샷</string>
+    <string name="lifeshot_hint">여행일지 및 커뮤니티에서 작성된 이미지입니다</string>
+    <string name="lifeshot_close">닫기</string>
+    <string name="lifeshot_register">등록하기</string>
 
 
 

@@ -6,6 +6,7 @@ import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserStatistics
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
@@ -14,7 +15,9 @@ import com.weit.domain.usecase.user.GetUserIdUseCase
 import com.weit.domain.usecase.user.GetUserSearchUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.domain.usecase.user.SearchUserUseCase
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
+import com.weit.presentation.ui.util.Constants
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -28,7 +31,7 @@ import javax.inject.Inject
 
 class OtherProfileViewModel @AssistedInject constructor(
     private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
-    private val getUserSearchUseCase: GetUserSearchUseCase,
+    private val searchUserUseCase: SearchUserUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     @Assisted private val userName: String,
 
@@ -46,13 +49,26 @@ class OtherProfileViewModel @AssistedInject constructor(
 
     init {
         getUserInfo()
-        getUserStatistics()
+
 
     }
 
-    private fun getUserInfo(){
+    private fun getUserInfo() {
         //팔로우 여부
-
+        viewModelScope.launch {
+//            val result = searchUserUseCase(
+//                SearchUserRequestInfo(null, userId, null)
+//            )
+//
+//            if (result.isSuccess) {
+//                val newUsers = result.getOrThrow()
+//
+//                if (newUsers.isNotEmpty()) {
+//                    userLastId = newUsers.last().userId
+//                }
+//                _searchResultUsers.emit(_searchResultUsers.value + newUsers)
+//            }
+        }
     }
 
 

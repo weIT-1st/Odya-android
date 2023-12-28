@@ -2,10 +2,12 @@ package com.weit.data.source
 
 import android.content.Context
 import com.weit.data.model.ListResponse
+import com.weit.data.model.image.UserImageResponseDTO
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.model.user.UserStatisticsDTO
 import com.weit.data.service.UserService
+import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -53,5 +55,13 @@ class UserDataSource @Inject constructor(
 
     suspend fun getUserStatistics(userId: Long): UserStatisticsDTO {
         return userService.getUserStatistics(userId)
+    }
+
+    suspend fun getUserLifeshots(lifeshotRequestInfo: LifeshotRequestInfo): ListResponse<UserImageResponseDTO> {
+        return userService.getUserLifeShot(
+            lifeshotRequestInfo.userId,
+            lifeshotRequestInfo.size,
+            lifeshotRequestInfo.lastId,
+        )
     }
 }

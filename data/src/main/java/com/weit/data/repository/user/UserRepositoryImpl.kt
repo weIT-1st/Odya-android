@@ -15,6 +15,8 @@ import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
+import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
@@ -41,6 +43,7 @@ class UserRepositoryImpl @Inject constructor(
     private val userInfoDataSource: UserInfoDataSource,
 ) : UserRepository {
     private val hasNextUser = AtomicBoolean(true)
+    private val hasNextImage = AtomicBoolean(true)
 
     override suspend fun getUser(): Result<User> {
         return runCatching {
@@ -118,6 +121,35 @@ class UserRepositoryImpl @Inject constructor(
             Result.failure(handleGetError(result.exception()))
         }
     }
+
+    override suspend fun getUserLifeShot(lifeshotRequestInfo: LifeshotRequestInfo): Result<List<UserImageResponseInfo>> {
+        if(lifeshotRequestInfo.lastId == null){
+            hasNextImage.set(true)
+        }
+
+        if (hasNextImage.get().not()){
+            return Result.failure(NoMoreItemException())
+        }
+
+        val result = kotlin.runCatching { userDataSource.getUserLifeshots(lifeshotRequestInfo) }
+        return if (result.isSuccess){
+            val list = result.getOrThrow()
+            Result.success(list.content.map {
+                UserImageResponseInfo(
+                    it.imageId,
+                    it.imageUrl,
+                    it.placeId,
+                    it.isLifeShot,
+                    it.placeName,
+                    it.journalId,
+                    it.communityId
+                )
+            })
+        } else {
+            Result.failure(handleGetError(result.exception()))
+        }
+    }
+
     private suspend fun getMultipartFile(uri: String): MultipartBody.Part{
         val bytes = imageRepositoryImpl.getImageBytes(uri)
         val requestFile = bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)

@@ -60,6 +60,7 @@ class ProfileMenuFragment(private val profileImage: (String) -> Unit) :
     private fun handleEvent(event: ProfileMenuViewModel.Event) {
         when (event) {
             is ProfileMenuViewModel.Event.OnChangeProfileImageSuccess -> {
+                profileImage(event.image)
                 dismiss()
             }
 

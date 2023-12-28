@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.profile.MyProfileViewModel" />
+            type="com.weit.presentation.ui.profile.myprofile.MyProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -28,7 +28,7 @@
                 android:layout_height="wrap_content">
 
 
-                <ImageView
+                <com.jgabrielfreitas.core.BlurImageView
                     android:id="@+id/iv_profile_bg"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
@@ -56,6 +56,7 @@
                     android:layout_height="96dp"
                     android:layout_marginTop="73dp"
                     android:src="@drawable/ic_profile"
+                    android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
                     app:layout_constraintStart_toStartOf="@+id/iv_profile_bg"
                     app:layout_constraintTop_toTopOf="@+id/iv_profile_bg"
@@ -255,19 +256,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_profile_total_travel" />
 
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_lifeshot"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="36dp"
-                    android:layout_marginStart="20dp"
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_profile_lifeshot_title"
                     tools:itemCount="8"
                     tools:listitem="@layout/item_profile_lifeshot" />
-
 
                 <View
                     android:id="@+id/view_line1"

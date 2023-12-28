@@ -1,5 +1,7 @@
 package com.weit.domain.repository.user
 
+import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
@@ -27,5 +29,6 @@ interface UserRepository {
 
     suspend fun getUserStatistics(userId: Long): Result<UserStatistics>
 
+    suspend fun getUserLifeShot(lifeshotRequestInfo: LifeshotRequestInfo): Result<List<UserImageResponseInfo>>
 
 }

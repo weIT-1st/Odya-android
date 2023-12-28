@@ -28,7 +28,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class OtherProfileFragment : BaseFragment<FragmentFriendProfileBinding>(
+class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     FragmentFriendProfileBinding::inflate,
 ) {
 
@@ -40,6 +40,11 @@ class OtherProfileFragment : BaseFragment<FragmentFriendProfileBinding>(
     lateinit var viewModelFactory: FeedDetailViewModel.FeedDetailFactory
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //TODO 유저인생샷
+        //TODO 즐겨찾기 여행일지
+        //TODO 대표여행일지
+        //TODO 관심장소
+
     }
 
     override fun initListener() {

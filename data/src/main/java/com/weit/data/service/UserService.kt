@@ -2,6 +2,7 @@ package com.weit.data.service
 
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityMyActivityContentDTO
+import com.weit.data.model.image.UserImageResponseDTO
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.model.user.UserStatisticsDTO
@@ -53,6 +54,13 @@ interface UserService {
         @Query("lastId") userId: Long?,
         @Query("nickname") nickname: String,
     ): ListResponse<SearchUserContentDTO>
+
+    @GET("/api/v1/users/{userId}/life-shots")
+    suspend fun getUserLifeShot(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") imageId: Long?,
+    ): ListResponse<UserImageResponseDTO>
 
     @GET("/api/v1/users/{userId}/statistics")
     suspend fun getUserStatistics(

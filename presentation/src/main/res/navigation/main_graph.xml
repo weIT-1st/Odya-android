@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_graph"
-    app:startDestination="@id/post_graph">
+    app:startDestination="@id/fragment_map">
 
     <fragment
         android:id="@+id/fragment_memory"
@@ -35,11 +35,14 @@
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
-        android:name="com.weit.presentation.ui.profile.MyProfileFragment"
+        android:name="com.weit.presentation.ui.profile.myprofile.MyProfileFragment"
         android:label="MyPageFragment" >
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_feed_my_activity"
             app:destination="@id/fragment_feed_my_activity" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_fragment_life_shot_picker"
+            app:destination="@id/fragment_life_shot_picker" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -179,5 +182,40 @@
         <action
             android:id="@+id/action_fragment_feed_search_to_fragment_mypage"
             app:destination="@id/fragment_mypage" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragment_life_shot_picker"
+        android:name="com.weit.presentation.ui.profile.lifeshot.LifeShotPickerFragment"
+        android:label="LifeShotPickerFragment" >
+        <action
+            android:id="@+id/action_fragment_life_shot_picker_to_lifeShotDialogFragment"
+            app:destination="@id/lifeShotDialogFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/lifeShotDialogFragment"
+        android:name="com.weit.presentation.ui.profile.lifeshot.LifeShotDialogFragment"
+        android:label="LifeShotDialogFragment" >
+        <action
+            android:id="@+id/action_lifeShotDialogFragment_to_lifeShotSelectPlaceFragment"
+            app:destination="@id/lifeShotSelectPlaceFragment" />
+        <argument
+            android:name="selectImage"
+            app:argType="com.weit.presentation.model.profile.lifeshot.SelectLifeShotImageDTO"
+            app:nullable="true" />
+        <argument
+            android:name="placeName"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_lifeShotDialogFragment_to_fragment_mypage"
+            app:destination="@id/fragment_mypage" />
+    </dialog>
+    <fragment
+        android:id="@+id/lifeShotSelectPlaceFragment"
+        android:name="com.weit.presentation.ui.profile.lifeshot.LifeShotSelectPlaceFragment"
+        android:label="LifeShotSelectPlaceFragment" >
+        <action
+            android:id="@+id/action_lifeShotSelectPlaceFragment_to_fragment_life_shot_picker"
+            app:destination="@id/fragment_life_shot_picker" />
     </fragment>
 </navigation>

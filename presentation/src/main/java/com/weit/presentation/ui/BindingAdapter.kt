@@ -30,9 +30,9 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
 
 @BindingAdapter("search_profile_background")
 fun bindSearchProfileBackground(view: ImageView, profile: UserProfileInfo?) {
-   profile?.color?.let { color ->
-       view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
-   }
+    profile?.color?.let { color ->
+        view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
+    }
 }
 
 @BindingAdapter("text_reaction_count")
@@ -50,8 +50,8 @@ fun bindReactionCount(textView: TextView, count: Int?) {
     }
 
 
-    @BindingAdapter("text_created_date")
-    fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
+@BindingAdapter("text_created_date")
+fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         if (date == null) {
             textView.text = ""
         }

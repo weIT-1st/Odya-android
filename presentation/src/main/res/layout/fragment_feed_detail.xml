@@ -115,7 +115,6 @@
                     android:textColor="@color/label_assistive"
                     android:textSize="12dp"
                     android:textStyle="bold"
-                    app:text_created_date="@{vm.feed.createdDate}"
                     app:layout_constrainedWidth="true"
                     app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
                     app:layout_constraintEnd_toStartOf="@+id/iv_community_follow"

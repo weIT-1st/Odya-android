@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/selector_star"
+        android:icon="@drawable/selector_star_bookmark"
         android:id="@+id/menu_search"
         app:showAsAction="always"
         android:iconTint="@color/label_normal"

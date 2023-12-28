@@ -27,10 +27,6 @@ class MyReviewAdapter(
     inner class ViewHolder(
         private val binding: ItemMyReviewBinding
     ): RecyclerView.ViewHolder(binding.root){
-        init {
-            showPopUpMenu(binding.btnItemPlaceMenu)
-        }
-
         fun bind(item: PlaceMyReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
@@ -39,7 +35,7 @@ class MyReviewAdapter(
 
     private fun showPopUpMenu(it: View){
         PopupMenu(it.context, it).apply {
-            menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)
+            menuInflater.inflate(R.menu.menu_my_place_reivew_menu, this.menu)
 
             setOnMenuItemClickListener {
                 when (it.itemId) {

@@ -10,7 +10,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/background_normal">
+        android:clipToPadding="true"
+        android:background="@drawable/corners_top_8"
+        android:backgroundTint="@color/background_normal">
 
         <View
             android:id="@+id/view_bottom_sheet_travel_journal_detail"

@@ -93,6 +93,7 @@
     <string name="journal_detail_more_friends">더보기</string>
     <string name="journal_detail_all_journal">전부 펼처보기</string>
     <string name="journal_detail_day">Day %d</string>
+    <string name="journal_detail_friends">함께 간 친구</string>
 
     <!-- travel friend search -->
     <string name="travel_friend_title">함께 간 친구</string>

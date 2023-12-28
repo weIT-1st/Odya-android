@@ -7,6 +7,7 @@ import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.place.PlaceMyReviewInfo
@@ -20,6 +21,7 @@ import com.weit.presentation.ui.memory.adapter.TaggedJournalAdapter
 import com.weit.presentation.ui.memory.viewmodel.MemoryReviewViewModel
 import com.weit.presentation.ui.memory.viewmodel.MyJournalViewModel
 import com.weit.presentation.ui.memory.viewmodel.OtherJournalViewModel
+import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -33,8 +35,8 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private val otherJournalViewModel: OtherJournalViewModel by viewModels()
     private val reviewViewModel: MemoryReviewViewModel by viewModels()
 
-    private val myJournalAdapter = MyJournalAdapter()
-    private val bookmarkJournalAdapter = BookmarkJournalAdapter()
+    private val myJournalAdapter = MyJournalAdapter { myJournalViewModel.onClickJournal(it)}
+    private val bookmarkJournalAdapter = BookmarkJournalAdapter { myJournalViewModel.onClickJournal(it) }
     private val taggedJournalAdapter = TaggedJournalAdapter()
     private val myReviewAdapter = MyReviewAdapter { reviewViewModel.deleteReview() }
 
@@ -67,20 +69,6 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
         }
 
         repeatOnStarted(viewLifecycleOwner){
-            myJournalViewModel.randomJournal.collectLatest {
-                if (it != null) {
-                    Glide.with(requireContext())
-                        .load(it.contentImageUrl)
-                        .into(binding.includeJournalMemoryLastJournal.ivItemJournalMemoryLastJournal)
-
-                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxTitle.text = it.travelJournalTitle
-                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxPlace.text = it.placeDetail.firstOrNull()?.name ?: ""
-                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text = requireContext().getString(R.string.journal_memory_my_travel_date, it.travelStartDate, it.travelEndDate)
-                }
-            }
-        }
-
-        repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.myNickname.collectLatest {
                 binding.tvJournalMemory.text = requireContext().getString(R.string.journal_memory_last_travel, it)
             }
@@ -92,6 +80,20 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
                     Glide.with(requireContext())
                         .load(it)
                         .into(binding.ivJournalMemoryMyProfile)
+                }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner){
+            myJournalViewModel.randomJournal.collectLatest {
+                if (it != null) {
+                    Glide.with(requireContext())
+                        .load(it.contentImageUrl)
+                        .into(binding.includeJournalMemoryLastJournal.ivItemJournalMemoryLastJournal)
+
+                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxTitle.text = it.travelJournalTitle
+                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxPlace.text = it.placeDetail.firstOrNull()?.name ?: ""
+                    binding.includeJournalMemoryLastJournal.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text = requireContext().getString(R.string.journal_memory_my_travel_date, it.travelStartDate, it.travelEndDate)
                 }
             }
         }
@@ -139,16 +141,24 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     }
 
     private fun initMyJournalRV() {
-        // todo 이거 왜 작동 안함?
-        binding.rvJournalMemoryMyReview.adapter = myJournalAdapter
+        binding.rvJournalMemoryMyJournal.run {
+            addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_all_space))
+            adapter = myJournalAdapter
+        }
     }
 
     private fun initBookmarkJournalRV() {
-        binding.rvJournalMemoryBookmarkJournal.adapter = bookmarkJournalAdapter
+        binding.rvJournalMemoryBookmarkJournal.run {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_memory_all_space))
+            adapter = bookmarkJournalAdapter
+        }
     }
 
     private fun initTaggedJournalRV(){
-        binding.rvJournalMemoryTagJournal.adapter = taggedJournalAdapter
+        binding.rvJournalMemoryTagJournal.run {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_memory_all_space))
+            adapter = taggedJournalAdapter
+        }
     }
 
     private fun initMyReviewsRV(){
@@ -164,6 +174,10 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
         when (event){
             is MyJournalViewModel.Event.MoveToRandomJournal -> {
                 moveToJournalDetail(event.randomJournalId)
+            }
+
+            is MyJournalViewModel.Event.MoveToJournal -> {
+                moveToJournalDetail(event.travelJournalId)
             }
         }
     }

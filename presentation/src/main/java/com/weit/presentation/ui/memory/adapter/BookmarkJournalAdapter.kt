@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide
 import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.presentation.databinding.ItemJournalMemoryBookmarkJournalBinding
 
-class BookmarkJournalAdapter: ListAdapter<JournalBookMarkInfo, BookmarkJournalAdapter.ViewHolder>(diffUtil) {
+class BookmarkJournalAdapter(
+    private val showDetail: (Long) -> Unit
+): ListAdapter<JournalBookMarkInfo, BookmarkJournalAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalMemoryBookmarkJournalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -19,9 +21,15 @@ class BookmarkJournalAdapter: ListAdapter<JournalBookMarkInfo, BookmarkJournalAd
         holder.bind(item)
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: ItemJournalMemoryBookmarkJournalBinding
     ): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.root.setOnClickListener {
+                showDetail( getItem(absoluteAdapterPosition).travelJournalId )
+            }
+        }
+
         fun bind(item: JournalBookMarkInfo){
             Glide.with(binding.root.context)
                 .load(item.travelJournalMainImageUrl)

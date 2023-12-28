@@ -89,9 +89,19 @@ class MyJournalViewModel @Inject constructor(
         }
     }
 
+    fun onClickJournal(id: Long){
+        viewModelScope.launch {
+            _event.emit(Event.MoveToJournal(id))
+        }
+    }
+
     sealed class Event {
         data class MoveToRandomJournal(
             val randomJournalId: Long
+        ) : Event()
+
+        data class MoveToJournal(
+            val travelJournalId: Long
         ) : Event()
     }
 }

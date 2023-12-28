@@ -1,6 +1,5 @@
 package com.weit.presentation.ui.memory.adapter
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
@@ -11,7 +10,9 @@ import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalMemoryMyJournalBinding
 
-class MyJournalAdapter: ListAdapter<TravelJournalListInfo, MyJournalAdapter.ViewHolder>(diffUtil) {
+class MyJournalAdapter(
+    private val showDetail: (Long) -> Unit
+): ListAdapter<TravelJournalListInfo, MyJournalAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalMemoryMyJournalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -20,18 +21,24 @@ class MyJournalAdapter: ListAdapter<TravelJournalListInfo, MyJournalAdapter.View
         holder.bind(item)
     }
 
-    class ViewHolder(
+    inner class ViewHolder(
         private val binding: ItemJournalMemoryMyJournalBinding
     ): RecyclerView.ViewHolder(binding.root){
+        init {
+            binding.root.setOnClickListener {
+                showDetail( getItem(absoluteAdapterPosition).travelJournalId )
+            }
+        }
         fun bind(item: TravelJournalListInfo){
             Glide.with(binding.root.context)
                 .load(item.contentImageUrl)
                 .into(binding.ivItemJournalMemoryMyJournal)
 
             binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxTitle.text = item.travelJournalTitle
-            binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text = item.placeDetail.firstOrNull()?.name ?: ""
+            binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxPlace.text = item.placeDetail.firstOrNull()?.name ?: ""
             binding.includeItemJournalMemoryDetail.tvJournalMemoryDetailBoxDate.text =
                 binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
+            binding.toggleItemJournalMemoryBookmark.isChecked = false
         }
     }
 

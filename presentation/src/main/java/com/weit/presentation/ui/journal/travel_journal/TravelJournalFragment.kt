@@ -10,6 +10,7 @@ import com.orhanobut.logger.Logger
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.base.BaseMapFragment
 import com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -17,8 +18,9 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
+class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
     FragmentTravelJournalBinding::inflate,
+    FragmentTravelJournalBinding::mapTravelJournal
 ) {
     @Inject
     lateinit var viewModelFactory: TravelJournalViewModel.TravelJournalIdFactory

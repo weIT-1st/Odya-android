@@ -23,10 +23,10 @@ class LoginPreviewThirdFragment : BaseFragment<FragmentLoginPreviewThirdBinding>
         if(bottomSheetDialog==null){
             bottomSheetDialog = LoginConsentDialogFragment()
         }
-        bottomSheetDialog?.setStyle(
-            DialogFragment.STYLE_NORMAL,
-            R.style.AppBottomSheetDialogTheme,
-        )
+//        bottomSheetDialog?.setStyle(
+//            DialogFragment.STYLE_NORMAL,
+//            R.style.AppBottomSheetDialogTheme,
+//        )
 
         if(bottomSheetDialog?.isAdded?.not() == true){
             binding.btnLoginPreviewThirdStart.setOnClickListener {

@@ -127,7 +127,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     }
                 } else {
                     if (otherMenuDialog == null) {
-                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId)
+                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId,args.nickname)
 
                     }
                     if (otherMenuDialog?.isAdded?.not() == true) {

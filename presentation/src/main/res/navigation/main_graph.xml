@@ -120,6 +120,9 @@
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
+        <argument
+            android:name="nickname"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"

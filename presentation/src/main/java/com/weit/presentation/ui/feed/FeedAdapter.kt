@@ -17,7 +17,7 @@ import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
-    private val navigateFeedDetail: (Long) -> Unit,
+    private val navigateFeedDetail: (Long,String) -> Unit,
     private val onFollowChanged: (Long) -> Unit,
     private val onLikeChanged: (Long) -> Unit,
     private val scrollListener: () -> Unit,
@@ -130,7 +130,7 @@ class FeedAdapter(
             }
 
             binding.viewCommunityContent.setOnClickListener {
-                navigateFeedDetail(feed.communityId)
+                navigateFeedDetail(feed.communityId,feed.writer.nickname)
             }
 
             val followImage = if(feed.writer.isFollowing) R.drawable.bt_following else R.drawable.bt_follow

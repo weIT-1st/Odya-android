@@ -13,7 +13,7 @@ import com.weit.presentation.databinding.ItemFeedMyActivityImageBinding
 import com.weit.presentation.databinding.ItemFeedPostImageBinding
 
 class FeedMyActivityCommentAdapter(
-    private val navigateFeedDetail: (Long) -> Unit,
+    private val navigateFeedDetail: (Long,String) -> Unit,
 ) : ListAdapter<CommunityMyActivityCommentContent, FeedMyActivityCommentAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
@@ -21,7 +21,7 @@ class FeedMyActivityCommentAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         init{
             itemView.setOnClickListener {
-                navigateFeedDetail(getItem(absoluteAdapterPosition).communityId)
+                navigateFeedDetail(getItem(absoluteAdapterPosition).communityId,getItem(absoluteAdapterPosition).writer.nickname)
             }
         }
         fun bind(item: CommunityMyActivityCommentContent) {

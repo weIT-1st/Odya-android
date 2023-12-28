@@ -50,7 +50,8 @@ class FeedMyActivityPostFragment() : BaseFragment<FragmentTabFeedPostBinding>(
     }
 
     private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
+        //TODO 닉네임 전달
+        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId,"임시")
         findNavController().navigate(action)
     }
 

@@ -21,7 +21,7 @@ class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBindi
 ) {
     private val viewModel: FeedMyActivityCommentViewModel by viewModels()
     private val myActivityCommentAdapter = FeedMyActivityCommentAdapter{
-            communityId, writer -> navigateFeedDetail(communityId,writer)
+            communityId -> navigateFeedDetail(communityId)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -47,8 +47,8 @@ class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBindi
         }
     }
 
-    private fun navigateFeedDetail(feedId: Long,writer:String) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId,writer)
+    private fun navigateFeedDetail(feedId: Long) {
+        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId,null)
         findNavController().navigate(action)
     }
 

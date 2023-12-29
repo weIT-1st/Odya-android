@@ -107,7 +107,9 @@ class FeedReportFragment(
 
     private fun handleEvent(event: FeedReportViewModel.Event){
         when(event){
-            FeedReportViewModel.Event.SuccessReviewReport -> {}
+            FeedReportViewModel.Event.SuccessReviewReport -> {
+                dismiss()
+            }
             FeedReportViewModel.Event.EmptyOtherReason -> {
                 sendSnackBar("기타사유를 입력하세요")
             }

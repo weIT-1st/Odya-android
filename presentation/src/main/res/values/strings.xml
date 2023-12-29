@@ -5,31 +5,67 @@
     <string name="search_a_place">Search for a Place</string>
 
     <!-- login -->
-    <string name="go_back_step">뒤로가기</string>
-    <string name="go_next_step">건너뛰기</string>
-    <string name="login_consent_app">앱 수집 권한 동의</string>
-    <string name="login_consent_privacy">개인정보 이용 동의</string>
-    <string name="login_consent_all">전체 동의</string>
-    <string name="login_start_odya">오댜 시작하기</string>
     <string name="text_login_kakao">카카오로 로그인</string>
-    <string name="login_what_name">오댜에서 활동할\n이름을 알려주세요!</string>
+
+    <string name="login_onboarding_odya_main">저번에 너가 갔던 그곳,\n어디야?</string>
+    <string name="login_onboarding_odya_detail">친구가 방문했던 장소를\n쉽게 찾아봐요</string>
+    <string name="login_onboarding_journal_main">지도에 쓰는\n나의 인생장소 여행일지</string>
+    <string name="login_onboarding_journal_detail">오댜에서 기억에 남는 장소들을\n방문하고 공유해보세요</string>
+    <string name="login_onboarding_route_main">한 눈에 담아보는\n나의 여행 동선</string>
+    <string name="login_onboarding_route_detail">동선을 보여드려요</string>
+    <string name="login_start_odya">오댜 시작하기</string>
+
+    <string name="go_back_step">뒤로가기</string>
+    <string name="go_next_step">다음으로</string>
+    <string name="login_consent_app">더 나은 서비스를 위해서 \n권한동의가 필요해요</string>
+    <string name="login_consent_app_detail">권한을 허용하지 않으면 일부 서비스가 제한 될 수 있습니다.</string>
+    <string name="login_consent_camera">카메라</string>
+    <string name="login_consent_camera_detail">촬영과 이미지 등 콘텐츠를 사용 할 수 있어요</string>
+    <string name="login_consent_record">기기 및 앱 기록</string>
+    <string name="login_consent_record_detail">여행 동선을 간편하게 기록 할 수 있어요</string>
+    <string name="login_consent_gps">GPS</string>
+    <string name="login_consent_gps_detail">여행일지와 커뮤니티에 장소를 태그할 수 있어요</string>
+    <string name="login_consent_storage">저장소 접근 권한</string>
+    <string name="login_consent_storage_detail">기기내에 이미지 파일을 업로드할 수 있어요</string>
+    <string name="login_consent_push">앱 푸쉬 알림</string>
+    <string name="login_consent_push_detail">게시물의 오댜, 댓글, 캐그 상태를 알 수 있어요</string>
+    <string name="login_consent_contact">연락처</string>
+    <string name="login_consent_contact_detail">연락처 기반 친구 추천을 받을 수 있어요</string>
+    <string name="login_consent_privacy">개인정보 이용 동의</string>
+    <string name="login_consent_privacy_detail">어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구 어쩌구 저쩌구</string>
+    <string name="login_terms_consent">동의하기</string>
+
+    <string name="login_what_name">오댜에서 활동할 \n이름을 알려주세요!</string>
+    <string name="login_what_name_detail">최소 2자~최대 8자, 특수문자 불가능</string>
     <string name="login_name_hint">홍길동</string>
-    <string name="login_random_name">랜덤 닉네임</string>
     <string name="login_who_you">%s님이\n궁금해요!</string>
-    <string name="login_birth_gender"></string>
+    <string name="login_who_you_warning">성별과 생년월일은 수정할 수 없어요\n정확한 정보를 입력해 주세요!</string>
     <string name="login_birth_hint">생년월일</string>
     <string name="login_gender_hint">성별</string>
     <string-array name="login_gender">
+        <item>성별</item>
         <item>남성</item>
         <item>여성</item>
     </string-array>
-    <string name="login_terms_consent">동의하기</string>
-    <string name="login_preview_third_title">한 눈에 담아보는\n나의 여행 동선</string>
-    <string name="login_preview_third_content">동선을 보여드려요</string>
-    <string name="login_preview_third_start">오댜 시작하기</string>
+    <string name="login_loading">메인페이지를\n생성중이에요</string>
+    
+    <string name="login_topic_sea">바다여행</string>
+    <string name="login_topic_camping">캠핑여행</string>
+    <string name="login_topic_hobby">취미여행</string>
+    <string name="login_topic_food">식도락</string>
+    <string name="login_topic_rest">휴양지</string>
+    <string name="login_topic_winter">겨울여행</string>
+    <string name="login_topic_summer">여름여행</string>
+    <string name="login_topic_flower">꽃놀이</string>
+    <string name="login_topic_fall">가을여행</string>
+    <string name="login_topic_festival">지역축제</string>
+    <string name="login_topic_family">가족여행</string>
+    <string name="login_topic_couple">커플여행</string>
+    <string name="login_topic_alone">나홀로여행</string>
+    <string name="login_topic_country">촌캉스</string>
+
     <string name="sign_up">등록하기</string>
-
-
+    <string name="sign_complete">등록 완료</string>
     <string name="text_home">홈</string>
     <string name="text_memory">내추억</string>
     <string name="text_feed">피드</string>
@@ -54,7 +90,7 @@
     <!-- maykonw_friend -->
     <string name="mayknow_friend_title">알 수도 있는 친구</string>
 
-    <!--  review  -->
+    <!--  review  -->로
     <string name="create_review_title">리뷰 작성</string>
     <string name="edit_review_title">리뷰 수정</string>
     <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>

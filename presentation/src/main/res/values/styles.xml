@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="h1" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">@dimen/h1</item>
         <item name="android:textStyle">bold</item>
@@ -134,5 +135,6 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
  </resources>
 

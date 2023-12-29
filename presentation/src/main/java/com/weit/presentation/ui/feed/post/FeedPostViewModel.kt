@@ -14,6 +14,8 @@ import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.model.profile.lifeshot.SelectLifeShotPlaceDTO
+import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -41,7 +43,7 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _imageList = MutableStateFlow<List<String>>(emptyList())
     val imageList : StateFlow<List<String>> get() = _imageList
 
-
+    private var selectedPlace :SelectLifeShotPlaceDTO? = null
     private var selectedTopicId :Long? = null
     private var selectedVisibility :Visibility = Visibility.PUBLIC
 
@@ -79,6 +81,9 @@ class FeedPostViewModel @AssistedInject constructor(
                 _imageList.emit(uris)
                 content.value = feed.content
                 feed.topic?.topicId?.let { updateTopicUI(it) }
+                selectedTopicId = feed.topic?.topicId
+                selectedVisibility = Visibility.valueOf(feed.visibility)
+                //TODO 장소
                 _feed.emit(feed)
             } else {
                 // TODO 에러 처리
@@ -133,7 +138,7 @@ class FeedPostViewModel @AssistedInject constructor(
                         CommunityRegistrationInfo(
                             content.value,
                             selectedVisibility.name,
-                            null,
+                            selectedPlace?.placeId,
                             null,
                             selectedTopicId
                         ),
@@ -153,7 +158,7 @@ class FeedPostViewModel @AssistedInject constructor(
                         CommunityUpdateInfo(
                             content.value,
                             selectedVisibility.name,
-                            null,
+                            selectedPlace?.placeId,
                             null,
                             selectedTopicId,
                             originalImageIds),
@@ -180,9 +185,20 @@ class FeedPostViewModel @AssistedInject constructor(
         }
     }
 
+    fun selectFeedPlace(place: SelectLifeShotPlaceDTO){
+        viewModelScope.launch {
+            selectedPlace = place
+            _event.emit(Event.OnSelectPlaceCompleted(place.name))
+        }
+    }
+
     sealed class Event {
         data class OnChangeTopics(
             val topics: List<FeedTopic>,
+        ) : FeedPostViewModel.Event()
+
+        data class OnSelectPlaceCompleted(
+            val placeName: String,
         ) : FeedPostViewModel.Event()
         object FeedPostSuccess : Event()
         object FeedUpdateSuccess : Event()

@@ -122,7 +122,8 @@
             app:destination="@id/fragment_feed_post" />
         <argument
             android:name="nickname"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -138,6 +139,9 @@
         <argument
             android:name="feedId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
+            app:destination="@id/feedSelectPlaceFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity"
@@ -221,4 +225,8 @@
             android:id="@+id/action_lifeShotSelectPlaceFragment_to_fragment_life_shot_picker"
             app:destination="@id/fragment_life_shot_picker" />
     </fragment>
+    <fragment
+        android:id="@+id/feedSelectPlaceFragment"
+        android:name="com.weit.presentation.ui.feed.post.FeedSelectPlaceFragment"
+        android:label="FeedSelectPlaceFragment" />
 </navigation>

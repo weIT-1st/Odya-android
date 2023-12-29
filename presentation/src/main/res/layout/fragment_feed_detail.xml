@@ -61,6 +61,7 @@
                     app:shapeAppearance="@style/ShapeableImageViewCircle"
                     android:src="@drawable/ic_profile"
                     app:image_uri="@{vm.feed.writer.profile.url}"
+                    android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="@+id/view_community_content"
                     app:layout_constraintTop_toTopOf="@+id/view_community_content"
                     app:profile_background="@{vm.feed.writer.profile}" />
@@ -210,7 +211,7 @@
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/iv_community_location"
                     app:layout_constraintTop_toTopOf="@id/view_community_reply"
-                    android:text="@{vm.feed.placeId}" />
+                    android:text="@{vm.placeName}" />
 
 
                 <ImageView
@@ -339,6 +340,7 @@
                     app:shapeAppearance="@style/ShapeableImageViewCircle"
                     android:layout_marginStart="20dp"
                     android:src="@drawable/ic_profile"
+                    android:scaleType="centerCrop"
                     app:image_uri="@{vm.user.profile.url}"
                     app:profile_background="@{vm.user.profile}"
                     app:layout_constraintBottom_toBottomOf="@+id/view_write_comment"

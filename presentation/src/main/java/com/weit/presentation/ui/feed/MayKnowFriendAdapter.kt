@@ -5,11 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.domain.model.follow.FollowUserContent
 import com.weit.presentation.databinding.ItemMayknowFriendSummaryBinding
 import com.weit.presentation.model.MayKnowFriend
 
-class MayKnowFriendAdapter(private val onFollowChanged: (Long, Boolean) -> Unit) :
-    ListAdapter<MayKnowFriend, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {
+class MayKnowFriendAdapter(private val onFollowChanged: (Int, Long, Boolean) -> Unit) :
+    ListAdapter<FollowUserContent, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MayKnowFriendViewHolder {
         return MayKnowFriendViewHolder(
@@ -30,29 +31,32 @@ class MayKnowFriendAdapter(private val onFollowChanged: (Long, Boolean) -> Unit)
         private val binding: ItemMayknowFriendSummaryBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(mayKnowFriend: MayKnowFriend) {
-            binding.friend = mayKnowFriend
+        init{
             binding.btnMayknowFriendSummaryFollow.setOnClickListener {
-                onFollowChanged(mayKnowFriend.userId, mayKnowFriend.followState)
+                val item = getItem(absoluteAdapterPosition)
+                onFollowChanged(absoluteAdapterPosition, item.userId, false)
             }
+        }
+        fun bind(mayKnowFriend: FollowUserContent) {
+            binding.friend = mayKnowFriend
         }
     }
 
     companion object {
-        private val MayKnowFriendCallback: DiffUtil.ItemCallback<MayKnowFriend> =
-            object : DiffUtil.ItemCallback<MayKnowFriend>() {
+        private val MayKnowFriendCallback: DiffUtil.ItemCallback<FollowUserContent> =
+            object : DiffUtil.ItemCallback<FollowUserContent>() {
                 override fun areItemsTheSame(
-                    oldItem: MayKnowFriend,
-                    newItem: MayKnowFriend,
+                    oldItem: FollowUserContent,
+                    newItem: FollowUserContent,
                 ): Boolean {
                     return oldItem.userId == newItem.userId
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: MayKnowFriend,
-                    newItem: MayKnowFriend,
+                    oldItem: FollowUserContent,
+                    newItem: FollowUserContent,
                 ): Boolean {
-                    return oldItem == newItem
+                    return oldItem.toString() == newItem.toString()
                 }
             }
     }

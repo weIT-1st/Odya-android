@@ -8,6 +8,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
 import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
@@ -32,6 +33,9 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @Inject
     lateinit var verifyLocationPermissionUseCase: VerifyLocationPermissionUseCase
 
+    @Inject
+    lateinit var pickImageUseCase: PickImageUseCase
+
     private val destinationChangedListener =
         NavController.OnDestinationChangedListener { _, destination, _ ->
             setBottomNavigationVisibility(destination)
@@ -40,6 +44,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     private val exceptBottomNavigationSet = hashSetOf(
         R.id.postTravelLogFragment,
         R.id.travelFriendFragment,
+        R.id.selectPlaceFragment,
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

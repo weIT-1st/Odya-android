@@ -6,17 +6,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemCommunityBinding
 import com.weit.presentation.databinding.ItemMayknowFriendBinding
 import com.weit.presentation.databinding.ItemPopularSpotBinding
 import com.weit.presentation.model.Feed
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
     private val navigateFeedDetail: (Long) -> Unit,
-    private val onFollowChanged: (Long, Boolean) -> Unit,
+    private val onFollowChanged: (Long) -> Unit,
+    private val onLikeChanged: (Long) -> Unit,
+    private val scrollListener: () -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
         Callback,
@@ -86,14 +90,25 @@ class FeedAdapter(
     inner class MayKnowFriendViewHolder(
         private val binding: ItemMayknowFriendBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+
+        init{
+            binding.rvMayknowFriendSummary.addOnScrollListener(infinityScrollListener)
+        }
         fun bind(mayKnowFriend: Feed.MayknowFriendItem) {
             val data = mayKnowFriend.mayKnowFriendList
             val mayKnowFriendRecyclerView = binding.rvMayknowFriendSummary
-            val mayKnowFriendAdapter = MayKnowFriendAdapter { userId, isChecked ->
-                onFollowChanged(userId, isChecked)
+            val mayKnowFriendAdapter = MayKnowFriendAdapter { position, userId, isChecked ->
+                onFollowChanged(userId)
             }
             mayKnowFriendAdapter.submitList(data)
             mayKnowFriendRecyclerView.adapter = mayKnowFriendAdapter
+
+        }
+    }
+
+    private val infinityScrollListener = object : InfinityScrollListener() {
+        override fun loadNextPage() {
+            scrollListener()
         }
     }
 
@@ -103,43 +118,31 @@ class FeedAdapter(
 
         fun bind(feed: Feed.FeedItem) {
             binding.feed = feed
-            if (feed.travelLog == null) {
+
+            if (feed.travelJournalSimpleResponse == null) {
                 binding.viewCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityBookmark.visibility = View.INVISIBLE
                 binding.tvCommunityTitle.visibility = View.INVISIBLE
                 binding.ivCommunityDirection.visibility = View.INVISIBLE
             }
-
-            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityReply.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.commentNum)
-            }
-
-            if (feed.commentNum > DEFAULT_REACTION_COUNT) {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(
-                        R.string.feed_reaction_over_count,
-                        DEFAULT_REACTION_COUNT,
-                    )
-            } else {
-                binding.tvCommunityHeart.text =
-                    binding.root.context.getString(R.string.feed_reaction_count, feed.likeNum)
+            binding.viewCommunityTitle.setOnClickListener {
+                feed.travelJournalSimpleResponse?.let { log -> navigateTravelLog(log.travelJournalId) }
             }
 
             binding.viewCommunityContent.setOnClickListener {
-                navigateFeedDetail(feed.feedId)
+                navigateFeedDetail(feed.communityId)
             }
-            binding.btCommunityFollow.setOnClickListener {
-                onFollowChanged(feed.userId, feed.followState)
+
+            val followImage = if(feed.writer.isFollowing) R.drawable.bt_following else R.drawable.bt_follow
+            binding.ivCommunityFollow.setImageResource(followImage)
+            binding.ivCommunityFollow.setOnClickListener {
+                onFollowChanged(feed.communityId)
             }
-            binding.viewCommunityTitle.setOnClickListener {
-                feed.travelLog?.let { log -> navigateTravelLog(log.travelLogId) }
+
+            val likeImage = if(feed.isUserLiked) R.drawable.ic_heart else R.drawable.ic_heart_blank
+            binding.ivCommunityLike.setImageResource(likeImage)
+            binding.ivCommunityLike.setOnClickListener {
+                onLikeChanged(feed.communityId)
             }
         }
     }
@@ -149,11 +152,12 @@ class FeedAdapter(
             object : DiffUtil.ItemCallback<Feed>() {
                 override fun areItemsTheSame(oldItem: Feed, newItem: Feed): Boolean {
                     return oldItem is Feed.FeedItem && newItem is Feed.FeedItem &&
-                        oldItem.feedId == newItem.feedId
+                        oldItem.communityId == newItem.communityId
                 }
 
                 override fun areContentsTheSame(oldItem: Feed, newItem: Feed): Boolean {
-                    return oldItem == newItem
+                    return oldItem is Feed.FeedItem && newItem is Feed.FeedItem &&
+                            oldItem == newItem
                 }
             }
     }

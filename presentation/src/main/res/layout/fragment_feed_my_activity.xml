@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+       <variable
+          name="vm"
+          type="com.weit.presentation.ui.feed.myactivity.FeedMyActivityViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tb_my_activity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:title="@string/feed_my_activity_title"
+            app:titleTextAppearance="@style/h6"
+            app:titleTextColor="?attr/colorOnSurface"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/ic_direction_left"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/view_my_activity"
+            android:layout_width="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_height="93dp"
+            android:background="@drawable/corners_all_16"
+            android:backgroundTint="@color/elevation4"
+            app:layout_constraintTop_toBottomOf="@+id/tb_my_activity"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_my_activity_hint"
+            style="@style/body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textColor="?attr/colorOnSurface"
+            android:layout_marginStart="66dp"
+            android:layout_marginEnd="66dp"
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@+id/view_my_activity"
+            app:layout_constraintEnd_toEndOf="@+id/view_my_activity"
+            app:layout_constraintBottom_toBottomOf="@+id/view_my_activity"
+            app:layout_constraintTop_toTopOf="@+id/view_my_activity"
+            tools:text="@string/feed_my_activity_hint" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_feed_my_activity"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="20dp"
+            app:cornerRadius="20dp"
+            app:tabGravity="start"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view_my_activity"
+            app:tabBackground="@drawable/selector_feed_my_activity_background"
+            app:tabIndicatorHeight="0dp"
+            app:tabSelectedTextColor="@color/label_reversed_normal"
+            app:tabTextColor="@color/primary">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_feed_my_activity_post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/feed_my_activity_post"/>
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_feed_my_activity_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/feed_my_activity_comment" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_feed_my_activity_like"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/feed_my_activity_like" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vp_feed_my_activity"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:nestedScrollingEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_feed_my_activity" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

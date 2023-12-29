@@ -21,7 +21,7 @@ data class Place(
     @field:Json(name = "international_phone_number")val internationalPhoneNumber: String?,
     @field:Json(name = "name")val name: String?,
     @field:Json(name = "photos")val photos: List<PlacePhoto>?,
-    @field:Json(name = "place_id")val placeId: String?,
+    @field:Json(name = "place_id")val placeId: String,
     @field:Json(name = "plus_code")val plusCode: PlusCode?,
     @field:Json(name = "price_level")val priceLevel: Int?,
     @field:Json(name = "reservable")val reservable: Boolean?,

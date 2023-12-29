@@ -1,6 +1,8 @@
 package com.weit.data.repository.image
 
 import android.Manifest
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.os.Build
 import com.gun0912.tedpermission.TedPermissionResult
 import com.gun0912.tedpermission.coroutine.TedPermission
@@ -24,12 +26,12 @@ class ImageRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getImageBytes(uri: String): ByteArray {
-        val bitmap = dataSource.getBitmapByUri(uri)
-        val scaledBitmap = dataSource.getScaledBitmap(bitmap)
-        val bytes = dataSource.getCompressedBytes(scaledBitmap)
-        scaledBitmap.recycle()
-        return bytes
+    override suspend fun getImageBytes(uri: String): ByteArray =
+        dataSource.getImageByte(uri)
+
+    fun Bitmap.getRotatedBitmap(degree: Float): Bitmap {
+        val matrix = Matrix().apply { postRotate(degree) }
+        return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true) ?: this
     }
 
     override suspend fun getCoordinates(uri: String?): ImageLatLng? {
@@ -47,4 +49,6 @@ class ImageRepositoryImpl @Inject constructor(
             .setPermissions(permission)
             .check()
     }
+
+
 }

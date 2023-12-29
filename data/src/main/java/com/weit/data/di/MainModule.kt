@@ -1,6 +1,10 @@
 package com.weit.data.di
 
 import android.content.Context
+import com.weit.data.repository.bookmark.BookMarkRepositoryImpl
+import com.squareup.moshi.Moshi
+import com.weit.data.repository.community.CommentRepositoryImpl
+import com.weit.data.repository.community.CommunityRepositoryImpl
 import com.weit.data.repository.example.ExampleRepositoryImpl
 import com.weit.data.repository.favoritePlace.FavoritePlaceRepositoryImpl
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -8,12 +12,18 @@ import com.weit.data.repository.place.PlaceReviewRepositoryImpl
 import com.weit.data.repository.term.TermRepositoryImpl
 import com.weit.data.repository.topic.TopicRepositoryImpl
 import com.weit.data.repository.user.UserRepositoryImpl
+import com.weit.data.service.BookMarkService
+import com.weit.data.service.CommentService
+import com.weit.data.service.CommunityService
 import com.weit.data.service.ExampleService
 import com.weit.data.service.FavoritePlaceService
 import com.weit.data.service.PlaceReviewService
 import com.weit.data.service.TermService
 import com.weit.data.service.TopicService
 import com.weit.data.service.UserService
+import com.weit.data.source.BookMarkDataSource
+import com.weit.data.source.CommentDataSource
+import com.weit.data.source.CommunityDataSource
 import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
@@ -23,6 +33,9 @@ import com.weit.data.source.TermDataSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.data.source.UserInfoDataSource
+import com.weit.domain.repository.bookmark.BookMarkRepository
+import com.weit.domain.repository.community.comment.CommentRepository
+import com.weit.domain.repository.community.comment.CommunityRepository
 import com.weit.domain.repository.example.ExampleRepository
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import com.weit.domain.repository.image.ImageRepository
@@ -59,16 +72,6 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideImageRepository(dataSource: ImageDataSource): ImageRepository =
-        ImageRepositoryImpl(dataSource)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
-        ImageDataSource(context.contentResolver)
-
-    @ActivityRetainedScoped
-    @Provides
     fun providePlaceReviewService(@AuthNetworkObject retrofit: Retrofit): PlaceReviewService =
         retrofit.create(PlaceReviewService::class.java)
 
@@ -97,27 +100,6 @@ class MainModule {
     fun provideFavoritePlaceRepository(dataSource: FavoritePlaceDateSource): FavoritePlaceRepository =
         FavoritePlaceRepositoryImpl(dataSource)
 
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
-        retrofit.create(UserService::class.java)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserDataSource(
-        @ApplicationContext context: Context,
-        userService: UserService,
-    ): UserDataSource = UserDataSource(context, userService)
-
-    @ActivityRetainedScoped
-    @Provides
-    fun provideUserRepository(
-        userDataSource: UserDataSource,
-        imageDataSource: ImageDataSource,
-        imageRepositoryImpl: ImageRepositoryImpl,
-        userInfoDataSource: UserInfoDataSource,
-    ): UserRepository =
-        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
 
     @ActivityRetainedScoped
     @Provides
@@ -153,4 +135,85 @@ class MainModule {
     @Provides
     fun provideTermRepository(dataSource: TermDataSource): TermRepository =
         TermRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideBookMarkRepository(dataSource: BookMarkDataSource): BookMarkRepository =
+        BookMarkRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideBookMarkDataSource(service: BookMarkService): BookMarkDataSource =
+        BookMarkDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideBookMarkService(@AuthNetworkObject retrofit: Retrofit): BookMarkService =
+        retrofit.create(BookMarkService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommentService(@AuthNetworkObject retrofit: Retrofit): CommentService =
+        retrofit.create(CommentService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommentDataSource(service: CommentService): CommentDataSource =
+        CommentDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommentRepository(dataSource: CommentDataSource): CommentRepository =
+        CommentRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityService(@AuthNetworkObject retrofit: Retrofit): CommunityService =
+        retrofit.create(CommunityService::class.java)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityDataSource(service: CommunityService): CommunityDataSource =
+        CommunityDataSource(service)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideCommunityRepository(
+        dataSource: CommunityDataSource,
+        imageRepositoryImpl: ImageRepositoryImpl,
+        imageDataSource: ImageDataSource,
+        moshi: Moshi
+    ): CommunityRepository =
+        CommunityRepositoryImpl(dataSource, imageRepositoryImpl, imageDataSource,moshi)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserService(@AuthNetworkObject retrofit: Retrofit): UserService =
+        retrofit.create(UserService::class.java)
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserDataSource(
+        @ApplicationContext context: Context,
+        userService: UserService,
+    ): UserDataSource = UserDataSource(context, userService)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideUserRepository(
+        userDataSource: UserDataSource,
+        imageDataSource: ImageDataSource,
+        imageRepositoryImpl: ImageRepositoryImpl,
+        userInfoDataSource: UserInfoDataSource,
+    ): UserRepository =
+        UserRepositoryImpl(userDataSource, imageDataSource, imageRepositoryImpl, userInfoDataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideImageRepository(dataSource: ImageDataSource): ImageRepository =
+        ImageRepositoryImpl(dataSource)
+
+    @ActivityRetainedScoped
+    @Provides
+    fun provideImageDataSource(@ApplicationContext context: Context): ImageDataSource =
+        ImageDataSource(context.contentResolver)
 }

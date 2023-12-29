@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetPlaceSearchHistoryUseCase @Inject constructor(
     private val repository: PlaceSearchHistoryRepository
 ) {
-    suspend operator fun invoke(): Result<Array<String>> =
+    suspend operator fun invoke(): Result<List<String>> =
         repository.getPlaceSearchHistoryRank()
 }

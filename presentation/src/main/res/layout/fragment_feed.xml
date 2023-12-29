@@ -13,39 +13,108 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_feed_user"
+            app:image_uri="@{vm.user.profile.url}"
+            app:profile_background="@{vm.user.profile}"
+            android:layout_width="32dp"
+            app:shapeAppearance="@style/ShapeableImageViewCircle"
+            android:layout_height="32dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_profile"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <ImageView
+            android:id="@+id/iv_feed_search"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/ic_white_search"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/iv_feed_alarm"
+            />
+
+        <ImageView
+            android:id="@+id/iv_feed_alarm"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            android:src="@drawable/ic_alarm"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_topic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             tools:listitem="@layout/item_topic"
+            android:layout_marginTop="10dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_feed_user"/>
+
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/btn_feed_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:checkedButton="@+id/btn_feed_sort_all"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_community"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/rv_topic"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_feed_sort_all"
+                style="@style/btn_follow_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/background_normal"
+                android:onClick="@{()-> vm.selectFeedAll()}"
+                android:text="@string/feed_sort_all" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_feed_sort_friend"
+                style="@style/btn_follow_sort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()-> vm.selectFeedFriend()}"
+                android:backgroundTint="@color/background_normal"
+                android:text="@string/feed_sort_friend" />
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_community"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="56dp"
             android:clipToPadding="false"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/rv_topic"/>
+            app:layout_constraintTop_toBottomOf="@+id/btn_feed_sort"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btn_write"
+            android:id="@+id/btn_feed_write"
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:backgroundTint="@color/primary"
             android:src="@drawable/ic_writing_pen"
             android:tint="@color/label_reversed"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="76dp"
+            android:layout_marginBottom="56dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

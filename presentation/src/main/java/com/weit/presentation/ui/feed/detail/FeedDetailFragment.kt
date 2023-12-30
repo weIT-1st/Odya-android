@@ -164,7 +164,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 binding.ivCommunityLike.setImageResource(imageResource)
 
                 feedImageAdapter.submitList(event.feedImages)
-                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
+                binding.tvTopic.visibility = if(event.feed.topic==null) View.GONE else View.VISIBLE
+                if(event.feed.topic != null){
+                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)}
+
                 binding.btnFeedCommentMore.text =
                     getString(R.string.feed_detail_comment, event.feed.communityCommentCount)
                 setTravelLog(event.feed.travelJournal)

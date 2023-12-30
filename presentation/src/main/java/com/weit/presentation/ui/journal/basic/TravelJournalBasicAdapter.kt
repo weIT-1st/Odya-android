@@ -34,12 +34,9 @@ class TravelJournalBasicAdapter: ListAdapter<TravelJournalContentsInfo, TravelJo
             binding.tvItemJournalDetailBasicPlace.text = item.placeDetail.name
             binding.tvItemJournalDetailBasicAddress.text =
                 item.placeDetail.address!!.split(" ").slice(1..2).joinToString(" ")
+
             binding.rvItemJournalDetailBasicContentImages.adapter = travelJournalBasicImageAdapter
             travelJournalBasicImageAdapter.submitList(item.travelJournalContentImages)
-
-//            Log.d("jomi", "list : ${item.travelJournalContentImages.map { it.contentImageUrl }}")
-//            binding.lvItemJournalDetailBasicContentImages.adapter = ListViewAdapter(binding.root.context, item.travelJournalContentImages.map { it.contentImageUrl })
-
         }
     }
 

@@ -31,7 +31,7 @@ class TravelJournalDetailFragment(
     private var _binding: BottomSheetTravelJournalDetailBinding? = null
     private val binding get() = _binding!!
 
-    private val travelJournalFriendAdapter: TravelJournalFriendAdapter()
+    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,13 +49,13 @@ class TravelJournalDetailFragment(
         super.onViewCreated(view, savedInstanceState)
 
         initJournalModelViewPager()
-        initFriendRV()
+//        initFriendRV()
         setButtonMoreFriends()
 
         binding.tvJournalDetailMainTitle.text = viewModel.travelJournalInfo.travelJournalTitle
         binding.tvJournalDetailTravelDate.text =
             requireContext().getString(R.string.journal_memory_my_travel_date, viewModel.travelJournalInfo.travelStartDate, viewModel.travelJournalInfo.travelEndDate)
-        travelJournalFriendAdapter.submitList(viewModel.travelJournalInfo.travelJournalCompanions.slice(0 until MAX_ABLE_SHOW_FRIENDS_NUM))
+//        travelJournalFriendAdapter.submitList(viewModel.travelJournalInfo.travelJournalCompanions.slice(0 until MAX_ABLE_SHOW_FRIENDS_NUM))
 
     }
 

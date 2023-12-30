@@ -2,6 +2,7 @@ package com.weit.presentation.ui.journal.basic
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,8 @@ class ListViewAdapter(
             context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         val view: View =
             layoutInflater.inflate(R.layout.item_journal_detail_basic_image, parent, false)
+
+        Log.d("jomi", "List position : $position")
 
         val item = images[position]
         val image = view.findViewById<ImageView>(R.id.iv_item_journal_detail_basic_image)

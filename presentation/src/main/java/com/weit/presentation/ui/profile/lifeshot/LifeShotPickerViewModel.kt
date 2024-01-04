@@ -45,8 +45,6 @@ class LifeShotPickerViewModel @Inject constructor(
     private var imageInfo: SelectLifeShotImageDTO? = null
     init{
         onNextImages()
-        Logger.t("USERIMAGE").i("초기화")
-
     }
 
     fun onNextImages() {

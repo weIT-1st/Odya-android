@@ -14,8 +14,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
+import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.FavoriteTopicAdapter
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
@@ -33,16 +35,14 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     private val viewModel: MyProfileViewModel by viewModels()
     private var profileMenuDialog: ProfileMenuFragment? = null
     private val myProfileLifeShotAdapter = MyProfileLifeShotAdapter(
-        selectImage = { LifeShotEntity ->
-            //TODO 확대샷
+        selectImage = { lifeShotEntity, position ->
+            viewModel.selectLifeShot(lifeShotEntity, position)
         }
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
 
-        //TODO 유저인생샷
-            //블러처리
         initRecyclerView()
         //TODO 관심장소
         //TODO 즐겨찾기 여행일지
@@ -115,7 +115,34 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     .load(lifeshots.first().imageUrl)
                     .into(binding.ivProfileBg)
                 myProfileLifeShotAdapter.submitList(lifeshots)
-                binding.ivProfileBg.setBlur(100)}
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.userInfo.collectLatest { userInfo ->
+                if(userInfo != null) {
+                    Glide.with(binding.root)
+                        .load(userInfo.user.profile.url)
+                        .into(binding.ivProfileUser)
+                    binding.tvProfileNickname.text = userInfo.user.nickname
+                    binding.tvProfileTotalOdyaCount.text = userInfo.userStatistics.odyaCount.toString()
+                    binding.tvProfileTotalFollowingCount.text =
+                        userInfo.userStatistics.followingsCount.toString()
+                    binding.tvProfileTotalFollowCount.text =
+                        userInfo.userStatistics.followersCount.toString()
+                    val baseString =
+                        getString(
+                            R.string.profile_total_travel_count,
+                            userInfo.user.nickname,
+                            userInfo.userStatistics.travelPlaceCount,
+                            userInfo.userStatistics.travelJournalCount
+                        )
+
+                    binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
+                        baseString,
+                        HtmlCompat.FROM_HTML_MODE_COMPACT,
+                    )
+                }
             }
         }
     }
@@ -123,27 +150,13 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     private fun handleEvent(event: MyProfileViewModel.Event) {
 
         when (event) {
-            is MyProfileViewModel.Event.GetUserStatisticsSuccess -> {
-                Glide.with(binding.root)
-                    .load(event.user.profile.url)
-                    .into(binding.ivProfileUser)
-                binding.tvProfileNickname.text = event.user.nickname
-                binding.tvProfileTotalOdyaCount.text = event.statistics.odyaCount.toString()
-                binding.tvProfileTotalFollowingCount.text = event.statistics.followingsCount.toString()
-                binding.tvProfileTotalFollowCount.text = event.statistics.followersCount.toString()
-                val baseString=
-                    getString(
-                        R.string.profile_total_travel_count,
-                        event.user.nickname,
-                        event.statistics.travelPlaceCount,
-                        event.statistics.travelJournalCount
-                    )
-
-
-                binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
-                    baseString,
-                    HtmlCompat.FROM_HTML_MODE_COMPACT,
+            is MyProfileViewModel.Event.OnSelectLifeShot -> {
+                val action = MyProfileFragmentDirections.actionFragmentMypageToLifeShotDetailFragment(
+                    event.lifeshots.toTypedArray(),
+                    event.position,
+                    LifeShotRequestDTO(event.lastImageId ?:0, event.userId)
                 )
+                findNavController().navigate(action)
             }
             else -> {}
         }

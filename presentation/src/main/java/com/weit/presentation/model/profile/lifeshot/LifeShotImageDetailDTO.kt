@@ -1,6 +1,10 @@
-package com.weit.domain.model.image
+package com.weit.presentation.model.profile.lifeshot
 
-data class UserImageResponseInfo(
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
+data class LifeShotImageDetailDTO(
     val imageId: Long,
     val imageUrl: String,
     val placeId: String?,
@@ -8,4 +12,4 @@ data class UserImageResponseInfo(
     val placeName: String?,
     val journalId: Long?,
     val communityId: Long?,
-)
+) : Parcelable

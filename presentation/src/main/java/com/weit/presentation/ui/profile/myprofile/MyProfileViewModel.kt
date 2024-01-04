@@ -3,8 +3,6 @@ package com.weit.presentation.ui.profile.myprofile
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
-import com.weit.domain.model.community.comment.CommentContent
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
@@ -15,6 +13,8 @@ import com.weit.domain.model.user.UserStatistics
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO
+import com.weit.presentation.model.profile.lifeshot.LifeShotUserInfo
 import com.weit.presentation.ui.util.Constants.DEFAULT_DATA_SIZE
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -30,16 +30,22 @@ class MyProfileViewModel @Inject constructor(
     private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getUserLifeshotUseCase: GetUserLifeshotUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
+
+    private val _userInfo = MutableStateFlow<LifeShotUserInfo?>(null)
+    val userInfo: StateFlow<LifeShotUserInfo?> get() = _userInfo
+
     private lateinit var user : User
+
     private var lifeShotJob: Job = Job().apply {
         complete()
     }
-    private var lastImageId :Long? = null
+    private var lastImageId: Long? = null
 
     init {
         viewModelScope.launch {
@@ -56,13 +62,14 @@ class MyProfileViewModel @Inject constructor(
     private fun getUserStatistics() {
         viewModelScope.launch {
             val result = getUserStatisticsUseCase(user.userId)
-                if (result.isSuccess) {
-                    _event.emit(Event.GetUserStatisticsSuccess(result.getOrThrow(), user))
-                } else {
-                    handleError(result.exceptionOrNull() ?: UnKnownException())
-                }
+            if (result.isSuccess) {
+                _userInfo.emit(LifeShotUserInfo(user,result.getOrThrow()))
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
             }
         }
+    }
+
     fun onNextLifeShots() {
         if (lifeShotJob.isCompleted.not()) {
             return
@@ -73,7 +80,7 @@ class MyProfileViewModel @Inject constructor(
     private fun loadNextLifeShots() {
         lifeShotJob = viewModelScope.launch {
             val result = getUserLifeshotUseCase(
-                LifeshotRequestInfo(DEFAULT_DATA_SIZE,lastImageId,user.userId)
+                LifeshotRequestInfo(DEFAULT_DATA_SIZE, lastImageId, user.userId)
             )
             if (result.isSuccess) {
                 val newLifeShots = result.getOrThrow()
@@ -88,6 +95,23 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
+    fun selectLifeShot(lifeShotEntity: UserImageResponseInfo, position: Int) {
+        viewModelScope.launch {
+            val lifeShots = _lifeshots.value.map {
+                LifeShotImageDetailDTO(
+                    it.imageId,
+                    it.imageUrl,
+                    it.placeId,
+                    it.isLifeShot,
+                    it.placeName,
+                    it.journalId,
+                    it.communityId
+                )
+            }
+            _event.emit(Event.OnSelectLifeShot(lifeShots, position,lastImageId,user.userId))
+        }
+    }
+
 
     private suspend fun handleError(error: Throwable) {
         when (error) {
@@ -99,10 +123,13 @@ class MyProfileViewModel @Inject constructor(
 
     sealed class Event {
 
-        data class GetUserStatisticsSuccess(
-            val statistics : UserStatistics,
-            val user: User
+        data class OnSelectLifeShot(
+            val lifeshots: List<LifeShotImageDetailDTO>,
+            val position: Int,
+            val lastImageId: Long?,
+            val userId: Long,
         ) : Event()
+
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()
         object UnknownException : Event()

@@ -47,15 +47,16 @@ class MyProfileViewModel @Inject constructor(
     }
     private var lastImageId: Long? = null
 
-    init {
+    fun initData(){
         viewModelScope.launch {
+            lastImageId = null
+            _lifeshots.value = emptyList()
             getUserUseCase().onSuccess {
                 user = it
                 getUserStatistics()
                 onNextLifeShots()
             }
         }
-
     }
 
     @SuppressLint("SuspiciousIndentation")

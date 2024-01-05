@@ -42,7 +42,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
+        viewModel.initData()
         initRecyclerView()
         //TODO 관심장소
         //TODO 즐겨찾기 여행일지
@@ -100,6 +100,16 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             addOnScrollListener(infinityScrollListener)
             adapter = myProfileLifeShotAdapter
         }
+//        binding.rvProfileFavoritePlace.run {
+//            addItemDecoration(
+//                SpaceDecoration(
+//                    resources,
+//                    bottomDP = R.dimen.item_feed_comment_space,
+//                ),
+//            )
+//            addOnScrollListener(infinityScrollListener)
+//            adapter = myProfileLifeShotAdapter
+//        }
     }
 
     override fun initCollector() {
@@ -162,4 +172,9 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     }
 
+    override fun onDestroyView() {
+        binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
+        binding.rvProfileLifeshot.adapter = null
+        super.onDestroyView()
+    }
 }

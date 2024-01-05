@@ -21,8 +21,8 @@ class OtherJournalViewModel @Inject constructor(
     private val _bookMarkTravelJournals = MutableStateFlow<List<JournalBookMarkInfo>>(emptyList())
     val bookMarkTravelJournals: StateFlow<List<JournalBookMarkInfo>> get() = _bookMarkTravelJournals
 
-    private val _taggedTravelJouranls = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
-    val taggedTravelJournals: StateFlow<List<TravelJournalListInfo>> get() = _taggedTravelJouranls
+    private val _taggedTravelJournals = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
+    val taggedTravelJournals: StateFlow<List<TravelJournalListInfo>> get() = _taggedTravelJournals
 
     init {
         getBookMarkJournal()
@@ -37,7 +37,8 @@ class OtherJournalViewModel @Inject constructor(
                 val list = result.getOrThrow()
                 _bookMarkTravelJournals.emit(list)
             } else {
-                Log.d("getBookMarkJournal", "Get Bookmark Journal Fail :  ${result.exceptionOrNull()}")
+                // todo 에러처리
+                Log.d("memory", "Get Bookmark Journal Fail :  ${result.exceptionOrNull()}")
             }
         }
     }
@@ -48,10 +49,15 @@ class OtherJournalViewModel @Inject constructor(
 
             if (result.isSuccess){
                 val list = result.getOrThrow()
-                _taggedTravelJouranls.emit(list)
+                _taggedTravelJournals.emit(list)
             } else {
-                Log.d("getTaggedJournal", "Get Tagged Journal Fail : ${result.exceptionOrNull()}")
+                // todo 에러처리
+                Log.d("memory", "Get Tagged Journal Fail : ${result.exceptionOrNull()}")
             }
         }
+    }
+
+    fun deleteTaggedJournal(){
+        // todo 태그된 여행일지 삭제
     }
 }

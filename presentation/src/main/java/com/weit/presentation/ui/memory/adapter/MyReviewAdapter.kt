@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,7 @@ import com.weit.presentation.databinding.ItemMyReviewBinding
 import java.time.LocalDateTime
 
 class MyReviewAdapter(
-    private val deleteItem: () -> Unit
+    private val deleteItem: (Long) -> Unit
 ): ListAdapter<PlaceMyReviewInfo, MyReviewAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemMyReviewBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -30,18 +31,21 @@ class MyReviewAdapter(
         fun bind(item: PlaceMyReviewInfo) {
             binding.review = item
             binding.tvItemPlaceReviewDate.text = localDateTimeToString(item.createAt)
+            binding.btnItemPlaceMenu.setOnClickListener {
+                showPopUpMenu(binding.btnItemPlaceMenu, item.placeReviewId)
+            }
         }
     }
+    private fun showPopUpMenu(it: View, placeReviewId: Long){
+        val contextThemeWrapper = ContextThemeWrapper(it.context, R.style.MemoryPopupMenuStyle)
 
-    private fun showPopUpMenu(it: View){
-        PopupMenu(it.context, it).apply {
-            menuInflater.inflate(R.menu.menu_my_place_reivew_menu, this.menu)
+        PopupMenu(contextThemeWrapper, it).apply {
+            menuInflater.inflate(R.menu.menu_memory, this.menu)
 
             setOnMenuItemClickListener {
                 when (it.itemId) {
-                    R.id.item_delete_review -> {
-                        Log.d("jomi", "item delete")
-                        deleteItem
+                    R.id.item_memory_delete -> {
+                        deleteItem(placeReviewId)
                     }
                 }
                 false

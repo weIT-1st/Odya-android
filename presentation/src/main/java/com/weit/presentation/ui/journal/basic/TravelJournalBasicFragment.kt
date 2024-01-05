@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.weit.domain.model.journal.TravelJournalInfo
+import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetialModelBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +34,11 @@ class TravelJournalBasicFragment(
         initTravelJournalBasicRV()
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             viewModel.journalContents.collectLatest {info ->
@@ -41,6 +48,9 @@ class TravelJournalBasicFragment(
     }
 
     private fun initTravelJournalBasicRV(){
-        binding.rvItemJournalDetailModel.adapter = travelJournalBasicAdapter
+        binding.rvItemJournalDetailModel.apply {
+            adapter = travelJournalBasicAdapter
+            addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_day_space))
+        }
     }
 }

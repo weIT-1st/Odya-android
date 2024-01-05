@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.domain.model.journal.TravelJournalInfo
@@ -31,13 +32,14 @@ class TravelJournalDetailFragment(
     private var _binding: BottomSheetTravelJournalDetailBinding? = null
     private val binding get() = _binding!!
 
+
     private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = BottomSheetTravelJournalDetailBinding.inflate(inflater, container, false)
         return binding.run {
             lifecycleOwner = viewLifecycleOwner
@@ -49,13 +51,12 @@ class TravelJournalDetailFragment(
         super.onViewCreated(view, savedInstanceState)
 
         initJournalModelViewPager()
-//        initFriendRV()
+        initFriendRV()
         setButtonMoreFriends()
 
         binding.tvJournalDetailMainTitle.text = viewModel.travelJournalInfo.travelJournalTitle
         binding.tvJournalDetailTravelDate.text =
             requireContext().getString(R.string.journal_memory_my_travel_date, viewModel.travelJournalInfo.travelStartDate, viewModel.travelJournalInfo.travelEndDate)
-//        travelJournalFriendAdapter.submitList(viewModel.travelJournalInfo.travelJournalCompanions.slice(0 until MAX_ABLE_SHOW_FRIENDS_NUM))
 
     }
 
@@ -64,6 +65,7 @@ class TravelJournalDetailFragment(
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_journal_friends_space))
             adapter = travelJournalFriendAdapter
         }
+        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -87,7 +89,7 @@ class TravelJournalDetailFragment(
     private fun setButtonMoreFriends(){
         binding.btnJournalDetailMoreFriends.isGone = viewModel.travelJournalInfo.travelJournalCompanions.size < MAX_ABLE_SHOW_FRIENDS_NUM
         binding.btnJournalDetailMoreFriends.setOnClickListener {
-
+            // todo 친구 목록 더보기
         }
     }
 

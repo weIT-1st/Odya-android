@@ -28,6 +28,10 @@ class BookmarkJournalAdapter(
             binding.root.setOnClickListener {
                 showDetail( getItem(absoluteAdapterPosition).travelJournalId )
             }
+
+            binding.toggleItemJournalMemoryBookmark.setOnClickListener {
+                // todo bookmark
+            }
         }
 
         fun bind(item: JournalBookMarkInfo){

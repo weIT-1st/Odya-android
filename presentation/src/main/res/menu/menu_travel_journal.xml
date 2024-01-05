@@ -4,14 +4,14 @@
 
     <item
         android:icon="@drawable/selector_star_bookmark"
-        android:id="@+id/menu_search"
+        android:id="@+id/menu_journal_bookmark"
         app:showAsAction="always"
         android:iconTint="@color/label_normal"
         android:title="bookmark" />
 
     <item
         android:icon="@drawable/ic_meats_ball"
-        android:id="@+id/menu_alarm"
+        android:id="@+id/menu_journal_alert"
         app:showAsAction="always"
         android:iconTint="@color/label_normal"
         android:title="alert" />

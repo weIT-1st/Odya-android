@@ -28,6 +28,7 @@ import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
+import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
 import com.weit.domain.repository.place.PlaceRepository
@@ -335,7 +336,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
         TravelJournalContentsInfo(
             travelJournalContentId = travelJournalContentId,
             content = content,
-            placeDetail = placeRepository.getPlaceDetail(placeId).getOrThrow(),
+            placeDetail = if (placeId == null){
+                // placeId를 입력받지 못한 경우
+                PlaceDetail("", null, null, null, null)
+            } else {
+                placeRepository.getPlaceDetail(placeId).getOrThrow()
+                   },
             latitude = latitude,
             longitude = longitude,
             travelDate = travelDate,

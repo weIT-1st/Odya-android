@@ -16,7 +16,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/tb_travel_journal"
             android:layout_width="0dp"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:backgroundTint="@android:color/transparent"
             android:gravity="center"
             android:elevation="1dp"

@@ -37,8 +37,11 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
     private val myJournalAdapter = MyJournalAdapter { myJournalViewModel.onClickJournal(it)}
     private val bookmarkJournalAdapter = BookmarkJournalAdapter { myJournalViewModel.onClickJournal(it) }
-    private val taggedJournalAdapter = TaggedJournalAdapter()
-    private val myReviewAdapter = MyReviewAdapter { reviewViewModel.deleteReview() }
+    private val taggedJournalAdapter = TaggedJournalAdapter(
+        { moveToJournalDetail(it) },
+        { otherJournalViewModel.deleteTaggedJournal() }
+    )
+    private val myReviewAdapter = MyReviewAdapter { reviewViewModel.deleteReview(it) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

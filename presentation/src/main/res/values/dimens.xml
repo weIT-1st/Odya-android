@@ -37,6 +37,8 @@
     <dimen name="item_feed_comment_space">16dp</dimen>
 
     <dimen name="item_memory_all_space">12dp</dimen>
+    <dimen name="item_memory_day_space">50dp</dimen>
+    <dimen name="item_memory_album_space">4dp</dimen>
     <dimen name="item_journal_friends_space">-8dp</dimen>
 
     <!-- margin -->

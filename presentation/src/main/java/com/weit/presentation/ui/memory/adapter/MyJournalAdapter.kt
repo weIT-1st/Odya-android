@@ -28,6 +28,10 @@ class MyJournalAdapter(
             binding.root.setOnClickListener {
                 showDetail( getItem(absoluteAdapterPosition).travelJournalId )
             }
+
+            binding.toggleItemJournalMemoryBookmark.setOnClickListener {
+                // todo bookmark
+            }
         }
         fun bind(item: TravelJournalListInfo){
             Glide.with(binding.root.context)

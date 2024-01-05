@@ -134,4 +134,9 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="MemoryPopupMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="titleTextAppearance">@style/detail1</item>
+        <item name="android:textColor">@color/warning</item>
+    </style>
 </resources>

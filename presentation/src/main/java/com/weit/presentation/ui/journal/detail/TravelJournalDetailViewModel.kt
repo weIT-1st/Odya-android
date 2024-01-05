@@ -22,7 +22,17 @@ class TravelJournalDetailViewModel @AssistedInject constructor(
         fun create(travelJournalInfo: TravelJournalInfo): TravelJournalDetailViewModel
     }
 
+    fun handleFriendsCount(): List<TravelJournalCompanionsInfo>{
+        val friendCount = travelJournalInfo.travelJournalCompanions.size
+        return if (friendCount < MAX_ABLE_SHOW_FRIENDS_NUM) {
+            travelJournalInfo.travelJournalCompanions
+        } else {
+            travelJournalInfo.travelJournalCompanions.slice(0 until  MAX_ABLE_SHOW_FRIENDS_NUM)
+        }
+    }
+
     companion object {
+        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
         fun provideFactory(
             assistedFactory: TravelJournalInfoFactory,
             travelJournalInfo: TravelJournalInfo

@@ -1,17 +1,17 @@
 package com.weit.presentation.ui.journal.travel_journal
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.journal.TravelJournalInfo
+import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
-import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.base.BaseMapFragment
 import com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment
+import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -31,6 +31,7 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
     }
 
     private var travelJournalDetailFragment: TravelJournalDetailFragment? = null
+    private var travelJournalDetailMenuFragment: TravelJournalDetailMenuFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -52,6 +53,38 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
                 }
             }
         }
+
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.travelJournalDetailToolBarInfo.collectLatest { info ->
+                initMenu(info)
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
+                handleEvent(event)
+            }
+        }
+    }
+
+    private fun initMenu(info: TravelJournalViewModel.TravelJournalDetailToolBarInfo) {
+        if (info.isMyTravelJournal) {
+            binding.tbTravelJournal.title = info.title
+            binding.tbTravelJournal.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.menu_journal_bookmark -> {
+                        // todo bookmark 처리
+                    }
+                    R.id.menu_journal_alert -> {
+                        viewModel.popUpJournalMenu()
+                    }
+                }
+                true
+            }
+        } else {
+            binding.tbTravelJournal.title = info.title
+            binding.tbTravelJournal.menu.clear()
+        }
     }
 
     private fun popUpJournalDetailBottomSheet(info: TravelJournalInfo){
@@ -64,7 +97,38 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
         }
     }
 
+    private fun popUpJournalMenuBottomSheet() {
+        if (travelJournalDetailMenuFragment == null) {
+            travelJournalDetailMenuFragment = TravelJournalDetailMenuFragment(
+                { viewModel.moveToJournalUpdate() },
+                { viewModel.deleteTravelJournal() }
+            )
+        }
+
+        if ( !travelJournalDetailFragment!!.isAdded) {
+            travelJournalDetailMenuFragment!!.show(childFragmentManager, TAG)
+        }
+    }
+
+    private fun handleEvent(event: TravelJournalViewModel.Event) {
+        when (event) {
+            is TravelJournalViewModel.Event.MoveToJournalUpdate -> {
+                travelJournalDetailFragment = null
+
+                val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalUpdateFragment(event.travelJournalUpdateDTO)
+                findNavController().navigate(action)
+            }
+            is TravelJournalViewModel.Event.PopupTravelJournalMenu -> {
+                popUpJournalMenuBottomSheet()
+            }
+
+            TravelJournalViewModel.Event.DeleteTravelJournalSuccess -> {
+                sendSnackBar("여행일지가 삭제되었습니다.")
+            }
+        }
+    }
+
     companion object {
-        private val TAG = "TravelJournalFragment"
+        private const val TAG = "TravelJournalFragment"
     }
 }

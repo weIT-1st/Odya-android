@@ -3,18 +3,25 @@ package com.weit.presentation.ui.profile.myprofile
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.image.UserImageResponseInfo
 import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.User
-import com.weit.domain.model.user.UserStatistics
+import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
+import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
+import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
+import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO
 import com.weit.presentation.model.profile.lifeshot.LifeShotUserInfo
+import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceEntity
 import com.weit.presentation.ui.util.Constants.DEFAULT_DATA_SIZE
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -30,7 +37,18 @@ class MyProfileViewModel @Inject constructor(
     private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getUserLifeshotUseCase: GetUserLifeshotUseCase,
-) : ViewModel() {
+    private val getFavoritePlacesUseCase: GetFavoritePlacesUseCase,
+    private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
+    private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
+ ) : ViewModel() {
+    private val _favoritePlaces = MutableStateFlow<List<FavoritePlaceEntity>>(emptyList())
+    val favoritePlaces: StateFlow<List<FavoritePlaceEntity>> get() = _favoritePlaces
+
+    private val _favoritePlaceCount = MutableStateFlow<Int>(0)
+    val favoritePlaceCount: StateFlow<Int> get() = _favoritePlaceCount
+
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
 
@@ -56,6 +74,8 @@ class MyProfileViewModel @Inject constructor(
                 getUserStatistics()
                 onNextLifeShots()
             }
+            loadFavoritePlaces()
+            getFavoritePlaceCount()
         }
     }
 
@@ -113,6 +133,52 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
+    private fun getFavoritePlaceCount(){
+        viewModelScope.launch {
+            val result = getFavoritePlaceCountUseCase()
+            if (result.isSuccess) {
+                _favoritePlaceCount.emit(result.getOrThrow())
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+
+            }
+        }
+    }
+
+    private fun loadFavoritePlaces() {
+        viewModelScope.launch {
+            val result = getFavoritePlacesUseCase(
+                FavoritePlaceInfo()
+            )
+            if (result.isSuccess) {
+                _favoritePlaces.value = emptyList()
+                val newFavoritePlaces = result.getOrThrow().map{
+                    val placeDetail = getPlaceDetailUseCase(it.placeId)
+                    FavoritePlaceEntity(it.favoritePlaceId,it.placeId,placeDetail.name,placeDetail.address)
+                }
+                newFavoritePlaces.lastOrNull()?.let {
+                    _favoritePlaces.emit(_favoritePlaces.value + newFavoritePlaces)
+                }
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
+    fun deleteFavoritePlace(place: FavoritePlaceEntity){
+        viewModelScope.launch {
+            val result = deleteFavoritePlaceUseCase(
+                place.favoritePlaceId
+            )
+            if (result.isSuccess) {
+                getFavoritePlaceCount()
+                loadFavoritePlaces()
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
 
     private suspend fun handleError(error: Throwable) {
         when (error) {
@@ -135,5 +201,6 @@ class MyProfileViewModel @Inject constructor(
         object InvalidTokenException : Event()
         object UnknownException : Event()
     }
+
 }
 

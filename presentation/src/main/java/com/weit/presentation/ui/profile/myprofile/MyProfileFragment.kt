@@ -1,26 +1,17 @@
 package com.weit.presentation.ui.profile.myprofile
 
-import android.graphics.Shader
-import android.os.Build
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.ForegroundColorSpan
 import android.view.View
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.orhanobut.logger.Logger
-import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.FavoriteTopicAdapter
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
+import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -39,12 +30,16 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             viewModel.selectLifeShot(lifeShotEntity, position)
         }
     )
+    private val favoritePlaceAdapter = FavoritePlaceAdapter(
+        selectPlace = { place ->
+            viewModel.deleteFavoritePlace(place)
+        }
+    )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         viewModel.initData()
         initRecyclerView()
-        //TODO 관심장소
         //TODO 즐겨찾기 여행일지
         //TODO 대표여행일지
 
@@ -53,13 +48,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     override fun initListener() {
         binding.ivProfileUser.setOnClickListener {
             if (profileMenuDialog == null) {
-
                 profileMenuDialog = ProfileMenuFragment { uri ->
                     Glide.with(binding.root)
                         .load(uri)
                         .into(binding.ivProfileUser)
                 }
-
             }
             if (profileMenuDialog?.isAdded?.not() == true) {
                 profileMenuDialog?.show(
@@ -77,6 +70,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
 
         binding.tvProfileMyCommunity.setOnClickListener {
             val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentFeedMyActivity()
+            findNavController().navigate(action)
+        }
+
+        binding.btnProfileFavoritePlaceMore.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentMap()
             findNavController().navigate(action)
         }
     }
@@ -100,16 +98,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             addOnScrollListener(infinityScrollListener)
             adapter = myProfileLifeShotAdapter
         }
-//        binding.rvProfileFavoritePlace.run {
-//            addItemDecoration(
-//                SpaceDecoration(
-//                    resources,
-//                    bottomDP = R.dimen.item_feed_comment_space,
-//                ),
-//            )
-//            addOnScrollListener(infinityScrollListener)
-//            adapter = myProfileLifeShotAdapter
-//        }
+        binding.rvProfileFavoritePlace.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    bottomDP = R.dimen.item_feed_comment_space,
+                ),
+            )
+            adapter = favoritePlaceAdapter
+        }
     }
 
     override fun initCollector() {
@@ -126,6 +123,19 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     .into(binding.ivProfileBg)
                 myProfileLifeShotAdapter.submitList(lifeshots)
                 }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.favoritePlaceCount.collectLatest { count ->
+                binding.btnProfileFavoritePlaceMore.text = getString(
+                    R.string.profile_bookmark_place,
+                    count
+                )
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.favoritePlaces.collectLatest { list ->
+                favoritePlaceAdapter.submitList(list)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
@@ -175,6 +185,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     override fun onDestroyView() {
         binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
         binding.rvProfileLifeshot.adapter = null
+        binding.rvProfileFavoritePlace.adapter = null
         super.onDestroyView()
     }
 }

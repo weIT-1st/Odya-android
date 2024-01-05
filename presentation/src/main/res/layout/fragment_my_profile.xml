@@ -385,20 +385,19 @@
                     app:layout_constraintTop_toBottomOf="@+id/rv_profile_bookmark_travel_journal" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_profile_boomark_place"
+                    android:id="@+id/rv_profile_favorite_place"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical"
-                    android:layout_marginStart="20dp"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:layout_marginTop="22dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_place"
-                    tools:listitem="@layout/item_profile_favorite_place"
-                    tools:itemCount="4"/>
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_profile_favorite_place" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_profile_bookmark_place_more"
+                    android:id="@+id/btn_profile_favorite_place_more"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -417,7 +416,7 @@
                     app:iconTint="@color/label_assistive"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_boomark_place"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_favorite_place"
                     app:strokeColor="@color/line_alternative"
                     app:strokeWidth="1dp"
                     tools:text="@string/profile_bookmark_place" />
@@ -430,11 +429,12 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
                     android:drawableEnd="@drawable/ic_go_right_arrow"
                     android:text="@string/profile_my_community"
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/btn_profile_bookmark_place_more" />
+                    app:layout_constraintTop_toBottomOf="@+id/btn_profile_favorite_place_more" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

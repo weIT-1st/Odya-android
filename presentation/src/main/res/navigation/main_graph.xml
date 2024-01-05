@@ -46,6 +46,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_lifeShotDetailFragment"
             app:destination="@id/lifeShotDetailFragment" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_fragment_map"
+            app:destination="@id/fragment_map" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">

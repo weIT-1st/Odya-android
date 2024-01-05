@@ -1,10 +1,8 @@
 package com.weit.data.repository.auth
 
 import android.content.Context
-import android.util.Log
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO
@@ -34,10 +32,6 @@ class LoginRepositoryImpl @Inject constructor(
     private val authDataSource: AuthDataSource,
     private val userNameDataSource: UserInfoDataSource,
 ) : LoginRepository {
-
-    init {
-    }
-
     override suspend fun loginWithKakao(): Result<Unit> {
         // TODO 유효 토큰 검사 후 자동 로그인
         // 카카오 로그인 -> 서버 로그인 -> 파이어베이스 로그인

@@ -1,8 +1,5 @@
 package com.weit.presentation.ui.searchplace
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -59,6 +56,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     }
 
     private suspend fun initExperiencedFriend() {
+        // todo 친구수가 1~2명일떄 + 리사이클러뷰 아이템 간격 조절
         val result = getExperiencedFriendUseCase(placeId)
         if (result.isSuccess) {
             val info = result.getOrThrow()

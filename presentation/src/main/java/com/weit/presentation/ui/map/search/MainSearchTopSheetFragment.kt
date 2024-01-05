@@ -1,7 +1,6 @@
 package com.weit.presentation.ui.map.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,12 +27,12 @@ class MainSearchTopSheetFragment(
 
     private val placePredictionAdapter = PlacePredictionAdapter { placeId, placeName ->
         onSearchPlace(placeId)
-        viewModel.onSearchNewWord(placeName)
+        viewModel.searchNewWord(placeName)
     }
 
     private val recentPlaceSearchAdapter =
         RecentPlaceSearchAdapter(
-            { deleteWord -> viewModel.deleteRecentPlaceSearch(deleteWord) },
+            { deleteWord -> viewModel.deleteRecentWord(deleteWord) },
             { touchWord -> viewModel.onTouchRecentWord(touchWord) }
         )
     private val odyaHotPlaceAdapter = OdyaHotPlaceAdapter()
@@ -110,7 +109,6 @@ class MainSearchTopSheetFragment(
     }
 
     override fun onDestroy() {
-        Log.d("test", "onDestroy")
         super.onDestroy()
     }
 
@@ -126,10 +124,6 @@ class MainSearchTopSheetFragment(
     private fun onEditFocusChange() {
         binding.etPlaceSearchMain.setOnFocusChangeListener { _, hasFocus ->
             viewModel.changeMainSearchFocus(hasFocus)
-        }
-
-        binding.btnPlaceSearchCancel.setOnClickListener {
-            viewModel.setBTNPleaseSearchCancelOnClickListener()
         }
     }
 

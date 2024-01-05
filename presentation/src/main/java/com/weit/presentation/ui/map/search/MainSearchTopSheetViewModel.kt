@@ -16,9 +16,8 @@ import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.job
 import kotlinx.coroutines.launch
-import java.util.concurrent.CopyOnWriteArrayList
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,8 +35,8 @@ class MainSearchTopSheetViewModel @Inject constructor(
     private val _searchPlaceList = MutableStateFlow<List<PlacePrediction>>(emptyList())
     val searchPlaceList: StateFlow<List<PlacePrediction>> get() = _searchPlaceList
 
-    private val _recentSearchWords = MutableStateFlow<List<String>>(emptyList())
-    val recentSearchWords: StateFlow<List<String>> get() = _recentSearchWords
+    private val _recentSearchWords = MutableStateFlow<List<RecentSearchWord>>(emptyList())
+    val recentSearchWords: StateFlow<List<RecentSearchWord>> get() = _recentSearchWords
 
     private val _odyaHotPlaceRank = MutableStateFlow<List<HotPlaceRank>>(emptyList())
     val odyaHotPlaceRank: StateFlow<List<HotPlaceRank>> get() = _odyaHotPlaceRank
@@ -51,7 +50,14 @@ class MainSearchTopSheetViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val list: MutableList<HotPlaceRank> = mutableListOf()
-            (TOP_RANK_MIN_COUNT..TOP_RANK_MAX_COUNT).forEach { list.add(HotPlaceRank(it, BLANK_SEARCH_TERM)) }
+            (TOP_RANK_MIN_COUNT..TOP_RANK_MAX_COUNT).forEach {
+                list.add(
+                    HotPlaceRank(
+                        it,
+                        BLANK_SEARCH_TERM
+                    )
+                )
+            }
             _odyaHotPlaceRank.emit(list)
         }
 
@@ -76,7 +82,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getRecentPlaceSearchUseCase()
             if (result.isSuccess) {
-                val list = result.getOrThrow()
+                val list = result.getOrThrow().map { RecentSearchWord(recentWord = it) }
                 _recentSearchWords.emit(list)
             } else {
                 Log.d("searchRecent", "fail : ${result.exceptionOrNull()?.message}")
@@ -84,35 +90,31 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-    fun onSearchNewWord(searchTerm: String) {
-        registerPlaceSearchWord(searchTerm)
-        plusRecentPlaceSearchWord(searchTerm)
-    }
-
-    private fun registerPlaceSearchWord(searchTerm: String) {
+    fun searchNewWord(searchTerm: String) {
         viewModelScope.launch {
             val result = registerPlaceSearchHistoryUseCase(searchTerm)
             if (result.isSuccess) {
-                Log.d("Register Place Search", "Register new term success")
+                val currentList = recentSearchWords.value
+
+                val newList = if (currentList.map { it.recentWord }.contains(searchTerm)) {
+                    listOf(RecentSearchWord(recentWord = searchTerm)).plus(currentList.filterNot { it.recentWord == searchTerm })
+                } else {
+                    listOf(RecentSearchWord(recentWord = searchTerm)).plus(currentList)
+                }
+
+                plusRecentPlaceSearchWord(newList)
+
             } else {
                 Log.d("Register Place Search", "Register new term failed")
             }
         }
     }
 
-    private fun plusRecentPlaceSearchWord(searchTerm: String) {
+    private fun plusRecentPlaceSearchWord(searchTerms: List<RecentSearchWord>) {
         viewModelScope.launch {
-            val list = recentSearchWords.value
-
-            val newList = if (list.contains(searchTerm)) {
-                listOf(searchTerm).plus(list.filter { it != searchTerm })
-            } else {
-                listOf(searchTerm).plus(list)
-            }
-
-            val result = setRecentPlaceSearchUseCase(newList)
+            val result = setRecentPlaceSearchUseCase(searchTerms.map { it.recentWord })
             if (result.isSuccess) {
-                _recentSearchWords.emit(newList)
+                _recentSearchWords.emit(searchTerms)
                 _event.emit(Event.SuccessPlusRecentSearch)
             } else {
                 Log.d("Add Recent Place Search Word", "failed")
@@ -132,12 +134,12 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-    fun deleteRecentPlaceSearch(searchedPlace: String) {
+    fun deleteRecentWord(recentSearchWord: RecentSearchWord) {
         viewModelScope.launch {
             val list = recentSearchWords.value
-            val newList = list.filterNot { it == searchedPlace }
+            val newList = list.filterNot { it == recentSearchWord }
 
-            val result = setRecentPlaceSearchUseCase(newList)
+            val result = setRecentPlaceSearchUseCase(newList.map { it.recentWord })
 
             if (result.isSuccess) {
                 _recentSearchWords.emit(newList)
@@ -154,7 +156,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-    fun setBTNPleaseSearchCancelOnClickListener() {
+    fun setSearchCancelButton() {
         viewModelScope.launch {
             val hasFocus = searchFocus.value
             if (hasFocus) {
@@ -166,7 +168,7 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-    fun getOdyaHotPlaceRank() {
+    private fun getOdyaHotPlaceRank() {
         viewModelScope.launch {
             val result = getPlaceSearchHistoryUseCase()
 
@@ -187,12 +189,10 @@ class MainSearchTopSheetViewModel @Inject constructor(
         }
     }
 
-//    fun onDestroyView() {
-//        viewModelScope.launch {
-//            changeMainSearchFocus(false)
-//            searchTerm.emit(BLANK_SEARCH_TERM)
-//        }
-//    }
+    data class RecentSearchWord(
+        val id: UUID = UUID.randomUUID(),
+        val recentWord: String
+    )
 
     sealed class Event {
         object ClickSearchCancelHasFocus : Event()

@@ -51,6 +51,7 @@ class PlaceCommunityViewModel @AssistedInject constructor(
     }
 
     private fun loadNextCommunityMyActivity() {
+        // todo 무한 스크롤 관리
         getJob = viewModelScope.launch {
             val result = getCommunitiesUseCase(
                 CommunityRequestInfo(DEFAULT_PAGE_SIZE, communityLastId, null, placeId)

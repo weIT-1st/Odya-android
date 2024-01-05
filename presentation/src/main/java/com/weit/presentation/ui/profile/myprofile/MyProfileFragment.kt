@@ -6,6 +6,7 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
@@ -35,6 +36,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             viewModel.deleteFavoritePlace(place)
         }
     )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
@@ -49,9 +51,8 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         binding.ivProfileUser.setOnClickListener {
             if (profileMenuDialog == null) {
                 profileMenuDialog = ProfileMenuFragment { uri ->
-                    Glide.with(binding.root)
-                        .load(uri)
-                        .into(binding.ivProfileUser)
+                    if (uri == null) viewModel.getUserProfileNone() else Glide.with(binding.root)
+                        .load(uri).into(binding.ivProfileUser)
                 }
             }
             if (profileMenuDialog?.isAdded?.not() == true) {
@@ -87,7 +88,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         binding.rvProfileLifeshot.run {
             addItemDecoration(
                 SpaceDecoration(
@@ -116,12 +117,18 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.lifeshots.collectLatest { lifeshots ->
-                if(!lifeshots.isNullOrEmpty()){
+            viewModel.userProfile.collectLatest { uri ->
                 Glide.with(binding.root)
-                    .load(lifeshots.first().imageUrl)
-                    .into(binding.ivProfileBg)
-                myProfileLifeShotAdapter.submitList(lifeshots)
+                    .load(uri).into(binding.ivProfileUser)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.lifeshots.collectLatest { lifeshots ->
+                if (!lifeshots.isNullOrEmpty()) {
+                    Glide.with(binding.root)
+                        .load(lifeshots.first().imageUrl)
+                        .into(binding.ivProfileBg)
+                    myProfileLifeShotAdapter.submitList(lifeshots)
                 }
             }
         }
@@ -140,12 +147,13 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.userInfo.collectLatest { userInfo ->
-                if(userInfo != null) {
+                if (userInfo != null) {
                     Glide.with(binding.root)
                         .load(userInfo.user.profile.url)
                         .into(binding.ivProfileUser)
                     binding.tvProfileNickname.text = userInfo.user.nickname
-                    binding.tvProfileTotalOdyaCount.text = userInfo.userStatistics.odyaCount.toString()
+                    binding.tvProfileTotalOdyaCount.text =
+                        userInfo.userStatistics.odyaCount.toString()
                     binding.tvProfileTotalFollowingCount.text =
                         userInfo.userStatistics.followingsCount.toString()
                     binding.tvProfileTotalFollowCount.text =
@@ -171,13 +179,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
 
         when (event) {
             is MyProfileViewModel.Event.OnSelectLifeShot -> {
-                val action = MyProfileFragmentDirections.actionFragmentMypageToLifeShotDetailFragment(
-                    event.lifeshots.toTypedArray(),
-                    event.position,
-                    LifeShotRequestDTO(event.lastImageId ?:0, event.userId)
-                )
+                val action =
+                    MyProfileFragmentDirections.actionFragmentMypageToLifeShotDetailFragment(
+                        event.lifeshots.toTypedArray(),
+                        event.position,
+                        LifeShotRequestDTO(event.lastImageId ?: 0, event.userId)
+                    )
                 findNavController().navigate(action)
             }
+
             else -> {}
         }
     }

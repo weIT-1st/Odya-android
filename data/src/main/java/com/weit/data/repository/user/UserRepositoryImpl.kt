@@ -167,10 +167,12 @@ class UserRepositoryImpl @Inject constructor(
     }
     override suspend fun updateProfile(uri: String?): Result<Unit> {
         return kotlin.runCatching {
-            var file : MultipartBody.Part?= null
-            if (uri != null) {
-                file = getMultipartFile(uri)
+            val file: MultipartBody.Part = if (uri != null) {
+                getMultipartFile(uri)
+            } else {
+                MultipartBody.Part.createFormData("profile", "")
             }
+
             val result = userDataSource.updateProfile(file)
             if (result.isSuccessful) {
                 Result.success(Unit)

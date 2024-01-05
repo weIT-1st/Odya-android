@@ -52,6 +52,9 @@ class MyProfileViewModel @Inject constructor(
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
 
+    private val _userProfile = MutableStateFlow<String>("emptyList()")
+    val userProfile: StateFlow<String> get() = _userProfile
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -79,8 +82,18 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("SuspiciousIndentation")
-    private fun getUserStatistics() {
+    fun getUserProfileNone(){
+        viewModelScope.launch {
+            val result = getUserUseCase()
+            if (result.isSuccess) {
+                _userProfile.emit(result.getOrThrow().profile.url)
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
+    fun getUserStatistics() {
         viewModelScope.launch {
             val result = getUserStatisticsUseCase(user.userId)
             if (result.isSuccess) {

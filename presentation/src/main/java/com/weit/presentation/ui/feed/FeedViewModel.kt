@@ -268,6 +268,8 @@ class FeedViewModel @Inject constructor(
                     )
                     if (result.isSuccess) {
                         val newContents = result.getOrThrow()
+                        Logger.t("MainTest").i("$newContents")
+
                         feedLastId = newContents[newContents.lastIndex].communityId
                         if (newContents.isEmpty()) {
                             loadNextFeeds()
@@ -333,7 +335,6 @@ class FeedViewModel @Inject constructor(
             )
             if (result.isSuccess) {
                 val newJournals = result.getOrThrow()
-                Logger.t("MainTest").i("$newJournals")
                 if (newJournals.isNotEmpty()) {
                     travelJournalLastId = newJournals.last().travelJournalId
                 }

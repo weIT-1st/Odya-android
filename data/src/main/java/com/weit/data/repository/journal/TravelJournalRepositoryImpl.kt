@@ -140,12 +140,45 @@ class TravelJournalRepositoryImpl @Inject constructor(
     override suspend fun getRecommendTravelJournalList(
         size: Int?,
         lastTravelJournal: Long?
-    ): Result<List<TravelJournalListInfo>> =
-        getInfiniteJournalList(
-            hasNextRecommendJournal,
-            lastTravelJournal,
-            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
-        )
+    ): Result<List<TravelJournalListInfo>> {
+        if(lastTravelJournal == null){
+            hasNextRecommendJournal.set(true)
+        }
+        if (hasNextRecommendJournal.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = kotlin.runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+
+        return if (result.isSuccess) {
+            val listSearch = result.getOrThrow()
+            hasNextRecommendJournal.set(listSearch.hasNext)
+            Result.success(listSearch.content.map {
+                TravelJournalListInfo(
+                    it.travelJournalId,
+                    it.travelJournalTitle,
+                    it.testContent,
+                    it.contentImageUrl,
+                    it.travelStartDate,
+                    it.travelEndDate,
+                    TravelJournalWriterInfo(
+                        it.writer.userId,
+                        it.writer.nickname,
+                        it.writer.profile
+                    ),
+                    it.travelCompanionSimpleResponses.map { response ->
+                        TravelCompanionSimpleResponsesInfo(
+                            response.username,
+                            response.profileUrl
+                        )
+                    }
+                )
+            })
+        } else {
+            Result.failure(handleJournalError(result.exception()))
+        }
+
+    }
+
 
     override suspend fun getTaggedTravelJournalList(
         size: Int?,

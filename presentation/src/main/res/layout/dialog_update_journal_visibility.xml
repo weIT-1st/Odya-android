@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="270dp"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_dialog_visibility_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginTop="19dp"
+            android:text="@string/feed_travel_journal_visibility_title"
+            android:textColor="@color/label_normal"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_dialog_visibility_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/feed_travel_journal_visibility_content"
+            android:textColor="@color/label_normal"
+            android:textSize="13sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_visibility_title" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_visibility_cancel"
+            android:layout_width="0dp"
+            android:layout_marginTop="15dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:stateListAnimator="@null"
+            android:text="@string/feed_travel_journal_cancel"
+            android:textColor="#0A84FF"
+            app:strokeColor="#5C3C3C43"
+            app:strokeWidth="0.33dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_dialog_visibility_complete"
+            app:layout_constraintTop_toBottomOf="@+id/tv_dialog_visibility_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dialog_visibility_complete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:stateListAnimator="@null"
+            android:layout_marginTop="15dp"
+            app:strokeColor="#5C3C3C43"
+            app:strokeWidth="0.33dp"
+            android:backgroundTint="@android:color/transparent"
+            android:text="@string/feed_travel_journal_visibility_update"
+            android:textColor="#0A84FF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_dialog_visibility_cancel" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

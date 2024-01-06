@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             app:lottie_rawRes="@raw/odya_splash_screen_animation"
-            app:lottie_loop="true"
+            app:lottie_loop="false"
             app:lottie_autoPlay="true"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

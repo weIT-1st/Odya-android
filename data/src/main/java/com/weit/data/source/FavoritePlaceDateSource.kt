@@ -11,6 +11,7 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.community.ExistedCommunityIdException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
+import com.weit.domain.model.favoritePlace.FriendFavoritePlaceInfo
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
 import okhttp3.internal.http.HTTP_FORBIDDEN
@@ -47,7 +48,13 @@ class FavoritePlaceDateSource @Inject constructor(
             sortType = info.sortType,
             lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
-
+    suspend fun getFriendFavoritePlaces(info: FriendFavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
+        service.getFriendFavoritePlaces(
+            userId = info.userId,
+            size = info.size,
+            sortType = info.sortType,
+            lastFavoritePlaceId = info.lastFavoritePlaceId,
+        )
     private fun handleDeleteError(response: Response<*>): Throwable {
         return handleCode(response.code())
     }

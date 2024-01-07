@@ -11,6 +11,7 @@ import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceDetail
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
+import com.weit.domain.model.favoritePlace.FriendFavoritePlaceInfo
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
@@ -25,6 +26,7 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
 ) : FavoritePlaceRepository {
 
     private val hasNextFavoritePlace = AtomicBoolean(true)
+    private val hasNextFriendFavoritePlace = AtomicBoolean(true)
 
     override suspend fun register(placeId: String): Result<Unit> {
         return handleFavoritePlaceResult {
@@ -69,11 +71,37 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
                     favoritePlaceId = it.favoritePlaceId,
                     placeId = it.placeId,
                     userId = it.userId,
+                    isFavoritePlace = it.isFavoritePlace
                 )})
         } else {
             Result.failure(handleFavoritePlaceError(result.exception()))
         }
     }
+
+    override suspend fun getFriendFavoritePlaces(friendFavoritePlaceInfo: FriendFavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
+        if(friendFavoritePlaceInfo.lastFavoritePlaceId == null){
+            hasNextFriendFavoritePlace.set(true)
+        }
+
+        if (hasNextFriendFavoritePlace.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            dataSource.getFriendFavoritePlaces(friendFavoritePlaceInfo)
+        }
+        return if (result.isSuccess) {
+            val places = result.getOrThrow()
+            hasNextFriendFavoritePlace.set(places.hasNext)
+            Result.success(places.content.map {
+                FavoritePlaceDetail(
+                    favoritePlaceId = it.favoritePlaceId,
+                    placeId = it.placeId,
+                    userId = it.userId,
+                    isFavoritePlace = it.isFavoritePlace
+                )})
+        } else {
+            Result.failure(handleFavoritePlaceError(result.exception()))
+        }    }
 
     private fun handleFavoritePlaceError(t: Throwable): Throwable {
         return if (t is HttpException) {

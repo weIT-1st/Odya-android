@@ -40,9 +40,9 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val getUserLifeshotUseCase: GetUserLifeshotUseCase,
     private val getFriendFavoritePlacesUseCase: GetFriendFavoritePlacesUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
-    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     @Assisted private val userName: String,
 ) : ViewModel() {
 
@@ -65,8 +65,6 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
 
-    private val _userProfile = MutableStateFlow<String?>(null)
-    val userProfile: StateFlow<String?> get() = _userProfile
 
     private val _userInfo = MutableStateFlow<FriendProfileUserInfo?>(null)
     val userInfo: StateFlow<FriendProfileUserInfo?> get() = _userInfo
@@ -87,7 +85,6 @@ class OtherProfileViewModel @AssistedInject constructor(
     }
 
     private fun getUserInfo() {
-        //팔로우 여부
         viewModelScope.launch {
             val result = searchUserUseCase(
                 SearchUserRequestInfo(null, null, userName)
@@ -96,6 +93,7 @@ class OtherProfileViewModel @AssistedInject constructor(
                 val newUsers = result.getOrThrow()
                 if (newUsers.isNotEmpty()) {
                     user = newUsers.first()
+                    _followState.emit(user.isFollowing)
                     getUserStatistics()
                     onNextLifeShots()
                     loadFavoritePlaces()
@@ -162,29 +160,38 @@ class OtherProfileViewModel @AssistedInject constructor(
         }
     }
 
-    fun selectFavoritePlace(place: OtherFavoritePlaceEntity){
+    fun selectFavoritePlace(place: OtherFavoritePlaceEntity) {
         viewModelScope.launch {
-//            val result = deleteFavoritePlaceUseCase(
-//                place.favoritePlaceId
-//            )
-//            if (result.isSuccess) {
-////                getFavoritePlaceCount()
-//                loadFavoritePlaces()
-//            } else {
-//                handleError(result.exceptionOrNull() ?: UnKnownException())
-//            }
+            val result = if (place.isFavoritePlace) {
+                deleteFavoritePlaceUseCase(place.favoritePlaceId)
+            } else {
+                registerFavoritePlaceUseCase(place.placeId)
+            }
+
+            if (result.isSuccess) {
+                val newPlaces = _favoritePlaces.value.map {
+                    if (place.favoritePlaceId == it.favoritePlaceId) {
+                        it.copy(isFavoritePlace = !place.isFavoritePlace)
+                    } else {
+                        it
+                    }
+                }
+                _favoritePlaces.emit(newPlaces)
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
         }
     }
 
     fun onFollowStateChange() {
         viewModelScope.launch {
-//            val currentFollowState = _feed.value?.writer?.isFollowing ?: return@launch
-//            val result = changeFollowStateUseCase(userId, !currentFollowState)
-//            if (result.isSuccess) {
-//                getFeed()
-//            } else {
-//                handleError(result.exceptionOrNull() ?: UnKnownException())
-//            }
+            val currentFollowState = _followState.value
+            val result = changeFollowStateUseCase(user.userId, !currentFollowState)
+            if (result.isSuccess) {
+                _followState.emit(!currentFollowState)
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
         }
     }
 

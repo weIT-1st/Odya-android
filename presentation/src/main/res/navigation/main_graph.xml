@@ -248,5 +248,8 @@
         <argument
             android:name="userName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_fragment_map"
+            app:destination="@id/fragment_map" />
     </fragment>
 </navigation>

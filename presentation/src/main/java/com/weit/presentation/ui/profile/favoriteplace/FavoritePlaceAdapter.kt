@@ -7,11 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.presentation.databinding.ItemProfileFavoritePlaceBinding
-import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceEntity
 
 class FavoritePlaceAdapter(
-    private val selectPlace: (OtherFavoritePlaceEntity) -> Unit,
-    ) : ListAdapter<OtherFavoritePlaceEntity, FavoritePlaceAdapter.ViewHolder>(diffUtil) {
+    private val selectPlace: (FavoritePlaceEntity) -> Unit,
+) : ListAdapter<FavoritePlaceEntity, FavoritePlaceAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
         private val binding: ItemProfileFavoritePlaceBinding,
@@ -22,7 +21,7 @@ class FavoritePlaceAdapter(
                 selectPlace(getItem(absoluteAdapterPosition))
             }
         }
-        fun bind(item: OtherFavoritePlaceEntity) {
+        fun bind(item: FavoritePlaceEntity) {
             binding.tvItemPlaceTitle.text = item.placeName
             binding.tvItemPlaceAddress.text = item.placeAddress
         }
@@ -39,11 +38,11 @@ class FavoritePlaceAdapter(
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<OtherFavoritePlaceEntity>() {
-            override fun areItemsTheSame(oldItem: OtherFavoritePlaceEntity, newItem: OtherFavoritePlaceEntity): Boolean =
+        private val diffUtil = object : DiffUtil.ItemCallback<FavoritePlaceEntity>() {
+            override fun areItemsTheSame(oldItem: FavoritePlaceEntity, newItem: FavoritePlaceEntity): Boolean =
                 oldItem.placeId == newItem.placeId
 
-            override fun areContentsTheSame(oldItem: OtherFavoritePlaceEntity, newItem: OtherFavoritePlaceEntity): Boolean =
+            override fun areContentsTheSame(oldItem: FavoritePlaceEntity, newItem: FavoritePlaceEntity): Boolean =
                 oldItem == newItem
         }
     }

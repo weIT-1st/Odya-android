@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.profile.OtherProfileFragmentArgs
-import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
+import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceAdapter
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -33,16 +33,13 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     }
 
     private val otherProfileLifeShotAdapter = OtherProfileLifeShotAdapter()
-    private val favoritePlaceAdapter = FavoritePlaceAdapter(
+    private val favoritePlaceAdapter = OtherFavoritePlaceAdapter(
         selectPlace = { place ->
             viewModel.selectFavoritePlace(place)
         }
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        //TODO 팔로우
-        //TODO 관심장소
-        //TODO 유저검색해서 최종확인
         initRecyclerView()
 
     }
@@ -78,10 +75,10 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     }
 
     override fun initListener() {
-//        binding.btnProfileFavoritePlaceMore.setOnClickListener {
-//            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentMap()
-//            findNavController().navigate(action)
-//        }
+        binding.btnProfileFavoritePlaceMore.setOnClickListener {
+            val action = OtherProfileFragmentDirections.actionOtherProfileFragmentToFragmentMap()
+            findNavController().navigate(action)
+        }
         binding.btProfileFriendFollow.setOnClickListener {
             viewModel.onFollowStateChange()
         }

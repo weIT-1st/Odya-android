@@ -40,14 +40,12 @@ class FeedTravelJournalAdapter(
 
         fun bind(item: FeedTravelJournalEntity) {
             binding.log = item
-            binding.layoutFeedTravelLog.run {
-                background = if (item.isSelected) {
-                    createBorderDrawable(R.color.primary)
-                } else {
-                    null
-                }
+            val foregroundDrawable = if (item.isSelected) {
+                ContextCompat.getDrawable(binding.root.context, R.drawable.corners_all_8_stroke2_yellow)
+            } else {
+                null
             }
-
+            binding.root.foreground = foregroundDrawable
             when (item.travelJournal.visibility) {
                 Visibility.PUBLIC.name -> {
                     binding.ivFeedTravelLogLock.visibility = View.GONE
@@ -61,32 +59,19 @@ class FeedTravelJournalAdapter(
 
         }
 
-        private fun createBorderDrawable(borderColor: Int): Drawable {
-            val borderSizeInDp = 2
-            val borderSizeInPixel = TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_DIP,
-                borderSizeInDp.toFloat(),
-                binding.root.context.resources.displayMetrics
-            ).toInt()
-
-            val gradientDrawable = GradientDrawable()
-            gradientDrawable.apply{
-                shape = GradientDrawable.RECTANGLE
-                cornerRadii = floatArrayOf(
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS,
-                    Constants.JOURNAL_CORNER_RADIUS
-                )
-                setColor(ContextCompat.getColor(binding.root.context, borderColor))
-                setStroke(borderSizeInPixel, ContextCompat.getColor(binding.root.context, borderColor))
-            }
-            return gradientDrawable
-        }
+//        private fun createBorderDrawable(borderColor: Int): Drawable {
+//            val borderSizeInDp = 2
+//            val borderSizeInPixel = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                borderSizeInDp.toFloat(),
+//                binding.root.context.resources.displayMetrics
+//            ).toInt()
+//
+//            val gradientDrawable = GradientDrawable()
+//            gradientDrawable.setStroke(borderSizeInPixel, ContextCompat.getColor(binding.root.context, borderColor))
+//
+//            return gradientDrawable
+//        }
 
     }
 

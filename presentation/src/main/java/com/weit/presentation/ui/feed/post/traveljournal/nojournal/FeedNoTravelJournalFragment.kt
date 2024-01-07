@@ -1,12 +1,10 @@
-package com.weit.presentation.ui.feed
+package com.weit.presentation.ui.feed.post.traveljournal.nojournal
 
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentFeedPostNoTravellogBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.post.traveljournal.FeedTravelJournalDialogFragment
-import com.weit.presentation.ui.feed.post.traveljournal.nojournal.FeedNoTravelJournalDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -40,7 +38,8 @@ class FeedNoTravelJournalFragment : BaseFragment<FragmentFeedPostNoTravellogBind
     }
 
     private fun goToTravelJournalWrite(){
-        val action = FeedNoTravelJournalFragmentDirections.actionFeedNoTravelJournalFragmentToPostGraph()
+        val action =
+            FeedNoTravelJournalFragmentDirections.actionFeedNoTravelJournalFragmentToPostGraph()
         findNavController().navigate(action)
     }
 

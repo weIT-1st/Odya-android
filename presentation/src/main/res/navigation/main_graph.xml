@@ -245,7 +245,7 @@
     </fragment>
     <fragment
         android:id="@+id/feedNoTravelJournalFragment"
-        android:name="com.weit.presentation.ui.feed.FeedNoTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.post.traveljournal.nojournal.FeedNoTravelJournalFragment"
         android:label="FeedNoTravelJournalFragment" >
         <action
             android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"

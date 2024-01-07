@@ -7,6 +7,7 @@ import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
+import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.RegisterCommunityUseCase
@@ -14,11 +15,14 @@ import com.weit.domain.usecase.community.UpdateCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.domain.usecase.user.GetUserStatisticsUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.model.feed.SelectTravelJournalDTO
 import com.weit.presentation.model.profile.lifeshot.SelectLifeShotPlaceDTO
 import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerViewModel
+import com.weit.presentation.ui.profile.myprofile.MyProfileViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -35,6 +39,8 @@ class FeedPostViewModel @AssistedInject constructor(
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val updateCommunityUseCase: UpdateCommunityUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
     @Assisted private val imageUris: List<String>,
     @Assisted private val feedId: Long,
     ): ViewModel() {
@@ -63,7 +69,6 @@ class FeedPostViewModel @AssistedInject constructor(
 
     val content = MutableStateFlow("")
 
-//    private val topicList = CopyOnWriteArrayList<FeedTopic>()
     private var feedState = feedRegister
 
     @AssistedFactory
@@ -227,9 +232,18 @@ class FeedPostViewModel @AssistedInject constructor(
         }
     }
 
-    fun onClickTravelJournalView(){
+    fun onClickTravelJournalView() {
         viewModelScope.launch {
-            _event.emit(Event.OnClickTravelJournalView(selectedTravelJournalId))
+            val userId = getUserUseCase().onSuccess {}.getOrThrow().userId
+            val result = getUserStatisticsUseCase(userId)
+            if (result.isSuccess) {
+                val journalCount = result.getOrThrow().travelJournalCount
+                val event =
+                    if (journalCount > 0) Event.GoSelectTravelJournal(selectedTravelJournalId) else Event.GoWriteTravelJournal
+                _event.emit(event)
+
+            } else {
+            }
         }
     }
 
@@ -238,9 +252,11 @@ class FeedPostViewModel @AssistedInject constructor(
             val topics: List<FeedTopic>,
         ) : FeedPostViewModel.Event()
 
-        data class OnClickTravelJournalView(
+        data class GoSelectTravelJournal(
             val journalId: Long?,
         ) : FeedPostViewModel.Event()
+
+        object GoWriteTravelJournal : Event()
 
         object FeedPostSuccess : Event()
         object FeedUpdateSuccess : Event()

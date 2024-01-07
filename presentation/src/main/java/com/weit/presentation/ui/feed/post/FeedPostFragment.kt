@@ -192,11 +192,15 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
                 findNavController().navigate(action)
             }
 
-            is FeedPostViewModel.Event.OnClickTravelJournalView -> {
+            is FeedPostViewModel.Event.GoSelectTravelJournal -> {
                 val action = FeedPostFragmentDirections.actionFragmentFeedPostToFeedTravelJournalFragment(event.journalId?:0)
                 findNavController().navigate(action)
             }
 
+            is FeedPostViewModel.Event.GoWriteTravelJournal -> {
+                val action = FeedPostFragmentDirections.actionFragmentFeedPostToFeedNoTravelJournalFragment()
+                findNavController().navigate(action)
+            }
             else -> {}
         }
     }

@@ -1,9 +1,7 @@
 package com.weit.presentation.ui.profile.myprofile
 
-import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
@@ -14,13 +12,12 @@ import com.weit.domain.model.user.User
 import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
-import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO
-import com.weit.presentation.model.profile.lifeshot.LifeShotUserInfo
+import com.weit.presentation.model.profile.lifeshot.ProfileUserInfo
 import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceEntity
 import com.weit.presentation.ui.util.Constants.DEFAULT_DATA_SIZE
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -41,7 +38,6 @@ class MyProfileViewModel @Inject constructor(
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
-    private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
  ) : ViewModel() {
     private val _favoritePlaces = MutableStateFlow<List<FavoritePlaceEntity>>(emptyList())
     val favoritePlaces: StateFlow<List<FavoritePlaceEntity>> get() = _favoritePlaces
@@ -52,14 +48,14 @@ class MyProfileViewModel @Inject constructor(
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
 
-    private val _userProfile = MutableStateFlow<String>("emptyList()")
-    val userProfile: StateFlow<String> get() = _userProfile
+    private val _userProfile = MutableStateFlow<String?>(null)
+    val userProfile: StateFlow<String?> get() = _userProfile
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
-    private val _userInfo = MutableStateFlow<LifeShotUserInfo?>(null)
-    val userInfo: StateFlow<LifeShotUserInfo?> get() = _userInfo
+    private val _userInfo = MutableStateFlow<ProfileUserInfo?>(null)
+    val userInfo: StateFlow<ProfileUserInfo?> get() = _userInfo
 
     private lateinit var user : User
 
@@ -97,7 +93,7 @@ class MyProfileViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getUserStatisticsUseCase(user.userId)
             if (result.isSuccess) {
-                _userInfo.emit(LifeShotUserInfo(user,result.getOrThrow()))
+                _userInfo.emit(ProfileUserInfo(user,result.getOrThrow()))
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }

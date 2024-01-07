@@ -188,6 +188,9 @@
         <action
             android:id="@+id/action_fragment_feed_search_to_fragment_mypage"
             app:destination="@id/fragment_mypage" />
+        <action
+            android:id="@+id/action_fragment_feed_search_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_life_shot_picker"
@@ -237,5 +240,13 @@
         <argument
             android:name="lifeshotRequestInfo"
             app:argType="com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.weit.presentation.ui.profile.otherprofile.OtherProfileFragment"
+        android:label="OtherProfileFragment" >
+        <argument
+            android:name="userName"
+            app:argType="string" />
     </fragment>
 </navigation>

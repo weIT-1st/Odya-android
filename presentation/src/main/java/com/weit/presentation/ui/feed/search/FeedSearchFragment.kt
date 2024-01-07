@@ -34,11 +34,6 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
         initRecyclerView()
     }
 
-    private fun navigateToProfile(){
-        val action = FeedSearchFragmentDirections.actionFragmentFeedSearchToFragmentMypage()
-        findNavController().navigate(action)
-    }
-
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
@@ -101,7 +96,8 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
     private fun handleEvent(event: FeedSearchViewModel.Event) {
         when (event) {
             is FeedSearchViewModel.Event.MoveToProfile -> {
-               navigateToProfile()
+                val action = FeedSearchFragmentDirections.actionFragmentFeedSearchToOtherProfileFragment(event.userName)
+                findNavController().navigate(action)
             }
             else -> {}
         }

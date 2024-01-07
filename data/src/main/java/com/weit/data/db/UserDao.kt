@@ -15,6 +15,6 @@ interface UserDao {
     @Query("DELETE FROM usersearch WHERE userId=:userId")
     suspend fun deleteUser(userId: Long)
 
-    @Query("SELECT * FROM usersearch")
+    @Query("SELECT * FROM usersearch ORDER BY time DESC")
     suspend fun getUsers(): List<UserSearch>
 }

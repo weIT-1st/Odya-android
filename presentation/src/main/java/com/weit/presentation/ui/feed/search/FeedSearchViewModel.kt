@@ -58,8 +58,8 @@ class FeedSearchViewModel @Inject constructor(
                         UserProfileColorInfo(
                             it.colorHex,
                             it.red,
-                            it.blue,
-                            it.green)
+                            it.green,
+                            it.blue)
                     }
                 )
             )

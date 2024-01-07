@@ -124,6 +124,7 @@
     <string name="place_my_review">내가 작성한 리뷰</string>
 
     <string name="place_journey">여행일지</string>
+    <string name="place_journey_date">%s ~ %s</string>
     <string name="place_my_journal">나의 여행일지</string>
     <string name="place_friend_journal">친구의 여행일지</string>
     <string name="place_recommend_journal">추천 여행일지</string>
@@ -167,9 +168,23 @@
 
 
     <string name="place_main_hot_place">🔥 오댜 핫플</string>
-        <!--  api연동 수 string 수정 필요  -->
+
+        <!--  api연동 후 string 수정 필요  -->
     <string name="place_main_hot_place_standard">09.09 10:00 기준</string>
     <string name="place_main_hot_place_rank">%d위</string>
+
+    <!-- report -->
+    <string name="review_report_title">신고하기</string>
+    <string name="review_report_writer">작성자</string>
+    <string name="review_report_reason">사유선택</string>
+    <string name="review_report_spam">스팸 및 홍보글</string>
+    <string name="review_report_pornography">음란성이 포함된 글</string>
+    <string name="review_report_swear_word">욕설/생명경시/혐오/차별적인 글</string>
+    <string name="review_report_over_post">게시글 도배</string>
+    <string name="review_report_copyright_violation">저작권 위배</string>
+    <string name="review_report_info_leak">개인정보 노출 및 불법 정보</string>
+    <string name="review_report_other">기타</string>
+    <string name="review_report_input_other">기타 사유를 입력해주세요(20자 이내)</string>
 
     <!-- feed -->
     <string name="feed_detail_topic"># %s</string>

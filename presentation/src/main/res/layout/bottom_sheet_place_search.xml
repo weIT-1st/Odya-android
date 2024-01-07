@@ -116,7 +116,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     tools:text="부산광역시 해운대구부산광역시 해운대구부산광역시 해운대구" />
 
-                <com.google.android.material.button.MaterialButton
+                <ImageButton
                     android:id="@+id/btn_bs_place_book_mark"
                     android:layout_width="24dp"
                     android:layout_height="24dp"

@@ -23,6 +23,7 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
     private val viewModel: FeedSearchViewModel by viewModels()
     private val recentUserSearchAdapter = RecentUserSearchAdapter(
         deleteItem = { user -> viewModel.deleteRecentUserSearch(user)},
+        selectUser = { user -> moveToProfile(user.nickname) }
     )
     private val searchUserResultAdapter = SearchUserResultAdapter(
         selectUser = { user ->
@@ -93,11 +94,15 @@ class FeedSearchFragment : BaseFragment<FragmentFeedSearchBinding>(
         }
     }
 
+    private fun moveToProfile(name: String){
+        val action = FeedSearchFragmentDirections.actionFragmentFeedSearchToOtherProfileFragment(name)
+        findNavController().navigate(action)
+    }
+
     private fun handleEvent(event: FeedSearchViewModel.Event) {
         when (event) {
             is FeedSearchViewModel.Event.MoveToProfile -> {
-                val action = FeedSearchFragmentDirections.actionFragmentFeedSearchToOtherProfileFragment(event.userName)
-                findNavController().navigate(action)
+                moveToProfile(event.userName)
             }
             else -> {}
         }

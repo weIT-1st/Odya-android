@@ -5,11 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.search.UserSearchInfo
 import com.weit.presentation.databinding.ItemFeedRecentSearchBinding
 
 class RecentUserSearchAdapter(
-    private val deleteItem: (UserSearchInfo) -> Unit
+    private val deleteItem: (UserSearchInfo) -> Unit,
+    private val selectUser: (UserSearchInfo) -> Unit
 ): ListAdapter<UserSearchInfo, RecentUserSearchAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,6 +27,12 @@ class RecentUserSearchAdapter(
     inner class ViewHolder(
         private val binding: ItemFeedRecentSearchBinding
     ): RecyclerView.ViewHolder(binding.root){
+
+        init{
+            binding.tvFeedUserSearchName.setOnClickListener {
+                selectUser(getItem(absoluteAdapterPosition))
+            }
+        }
         fun bind(recentUser: UserSearchInfo){
             binding.btnFeedUserSearchDelete.setOnClickListener { deleteItem(recentUser) }
             binding.user = recentUser

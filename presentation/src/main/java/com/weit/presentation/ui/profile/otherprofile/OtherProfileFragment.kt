@@ -82,6 +82,9 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.btProfileFriendFollow.setOnClickListener {
             viewModel.onFollowStateChange()
         }
+        binding.ivProfileBack.setOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
 

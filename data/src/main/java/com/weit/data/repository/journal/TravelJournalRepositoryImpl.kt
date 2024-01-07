@@ -178,6 +178,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
+                    it.placeIds,
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
@@ -188,7 +189,9 @@ class TravelJournalRepositoryImpl @Inject constructor(
                             response.username,
                             response.profileUrl
                         )
-                    }
+                    },
+                    it.visibility,
+                    it.isBookmarked
                 )
             })
         } else {
@@ -342,6 +345,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
+                    it.placeIds,
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
@@ -352,7 +356,9 @@ class TravelJournalRepositoryImpl @Inject constructor(
                             response.username,
                             response.profileUrl
                         )
-                    }
+                    },
+                    it.visibility,
+                    it.isBookmarked
                 )
             })
         } else {

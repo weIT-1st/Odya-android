@@ -2,7 +2,7 @@
 <layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="270dp"
+        android:layout_width="330dp"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView

@@ -12,15 +12,14 @@
         android:background="@drawable/corners_all_8"
         android:id="@+id/layout_travel_log"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         >
 
         <ImageView
             android:id="@+id/iv_travel_log"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:scaleType="centerCrop"
-            app:image_uri="@{log.mainImageUrl}"
             tools:src="@drawable/bg_popular_spot_summary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,10 +65,10 @@
             android:maxLines="1"
             android:textColor="@color/label_alternative"
             app:layout_constrainedWidth="true"
+            app:layout_constraintTop_toTopOf="@+id/iv_travel_log_diary"
             app:layout_constraintBottom_toBottomOf="@+id/iv_travel_log_diary"
             app:layout_constraintEnd_toStartOf="@+id/tv_popular_spot_hot"
             app:layout_constraintStart_toEndOf="@+id/iv_travel_log_diary"
-            app:layout_constraintTop_toTopOf="@+id/iv_travel_log_diary"
             tools:text="@{log.title}" />
 
         <TextView

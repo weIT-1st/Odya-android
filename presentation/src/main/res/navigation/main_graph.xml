@@ -142,6 +142,9 @@
         <action
             android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
             app:destination="@id/feedSelectPlaceFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedTravelJournalFragment"
+            app:destination="@id/feedTravelJournalFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity"
@@ -229,4 +232,12 @@
         android:id="@+id/feedSelectPlaceFragment"
         android:name="com.weit.presentation.ui.feed.post.FeedSelectPlaceFragment"
         android:label="FeedSelectPlaceFragment" />
+    <fragment
+        android:id="@+id/feedTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.FeedTravelJournalFragment"
+        android:label="FeedTravelJournalFragment" >
+        <argument
+            android:name="journalId"
+            app:argType="long" />
+    </fragment>
 </navigation>

@@ -11,6 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/corners_all_8"
         android:id="@+id/layout_travel_log"
+        android:clipToOutline="true"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         >

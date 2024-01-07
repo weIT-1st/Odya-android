@@ -13,6 +13,7 @@ import com.google.android.flexbox.AlignItems
 import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexWrap
 import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.usecase.image.PickImageUseCase
@@ -123,17 +124,16 @@ class FeedTravelJournalFragment : BaseFragment<FragmentFeedPostTravellogBinding>
             }
 
             is FeedTravelJournalAction.OnClickPrivateJournal -> {
-                if (feedTravelJournalDialog == null) {
-                    feedTravelJournalDialog = FeedTravelJournalDialogFragment(
-                        onComplete = { viewModel.updateTravelJournalVisibility(action.journal) }
-                    )
-                }
-                if (feedTravelJournalDialog?.isAdded?.not() == true) {
-                    feedTravelJournalDialog?.show(
-                        requireActivity().supportFragmentManager,
-                        "FeedTravelJournalDialogFragment",
-                    )
-                }
+                MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(getString(R.string.feed_travel_journal_visibility_title))
+                    .setMessage(getString(R.string.feed_travel_journal_visibility_content))
+                    .setNegativeButton(getString(R.string.feed_travel_journal_cancel)) { dialog, which ->
+                        dialog.dismiss()
+                    }
+                    .setPositiveButton(getString(R.string.feed_travel_journal_visibility_update)) { dialog, which ->
+                        viewModel.updateTravelJournalVisibility(action.journal)
+                    }
+                    .show()
             }
         }
     }

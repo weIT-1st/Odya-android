@@ -12,7 +12,11 @@
     <fragment
         android:id="@+id/fragment_map"
         android:name="com.weit.presentation.ui.map.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment" >
+        <action
+            android:id="@+id/action_fragment_map_to_loginTopicFragment"
+            app:destination="@id/loginTopicFragment" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_feed"
         android:name="com.weit.presentation.ui.feed.FeedFragment"
@@ -175,5 +179,21 @@
         <action
             android:id="@+id/action_fragment_feed_search_to_fragment_mypage"
             app:destination="@id/fragment_mypage" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginTopicFragment"
+        android:name="com.weit.presentation.ui.login.input.topic.LoginTopicFragment"
+        android:label="LoginTopicFragment" >
+        <action
+            android:id="@+id/action_loginTopicFragment_to_loginFriendFragment"
+            app:destination="@id/loginFriendFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFriendFragment"
+        android:name="com.weit.presentation.ui.login.input.friend.LoginFriendFragment"
+        android:label="LoginFriendFragment" >
+        <action
+            android:id="@+id/action_loginFriendFragment_to_fragment_map"
+            app:destination="@id/fragment_map" />
     </fragment>
 </navigation>

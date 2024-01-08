@@ -49,20 +49,12 @@
     </string-array>
     <string name="login_loading">메인페이지를\n생성중이에요</string>
     
-    <string name="login_topic_sea">바다여행</string>
-    <string name="login_topic_camping">캠핑여행</string>
-    <string name="login_topic_hobby">취미여행</string>
-    <string name="login_topic_food">식도락</string>
-    <string name="login_topic_rest">휴양지</string>
-    <string name="login_topic_winter">겨울여행</string>
-    <string name="login_topic_summer">여름여행</string>
-    <string name="login_topic_flower">꽃놀이</string>
-    <string name="login_topic_fall">가을여행</string>
-    <string name="login_topic_festival">지역축제</string>
-    <string name="login_topic_family">가족여행</string>
-    <string name="login_topic_couple">커플여행</string>
-    <string name="login_topic_alone">나홀로여행</string>
-    <string name="login_topic_country">촌캉스</string>
+    <string name="login_topic_question">%s님은\n어떤 여행을 좋아하시나요?</string>
+    <string name="login_topic_explain">취향을 선택하고 나에게 맞는 홈을 받아보세요</string>
+    <string name="login_topic_minimum">최소 3개 이상</string>
+
+    <string name="login_friend_active_friend">활동중인 친구를\n오댜에서 만나요!</string>
+    <string name="login_friend_recommend">연락처에 있는 친구를 추천해드려요</string>
 
     <string name="sign_up">등록하기</string>
     <string name="sign_complete">등록 완료</string>

@@ -33,7 +33,8 @@ import java.util.Calendar
 class LifeShotDialogViewModel @AssistedInject constructor(
     private val setLifeShotUseCase: SetLifeShotUseCase,
     @Assisted private val imageInfo: SelectLifeShotImageDTO?,
-    ) : ViewModel() {
+    @Assisted private val placeName: String?,
+) : ViewModel() {
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -41,11 +42,11 @@ class LifeShotDialogViewModel @AssistedInject constructor(
     private val _lifeshotImage = MutableStateFlow<String?>(null)
     val lifeshotImage: StateFlow<String?> get() = _lifeshotImage
 
-    private var selectPlaceName : String = ""
+//    private var selectPlaceName : String = ""
 
     @AssistedFactory
     interface LifeShotFactory {
-        fun create(imageInfo: SelectLifeShotImageDTO?): LifeShotDialogViewModel
+        fun create(imageInfo: SelectLifeShotImageDTO?,placeName: String?): LifeShotDialogViewModel
     }
 
     init{
@@ -54,13 +55,13 @@ class LifeShotDialogViewModel @AssistedInject constructor(
         }
     }
 
-    fun setLifeShotPlace(placeName: String?) {
-        selectPlaceName = placeName.toString()
-    }
+//    fun setLifeShotPlace(placeName: String?) {
+//        selectPlaceName = placeName.toString()
+//    }
 
      fun registerLifeShot() {
         viewModelScope.launch {
-            val result = setLifeShotUseCase(imageInfo?.imageId?:0,selectPlaceName)
+            val result = setLifeShotUseCase(imageInfo?.imageId?:0,placeName.toString())
             if(result.isSuccess){
                 _event.emit(LifeShotDialogViewModel.Event.OnComplete)
             }else{
@@ -80,9 +81,10 @@ class LifeShotDialogViewModel @AssistedInject constructor(
         fun provideFactory(
             assistedFactory: LifeShotDialogViewModel.LifeShotFactory,
             imageInfo: SelectLifeShotImageDTO?,
+            placeName: String?
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return assistedFactory.create(imageInfo) as T
+                return assistedFactory.create(imageInfo,placeName) as T
             }
         }
     }

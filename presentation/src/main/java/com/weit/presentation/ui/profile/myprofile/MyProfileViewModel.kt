@@ -72,13 +72,14 @@ class MyProfileViewModel @Inject constructor(
         viewModelScope.launch {
             lastImageId = null
             _lifeshots.value = emptyList()
-            getUserUseCase().onSuccess {
-                user = it
+            getUserUseCase().onSuccess { userInfo ->
+                user = userInfo
                 getUserStatistics()
                 onNextLifeShots()
+
+                loadFavoritePlaces()
+                getFavoritePlaceCount()
             }
-            loadFavoritePlaces()
-            getFavoritePlaceCount()
         }
     }
 

@@ -124,12 +124,12 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.lifeshots.collectLatest { lifeshots ->
-                if (!lifeshots.isNullOrEmpty()) {
+                if (lifeshots.isNotEmpty()) {
                     Glide.with(binding.root)
                         .load(lifeshots.first().imageUrl)
                         .into(binding.ivProfileBg)
-                    myProfileLifeShotAdapter.submitList(lifeshots)
                 }
+                myProfileLifeShotAdapter.submitList(lifeshots)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {

@@ -30,11 +30,12 @@ class UserSearchRepositoryImpl @Inject constructor(
                     UserSearchProfileColor(
                         it.colorHex,
                         it.red,
-                        it.blue,
-                        it.green
+                        it.green,
+                        it.blue
                     )
                 }
-            )
+            ),
+            System.currentTimeMillis(),
         )
 
     override suspend fun insertUser(user: UserSearchInfo) {
@@ -54,10 +55,10 @@ class UserSearchRepositoryImpl @Inject constructor(
                         UserProfileColorInfo(
                             it.colorHex,
                             it.red,
-                            it.blue,
-                            it.green)
+                            it.green,
+                            it.blue)
                     }
-                )
+                ),
             )
         }
     }

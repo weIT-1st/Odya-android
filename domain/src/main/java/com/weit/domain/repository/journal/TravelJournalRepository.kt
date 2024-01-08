@@ -1,11 +1,17 @@
 package com.weit.domain.repository.journal
 
+import com.weit.domain.model.journal.TravelJournalContentUpdateInfo
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
+import com.weit.domain.model.journal.TravelJournalRegistrationInfo
+import com.weit.domain.model.journal.TravelJournalUpdateInfo
 
 interface TravelJournalRepository {
 
-    // 여행일지 생성 Api
+    suspend fun registerTravelJournal(
+        travelJournalRegistrationInfo: TravelJournalRegistrationInfo,
+        travelJournalImages: List<String>
+    ): Result<Unit>
 
     suspend fun getTravelJournal(
         travelJournalId: Long
@@ -18,7 +24,8 @@ interface TravelJournalRepository {
 
     suspend fun getMyTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>>
 
     suspend fun getFriendTravelJournalList(
@@ -38,8 +45,18 @@ interface TravelJournalRepository {
 
 
     // 여행 일지 수정 Api
+    suspend fun updateTravelJournal(
+        travelJournalId: Long,
+        travelJournalUpdateInfo: TravelJournalUpdateInfo,
+    ): Result<Unit>
 
     // 여행 일지 콘텐츠 수정 Api
+    suspend fun updateTravelJournalContent(
+        travelJournalId: Long,
+        travelJournalContentId: Long,
+        travelJournalContentUpdateInfo: TravelJournalContentUpdateInfo,
+        travelJournalContentImages: List<String>
+    ): Result<Unit>
     suspend fun deleteTravelJournal(travelJournalId: Long): Result<Unit>
 
     suspend fun deleteTravelJournalContent(travelJournalId: Long, travelJournalContentId: Long): Result<Unit>

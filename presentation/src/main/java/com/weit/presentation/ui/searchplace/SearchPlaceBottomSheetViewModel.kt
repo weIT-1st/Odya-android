@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.follow.ExperiencedFriendContent
+import com.weit.domain.usecase.bookmark.CreateJournalBookMarkUseCase
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlaceImageUseCase
@@ -25,6 +26,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getExperiencedFriendUseCase: GetExperiencedFriendUseCase,
     private val getPlaceImageUseCase: GetPlaceImageUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val createJournalBookMarkUseCase: CreateJournalBookMarkUseCase,
     @Assisted private val placeId: String,
 ) : ViewModel() {
 
@@ -89,6 +91,11 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
         }
         if (placeInform.address.isNullOrBlank().not()) {
             _placeAddress.emit(placeInform.address!!)
+        }
+    }
+
+    fun checkBookmark(){
+        viewModelScope.launch {
         }
     }
 

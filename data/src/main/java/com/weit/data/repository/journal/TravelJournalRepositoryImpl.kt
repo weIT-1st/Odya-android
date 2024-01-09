@@ -158,7 +158,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextTaggedJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+            runCatching { travelJournalDataSource.getTaggedTravelJournalList(size, lastTravelJournal) }
         )
 
     // 여행일지 수정 Api

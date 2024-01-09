@@ -46,14 +46,11 @@ class PostTravelLogViewModel @Inject constructor(
     private val _visibility = MutableStateFlow(Visibility.PUBLIC)
     val visibility: StateFlow<Visibility> get() = _visibility
 
-    private val _imageList = MutableStateFlow<List<String>>(emptyList())
-    val imageList: StateFlow<List<String>> get() = _imageList
+    private val _dailyTravelLogs = MutableStateFlow(listOf(DailyTravelLog(day = 1)))
+    val dailyTravelLogs: StateFlow<List<DailyTravelLog>> get() = _dailyTravelLogs
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
-
-    private val _dailyTravelLogs = MutableStateFlow(listOf(DailyTravelLog(day = 1)))
-    val dailyTravelLogs: StateFlow<List<DailyTravelLog>> get() = _dailyTravelLogs
 
     fun initViewState(travelFriends: List<FollowUserContent>?, selectPlace: SelectPlaceDTO?) {
         travelFriends?.let {
@@ -69,9 +66,16 @@ class PostTravelLogViewModel @Inject constructor(
             clear()
             addAll(travelFriends)
         }
-        val friendsSummary = travelFriends
-            .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
-            .map { it.profile }
+
+        val friendsSummary = if (travelFriends.size >= DEFAULT_FRIENDS_SUMMARY_COUNT) {
+            travelFriends
+                .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
+                .map { it.profile }
+        } else {
+            travelFriends
+                .map { it.profile }
+        }
+
         val remainingFriendsCount = travelFriends.size - friendsSummary.size
         viewModelScope.launch {
             _travelFriendsInfo.emit(TravelFriendsInfo(friendsSummary, remainingFriendsCount))
@@ -187,6 +191,7 @@ class PostTravelLogViewModel @Inject constructor(
             val end: List<Int> = listOf(date.end.year, date.end.monthValue, date.end.dayOfMonth)
             val visibility = visibility.value.name
             val companionIds: List<Long> = friends.map { it.userId }
+            val travelCompanionNames: List<String> = friends.map { it.nickname }
             val dailyTravelLog = dailyTravelLogs.value
 
             val travelJournalRegistration = TravelJournalRegistrationInfo(
@@ -194,14 +199,14 @@ class PostTravelLogViewModel @Inject constructor(
                 travelStartDate = start,
                 travelEndDate = end,
                 visibility = visibility,
-                travelCompanionIds = emptyList(),
-                travelCompanionNames = emptyList(),
+                travelCompanionIds = companionIds,
+                travelCompanionNames = travelCompanionNames,
                 travelJournalContentRequests = dailyTravelLog.map {log ->
                     TravelJournalContentRequest(
                         content = log.contents,
                         placeId = log.place?.placeId,
-                        latitudes = null,
-                        longitudes = null,
+                        latitudes = emptyList(),
+                        longitudes = emptyList(),
                         travelDate = listOf(log.date!!.year, log.date.monthValue, log.date.dayOfMonth),
                         contentImageNames = log.images.map { it.split("/").last() + IMAGE_EXTENSION_WEBP }
                     )

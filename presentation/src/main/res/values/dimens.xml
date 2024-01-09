@@ -39,6 +39,6 @@
     <!-- margin -->
     <dimen name="feed_my_activity_tab_margin">20dp</dimen>
 
-    <dimen name="marker_width">30dp</dimen>
-    <dimen name="marker_height">36dp</dimen>
+    <dimen name="marker_width">48dp</dimen>
+    <dimen name="marker_height">48dp</dimen>
 </resources>

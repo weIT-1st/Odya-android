@@ -147,6 +147,10 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                     event.maxDateMillis,
                 )
             }
+
+            PostTravelLogViewModel.Event.SuccessPostJoruanl -> {
+               findNavController().popBackStack()
+            }
         }
     }
 

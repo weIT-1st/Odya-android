@@ -227,9 +227,10 @@ class PostTravelLogViewModel @Inject constructor(
                 travelJournalImages = travelJournalImages)
 
             if (result.isSuccess) {
-                Log.d("jomi", "Register Travel Journal Success")
+                _event.emit(Event.SuccessPostJoruanl)
             } else {
-                Log.d("jomi", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
+                //todo 에러처리
+                Log.d("register travel", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
             }
         }
     }
@@ -278,6 +279,7 @@ class PostTravelLogViewModel @Inject constructor(
         ) : Event()
 
         object ClearDatePickerDialog : Event()
+        object SuccessPostJoruanl : Event()
     }
 
     data class TravelFriendsInfo(

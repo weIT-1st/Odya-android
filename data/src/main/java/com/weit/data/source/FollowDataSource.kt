@@ -11,6 +11,7 @@ import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.MayknowUserSearchInfo
+import com.weit.domain.model.follow.SearchFollowRequestInfo
 import retrofit2.Response
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
@@ -73,6 +74,26 @@ class FollowDataSource @Inject constructor(
 
     fun getCachedFollowings(): List<FollowUserContent> = followings
 
+    suspend fun getSearchFollowings(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchFollowings(
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
+    suspend fun getSearchFollowers(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchFollowers(
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
     suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
         followService.getExperiencedFriend(placeId)
 
@@ -82,7 +103,7 @@ class FollowDataSource @Inject constructor(
     ): ListResponse<FollowUserContentDTO> {
         return followService.getMayknowUsers(
             size = mayknowUserSearchInfo.size,
-            lasId = mayknowUserSearchInfo.lastId,
+            lastId = mayknowUserSearchInfo.lastId,
         )
     }
 

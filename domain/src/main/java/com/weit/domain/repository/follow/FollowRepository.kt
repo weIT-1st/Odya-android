@@ -8,6 +8,7 @@ import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.MayknowUserSearchInfo
+import com.weit.domain.model.follow.SearchFollowRequestInfo
 
 interface FollowRepository {
 
@@ -41,7 +42,13 @@ interface FollowRepository {
         query: String,
     ): List<FollowUserContent>
 
+    suspend fun getSearchFollowings(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
 
+    suspend fun getSearchFollowers(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo,
     ): Result<List<FollowUserContent>>

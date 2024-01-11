@@ -78,6 +78,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentMap()
             findNavController().navigate(action)
         }
+        binding.viewProfileTotalCount.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToMyFriendManageFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private val infinityScrollListener by lazy {

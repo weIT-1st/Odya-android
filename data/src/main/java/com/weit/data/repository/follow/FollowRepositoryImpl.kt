@@ -37,7 +37,8 @@ class FollowRepositoryImpl @Inject constructor(
     private val hasNextSearchFollower = AtomicBoolean(true)
     private val hasNextSearchFollowing = AtomicBoolean(true)
     private val hasNextUser = AtomicBoolean(true)
-
+    private val hasNextFollowers = AtomicBoolean(true)
+    private val hasNextFollowings = AtomicBoolean(true)
 
     override suspend fun createFollow(followFollowingIdInfo: FollowFollowingIdInfo): Result<Unit> {
         val result = runCatching {
@@ -112,6 +113,48 @@ class FollowRepositoryImpl @Inject constructor(
             val followSearch = result.getOrThrow()
             hasNextFollower.set(followSearch.hasNext)
             Result.success(followSearch.content.filterByNickname(query))
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
+    override suspend fun getFollowings(
+        followingSearchInfo: FollowingSearchInfo,
+    ): Result<List<FollowUserContent>> {
+        if (followingSearchInfo.page == 0) {
+            hasNextFollowings.set(true)
+        }
+        if (hasNextFollowings.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getInfiniteFollowing(followingSearchInfo)
+        }
+        return if (result.isSuccess) {
+            val followSearch = result.getOrThrow()
+            hasNextFollowings.set(followSearch.hasNext)
+            Result.success(followSearch.content)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
+    override suspend fun getFollowers(
+        followerSearchInfo: FollowerSearchInfo,
+    ): Result<List<FollowUserContent>> {
+        if (followerSearchInfo.page == 0) {
+            hasNextFollowers.set(true)
+        }
+        if (hasNextFollowers.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getInfiniteFollower(followerSearchInfo)
+        }
+        return if (result.isSuccess) {
+            val followSearch = result.getOrThrow()
+            hasNextFollowers.set(followSearch.hasNext)
+            Result.success(followSearch.content)
         } else {
             Result.failure(result.exception())
         }

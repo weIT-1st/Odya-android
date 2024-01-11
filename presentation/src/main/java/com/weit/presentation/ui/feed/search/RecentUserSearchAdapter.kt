@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.search.UserSearchInfo
 import com.weit.presentation.databinding.ItemFeedRecentSearchBinding
@@ -29,6 +30,8 @@ class RecentUserSearchAdapter(
     ): RecyclerView.ViewHolder(binding.root){
 
         init{
+            Logger.t("MainTest").i("adapter init")
+
             binding.tvFeedUserSearchName.setOnClickListener {
                 selectUser(getItem(absoluteAdapterPosition))
             }

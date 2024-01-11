@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_myFriendManageFragment"
+            app:destination="@id/myFriendManageFragment" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -252,4 +255,8 @@
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
     </fragment>
+    <fragment
+        android:id="@+id/myFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.MyFriendManageFragment"
+        android:label="MyFriendManageFragment" />
 </navigation>

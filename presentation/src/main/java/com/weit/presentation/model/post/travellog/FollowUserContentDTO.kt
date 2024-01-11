@@ -11,7 +11,8 @@ data class FollowUserContentDTO(
     override val userId: Long,
     override val nickname: String,
     override val profile: UserProfileDTO,
+    override val isFollowing: Boolean,
 ) : FollowUserContent, Parcelable
 
 internal fun FollowUserContent.toDTO() =
-    FollowUserContentDTO(userId, nickname, profile.toDTO())
+    FollowUserContentDTO(userId, nickname, profile.toDTO(),isFollowing)

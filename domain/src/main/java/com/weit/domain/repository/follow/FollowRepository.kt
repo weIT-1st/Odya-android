@@ -33,6 +33,14 @@ interface FollowRepository {
         query: String,
     ): Result<List<FollowUserContent>>
 
+    suspend fun getFollowers(
+        followerSearchInfo: FollowerSearchInfo
+        ): Result<List<FollowUserContent>>
+
+    suspend fun getFollowings(
+        followingSearchInfo: FollowingSearchInfo
+    ): Result<List<FollowUserContent>>
+
     suspend fun getInfiniteFollower(
         followerSearchInfo: FollowerSearchInfo,
         query: String,

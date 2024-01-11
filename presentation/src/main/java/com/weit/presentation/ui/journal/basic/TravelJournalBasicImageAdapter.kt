@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.weit.domain.model.journal.TravelJournalContentsImagesInfo
 import com.weit.presentation.databinding.ItemJournalDetailBasicImageBinding
 
@@ -21,9 +20,7 @@ class TravelJournalBasicImageAdapter: ListAdapter<TravelJournalContentsImagesInf
         private val binding: ItemJournalDetailBasicImageBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TravelJournalContentsImagesInfo) {
-            Glide.with(binding.root.context)
-                .load(item.contentImageUrl)
-                .into(binding.ivItemJournalDetailBasicImage)
+            binding.image = item
         }
     }
 

@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/fragment_memory"
-        android:name="com.weit.presentation.ui.memory.MemoryFragment"
+        android:name="com.weit.presentation.ui.journal.memory.MemoryFragment"
         android:label="MemoryFragment">
         <action
             android:id="@+id/action_fragment_memory_to_fragment_travel_Journal"

@@ -12,11 +12,14 @@ class GetMyPlaceReviewUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val placeRepository: PlaceRepository
 ) {
-    suspend operator fun invoke(): Result<List<PlaceMyReviewInfo>> {
+    suspend operator fun invoke(size: Int = 10, lastId: Long? = null): Result<List<PlaceMyReviewInfo>> {
         val myId = userRepository.getUserId()
 
         val reviewResult = placeReviewRepository.getByUserId(
-            PlaceReviewByUserIdQuery(myId)
+            PlaceReviewByUserIdQuery(
+                userId = myId,
+                size = size,
+                lastPlaceReviewId = lastId)
         )
 
         return if (reviewResult.isSuccess){

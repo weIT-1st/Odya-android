@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.memory.adapter
+package com.weit.presentation.ui.journal.memory.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,8 @@ import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.presentation.databinding.ItemJournalMemoryBookmarkJournalBinding
 
 class BookmarkJournalAdapter(
-    private val showDetail: (Long) -> Unit
+    private val showDetail: (Long) -> Unit,
+    private val updateBookmarkState: (Long) -> Unit
 ): ListAdapter<JournalBookMarkInfo, BookmarkJournalAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalMemoryBookmarkJournalBinding.inflate(LayoutInflater.from(parent.context), parent, false))
@@ -30,7 +31,7 @@ class BookmarkJournalAdapter(
             }
 
             binding.toggleItemJournalMemoryBookmark.setOnClickListener {
-                // todo bookmark
+               updateBookmarkState( getItem(absoluteAdapterPosition).travelJournalId )
             }
         }
 

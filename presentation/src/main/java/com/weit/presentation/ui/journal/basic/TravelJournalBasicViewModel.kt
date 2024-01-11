@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.journal.basic
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -21,22 +22,21 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
         fun crate(travelJournalInfo: TravelJournalInfo): TravelJournalBasicViewModel
     }
 
-    private val _journalInfo = MutableStateFlow<TravelJournalInfo>(travelJournalInfo)
-    val journalInfo: StateFlow<TravelJournalInfo> get() = _journalInfo
-
     private val _journalContents = MutableStateFlow<List<TravelJournalContentsInfo>>(emptyList())
     val journalContents: StateFlow<List<TravelJournalContentsInfo>> get() = _journalContents
 
     init {
         getContentsInfo()
+        Log.d("jomi", "journal : $travelJournalInfo")
+        Log.d("jomi", "contents : ${travelJournalInfo.travelJournalContents}")
     }
 
     private fun getContentsInfo() {
         viewModelScope.launch {
-            val journal = journalInfo.value
-            _journalContents.emit(journal.travelJournalContents)
+            _journalContents.emit(travelJournalInfo.travelJournalContents)
         }
     }
+
     companion object {
         fun provideFactory(
             assistedFactory: TravelJournalInfoFactory,

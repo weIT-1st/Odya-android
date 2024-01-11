@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.detail
+package com.weit.presentation.ui.journal.travel_journal
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

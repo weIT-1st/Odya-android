@@ -59,12 +59,14 @@
             app:layout_constraintBottom_toTopOf="@id/div_item_journal_detail_album_horizon"
             tools:text="2023.06.01"/>
 
-        <ImageButton
+        <ToggleButton
             android:id="@+id/btn_item_journal_detail_down"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_direrction_down"
-            android:background="@android:color/transparent"
+            android:textOn=""
+            android:textOff=""
+            android:checked="false"
+            android:background="@drawable/selector_travel_journal_detail"
             app:layout_constraintTop_toTopOf="@id/tv_item_journal_detail_album_date"
             app:layout_constraintBottom_toBottomOf="@id/tv_item_journal_detail_album_date"
             app:layout_constraintEnd_toStartOf="@id/btn_item_journal_detail_kebab"/>
@@ -79,66 +81,77 @@
             app:layout_constraintBottom_toBottomOf="@id/tv_item_journal_detail_album_date"
             app:layout_constraintEnd_toEndOf="parent"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_item_journal_detail_album_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ly_item_journal_detail_album"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/detail2"
-            android:textColor="@color/label_normal"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toEndOf="@id/iv_item_journal_detail_album_pin"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/div_item_journal_detail_album_horizon"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="클린스만호는 대회를 앞두고 마지막 모의고사로 이라크와 평가전을 가지기로 결정했다. KFA는 지난 23일"/>
+            >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_item_journal_detail_album_content_images"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:layout_constraintTop_toBottomOf="@id/tv_item_journal_detail_album_content"
-            app:layout_constraintStart_toEndOf="@id/iv_item_journal_detail_album_pin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:spanCount="3"
-            tools:itemCount="5"
-            tools:listitem="@layout/item_journal_detail_album_image"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_item_journal_detail_album_content"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/detail2"
+                android:textColor="@color/label_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="클린스만호는 대회를 앞두고 마지막 모의고사로 이라크와 평가전을 가지기로 결정했다. KFA는 지난 23일"/>
 
-        <ImageView
-            android:id="@+id/iv_item_journal_detail_album_location"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:src="@drawable/ic_location"
-            android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@id/rv_item_journal_detail_album_content_images"
-            app:layout_constraintStart_toStartOf="@id/tv_item_journal_detail_album_content"
-            app:tint="@color/primary" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_item_journal_detail_album_content_images"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:layout_constraintTop_toBottomOf="@id/tv_item_journal_detail_album_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:spanCount="3"
+                tools:itemCount="5"
+                tools:listitem="@layout/item_journal_detail_album_image"/>
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_item_journal_detail_album_place"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/detail1"
-            android:textColor="@color/primary"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:layout_marginStart="8dp"
-            app:layout_constraintStart_toEndOf="@+id/iv_item_journal_detail_album_location"
-            app:layout_constraintEnd_toStartOf="@id/tv_item_journal_detail_album_address"
-            app:layout_constraintTop_toTopOf="@id/iv_item_journal_detail_album_location"
-            app:layout_constraintBottom_toBottomOf="@id/iv_item_journal_detail_album_location"
-            tools:text="덕수궁 돌담길"/>
+            <ImageView
+                android:id="@+id/iv_item_journal_detail_album_location"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_location"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@id/rv_item_journal_detail_album_content_images"
+                app:layout_constraintStart_toStartOf="@id/tv_item_journal_detail_album_content"
+                app:tint="@color/primary" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_item_journal_detail_album_address"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/detail2"
-            android:textColor="@color/label_assistive"
-            app:layout_constraintTop_toTopOf="@id/iv_item_journal_detail_album_location"
-            app:layout_constraintBottom_toBottomOf="@id/iv_item_journal_detail_album_location"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="서울틀별시 중구"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_item_journal_detail_album_place"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/detail1"
+                android:textColor="@color/primary"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:layout_marginStart="8dp"
+                app:layout_constraintStart_toEndOf="@+id/iv_item_journal_detail_album_location"
+                app:layout_constraintEnd_toStartOf="@id/tv_item_journal_detail_album_address"
+                app:layout_constraintTop_toTopOf="@id/iv_item_journal_detail_album_location"
+                app:layout_constraintBottom_toBottomOf="@id/iv_item_journal_detail_album_location"
+                tools:text="덕수궁 돌담길"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_item_journal_detail_album_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/detail2"
+                android:textColor="@color/label_assistive"
+                app:layout_constraintTop_toTopOf="@id/iv_item_journal_detail_album_location"
+                app:layout_constraintBottom_toBottomOf="@id/iv_item_journal_detail_album_location"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="서울틀별시 중구"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

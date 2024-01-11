@@ -1,17 +1,18 @@
-package com.weit.presentation.ui.journal.detail
+package com.weit.presentation.ui.journal.friends
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
-import com.weit.presentation.databinding.ItemRoundProfileBigBinding
+import com.weit.presentation.databinding.ItemFriendsBinding
 
-class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(diffUtil) {
+class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(
+    diffUtil
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-        = ViewHolder(ItemRoundProfileBigBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        = ViewHolder(ItemFriendsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -19,12 +20,10 @@ class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, Trave
     }
 
     inner class ViewHolder(
-        private val binding: ItemRoundProfileBigBinding
+        private val binding: ItemFriendsBinding
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: TravelJournalCompanionsInfo) {
-            Glide.with(binding.root.context)
-                .load(item.profileUrl)
-                .into(binding.ivProfile)
+            binding.friends = item
         }
     }
     companion object{

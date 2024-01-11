@@ -6,10 +6,13 @@
     <data>
         <variable
             name="vm_review"
-            type="com.weit.presentation.ui.memory.viewmodel.MemoryReviewViewModel" />
+            type="com.weit.presentation.ui.journal.memory.viewmodel.MemoryReviewViewModel" />
         <variable
             name="vm_other"
-            type="com.weit.presentation.ui.memory.viewmodel.OtherJournalViewModel" />
+            type="com.weit.presentation.ui.journal.memory.viewmodel.OtherJournalViewModel" />
+        <variable
+            name="user"
+            type="com.weit.domain.model.user.User" />
     </data>
 
     <ScrollView
@@ -67,7 +70,8 @@
                 android:id="@+id/iv_journal_memory_my_profile"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/ic_profile"
+                app:image_uri="@{user.profile.url}"
+                app:profile_background="@{user.profile}"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_journal_memory"
                 app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
                 app:layout_constraintTop_toTopOf="@+id/tv_journal_memory"

@@ -1,26 +1,25 @@
-package com.weit.presentation.ui.memory
+package com.weit.presentation.ui.journal.memory
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.place.PlaceMyReviewInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMemoryBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.memory.adapter.BookmarkJournalAdapter
-import com.weit.presentation.ui.memory.adapter.MyJournalAdapter
-import com.weit.presentation.ui.memory.adapter.MyReviewAdapter
-import com.weit.presentation.ui.memory.adapter.TaggedJournalAdapter
-import com.weit.presentation.ui.memory.viewmodel.MemoryReviewViewModel
-import com.weit.presentation.ui.memory.viewmodel.MyJournalViewModel
-import com.weit.presentation.ui.memory.viewmodel.OtherJournalViewModel
+import com.weit.presentation.ui.journal.memory.adapter.BookmarkJournalAdapter
+import com.weit.presentation.ui.journal.memory.adapter.MyJournalAdapter
+import com.weit.presentation.ui.journal.memory.adapter.MyReviewAdapter
+import com.weit.presentation.ui.journal.memory.adapter.TaggedJournalAdapter
+import com.weit.presentation.ui.journal.memory.viewmodel.MemoryReviewViewModel
+import com.weit.presentation.ui.journal.memory.viewmodel.MyJournalViewModel
+import com.weit.presentation.ui.journal.memory.viewmodel.OtherJournalViewModel
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,13 +34,52 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private val otherJournalViewModel: OtherJournalViewModel by viewModels()
     private val reviewViewModel: MemoryReviewViewModel by viewModels()
 
-    private val myJournalAdapter = MyJournalAdapter { myJournalViewModel.onClickJournal(it)}
-    private val bookmarkJournalAdapter = BookmarkJournalAdapter { myJournalViewModel.onClickJournal(it) }
+    private val myJournalAdapter = MyJournalAdapter(
+        { myJournalViewModel.moveToJournal(it)},
+        { myJournalViewModel.updateTravelJournalBookmarkState(it) }
+        )
+    private val bookmarkJournalAdapter = BookmarkJournalAdapter (
+        { moveToJournalDetail(it) },
+        { otherJournalViewModel.updateBookmarkTravelJournalBookmarkState(it) }
+    )
     private val taggedJournalAdapter = TaggedJournalAdapter(
         { moveToJournalDetail(it) },
+        { otherJournalViewModel.updateTaggedTravelJournalBookmarkState(it) },
         { otherJournalViewModel.deleteTaggedJournal() }
     )
     private val myReviewAdapter = MyReviewAdapter { reviewViewModel.deleteReview(it) }
+
+    private val myJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                myJournalViewModel.onNextJournal()
+            }
+        }
+    }
+
+    private val bookMarkJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                otherJournalViewModel.onNextBookMarkJournal()
+            }
+        }
+    }
+
+    private val taggedJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                otherJournalViewModel.onNextTaggedJournal()
+            }
+        }
+    }
+
+    private val myReviewInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                reviewViewModel.onNextReview()
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +95,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
     override fun initListener() {
         binding.includeJournalMemoryLastJournal.root.setOnClickListener {
-            myJournalViewModel.onClickRandomJournal()
+            myJournalViewModel.moveToRandomJournal()
         }
     }
 
@@ -72,18 +110,9 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
         }
 
         repeatOnStarted(viewLifecycleOwner){
-            myJournalViewModel.myNickname.collectLatest {
-                binding.tvJournalMemory.text = requireContext().getString(R.string.journal_memory_last_travel, it)
-            }
-        }
-
-        repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.myProfile.collectLatest {
-                if (it != null){
-                    Glide.with(requireContext())
-                        .load(it)
-                        .into(binding.ivJournalMemoryMyProfile)
-                }
+                binding.tvJournalMemory.text = requireContext().getString(R.string.journal_memory_last_travel, it?.nickname)
+                binding.user = it
             }
         }
 
@@ -146,6 +175,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private fun initMyJournalRV() {
         binding.rvJournalMemoryMyJournal.run {
             addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_all_space))
+            addOnScrollListener(myJournalInfinityScrollListener)
             adapter = myJournalAdapter
         }
     }
@@ -153,6 +183,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private fun initBookmarkJournalRV() {
         binding.rvJournalMemoryBookmarkJournal.run {
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_memory_all_space))
+            addOnScrollListener(bookMarkJournalInfinityScrollListener)
             adapter = bookmarkJournalAdapter
         }
     }
@@ -160,12 +191,17 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private fun initTaggedJournalRV(){
         binding.rvJournalMemoryTagJournal.run {
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_memory_all_space))
+            addOnScrollListener(taggedJournalInfinityScrollListener)
             adapter = taggedJournalAdapter
         }
     }
 
     private fun initMyReviewsRV(){
-        binding.rvJournalMemoryMyReview.adapter = myReviewAdapter
+        binding.rvJournalMemoryMyReview.run {
+            addOnScrollListener(myReviewInfinityScrollListener)
+            adapter = myReviewAdapter
+        }
+
     }
 
     private fun moveToJournalDetail(travelId: Long){

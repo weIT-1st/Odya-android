@@ -9,7 +9,6 @@ import com.weit.data.model.journal.TravelJournalContentsImagesDTO
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalWriterDTO
-import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
@@ -32,7 +31,6 @@ import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
 import com.weit.domain.repository.place.PlaceRepository
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -157,7 +155,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextTaggedJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+            runCatching { travelJournalDataSource.getTaggedTravelJournalList(size, lastTravelJournal) }
         )
 
     // 여행일지 수정 Api
@@ -270,12 +268,14 @@ class TravelJournalRepositoryImpl @Inject constructor(
                         it.writer.nickname,
                         it.writer.profile
                     ),
+                    it.visibility,
                     it.travelCompanionSimpleResponses.map { response ->
                         TravelCompanionSimpleResponsesInfo(
                             response.username,
                             response.profileUrl
                         )
-                    }
+                    },
+                    it.isBookmark
                 )
             })
         } else {
@@ -360,7 +360,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             userId = userId,
             nickname = nickname,
             profileUrl = profileUrl,
-            isRegistered = isRegistered
+            isRegistered = isRegistered,
+            isFollowing = isFollowing
         )
 
     companion object{

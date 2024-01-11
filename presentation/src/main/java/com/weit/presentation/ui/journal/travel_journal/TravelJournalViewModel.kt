@@ -1,30 +1,25 @@
 package com.weit.presentation.ui.journal.travel_journal
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
+import com.weit.domain.model.journal.TravelJournalCompanionsInfo
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.usecase.journal.DeleteTravelJournalUseCase
 import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
-import com.weit.domain.usecase.user.GetUserUseCase
-import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
-import com.weit.presentation.ui.util.EventFlow
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 
 class TravelJournalViewModel @AssistedInject constructor(
     private val getUserIdUseCase: GetUserIdUseCase,
@@ -79,9 +74,20 @@ class TravelJournalViewModel @AssistedInject constructor(
                     )
                 }
             } else {
-                // todo 에러 처리
+                //todo 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
             }
+        }
+    }
+
+    fun handleFriendsCount(): List<TravelJournalCompanionsInfo>{
+        val info = journalInfo.value ?: return emptyList()
+
+        val friendCount = info.travelJournalCompanions.size
+        return if (friendCount < MAX_ABLE_SHOW_FRIENDS_NUM) {
+            info.travelJournalCompanions
+        } else {
+            info.travelJournalCompanions.slice(0 until MAX_ABLE_SHOW_FRIENDS_NUM)
         }
     }
 
@@ -101,6 +107,12 @@ class TravelJournalViewModel @AssistedInject constructor(
     fun popUpJournalMenu() {
         viewModelScope.launch {
             _event.emit(Event.PopupTravelJournalMenu)
+        }
+    }
+
+    fun popUpJournalFriends() {
+        viewModelScope.launch {
+            _event.emit(Event.PopupTravelJournalFriends)
         }
     }
 
@@ -130,6 +142,7 @@ class TravelJournalViewModel @AssistedInject constructor(
         ) : Event()
 
         object PopupTravelJournalMenu : Event()
+        object PopupTravelJournalFriends : Event()
         object DeleteTravelJournalSuccess : Event()
     }
 
@@ -144,5 +157,6 @@ class TravelJournalViewModel @AssistedInject constructor(
         }
 
         private const val DEFAULT_JOURNAL_ID = 0L
+        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
     }
 }

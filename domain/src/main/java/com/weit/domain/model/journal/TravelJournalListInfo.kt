@@ -11,5 +11,7 @@ data class TravelJournalListInfo(
     val travelEndDate: String,
     val placeDetail: List<PlaceDetail> = emptyList(),
     val writer: TravelJournalWriterInfo,
+    val visibility : String,
     val travelCompanionSimpleResponses: List<TravelCompanionSimpleResponsesInfo>,
+    var isBookmarked : Boolean,
 )

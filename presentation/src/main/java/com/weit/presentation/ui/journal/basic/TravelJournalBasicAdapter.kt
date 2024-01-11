@@ -1,8 +1,8 @@
 package com.weit.presentation.ui.journal.basic
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -12,22 +12,25 @@ import com.weit.presentation.databinding.ItemJournalDetailBasicModelBinding
 import com.weit.presentation.ui.util.SpaceDecoration
 
 class TravelJournalBasicAdapter: ListAdapter<TravelJournalContentsInfo, TravelJournalBasicAdapter.ViewHolder>(diffUtil) {
-
-    private val travelJournalBasicImageAdapter = TravelJournalBasicImageAdapter()
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalDetailBasicModelBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val item = getItem(position)
+        holder.bind(item)
     }
     inner class ViewHolder(
         private val binding: ItemJournalDetailBasicModelBinding
     ) : RecyclerView.ViewHolder(binding.root) {
-
+        private val imageAdapter = TravelJournalBasicImageAdapter()
         init {
-            binding.btnItemJournalDetailDown.setOnClickListener {
-                // todo 여행일지 컨텐츠 감추기
+            binding.rvItemJournalDetailBasicContentImages.apply {
+                adapter = imageAdapter
+                addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_all_space))
+            }
+
+            binding.btnItemJournalDetailDown.setOnCheckedChangeListener { _, isChecked ->
+                binding.lyItemJournalDetailBasic.isGone = isChecked
             }
 
             binding.btnItemJournalDetailKebab.setOnClickListener {
@@ -43,11 +46,7 @@ class TravelJournalBasicAdapter: ListAdapter<TravelJournalContentsInfo, TravelJo
             binding.tvItemJournalDetailBasicAddress.text =
                 item.placeDetail.address?.split(" ")?.slice(1..2)?.joinToString(" ") ?: ""
 
-            binding.rvItemJournalDetailBasicContentImages.apply {
-                adapter = travelJournalBasicImageAdapter
-                addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_all_space))
-            }
-            travelJournalBasicImageAdapter.submitList(item.travelJournalContentImages)
+            imageAdapter.submitList(item.travelJournalContentImages)
         }
     }
 

@@ -31,6 +31,10 @@ class FollowDataSource @Inject constructor(
         return followService.deleteFollow(followFollowingId)
     }
 
+    suspend fun deleteFollower(followerId: Long): Response<Unit> {
+        return followService.deleteFollower(followerId)
+    }
+
     suspend fun getFollowNumber(
         followUserIdInfo: FollowUserIdInfo,
     ): FollowNumDTO =

@@ -7,6 +7,7 @@ import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
@@ -24,6 +25,11 @@ interface FollowService {
     suspend fun deleteFollow(
         @Body followFollowingId: FollowFollowingId,
     ): Response<Unit>
+
+    @DELETE("/api/v1/follows/follower/{followerId}")
+    suspend fun deleteFollower(
+        @Path("followerId") followerId: Long,
+    ) : Response<Unit>
 
     @GET("/api/v1/follows/{userId}}/counts")
     suspend fun getFollowNumber(

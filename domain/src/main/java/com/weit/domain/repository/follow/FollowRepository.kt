@@ -20,6 +20,10 @@ interface FollowRepository {
         followFollowingIdInfo: FollowFollowingIdInfo,
     ): Result<Unit>
 
+    suspend fun deleteFollower(
+        followerId: Long
+    ): Result<Unit>
+
     suspend fun getFollowNumber(
         followUserIdInfo: FollowUserIdInfo,
     ): Result<FollowNumDetail>

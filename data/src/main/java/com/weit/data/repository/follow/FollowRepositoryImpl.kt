@@ -60,6 +60,16 @@ class FollowRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteFollower(followerId: Long): Result<Unit> {
+        val response =
+            followDataSource.deleteFollower(followerId)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleDeleteFollowError(response))
+        }
+    }
+
     override suspend fun getFollowNumber(followUserIdInfo: FollowUserIdInfo): Result<FollowNumDetail> {
         return runCatching {
             followDataSource.getFollowNumber(followUserIdInfo)

@@ -60,7 +60,7 @@ class PlaceCommunityViewModel @AssistedInject constructor(
             if (result.isSuccess) {
                 val newImages = result.getOrThrow()
 
-                if (newImages.isEmpty()){
+                if (newImages.isEmpty().not()){
                     return@launch
                 }
 

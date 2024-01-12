@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.friendmanage.other.OtherFriendManageViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tb_friend_manage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_direction_left"
+            app:title="@string/friend_manage_title"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/h6"
+            app:titleTextColor="@color/label_normal" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_friend_manage_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="34dp"
+            android:layout_marginEnd="20dp"
+            app:boxStrokeWidth="0dp"
+            app:expandedHintEnabled="false"
+            app:hintEnabled="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tb_friend_manage">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_friend_manage_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corners_all_8"
+                android:backgroundTint="@color/elevation4"
+                android:drawableEnd="@drawable/ic_search"
+                android:drawableTint="?attr/colorOnSurface"
+                android:hint="@string/hint_find_friend"
+                android:inputType="text"
+                android:maxLines="1"
+                android:padding="12dp"
+                android:text="@={vm.query}"
+                android:textAppearance="@style/body1"
+                android:textColor="?attr/colorOnSurface"
+                android:textColorHint="@color/system_inactive" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tl_friend_manage_follow"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginStart="92dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="92dp"
+            android:background="@drawable/corners_all_61"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tl_friend_manage_search"
+            app:tabBackground="@drawable/selector_tl_place_background"
+            app:tabIndicatorHeight="0dp"
+            app:tabSelectedTextColor="@color/label_reversed_normal"
+            app:tabTextColor="@color/label_inactive">
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_friend_manage_follower"
+                style="@style/body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corners_all_61"
+                android:text="@string/friend_manage_follower" />
+
+            <com.google.android.material.tabs.TabItem
+                android:id="@+id/tab_friend_manage_following"
+                style="@style/body1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corners_all_33"
+                android:text="@string/friend_manage_following" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_manage_default_follower"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_friend_manage_follow"
+            tools:listitem="@layout/item_friend_manage_follow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_manage_default_following"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_friend_manage_follow"
+            tools:listitem="@layout/item_friend_manage_follow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_manage_search_following"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_friend_manage_follow"
+            tools:listitem="@layout/item_friend_manage_follow" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_friend_manage_search_follower"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tl_friend_manage_follow"
+            tools:listitem="@layout/item_friend_manage_follow" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

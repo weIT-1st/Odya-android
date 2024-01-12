@@ -195,6 +195,12 @@ class OtherProfileViewModel @AssistedInject constructor(
         }
     }
 
+    fun goToFriendManage(){
+        viewModelScope.launch {
+            _event.emit(Event.GoToFriendManage(user.userId))
+        }
+    }
+
     private suspend fun handleError(error: Throwable) {
         when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
@@ -204,10 +210,8 @@ class OtherProfileViewModel @AssistedInject constructor(
     }
 
     sealed class Event {
-
-        data class GetUserStatisticsSuccess(
-            val statistics : UserStatistics,
-            val user: SearchUserContent
+        data class GoToFriendManage(
+            val userId: Long
         ) : Event()
         object InvalidRequestException : Event()
         object InvalidTokenException : Event()

@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.friendmanage
+package com.weit.presentation.ui.friendmanage.other
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +8,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.SearchFollowRequestInfo
+import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.domain.usecase.follow.DeleteFollowerUseCase
 import com.weit.domain.usecase.follow.GetCachedFollowerUseCase
@@ -20,6 +21,7 @@ import com.weit.domain.usecase.follow.SearchFollowingsUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
 import com.weit.presentation.model.Follow
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
+import com.weit.presentation.model.user.FollowUserContentImpl
 import com.weit.presentation.ui.feed.post.FeedPostViewModel
 import com.weit.presentation.ui.post.travelfriend.TravelFriendViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -33,14 +35,14 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
-class MyFriendManageViewModel @Inject constructor(
+class OtherFriendManageViewModel @Inject constructor(
     getUserIdUseCase: GetUserIdUseCase,
     private val getFollowersUseCase: GetFollowersUseCase,
     private val getFollowingsUseCase: GetFollowingsUseCase,
     private val searchFollowersUseCase: SearchFollowersUseCase,
     private val searchFollowingsUseCase: SearchFollowingsUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
-    private val deleteFollowerUseCase: DeleteFollowerUseCase,
+    private val createFollowCreateUseCase: CreateFollowCreateUseCase
 ) : ViewModel() {
 
     private val userId: Long = runBlocking {
@@ -59,7 +61,7 @@ class MyFriendManageViewModel @Inject constructor(
 
     private val _defaultFollowings = MutableStateFlow<List<FollowUserContent>>(emptyList())
     val defaultFollowings: StateFlow<List<FollowUserContent>> get() = _defaultFollowings
-    private val _event = MutableEventFlow<MyFriendManageViewModel.Event>()
+    private val _event = MutableEventFlow<OtherFriendManageViewModel.Event>()
     val event = _event.asEventFlow()
 
     private var followState: Follow = Follow.FOLLOWER
@@ -204,65 +206,143 @@ class MyFriendManageViewModel @Inject constructor(
         }
     }
 
-
-//    fun selectFriend(friend: FollowUserContent) {
-//        viewModelScope.launch {
-//            val result =  if (followState == Follow.FOLLOWING) {
-//                deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))
-//            } else {
-//                deleteFollowerUseCase(friend.userId)
-//            }
-//
-//            if (result.isSuccess) {
-////                initData()
-//
-//            } else {
-//            }
-//        }
-//    }
-    fun selectSearchFollowing(friend: FollowUserContent) {
+    fun createFollow(friend: FollowUserContent,type:String){
         viewModelScope.launch {
-             val result =  deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))
-
+            val result = createFollowCreateUseCase(FollowFollowingIdInfo(friend.userId))
             if (result.isSuccess) {
-                val newResult = _searchResultFollowings.value.filterNot { it.userId == friend.userId }
-                _searchResultFollowings.emit(newResult)
+                when(type){
+                    SEARCH_FOLLOWER -> {
+                        val newResult = searchResultFollowers.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    true
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _searchResultFollowers.emit(newResult)
+                    }
+                    SEARCH_FOLLOWING -> {
+                        val newResult = searchResultFollowings.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    true
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _searchResultFollowings.emit(newResult)
+                    }
+                    DEFAULT_FOLLOWER -> {
+                        val newResult = defaultFollowers.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    true
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _defaultFollowers.emit(newResult)
+                    }
+                    DEFAULT_FOLLOWING -> {
+                        val newResult = defaultFollowings.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    true
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _defaultFollowings.emit(newResult)
+                    }
+                }
             } else {
             }
         }
     }
 
-    fun selectDefaultFollowing(friend: FollowUserContent) {
+    fun deleteFollow(friend: FollowUserContent, type: String){
         viewModelScope.launch {
-            val result =  deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))
-
+            val result = deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))
             if (result.isSuccess) {
-                val newResult = _defaultFollowings.value.filterNot { it.userId == friend.userId }
-                _defaultFollowings.emit(newResult)
-            } else {
-            }
-        }
-    }
-
-    fun selectSearchFollower(friend: FollowUserContent) {
-        viewModelScope.launch {
-            val result =  deleteFollowerUseCase(friend.userId)
-
-            if (result.isSuccess) {
-                val newResult = _searchResultFollowers.value.filterNot { it.userId == friend.userId }
-                _searchResultFollowers.emit(newResult)
-            } else {
-            }
-        }
-    }
-
-    fun selectDefaultFollower(friend: FollowUserContent) {
-        viewModelScope.launch {
-            val result =  deleteFollowerUseCase(friend.userId)
-
-            if (result.isSuccess) {
-                val newResult = _defaultFollowers.value.filterNot { it.userId == friend.userId }
-                _defaultFollowers.emit(newResult)
+                when(type){
+                    SEARCH_FOLLOWER -> {
+                        val newResult = searchResultFollowers.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    false
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _searchResultFollowers.emit(newResult)
+                    }
+                    SEARCH_FOLLOWING -> {
+                        val newResult = searchResultFollowings.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    false
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _searchResultFollowings.emit(newResult)
+                    }
+                    DEFAULT_FOLLOWER -> {
+                        val newResult = defaultFollowers.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    false
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _defaultFollowers.emit(newResult)
+                    }
+                    DEFAULT_FOLLOWING -> {
+                        val newResult = defaultFollowings.value.map{
+                            if(it.userId == friend.userId){
+                                FollowUserContentImpl(
+                                    it.userId,
+                                    it.nickname,
+                                    it.profile,
+                                    false
+                                )
+                            }else{
+                                it
+                            }
+                        }
+                        _defaultFollowings.emit(newResult)
+                    }
+                }
             } else {
             }
         }
@@ -281,5 +361,9 @@ class MyFriendManageViewModel @Inject constructor(
 
     companion object {
         private const val DEFAULT_PAGE_SIZE = 20
+        const val SEARCH_FOLLOWER = "SEARCH_FOLLOWER"
+        const val SEARCH_FOLLOWING = "SEARCH_FOLLOWING"
+        const val DEFAULT_FOLLOWER = "DEFAULT_FOLLOWER"
+        const val DEFAULT_FOLLOWING = "DEFAULT_FOLLOWING"
     }
 }

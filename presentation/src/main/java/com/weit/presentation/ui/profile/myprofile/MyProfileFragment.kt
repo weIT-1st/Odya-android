@@ -79,6 +79,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentFeedMyActivity()
             findNavController().navigate(action)
         }
+
+        binding.ivProfileTravelJournalPencil.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToRepTravelJournalFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private val infinityScrollListener by lazy {

@@ -43,6 +43,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_life_shot_picker"
             app:destination="@id/fragment_life_shot_picker" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_repTravelJournalFragment"
+            app:destination="@id/repTravelJournalFragment" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -251,4 +254,8 @@
             android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
             app:destination="@id/post_graph" />
     </fragment>
+    <fragment
+        android:id="@+id/repTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.RepTravelJournalFragment"
+        android:label="RepTravelJournalFragment" />
 </navigation>

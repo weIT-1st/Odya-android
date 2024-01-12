@@ -25,7 +25,7 @@ import com.weit.data.source.ExampleDataSource
 import com.weit.data.source.FavoritePlaceDateSource
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.PermissionDataSource
-import com.weit.data.source.PlaceReviewDateSource
+import com.weit.data.source.PlaceReviewDataSource
 import com.weit.data.source.TermDataSource
 import com.weit.data.source.TopicDataSource
 import com.weit.data.source.UserDataSource
@@ -73,12 +73,12 @@ class MainModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun providePlaceReviewDataSource(service: PlaceReviewService): PlaceReviewDateSource =
-        PlaceReviewDateSource(service)
+    fun providePlaceReviewDataSource(service: PlaceReviewService): PlaceReviewDataSource =
+        PlaceReviewDataSource(service)
 
     @ActivityRetainedScoped
     @Provides
-    fun providePlaceReviewRepository(dataSource: PlaceReviewDateSource): PlaceReviewRepository =
+    fun providePlaceReviewRepository(dataSource: PlaceReviewDataSource): PlaceReviewRepository =
         PlaceReviewRepositoryImpl(dataSource)
 
     @ActivityRetainedScoped

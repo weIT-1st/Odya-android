@@ -53,7 +53,7 @@ class MapFragment :
     private var mainSearchTopSheetFragment: MainSearchTopSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
-    private var coordinates = LatLng(37.554891, 126.970814)
+    private var coordinates : LatLng = DEFAULT_LAT_LNG
     private var map: GoogleMap? = null
     private var marker: Marker? = null
 
@@ -275,5 +275,6 @@ class MapFragment :
     companion object {
         private val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"
+        private val DEFAULT_LAT_LNG = LatLng(37.55476719052827, 126.97082417355988)
     }
 }

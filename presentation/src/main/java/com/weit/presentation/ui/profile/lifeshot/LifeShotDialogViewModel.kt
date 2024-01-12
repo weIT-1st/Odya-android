@@ -42,8 +42,6 @@ class LifeShotDialogViewModel @AssistedInject constructor(
     private val _lifeshotImage = MutableStateFlow<String?>(null)
     val lifeshotImage: StateFlow<String?> get() = _lifeshotImage
 
-//    private var selectPlaceName : String = ""
-
     @AssistedFactory
     interface LifeShotFactory {
         fun create(imageInfo: SelectLifeShotImageDTO?,placeName: String?): LifeShotDialogViewModel
@@ -55,18 +53,12 @@ class LifeShotDialogViewModel @AssistedInject constructor(
         }
     }
 
-//    fun setLifeShotPlace(placeName: String?) {
-//        selectPlaceName = placeName.toString()
-//    }
-
      fun registerLifeShot() {
         viewModelScope.launch {
             val result = setLifeShotUseCase(imageInfo?.imageId?:0,placeName.toString())
             if(result.isSuccess){
                 _event.emit(LifeShotDialogViewModel.Event.OnComplete)
             }else{
-                Logger.t("lifeShotJob").i("${result.exceptionOrNull()}")
-
             }
         }
     }

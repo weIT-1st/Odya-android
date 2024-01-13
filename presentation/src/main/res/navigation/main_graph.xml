@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_post_graph"
+            app:destination="@id/post_graph" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">

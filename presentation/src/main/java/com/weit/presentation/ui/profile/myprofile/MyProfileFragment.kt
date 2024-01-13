@@ -69,6 +69,16 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             findNavController().navigate(action)
         }
 
+        binding.layoutProfileNoLifeshot.btnAddLifeshot.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentLifeShotPicker()
+            findNavController().navigate(action)
+        }
+
+        binding.layoutProfileNoTravellog.btnFeedNoTravelLogWrite.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToPostGraph()
+            findNavController().navigate(action)
+        }
+
         binding.tvProfileMyCommunity.setOnClickListener {
             val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentFeedMyActivity()
             findNavController().navigate(action)
@@ -128,20 +138,39 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     Glide.with(binding.root)
                         .load(lifeshots.first().imageUrl)
                         .into(binding.ivProfileBg)
+                    binding.layoutProfileNoLifeshot.root.visibility = View.GONE
+                    binding.rvProfileLifeshot.visibility = View.VISIBLE
+                }else{
+                    binding.layoutProfileNoLifeshot.root.visibility = View.VISIBLE
+                    binding.rvProfileLifeshot.visibility = View.INVISIBLE
                 }
                 myProfileLifeShotAdapter.submitList(lifeshots)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaceCount.collectLatest { count ->
-                binding.btnProfileFavoritePlaceMore.text = getString(
-                    R.string.profile_bookmark_place,
-                    count
-                )
+               if(count > 4){
+                   binding.btnProfileFavoritePlaceMore.text = getString(
+                       R.string.profile_bookmark_place,
+                       count - 4
+                   )
+                   binding.btnProfileFavoritePlaceMore.visibility = View.VISIBLE
+               }else{
+                   binding.btnProfileFavoritePlaceMore.visibility = View.INVISIBLE
+               }
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
+                if(list.isEmpty()){
+                    binding.tvProfileNoFavoritePlace.visibility = View.VISIBLE
+                    binding.view2.visibility = View.VISIBLE
+                    binding.rvProfileFavoritePlace.visibility = View.INVISIBLE
+                }else{
+                    binding.tvProfileNoFavoritePlace.visibility = View.GONE
+                    binding.view2.visibility = View.INVISIBLE
+                    binding.rvProfileFavoritePlace.visibility = View.VISIBLE
+                }
                 favoritePlaceAdapter.submitList(list)
             }
         }
@@ -165,7 +194,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-
+                    if(userInfo.userStatistics.travelJournalCount <= 0){
+                            binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
+                            binding.ivProfileImage.visibility = View.INVISIBLE
+                            binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
+                    }else{
+                            binding.layoutProfileNoTravellog.root.visibility = View.GONE
+                            binding.ivProfileImage.visibility = View.VISIBLE
+                            binding.tvProfileTotalTravelCount.visibility = View.VISIBLE
+                    }
                     binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
                         baseString,
                         HtmlCompat.FROM_HTML_MODE_COMPACT,

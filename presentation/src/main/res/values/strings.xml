@@ -153,6 +153,11 @@
     <string name="profile_image_select">앨범에서 사진 선택</string>
     <string name="profile_image_none">기본 이미지로 변경</string>
     <string name="profile_image_cancel">취소</string>
+    <string name="profile_no_lifeshot_content">다녀온 장소의 인생샷을\n업로드 해주세요!</string>
+    <string name="profile_no_lifeshot_add">인생샷 추가</string>
+    <string name="profile_no_rep_journal">대표 여행일지가 없어요.</string>
+    <string name="profile_no_journal">여행일지가 없어요.</string>
+    <string name="profile_no_favorite_place">관심장소가 없어요.</string>
 
 
     <!-- lifeshot -->

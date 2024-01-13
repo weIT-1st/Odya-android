@@ -98,6 +98,30 @@ class FollowDataSource @Inject constructor(
         )
     }
 
+    suspend fun getOtherSearchFollowings(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchOtherFollowings(
+            userId,
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
+    suspend fun getOtherSearchFollowers(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchOtherFollowers(
+            userId,
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
     suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
         followService.getExperiencedFriend(placeId)
 

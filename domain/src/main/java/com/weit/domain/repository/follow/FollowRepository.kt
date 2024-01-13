@@ -61,6 +61,16 @@ interface FollowRepository {
     suspend fun getSearchFollowers(
         searchFollowRequestInfo: SearchFollowRequestInfo,
     ): Result<List<FollowUserContent>>
+
+    suspend fun getOtherSearchFollowings(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
+
+    suspend fun getOtherSearchFollowers(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo,
     ): Result<List<FollowUserContent>>

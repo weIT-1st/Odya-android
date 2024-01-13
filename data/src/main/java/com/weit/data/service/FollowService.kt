@@ -59,6 +59,22 @@ interface FollowService {
         @Query("nickname") nickname: String,
     ): ListResponse<FollowUserContentDTO>
 
+    @GET("/api/v1/follows/{userId}}/followers/search")
+    suspend fun searchOtherFollowers(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/{userId}}/followings/search")
+    suspend fun searchOtherFollowings(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
     @GET("/api/v1/follows/followers/search")
     suspend fun searchFollowers(
         @Query("size") size: Int?,

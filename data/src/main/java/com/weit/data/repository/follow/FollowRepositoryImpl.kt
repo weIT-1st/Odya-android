@@ -36,6 +36,8 @@ class FollowRepositoryImpl @Inject constructor(
     private val hasNextFollowing = AtomicBoolean(true)
     private val hasNextSearchFollower = AtomicBoolean(true)
     private val hasNextSearchFollowing = AtomicBoolean(true)
+    private val hasNextOtherSearchFollower = AtomicBoolean(true)
+    private val hasNextOtherSearchFollowing = AtomicBoolean(true)
     private val hasNextUser = AtomicBoolean(true)
     private val hasNextFollowers = AtomicBoolean(true)
     private val hasNextFollowings = AtomicBoolean(true)
@@ -205,7 +207,54 @@ class FollowRepositoryImpl @Inject constructor(
             Result.success(searchUser.content)
         } else {
             Result.failure(result.exception())
-        }    }
+        }
+    }
+
+    override suspend fun getOtherSearchFollowings(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo
+    ): Result<List<FollowUserContent>> {
+        if(searchFollowRequestInfo.lastId == null){
+            hasNextOtherSearchFollower.set(true)
+        }
+
+        if (hasNextOtherSearchFollower.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getOtherSearchFollowers(userId,searchFollowRequestInfo)
+        }
+        return if (result.isSuccess) {
+            val searchUser = result.getOrThrow()
+            hasNextOtherSearchFollower.set(searchUser.hasNext)
+            Result.success(searchUser.content)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
+
+    override suspend fun getOtherSearchFollowers(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo
+    ): Result<List<FollowUserContent>> {
+        if(searchFollowRequestInfo.lastId == null){
+            hasNextOtherSearchFollowing.set(true)
+        }
+
+        if (hasNextOtherSearchFollowing.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            followDataSource.getOtherSearchFollowings(userId,searchFollowRequestInfo)
+        }
+        return if (result.isSuccess) {
+            val searchUser = result.getOrThrow()
+            hasNextOtherSearchFollowing.set(searchUser.hasNext)
+            Result.success(searchUser.content)
+        } else {
+            Result.failure(result.exception())
+        }
+    }
 
     override suspend fun getMayknowUsers(mayknowUserSearchInfo: MayknowUserSearchInfo): Result<List<FollowUserContent>> {
         if(mayknowUserSearchInfo.lastId == null){

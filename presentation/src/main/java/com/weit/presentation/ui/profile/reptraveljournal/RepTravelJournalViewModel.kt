@@ -15,6 +15,7 @@ import com.weit.domain.usecase.community.UpdateCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
 import com.weit.domain.usecase.journal.UpdateTravelJournalVisibilityUseCase
+import com.weit.domain.usecase.repjournal.CreateRepTravelJournalUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
@@ -41,7 +42,7 @@ import javax.inject.Inject
 class RepTravelJournalViewModel @Inject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
     private val updateTravelJournalVisibilityUseCase: UpdateTravelJournalVisibilityUseCase,
-//    private val
+    private val createRepTravelJournalUseCase : CreateRepTravelJournalUseCase
 ) : ViewModel() {
 
     private val _event = MutableEventFlow<RepTravelJournalViewModel.Event>()
@@ -123,26 +124,16 @@ class RepTravelJournalViewModel @Inject constructor(
     }
 
     fun onCreateRepTravelJournal(){
-//        val result = updateTravelJournalVisibilityUseCase(
-//            TravelJournalVisibilityInfo(
-//                selectedJournal.travelJournal.travelJournalId,
-//                Visibility.PUBLIC.name
-//            )
-//        )
-//        if (result.isSuccess) {
-//            val newJournals = _journals.value.map { journal ->
-//                if(selectedJournal.travelJournal.travelJournalId == journal?.travelJournal?.travelJournalId){
-//                    journal.copy(travelJournal = journal.travelJournal.copy(visibility = "PUBLIC"))
-//                }else{
-//                    journal
-//                }
-//            }
-//            _journals.emit(newJournals)
-//        _event.emit(Event.OnCompleted)
-
-//        } else {
-//            Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
-//        }
+        viewModelScope.launch {
+            val result = createRepTravelJournalUseCase(
+                selectedTravelJournal?.travelJournalId ?:0
+            )
+            if (result.isSuccess) {
+                _event.emit(Event.OnCompleted)
+            } else {
+                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
     }
 
 

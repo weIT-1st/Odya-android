@@ -301,49 +301,12 @@
                     android:layout_height="280dp"
                     android:layout_marginTop="27dp"
                     android:orientation="horizontal"
+                    tools:listitem="@layout/item_profile_rep_travel_journal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_profile_rep_travel_journal"
                     tools:itemCount="8"/>
-
-                <View
-                    android:id="@+id/view_profile_travel_journal"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/corners_all_12"
-                    android:backgroundTint="@color/elevation4"
-                    android:minHeight="56dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_travel_journal" />
-
-
-                <ImageView
-                    android:id="@+id/iv_profile_travel_journal_pencil"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="36dp"
-                    android:src="@drawable/ic_pencil"
-                    app:layout_constraintStart_toStartOf="@+id/view_profile_travel_journal"
-                    app:layout_constraintTop_toTopOf="@+id/view_profile_travel_journal" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_profile_travel_journal_content"
-                    style="@style/detail2"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/label_assistive"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginStart="10dp"
-                    app:layout_constraintTop_toTopOf="@+id/view_profile_travel_journal"
-                    app:layout_constraintEnd_toEndOf="@+id/view_profile_travel_journal"
-                    app:layout_constraintStart_toEndOf="@+id/iv_profile_travel_journal_pencil"
-                    tools:text="일반적인 Android 앱에는 활동, 프래그먼트, 서비스, 콘텐츠 제공자, broadcast receiver를 비롯하여 " />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_profile_bookmark_travel_journal"
@@ -356,7 +319,7 @@
                     android:text="@string/profile_bookmark_travel_jouranl"
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_profile_travel_journal" />
+                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_travel_journal" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_bookmark_travel_journal"

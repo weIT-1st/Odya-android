@@ -30,8 +30,6 @@ class RecentUserSearchAdapter(
     ): RecyclerView.ViewHolder(binding.root){
 
         init{
-            Logger.t("MainTest").i("adapter init")
-
             binding.tvFeedUserSearchName.setOnClickListener {
                 selectUser(getItem(absoluteAdapterPosition))
             }

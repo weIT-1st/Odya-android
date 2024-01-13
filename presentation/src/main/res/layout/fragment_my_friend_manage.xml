@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.friendmanage.MyFriendManageViewModel" />
+            type="com.weit.presentation.ui.friendmanage.my.MyFriendManageViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -153,5 +153,11 @@
             app:layout_constraintTop_toBottomOf="@id/tl_friend_manage_follow"
             tools:listitem="@layout/item_friend_manage_delete" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

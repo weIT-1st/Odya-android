@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.weit.domain.model.follow.FollowUserContent
@@ -12,27 +13,34 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentOtherFriendManageBinding
 import com.weit.presentation.model.Follow
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.friendmanage.FollowingSearchAdapter
-import com.weit.presentation.ui.friendmanage.MyFollowingAdapter
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class OtherFriendManageFragment : BaseFragment<FragmentOtherFriendManageBinding>(
     FragmentOtherFriendManageBinding::inflate,
 ) {
-    private val viewModel: OtherFriendManageViewModel by viewModels()
+    private val args: OtherFriendManageFragmentArgs by navArgs()
 
-    private val followingSearchAdapter = FollowingSearchAdapter(
+    @Inject
+    lateinit var viewModelFactory: OtherFriendManageViewModel.OtherFriendManageFactory
+
+
+    private val viewModel: OtherFriendManageViewModel by viewModels {
+        OtherFriendManageViewModel.provideFactory(viewModelFactory, args.userId)
+    }
+
+    private val followingSearchAdapter = OtherFollowingSearchAdapter(
         onClickFollowing = { user ->
             if(user.isFollowing) showDeleteDialog(user,SEARCH_FOLLOWING) else viewModel.createFollow(user,SEARCH_FOLLOWING)
         }
     )
 
-    private val myFollowingAdapter = MyFollowingAdapter(
+    private val myFollowingAdapter = OtherFollowingAdapter(
         onClickFollowing = { user ->
             if(user.isFollowing) showDeleteDialog(user, DEFAULT_FOLLOWING) else viewModel.createFollow(user,DEFAULT_FOLLOWING)
         }

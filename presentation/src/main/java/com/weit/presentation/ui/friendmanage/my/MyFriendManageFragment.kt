@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.friendmanage
+package com.weit.presentation.ui.friendmanage.my
 
 import android.os.Bundle
 import android.view.View

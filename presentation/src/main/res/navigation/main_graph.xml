@@ -260,7 +260,7 @@
     </fragment>
     <fragment
         android:id="@+id/myFriendManageFragment"
-        android:name="com.weit.presentation.ui.friendmanage.MyFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.my.MyFriendManageFragment"
         android:label="MyFriendManageFragment" />
     <fragment
         android:id="@+id/otherFriendManageFragment"

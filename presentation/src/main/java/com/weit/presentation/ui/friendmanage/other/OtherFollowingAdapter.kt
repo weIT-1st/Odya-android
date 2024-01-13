@@ -1,37 +1,38 @@
-package com.weit.presentation.ui.friendmanage
+package com.weit.presentation.ui.friendmanage.other
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowUserContent
-import com.weit.presentation.databinding.ItemFriendManageDeleteBinding
-import com.weit.presentation.databinding.ItemTravelFriendSearchBinding
+import com.weit.presentation.R
+import com.weit.presentation.databinding.ItemFriendManageFollowBinding
 
-class MyFollowerAdapter(
-    private val onClickFollower: (FollowUserContent) -> Unit,
-) : ListAdapter<FollowUserContent, MyFollowerAdapter.ViewHolder>(diffUtil) {
+class OtherFollowingAdapter(
+    private val onClickFollowing: (FollowUserContent) -> Unit,
+) : ListAdapter<FollowUserContent, OtherFollowingAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
-        private val binding: ItemFriendManageDeleteBinding,
+        private val binding: ItemFriendManageFollowBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init {
-            binding.ivFriendDelete.setOnClickListener {
-                onClickFollower(getItem(absoluteAdapterPosition))
+            binding.ivFriendFollow.setOnClickListener {
+                onClickFollowing(getItem(absoluteAdapterPosition))
             }
         }
 
         fun bind(item: FollowUserContent) {
             binding.follower = item
+            val followImage = if(item.isFollowing) R.drawable.bt_following else R.drawable.bt_unfollow_fill
+            binding.ivFriendFollow.setImageResource(followImage)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemFriendManageDeleteBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemFriendManageFollowBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 

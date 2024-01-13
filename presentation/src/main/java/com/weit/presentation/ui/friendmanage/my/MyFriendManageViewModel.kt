@@ -1,8 +1,7 @@
-package com.weit.presentation.ui.friendmanage
+package com.weit.presentation.ui.friendmanage.my
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowerSearchInfo
@@ -10,18 +9,12 @@ import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.SearchFollowRequestInfo
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.domain.usecase.follow.DeleteFollowerUseCase
-import com.weit.domain.usecase.follow.GetCachedFollowerUseCase
 import com.weit.domain.usecase.follow.GetFollowersUseCase
 import com.weit.domain.usecase.follow.GetFollowingsUseCase
-import com.weit.domain.usecase.follow.GetInfiniteFollowerUseCase
-import com.weit.domain.usecase.follow.GetInfiniteFollowingUseCase
 import com.weit.domain.usecase.follow.SearchFollowersUseCase
 import com.weit.domain.usecase.follow.SearchFollowingsUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
 import com.weit.presentation.model.Follow
-import com.weit.presentation.model.post.travellog.FollowUserContentDTO
-import com.weit.presentation.ui.feed.post.FeedPostViewModel
-import com.weit.presentation.ui.post.travelfriend.TravelFriendViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,7 +52,7 @@ class MyFriendManageViewModel @Inject constructor(
 
     private val _defaultFollowings = MutableStateFlow<List<FollowUserContent>>(emptyList())
     val defaultFollowings: StateFlow<List<FollowUserContent>> get() = _defaultFollowings
-    private val _event = MutableEventFlow<MyFriendManageViewModel.Event>()
+    private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
     private var followState: Follow = Follow.FOLLOWER

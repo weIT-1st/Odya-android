@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.friendmanage
+package com.weit.presentation.ui.friendmanage.my
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,12 +7,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.presentation.databinding.ItemFriendManageDeleteBinding
-import com.weit.presentation.databinding.ItemFriendManageFollowBinding
-import com.weit.presentation.databinding.ItemTravelFriendSearchBinding
 
-class FollowerSearchAdapter(
+class MyFollowerAdapter(
     private val onClickFollower: (FollowUserContent) -> Unit,
-) : ListAdapter<FollowUserContent, FollowerSearchAdapter.ViewHolder>(diffUtil) {
+) : ListAdapter<FollowUserContent, MyFollowerAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
         private val binding: ItemFriendManageDeleteBinding,

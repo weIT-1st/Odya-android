@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.friendmanage.other
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowFollowingIdInfo
@@ -16,6 +17,8 @@ import com.weit.domain.usecase.follow.GetFollowersUseCase
 import com.weit.domain.usecase.follow.GetFollowingsUseCase
 import com.weit.domain.usecase.follow.GetInfiniteFollowerUseCase
 import com.weit.domain.usecase.follow.GetInfiniteFollowingUseCase
+import com.weit.domain.usecase.follow.OtherSearchFollowersUseCase
+import com.weit.domain.usecase.follow.OtherSearchFollowingsUseCase
 import com.weit.domain.usecase.follow.SearchFollowersUseCase
 import com.weit.domain.usecase.follow.SearchFollowingsUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
@@ -24,8 +27,12 @@ import com.weit.presentation.model.post.travellog.FollowUserContentDTO
 import com.weit.presentation.model.user.FollowUserContentImpl
 import com.weit.presentation.ui.feed.post.FeedPostViewModel
 import com.weit.presentation.ui.post.travelfriend.TravelFriendViewModel
+import com.weit.presentation.ui.profile.otherprofile.OtherProfileViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,19 +41,19 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
-@HiltViewModel
-class OtherFriendManageViewModel @Inject constructor(
-    getUserIdUseCase: GetUserIdUseCase,
+class OtherFriendManageViewModel @AssistedInject constructor(
     private val getFollowersUseCase: GetFollowersUseCase,
     private val getFollowingsUseCase: GetFollowingsUseCase,
-    private val searchFollowersUseCase: SearchFollowersUseCase,
-    private val searchFollowingsUseCase: SearchFollowingsUseCase,
+    private val searchFollowersUseCase: OtherSearchFollowersUseCase,
+    private val searchFollowingsUseCase: OtherSearchFollowingsUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
-    private val createFollowCreateUseCase: CreateFollowCreateUseCase
+    private val createFollowCreateUseCase: CreateFollowCreateUseCase,
+    @Assisted private val userId: Long,
 ) : ViewModel() {
 
-    private val userId: Long = runBlocking {
-        getUserIdUseCase()
+    @AssistedFactory
+    interface OtherFriendManageFactory {
+        fun create(userId: Long): OtherFriendManageViewModel
     }
 
     val query = MutableStateFlow("")
@@ -139,15 +146,18 @@ class OtherFriendManageViewModel @Inject constructor(
         }
     }
 
-    private fun loadNextSearchFollowersAndFollowings(query: String, userId: Long?) {
+    private fun loadNextSearchFollowersAndFollowings(query: String, lastUserId: Long?) {
         searchJob = viewModelScope.launch {
             val result = if (followState == Follow.FOLLOWING) {
-                searchFollowingsUseCase(SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, userId, query))
+                Logger.t("MainTest").i("${userId}")
+
+                searchFollowingsUseCase(userId, SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, lastUserId, query))
             }else{
-                searchFollowersUseCase(SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, userId, query))
+                searchFollowersUseCase(userId, SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, lastUserId, query))
             }
             if (result.isSuccess) {
                 val newFollowersOrFollowings = result.getOrThrow()
+
                 val lastId = if (newFollowersOrFollowings.isNotEmpty()) newFollowersOrFollowings.last().userId else null
 
                 if (followState == Follow.FOLLOWING) {
@@ -158,6 +168,7 @@ class OtherFriendManageViewModel @Inject constructor(
                     _searchResultFollowers.emit(searchResultFollowers.value + newFollowersOrFollowings)
                 }
             } else {
+                Logger.t("MainTest").i("${result.exceptionOrNull()}")
 
             }
         }
@@ -194,6 +205,7 @@ class OtherFriendManageViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newFollowingsOrFollowers = result.getOrThrow()
                 if (followState == Follow.FOLLOWING){
+                    Logger.t("MainTest").i("$newFollowingsOrFollowers")
                     defaultFollowingPage += 1
                     _defaultFollowings.emit(defaultFollowings.value + newFollowingsOrFollowers)
                 } else {
@@ -365,5 +377,14 @@ class OtherFriendManageViewModel @Inject constructor(
         const val SEARCH_FOLLOWING = "SEARCH_FOLLOWING"
         const val DEFAULT_FOLLOWER = "DEFAULT_FOLLOWER"
         const val DEFAULT_FOLLOWING = "DEFAULT_FOLLOWING"
+
+        fun provideFactory(
+            assistedFactory: OtherFriendManageViewModel.OtherFriendManageFactory,
+            userId: Long,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(userId) as T
+            }
+        }
     }
 }

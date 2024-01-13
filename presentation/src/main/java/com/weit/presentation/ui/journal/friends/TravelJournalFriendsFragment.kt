@@ -45,7 +45,7 @@ class TravelJournalFriendsFragment(
 
         binding.rvTravelJournalFriends.adapter = travelJournalFriendAdapter
 
-        travelJournalFriendAdapter.submitList(viewModel.friends)
+        travelJournalFriendAdapter.submitList(friends)
     }
 
     override fun onDestroyView() {

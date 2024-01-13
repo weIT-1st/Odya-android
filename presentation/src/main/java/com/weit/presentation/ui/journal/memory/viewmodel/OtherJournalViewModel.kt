@@ -113,34 +113,6 @@ class OtherJournalViewModel @Inject constructor(
         }
     }
 
-//    private fun getBookMarkJournal() {
-//        viewModelScope.launch {
-//            val result = getMyJournalBookMarkUseCase(null, null, null)
-//
-//            if (result.isSuccess) {
-//                val list = result.getOrThrow()
-//                _bookMarkTravelJournals.emit(list)
-//            } else {
-//                // todo 에러처리
-//                Log.d("memory", "Get Bookmark Journal Fail :  ${result.exceptionOrNull()}")
-//            }
-//        }
-//    }
-//
-//    private fun getTaggedJournal() {
-//        viewModelScope.launch {
-//            val result = getTaggedTravelJournalListUseCase(null, null)
-//
-//            if (result.isSuccess) {
-//                val list = result.getOrThrow()
-//                _taggedTravelJournals.emit(list)
-//            } else {
-//                // todo 에러처리
-//                Log.d("memory", "Get Tagged Journal Fail : ${result.exceptionOrNull()}")
-//            }
-//        }
-//    }
-
     fun updateBookmarkTravelJournalBookmarkState(travelJournalId: Long) {
         viewModelScope.launch {
             val journals = bookMarkTravelJournals.value
@@ -151,9 +123,9 @@ class OtherJournalViewModel @Inject constructor(
             }
 
             if (journal.isBookmarked) {
-                deleteBookmarkTravelJournalBookmark(journals, journal)
+                deleteTravelJournalBookmark(journals, journal)
             } else {
-                createBookmarkTravelJournalBookmark(journals, journal)
+                createkTravelJournalBookmark(journals, journal)
             }
         }
     }
@@ -161,22 +133,22 @@ class OtherJournalViewModel @Inject constructor(
     fun updateTaggedTravelJournalBookmarkState(travelJournalId: Long) {
         viewModelScope.launch {
 
-            val journals = taggedTravelJournals.value
-            val journal = journals.find { it.travelJournalId == travelJournalId }
+            val tageedJournals = taggedTravelJournals.value
+            val journal = tageedJournals.find { it.travelJournalId == travelJournalId }
 
             if (journal?.isBookmarked == null) {
                 return@launch
             }
 
             if (journal.isBookmarked) {
-                deleteTravelJournalBookmark(journals, journal)
+                deleteTravelJournalBookmark(tageedJournals, journal)
             } else {
-                createTravelJournalBookmark(journals, journal)
+                createTravelJournalBookmark(tageedJournals, journal)
             }
         }
     }
 
-    private fun createBookmarkTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo){
+    private fun createkTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo){
         viewModelScope.launch {
             val result = createJournalBookMarkUseCase(journal.travelJournalId)
 
@@ -186,7 +158,7 @@ class OtherJournalViewModel @Inject constructor(
         }
     }
 
-    private fun deleteBookmarkTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo) {
+    private fun deleteTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo) {
         viewModelScope.launch {
             val result = deleteJournalBookMarkUseCase(journal.travelJournalId)
 

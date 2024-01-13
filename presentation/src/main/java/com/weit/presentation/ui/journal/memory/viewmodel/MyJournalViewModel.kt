@@ -98,13 +98,8 @@ class MyJournalViewModel @Inject constructor(
                 journals.addAll(originalJournal + newJournals)
 
                 _myJournals.emit(journals)
-                if (journals.isEmpty()){
-                    _isEmptyMyJournal.emit(true)
-                } else {
-                    _isEmptyMyJournal.emit(false)
-                    val random = journals.random()
-                    _randomJournal.emit(random)
-                }
+                _isEmptyMyJournal.emit(journals.isEmpty())
+
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")

@@ -25,7 +25,7 @@ interface BookMarkService {
 
     @GET("/api/v1/travel-journal-bookmarks/{userId}")
     suspend fun getUserJournalBookMark(
-        @Path("userID") userId: Long,
+        @Path("userId") userId: Long,
         @Query("size") size: Int? = 10,
         @Query("lastId") lastId: Long?,
         @Query("sortType") sortType: String?

@@ -27,8 +27,6 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
 
     init {
         getContentsInfo()
-        Log.d("jomi", "journal : $travelJournalInfo")
-        Log.d("jomi", "contents : ${travelJournalInfo.travelJournalContents}")
     }
 
     private fun getContentsInfo() {

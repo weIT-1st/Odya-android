@@ -38,6 +38,7 @@
 
     <!-- margin -->
     <dimen name="feed_my_activity_tab_margin">20dp</dimen>
+    <dimen name="main_my_journal_margin">-300dp</dimen>
 
     <dimen name="marker_width">30dp</dimen>
     <dimen name="marker_height">36dp</dimen>

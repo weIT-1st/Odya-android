@@ -4,10 +4,12 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.usecase.journal.GetFriendTravelJournalListUseCase
 import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
 import com.weit.domain.usecase.journal.GetRecommendTravelJournalListUseCase
+import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,13 +19,15 @@ import kotlinx.coroutines.launch
 
 class PlaceJourneyViewModel @AssistedInject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
+    private val getTravelJournalInfoUseCase: GetTravelJournalUseCase,
     private val getFriendTravelJournalListUseCase: GetFriendTravelJournalListUseCase,
     private val getRecommendTravelJournalListUseCase: GetRecommendTravelJournalListUseCase,
     @Assisted private val placeId: String
 ) : ViewModel(){
 
-    private val _myJournalList = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
-    val myJournalList: StateFlow<List<TravelJournalListInfo>> get() = _myJournalList
+    private val _myJournalDetails = MutableStateFlow<List<TravelJournalInfo>>(emptyList())
+    val myJournalDetail : StateFlow<List<TravelJournalInfo>> get() = _myJournalDetails
+
 
     private val _friendJournalList = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
     val friendJournalList: StateFlow<List<TravelJournalListInfo>> get() = _friendJournalList
@@ -44,21 +48,33 @@ class PlaceJourneyViewModel @AssistedInject constructor(
 
     private fun getMyJournalList(){
         viewModelScope.launch {
-
-            // todo 무한 스크롤
             val result = getMyTravelJournalListUseCase(null, null, placeId)
             if (result.isSuccess){
                 val list = result.getOrThrow()
-                _myJournalList.emit(list)
+                list.forEach { getTravelJournalList(it.travelJournalId) }
             } else {
                 Log.d("getMyJournalList", "fail : ${result.exceptionOrNull()}")
             }
         }
     }
 
+    private fun getTravelJournalList(journalId: Long){
+        viewModelScope.launch {
+            val currentList = myJournalDetail.value
+
+            val result = getTravelJournalInfoUseCase(journalId)
+
+            if (result.isSuccess) {
+                val info = result.getOrThrow()
+                _myJournalDetails.emit(currentList.plus(info))
+            } else {
+                Log.d("getournalList", "fail : ${result.exceptionOrNull()}")
+            }
+        }
+    }
+
     private fun getFriendJournalList(){
         viewModelScope.launch{
-            // todo 무한 스크롤
             val result = getFriendTravelJournalListUseCase(null, null)
             if (result.isSuccess){
                 val list = result.getOrThrow()

@@ -2,12 +2,17 @@ package com.weit.presentation.ui.searchplace.journey
 
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.view.isGone
+import androidx.core.view.marginEnd
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.DimensionUtils
+import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -26,7 +31,7 @@ class PlaceJourneyFragment(
         PlaceJourneyViewModel.provideFactory(viewModelFactory, placeId)
     }
 
-    private val myJournalAdapter: MyJournalAdapter = MyJournalAdapter()
+    private val myJournalAdapter: MyJournalAdapter = MyJournalAdapter(placeId)
     private val friendJournalAdapter: FriendJournalAdapter = FriendJournalAdapter()
     private val recommendJournalAdapter: RecommendJournalAdapter = RecommendJournalAdapter() 
 
@@ -41,9 +46,12 @@ class PlaceJourneyFragment(
 
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
-            viewModel.myJournalList.collectLatest { myJournals ->
-                myJournalAdapter.submitList(myJournals)
-                binding.tvTabPlaceMyJourneyContent.text = myJournals.first().content
+            viewModel.myJournalDetail.collectLatest { detail ->
+                myJournalAdapter.submitList(detail)
+
+                binding.includeTabPlaceNoMyJournal.root.isGone = detail.isNotEmpty()
+                binding.tvTabPlaceMyJournal.isGone = detail.isEmpty()
+                binding.rvTabPlaceMyJournal.isGone = detail.isEmpty()
             }
         }
 
@@ -61,28 +69,17 @@ class PlaceJourneyFragment(
     }
 
     override fun onDestroyView() {
-        binding.rvTabPlaceMyJourney.adapter = null
+        binding.rvTabPlaceMyJournal.adapter = null
         binding.rvTabPlaceFriendJourney.adapter = null
         binding.rvTabPlaceRecommendJourney.adapter = null
         super.onDestroyView()
     }
 
     private fun setMyJournalRecyclerView(){
-        binding.rvTabPlaceMyJourney.addItemDecoration(object : RecyclerView.ItemDecoration(){
-            override fun getItemOffsets(
-                outRect: Rect,
-                view: View,
-                parent: RecyclerView,
-                state: RecyclerView.State
-            ) {
-                val position = parent.getChildAdapterPosition(view)
-
-                if (position != 0){
-                    outRect.left = DimensionUtils.dpToPx(requireContext(), 10).toInt() * -1
-                }
-            }
-        })
-        binding.rvTabPlaceMyJourney.adapter = myJournalAdapter
+        binding.rvTabPlaceMyJournal.apply {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.main_my_journal_margin))
+            adapter = myJournalAdapter
+        }
     }
 
     private fun setFriendJournalRecyclerView(){

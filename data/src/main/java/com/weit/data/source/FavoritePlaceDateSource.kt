@@ -42,6 +42,9 @@ class FavoritePlaceDateSource @Inject constructor(
     suspend fun getFavoritePlaceCount(): Int =
         service.getFavoritePlaceCount()
 
+    suspend fun getFriendFavoritePlaceCount(userId: Long): Int =
+        service.getFriendFavoritePlaceCount(userId)
+
     suspend fun getFavoritePlaces(info: FavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFavoritePlaces(
             size = info.size,

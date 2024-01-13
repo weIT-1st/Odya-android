@@ -52,6 +52,12 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getFriendPlaceCount(userId: Long): Result<Int> {
+        return handleFavoritePlaceResult {
+            dataSource.getFriendFavoritePlaceCount(userId)
+        }
+    }
+
     override suspend fun getFavoritePlaces(favoritePlaceInfo: FavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
         if(favoritePlaceInfo.lastFavoritePlaceId == null){
             hasNextFavoritePlace.set(true)

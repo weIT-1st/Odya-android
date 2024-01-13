@@ -167,8 +167,11 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
     override fun onDestroyView() {
         binding.rvJournalMemoryBookmarkJournal.adapter = null
+        binding.rvJournalMemoryBookmarkJournal.removeOnScrollListener(bookMarkJournalInfinityScrollListener)
         binding.rvJournalMemoryTagJournal.adapter = null
+        binding.rvJournalMemoryTagJournal.removeOnScrollListener(taggedJournalInfinityScrollListener)
         binding.rvJournalMemoryMyReview.adapter = null
+        binding.rvJournalMemoryMyReview.removeOnScrollListener(myReviewInfinityScrollListener)
         super.onDestroyView()
     }
 

@@ -125,7 +125,7 @@ class OtherJournalViewModel @Inject constructor(
             if (journal.isBookmarked) {
                 deleteTravelJournalBookmark(journals, journal)
             } else {
-                createkTravelJournalBookmark(journals, journal)
+                createTravelJournalBookmark(journals, journal)
             }
         }
     }
@@ -148,7 +148,7 @@ class OtherJournalViewModel @Inject constructor(
         }
     }
 
-    private fun createkTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo){
+    private fun createTravelJournalBookmark(journals: List<JournalBookMarkInfo>, journal: JournalBookMarkInfo){
         viewModelScope.launch {
             val result = createJournalBookMarkUseCase(journal.travelJournalId)
 

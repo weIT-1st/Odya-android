@@ -1,8 +1,10 @@
 package com.weit.data.source
 
+import com.weit.data.model.ListResponse
+import com.weit.data.model.place.AverageRatingDTO
 import com.weit.data.model.place.IsExistPlaceReviewDTO
+import com.weit.data.model.place.PlaceReviewContentDTO
 import com.weit.data.model.place.PlaceReviewCountDTO
-import com.weit.data.model.place.PlaceReviewDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import com.weit.data.service.PlaceReviewService
@@ -27,7 +29,7 @@ class PlaceReviewDataSource @Inject constructor(
         return service.delete(placeReviewId)
     }
 
-    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): PlaceReviewDTO =
+    suspend fun getByPlaceId(info: PlaceReviewByPlaceIdQuery): ListResponse<PlaceReviewContentDTO> =
         service.getReviewsByPlaceId(
             placeId = info.placeId,
             size = info.size,
@@ -35,7 +37,7 @@ class PlaceReviewDataSource @Inject constructor(
             lastPlaceReviewId = info.lastPlaceReviewId,
         )
 
-    suspend fun getByUserId(info: PlaceReviewByUserIdQuery): PlaceReviewDTO =
+    suspend fun getByUserId(info: PlaceReviewByUserIdQuery): ListResponse<PlaceReviewContentDTO> =
         service.getReviewsByUserId(
             userId = info.userId,
             size = info.size,
@@ -48,5 +50,9 @@ class PlaceReviewDataSource @Inject constructor(
 
     suspend fun getReviewCount(placeId: String): PlaceReviewCountDTO {
         return service.getReviewCount(placeId)
+    }
+
+    suspend fun getAverageRating(placeId: String): AverageRatingDTO {
+        return service.getAverageRating(placeId)
     }
 }

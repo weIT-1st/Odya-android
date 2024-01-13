@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="h1" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">@dimen/h1</item>
         <item name="android:textStyle">bold</item>
@@ -107,11 +108,6 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerRadius">8dp</item>
     </style>
-    <style name="AppBottomSheetDialogTheme"
-        parent="Theme.Design.Light.BottomSheetDialog">
-        <item name="bottomSheetStyle">@style/AppModalStyle</item>
-        <item name="android:windowIsFloating">false</item>
-    </style>
 
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
@@ -133,5 +129,6 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
  </resources>
 

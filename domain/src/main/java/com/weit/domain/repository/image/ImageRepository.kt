@@ -8,4 +8,6 @@ interface ImageRepository {
     suspend fun getImageBytes(uri: String): ByteArray
 
     suspend fun getCoordinates(uri: String?): ImageLatLng?
+
+
 }

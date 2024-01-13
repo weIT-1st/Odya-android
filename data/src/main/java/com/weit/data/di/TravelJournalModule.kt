@@ -1,8 +1,11 @@
 package com.weit.data.di
 
+import com.squareup.moshi.Moshi
 import com.weit.data.repository.journal.TravelJournalRepositoryImpl
 import com.weit.data.service.TravelJournalService
+import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
+import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
 import dagger.Module
 import dagger.Provides
@@ -22,8 +25,13 @@ class TravelJournalModule {
 
     @ActivityRetainedScoped
     @Provides
-    fun provideJournalRepository(dataSource: TravelJournalDataSource): TravelJournalRepository =
-        TravelJournalRepositoryImpl(dataSource)
+    fun provideJournalRepository(
+        travelJournalDataSource: TravelJournalDataSource,
+        imageRepository: ImageRepository,
+        imageDataSource: ImageDataSource,
+        moshi: Moshi
+    ): TravelJournalRepository =
+        TravelJournalRepositoryImpl(travelJournalDataSource, imageRepository, imageDataSource, moshi)
 
     @ActivityRetainedScoped
     @Provides

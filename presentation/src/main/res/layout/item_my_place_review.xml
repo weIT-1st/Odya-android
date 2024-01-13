@@ -94,7 +94,7 @@
                 app:srb_starWidth="17dp"
                 app:srb_stepSize="0.5" />
 
-            <com.google.android.material.button.MaterialButton
+            <ImageButton
                 android:id="@+id/btn_item_place_menu"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

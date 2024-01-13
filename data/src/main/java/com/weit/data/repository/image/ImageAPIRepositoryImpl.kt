@@ -41,6 +41,7 @@ class ImageAPIRepositoryImpl @Inject constructor(
         val result = kotlin.runCatching { dataSource.getUserImage(size, lastId) }
         return if (result.isSuccess){
             val list = result.getOrThrow()
+            hasNextUserImage.set(list.hasNext)
             Result.success(list.content.map {
                 UserImageResponseInfo(
                     it.imageId,

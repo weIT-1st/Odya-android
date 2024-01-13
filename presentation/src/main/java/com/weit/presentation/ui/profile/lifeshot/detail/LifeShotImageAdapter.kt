@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.profile.myprofile
+package com.weit.presentation.ui.profile.lifeshot.detail
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,32 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.weit.domain.model.image.UserImageResponseInfo
 import com.weit.presentation.databinding.ItemFeedPostImageBinding
-import com.weit.presentation.databinding.ItemProfileLifeshotBinding
 
-class MyProfileLifeShotAdapter(
-    private val selectImage: (UserImageResponseInfo, Int) -> Unit,
-    ) : ListAdapter<UserImageResponseInfo, MyProfileLifeShotAdapter.ViewHolder>(diffUtil) {
+class LifeShotImageAdapter(
+) : ListAdapter<UserImageResponseInfo, LifeShotImageAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
-        private val binding: ItemProfileLifeshotBinding,
+        private val binding: ItemFeedPostImageBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        init {
-            binding.ivLifeshot.setOnClickListener {
-                val item = getItem(absoluteAdapterPosition)
-                selectImage(item,absoluteAdapterPosition)
-            }
-        }
+
         fun bind(item: UserImageResponseInfo) {
             Glide.with(binding.root)
                 .load(item.imageUrl)
-                .into(binding.ivLifeshot)
-            binding.tvLocation.text = item.placeName
+                .into(binding.ivFeedPost)
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemProfileLifeshotBinding.inflate(LayoutInflater.from(parent.context), parent, false),
+            ItemFeedPostImageBinding.inflate(LayoutInflater.from(parent.context), parent, false),
         )
     }
 
@@ -44,7 +36,7 @@ class MyProfileLifeShotAdapter(
     companion object {
         private val diffUtil = object : DiffUtil.ItemCallback<UserImageResponseInfo>() {
             override fun areItemsTheSame(oldItem: UserImageResponseInfo, newItem: UserImageResponseInfo): Boolean =
-                oldItem.toString() == newItem.toString()
+                oldItem.imageId == newItem.imageId
 
             override fun areContentsTheSame(oldItem: UserImageResponseInfo, newItem: UserImageResponseInfo): Boolean =
                 oldItem == newItem

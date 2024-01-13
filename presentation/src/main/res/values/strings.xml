@@ -161,6 +161,9 @@
     <string name="lifeshot_hint">여행일지 및 커뮤니티에서 작성된 이미지입니다</string>
     <string name="lifeshot_close">닫기</string>
     <string name="lifeshot_register">등록하기</string>
+    <string name="lifeshot_delete">삭제하기</string>
+    <string name="lifeshot_cancel">Cancel</string>
+    <string name="lifeshot_count">%d / %d</string>
 
 
 

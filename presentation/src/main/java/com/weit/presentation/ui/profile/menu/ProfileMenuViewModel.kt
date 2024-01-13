@@ -1,19 +1,12 @@
 package com.weit.presentation.ui.profile.menu
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
-import com.weit.domain.usecase.community.DeleteCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.user.UpdateProfileUseCase
-import com.weit.presentation.model.feed.FeedTopic
-import com.weit.presentation.ui.feed.post.FeedPostViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -40,17 +33,16 @@ class ProfileMenuViewModel @Inject constructor(
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun onUpdateProfileImageNone() {
         viewModelScope.launch {
-            viewModelScope.launch {
-                val result = updateProfileUseCase(null)
+            val result = updateProfileUseCase(null)
                 if (result.isSuccess) {
                     _event.emit(Event.OnChangeProfileNoneSuccess)
                 } else {
-                    // TODO 에러 처리
+
                 }
             }
-        }
     }
 
     sealed class Event {

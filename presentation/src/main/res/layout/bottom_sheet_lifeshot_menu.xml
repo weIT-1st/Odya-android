@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        android:background="@android:color/transparent"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_lifeshot_delete"
+            style="@style/body2"
+            android:background="@drawable/corners_all_12"
+            android:backgroundTint="#A6545458"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:gravity="center"
+            android:textColor="#FF453A"
+            android:textAlignment="center"
+            android:text="@string/lifeshot_delete"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_lifeshot_cancel"
+            style="@style/body2"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/corners_all_12"
+            android:backgroundTint="#A6545458"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="#0A84FF"
+            android:textAlignment="center"
+            android:text="@string/lifeshot_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_lifeshot_delete" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

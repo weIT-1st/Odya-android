@@ -33,16 +33,20 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     private val viewModel: MyProfileViewModel by viewModels()
     private var profileMenuDialog: ProfileMenuFragment? = null
     private val myProfileLifeShotAdapter = MyProfileLifeShotAdapter(
-        selectImage = { LifeShotEntity ->
-            //TODO 확대샷
+        selectImage = { lifeShotEntity, position ->
+            viewModel.selectLifeShot(lifeShotEntity, position)
         }
     )
+    private val favoritePlaceAdapter = FavoritePlaceAdapter(
+        selectPlace = { place ->
+            viewModel.deleteFavoritePlace(place)
+        }
+    )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
-        //TODO 유저인생샷
-            //블러처리
+        viewModel.initData()
         initRecyclerView()
         //TODO 관심장소
         //TODO 즐겨찾기 여행일지
@@ -53,11 +57,9 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     override fun initListener() {
         binding.ivProfileUser.setOnClickListener {
             if (profileMenuDialog == null) {
-
                 profileMenuDialog = ProfileMenuFragment { uri ->
-                    Glide.with(binding.root)
-                        .load(uri)
-                        .into(binding.ivProfileUser)
+                    if (uri == null) viewModel.getUserProfileNone() else Glide.with(binding.root)
+                        .load(uri).into(binding.ivProfileUser)
                 }
 
             }
@@ -84,6 +86,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             val action = MyProfileFragmentDirections.actionFragmentMypageToRepTravelJournalFragment()
             findNavController().navigate(action)
         }
+
+        binding.btnProfileFavoritePlaceMore.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentMap()
+            findNavController().navigate(action)
+        }
     }
 
     private val infinityScrollListener by lazy {
@@ -105,6 +112,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             addOnScrollListener(infinityScrollListener)
             adapter = myProfileLifeShotAdapter
         }
+        binding.rvProfileFavoritePlace.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    bottomDP = R.dimen.item_feed_comment_space,
+                ),
+            )
+            adapter = favoritePlaceAdapter
+        }
     }
 
     override fun initCollector() {
@@ -114,13 +130,60 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.lifeshots.collectLatest { lifeshots ->
-                if(!lifeshots.isNullOrEmpty()){
+            viewModel.userProfile.collectLatest { uri ->
                 Glide.with(binding.root)
-                    .load(lifeshots.first().imageUrl)
-                    .into(binding.ivProfileBg)
-                myProfileLifeShotAdapter.submitList(lifeshots)
-                binding.ivProfileBg.setBlur(100)}
+                    .load(uri).into(binding.ivProfileUser)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.lifeshots.collectLatest { lifeshots ->
+                if (!lifeshots.isNullOrEmpty()) {
+                    Glide.with(binding.root)
+                        .load(lifeshots.first().imageUrl)
+                        .into(binding.ivProfileBg)
+                    myProfileLifeShotAdapter.submitList(lifeshots)
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.favoritePlaceCount.collectLatest { count ->
+                binding.btnProfileFavoritePlaceMore.text = getString(
+                    R.string.profile_bookmark_place,
+                    count
+                )
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.favoritePlaces.collectLatest { list ->
+                favoritePlaceAdapter.submitList(list)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.userInfo.collectLatest { userInfo ->
+                if (userInfo != null) {
+                    Glide.with(binding.root)
+                        .load(userInfo.user.profile.url)
+                        .into(binding.ivProfileUser)
+                    binding.tvProfileNickname.text = userInfo.user.nickname
+                    binding.tvProfileTotalOdyaCount.text =
+                        userInfo.userStatistics.odyaCount.toString()
+                    binding.tvProfileTotalFollowingCount.text =
+                        userInfo.userStatistics.followingsCount.toString()
+                    binding.tvProfileTotalFollowCount.text =
+                        userInfo.userStatistics.followersCount.toString()
+                    val baseString =
+                        getString(
+                            R.string.profile_total_travel_count,
+                            userInfo.user.nickname,
+                            userInfo.userStatistics.travelPlaceCount,
+                            userInfo.userStatistics.travelJournalCount
+                        )
+
+                    binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
+                        baseString,
+                        HtmlCompat.FROM_HTML_MODE_COMPACT,
+                    )
+                }
             }
         }
     }
@@ -128,30 +191,24 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     private fun handleEvent(event: MyProfileViewModel.Event) {
 
         when (event) {
-            is MyProfileViewModel.Event.GetUserStatisticsSuccess -> {
-                Glide.with(binding.root)
-                    .load(event.user.profile.url)
-                    .into(binding.ivProfileUser)
-                binding.tvProfileNickname.text = event.user.nickname
-                binding.tvProfileTotalOdyaCount.text = event.statistics.odyaCount.toString()
-                binding.tvProfileTotalFollowingCount.text = event.statistics.followingsCount.toString()
-                binding.tvProfileTotalFollowCount.text = event.statistics.followersCount.toString()
-                val baseString=
-                    getString(
-                        R.string.profile_total_travel_count,
-                        event.user.nickname,
-                        event.statistics.travelPlaceCount,
-                        event.statistics.travelJournalCount
+            is MyProfileViewModel.Event.OnSelectLifeShot -> {
+                val action =
+                    MyProfileFragmentDirections.actionFragmentMypageToLifeShotDetailFragment(
+                        event.lifeshots.toTypedArray(),
+                        event.position,
+                        LifeShotRequestDTO(event.lastImageId ?: 0, event.userId)
                     )
-
-
-                binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
-                    baseString,
-                    HtmlCompat.FROM_HTML_MODE_COMPACT,
-                )
+                findNavController().navigate(action)
             }
+
             else -> {}
         }
     }
 
+    override fun onDestroyView() {
+        binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
+        binding.rvProfileLifeshot.adapter = null
+        binding.rvProfileFavoritePlace.adapter = null
+        super.onDestroyView()
+    }
 }

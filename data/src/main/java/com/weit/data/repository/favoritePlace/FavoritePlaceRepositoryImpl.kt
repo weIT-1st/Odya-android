@@ -2,9 +2,14 @@ package com.weit.data.repository.favoritePlace
 
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.source.FavoritePlaceDateSource
+import com.weit.data.util.exception
+import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.community.ExistedCommunityIdException
+import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.exception.favoritePlace.NotExistPlaceIdException
 import com.weit.domain.model.exception.favoritePlace.RegisteredFavoritePlaceException
 import com.weit.domain.model.favoritePlace.FavoritePlaceDetail
@@ -12,14 +17,20 @@ import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.repository.favoritePlace.FavoritePlaceRepository
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
+import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
+import retrofit2.Response
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class FavoritePlaceRepositoryImpl @Inject constructor(
     private val dataSource: FavoritePlaceDateSource,
 ) : FavoritePlaceRepository {
+
+    private val hasNextFavoritePlace = AtomicBoolean(true)
+
     override suspend fun register(placeId: String): Result<Unit> {
         return handleFavoritePlaceResult {
             dataSource.register(FavoritePlaceRegistration(placeId))
@@ -27,9 +38,12 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun delete(favoritePlaceId: Long): Result<Unit> {
-        return handleFavoritePlaceResult {
-            dataSource.delete(favoritePlaceId)
-        }
+            val response = dataSource.delete(favoritePlaceId)
+            return if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                Result.failure(handleDeleteError(response))
+            }
     }
 
     override suspend fun isFavoritePlace(placeId: String): Result<Boolean> {
@@ -45,13 +59,39 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getFavoritePlaces(favoritePlaceInfo: FavoritePlaceInfo): Result<List<FavoritePlaceDetail>> {
-        return handleFavoritePlaceResult {
-            dataSource.getFavoritePlaces(favoritePlaceInfo).content.map {
+        if(favoritePlaceInfo.lastFavoritePlaceId == null){
+            hasNextFavoritePlace.set(true)
+        }
+
+        if (hasNextFavoritePlace.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = runCatching {
+            dataSource.getFavoritePlaces(favoritePlaceInfo)
+        }
+        return if (result.isSuccess) {
+            val places = result.getOrThrow()
+            hasNextFavoritePlace.set(places.hasNext)
+            Result.success(places.content.map {
                 FavoritePlaceDetail(
                     favoritePlaceId = it.favoritePlaceId,
                     placeId = it.placeId,
                     userId = it.userId,
-                )
+                )})
+        } else {
+            Result.failure(handleFavoritePlaceError(result.exception()))
+        }
+    }
+
+    private fun handleDeleteError(response: Response<*>): Throwable {
+        return when (response.code()) {
+            HTTP_NOT_FOUND -> NotExistCommunityIdOrCommunityCommentsException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_FORBIDDEN -> InvalidPermissionException()
+            HTTP_CONFLICT -> ExistedCommunityIdException()
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            else -> {
+                UnKnownException()
             }
         }
     }

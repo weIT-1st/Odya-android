@@ -51,7 +51,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-//    private val getTopicListUseCase: GetTopicListUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,

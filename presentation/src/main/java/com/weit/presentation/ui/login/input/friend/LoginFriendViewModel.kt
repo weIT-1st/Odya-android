@@ -81,6 +81,7 @@ class LoginFriendViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 _event.emit(Event.CreateFollowSuccess(user?.nickname ?: ""))
+                friendLastId = null
                 onNextFriends()
             } else {
                 Log.d("createFollow", "Create Follow Fail : ${result.exceptionOrNull()}")

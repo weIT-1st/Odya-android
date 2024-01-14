@@ -30,6 +30,10 @@ class ImageAPIRepositoryImpl @Inject constructor(
         size: Int?,
         lastId: Long?
     ): Result<List<UserImageResponseInfo>> {
+        if(lastId == null){
+            hasNextUserImage.set(true)
+        }
+
         if (hasNextUserImage.get().not()){
             return Result.failure(NoMoreItemException())
         }
@@ -37,6 +41,7 @@ class ImageAPIRepositoryImpl @Inject constructor(
         val result = kotlin.runCatching { dataSource.getUserImage(size, lastId) }
         return if (result.isSuccess){
             val list = result.getOrThrow()
+            hasNextUserImage.set(list.hasNext)
             Result.success(list.content.map {
                 UserImageResponseInfo(
                     it.imageId,

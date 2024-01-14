@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.mypage.MyPageViewModel" />
+            type="com.weit.presentation.ui.profile.myprofile.MyProfileViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

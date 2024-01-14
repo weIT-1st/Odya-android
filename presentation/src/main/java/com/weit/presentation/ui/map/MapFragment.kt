@@ -206,11 +206,12 @@ class MapFragment :
     }
 
     private fun showMainSearchTopSheet(){
-        if (mainSearchTopSheetFragment == null){
-            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
-                viewModel.getDetailPlace(it)
-            }
+        mainSearchTopSheetFragment = null
+        mainSearchTopSheetFragment = MainSearchTopSheetFragment{placeId ->
+            viewModel.getDetailPlace(placeId)
+            placeBottomSheetUp(placeId)
         }
+
         if (!mainSearchTopSheetFragment!!.isAdded) {
             mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
         }

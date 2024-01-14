@@ -73,7 +73,7 @@ class SearchPlaceBottomSheetFragment(
 
         tabItem.add(tabJourney, PlaceJourneyFragment(placeId))
         tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
-        tabItem.add(tabCommunity, PlaceCommunityFragment())
+        tabItem.add(tabCommunity, PlaceCommunityFragment(placeId))
 
 
         repeatOnStarted(viewLifecycleOwner) {
@@ -134,7 +134,7 @@ class SearchPlaceBottomSheetFragment(
 
         tabItem.add(tabJourney, PlaceJourneyFragment(placeId))
         tabItem.add(tabReview, PlaceReviewFragment(placeId, ""))
-        tabItem.add(tabCommunity, PlaceCommunityFragment())
+        tabItem.add(tabCommunity, PlaceCommunityFragment(placeId))
 
         viewPager.apply {
             adapter = SearchPlaceBottomSheetAdapter(this.findFragment(), tabItem)

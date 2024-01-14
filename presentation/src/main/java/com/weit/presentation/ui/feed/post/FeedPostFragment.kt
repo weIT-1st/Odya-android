@@ -1,8 +1,12 @@
 package com.weit.presentation.ui.feed
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.flexbox.AlignItems
@@ -15,12 +19,17 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedPostBinding
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.model.profile.lifeshot.SelectLifeShotImageDTO
+import com.weit.presentation.model.profile.lifeshot.SelectLifeShotPlaceDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.post.FeedPostTopicAdapter
 import com.weit.presentation.ui.feed.post.FeedPostViewModel
+import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerFragmentDirections
+import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerViewModel
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -53,22 +62,26 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
-    
-    private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
-        FlexboxLayoutManager(requireContext()).apply {
-            flexWrap = FlexWrap.WRAP
-            flexDirection = FlexDirection.ROW
-            alignItems = AlignItems.STRETCH
-        }
-    }
 
+    @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm =viewModel
         binding.vpFeedPost.adapter = feedImageAdapter
         binding.tlFeedPostVisibility.addOnTabSelectedListener(tabSelectedListener)
         initTopics()
-
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                findNavController().currentBackStackEntry?.savedStateHandle?.getStateFlow<SelectLifeShotPlaceDTO?>(
+                    "place",
+                    null
+                )?.collect { place ->
+                    if (place != null) {
+                        viewModel.selectFeedPlace(place)
+                    }
+                }
+            }
+        }
     }
 
 
@@ -83,11 +96,14 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         binding.tbFeedPost.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+        binding.btnFeedPostPlace.setOnClickListener {
+                val direction = FeedPostFragmentDirections.actionFragmentFeedPostToFeedSelectPlaceFragment()
+                findNavController().navigate(direction)
+        }
     }
 
     private fun initTopics(){
         binding.rvTopic.run{
-            layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter
             setHasFixedSize(false)
         }
@@ -125,6 +141,9 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
             }
             is FeedPostViewModel.Event.OnChangeTopics -> {
                 feedPostTopicAdapter.submitList(event.topics)
+            }
+            is FeedPostViewModel.Event.OnSelectPlaceCompleted -> {
+                binding.btnFeedPostPlace.text = event.placeName
             }
             else -> {}
         }

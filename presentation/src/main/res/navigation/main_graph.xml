@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_post_graph"
+            app:destination="@id/post_graph" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -126,6 +129,10 @@
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
+        <argument
+            android:name="nickname"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -141,11 +148,21 @@
         <argument
             android:name="feedId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
+            app:destination="@id/feedSelectPlaceFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity"
         android:name="com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragment"
-        android:label="FeedMyActivityFragment" />
+        android:label="FeedMyActivityFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_my_activity_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity_post"
         android:name="com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragment"
@@ -252,4 +269,8 @@
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
     </fragment>
+    <fragment
+        android:id="@+id/feedSelectPlaceFragment"
+        android:name="com.weit.presentation.ui.feed.post.FeedSelectPlaceFragment"
+        android:label="FeedSelectPlaceFragment" />
 </navigation>

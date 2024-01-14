@@ -1,7 +1,9 @@
 package com.weit.presentation.ui.feed
 
+import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityMainContent
 import com.weit.domain.model.community.CommunityRequestInfo
 import com.weit.domain.model.exception.InvalidPermissionException
@@ -13,6 +15,7 @@ import com.weit.domain.model.exception.follow.ExistedFollowingIdException
 import com.weit.domain.model.exception.topic.NotExistTopicIdException
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.MayknowUserSearchInfo
+import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.user.User
 import com.weit.domain.usecase.community.ChangeLikeStateUseCase
 import com.weit.domain.usecase.community.GetCommunitiesByTopicUseCase
@@ -21,6 +24,9 @@ import com.weit.domain.usecase.community.GetFriendCommunitiesUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.follow.GetMayknowUsersUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.domain.usecase.journal.GetRecommendTravelJournalListUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Feed
@@ -45,7 +51,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-    private val getTopicListUseCase: GetTopicListUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val getMayknowUsersUseCase: GetMayknowUsersUseCase,
     private val getCommunitiesUseCase: GetCommunitiesUseCase,
@@ -53,6 +60,7 @@ class FeedViewModel @Inject constructor(
     private val getCommunitiesByTopicUseCase: GetCommunitiesByTopicUseCase,
     private val getFriendCommunitiesUseCase: GetFriendCommunitiesUseCase,
     private val changeLikeStateUseCase: ChangeLikeStateUseCase,
+    private val getRecommendTravelJournalListUseCase: GetRecommendTravelJournalListUseCase,
 ) : ViewModel() {
 
     private val _user = MutableStateFlow<User?>(null)
@@ -66,7 +74,7 @@ class FeedViewModel @Inject constructor(
 
     private val totalFeed = CopyOnWriteArrayList<Feed>()
     private val feedItems = CopyOnWriteArrayList<Feed.FeedItem>()
-    private val popularLogs = CopyOnWriteArrayList<PopularTravelLog>()
+    private val popularLogs = CopyOnWriteArrayList<TravelJournalListInfo>()
     private val friends = CopyOnWriteArrayList<FollowUserContent>()
 
     private val _feed = MutableStateFlow<List<Feed>>(emptyList())
@@ -81,9 +89,13 @@ class FeedViewModel @Inject constructor(
     private var getFeedJob: Job = Job().apply {
         complete()
     }
+    private var travelJournalJob: Job = Job().apply {
+        complete()
+    }
     private var selectedTopicId: Long = 0
     private var topicFeedLastId: Long? = null
     private var friendFeedLastId: Long? = null
+    private var travelJournalLastId: Long? = null
 
     private var topicList = CopyOnWriteArrayList<FeedTopic>()
 
@@ -97,7 +109,7 @@ class FeedViewModel @Inject constructor(
 
         getTopicList()
         onNextFeeds()
-        getPopularTravelLogs()
+        onNextJournals()
         onNextFriends()
         makeFeedItems()
     }
@@ -126,7 +138,7 @@ class FeedViewModel @Inject constructor(
 
     private fun getTopicList() {
         viewModelScope.launch {
-            val result = getTopicListUseCase()
+            val result = getFavoriteTopicListUseCase()
             if (result.isSuccess) {
                 val topics = result.getOrThrow().map {
                     FeedTopic(
@@ -211,25 +223,39 @@ class FeedViewModel @Inject constructor(
         loadNextFeeds(feedState)
     }
 
-    private fun changeFeedItems(newContents: List<CommunityMainContent>) {
-        val feeds = newContents.map {
-            Feed.FeedItem(
-                it.communityId,
-                it.communityContent,
-                it.placeId,
-                it.communityMainImageUrl,
-                it.writer,
-                it.travelJournalSimpleResponse,
-                it.communityCommentCount,
-                it.communityLikeCount,
-                it.isUserLiked,
-                it.createdDate,
-            )
-        }
-        val original = feedItems
-        feedItems.clear()
-        feedItems.addAll(original + CopyOnWriteArrayList(feeds))
-        makeFeedItems()
+    @SuppressLint("SuspiciousIndentation")
+    private suspend fun getPlaceName(placeId: String?): String{
+        var name = ""
+            if(placeId.isNullOrEmpty().not()){
+                val placeInfo = getPlaceDetailUseCase(placeId.toString())
+                if (placeInfo.name.isNullOrBlank().not()) {
+                    name = placeInfo.name.toString()
+                }
+            }
+        return name
+    }
+
+    private suspend fun changeFeedItems(newContents: List<CommunityMainContent>) {
+            val feeds = newContents.map {
+                Feed.FeedItem(
+                    it.communityId,
+                    it.communityContent,
+                    getPlaceName(it.placeId),
+                    it.communityMainImageUrl,
+                    it.writer,
+                    it.travelJournalSimpleResponse,
+                    it.communityCommentCount,
+                    it.communityLikeCount,
+                    it.isUserLiked,
+                    it.createdDate,
+                )
+            }
+            Logger.t("MainTest").i("${feeds}")
+
+            val original = feedItems
+            feedItems.clear()
+            feedItems.addAll(original + CopyOnWriteArrayList(feeds))
+            makeFeedItems()
     }
 
     private fun loadNextFeeds(feedState: String = feedAll) {
@@ -241,13 +267,16 @@ class FeedViewModel @Inject constructor(
                     )
                     if (result.isSuccess) {
                         val newContents = result.getOrThrow()
+                        Logger.t("MainTest").i("$newContents")
+
                         feedLastId = newContents[newContents.lastIndex].communityId
                         if (newContents.isEmpty()) {
                             loadNextFeeds()
                         }
                         changeFeedItems(newContents)
                     } else {
-                        //TODO 에러
+                        Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+
                     }
                 }
 
@@ -291,15 +320,28 @@ class FeedViewModel @Inject constructor(
         }
     }
 
-    private fun getPopularTravelLogs() {
-        val profile = UserProfileDTO("testProfileUrl", UserProfileColorDTO("#ffd42c", 255, 212, 44))
-        val popularSpotList = arrayListOf<PopularTravelLog>(
-            PopularTravelLog(12, 1, profile, "dd", "dd", "dd"),
-            PopularTravelLog(13, 2, profile, "dd", "dd", "dd"),
-        )
+    fun onNextJournals() {
+        if (travelJournalJob.isCompleted.not()) {
+            return
+        }
+        loadNextJournals()
+    }
 
-        popularLogs.clear()
-        popularLogs.addAll(popularSpotList)
+    private fun loadNextJournals() {
+        travelJournalJob = viewModelScope.launch {
+            val result = getRecommendTravelJournalListUseCase(
+                DEFAULT_PAGE_SIZE,travelJournalLastId
+            )
+            if (result.isSuccess) {
+                val newJournals = result.getOrThrow()
+                if (newJournals.isNotEmpty()) {
+                    travelJournalLastId = newJournals.last().travelJournalId
+                }
+                val originalJournals = popularLogs
+                popularLogs.clear()
+                popularLogs.addAll(originalJournals + newJournals)
+            }
+        }
     }
 
     fun onNextFriends() {
@@ -319,7 +361,7 @@ class FeedViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newFriends = result.getOrThrow()
 
-                if (newFriends.size > 0) {
+                if (newFriends.isNotEmpty()) {
                     friendLastId = newFriends.last().userId
                 }
                 if (newFriends.isEmpty()) {
@@ -328,9 +370,7 @@ class FeedViewModel @Inject constructor(
                 val originalFriends = friends
                 friends.clear()
                 friends.addAll(originalFriends + newFriends)
-
             }
-
         }
     }
 

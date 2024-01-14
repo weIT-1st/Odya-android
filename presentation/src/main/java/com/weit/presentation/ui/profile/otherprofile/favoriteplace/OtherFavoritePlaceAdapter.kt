@@ -1,16 +1,16 @@
-package com.weit.presentation.ui.profile.favoriteplace
+package com.weit.presentation.ui.profile.otherprofile.favoriteplace
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.place.PlaceDetail
+import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemProfileFavoritePlaceBinding
 
-class FavoritePlaceAdapter(
-    private val selectPlace: (FavoritePlaceEntity) -> Unit,
-) : ListAdapter<FavoritePlaceEntity, FavoritePlaceAdapter.ViewHolder>(diffUtil) {
+class OtherFavoritePlaceAdapter(
+    private val selectPlace: (OtherFavoritePlaceEntity) -> Unit,
+    ) : ListAdapter<OtherFavoritePlaceEntity, OtherFavoritePlaceAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
         private val binding: ItemProfileFavoritePlaceBinding,
@@ -21,7 +21,9 @@ class FavoritePlaceAdapter(
                 selectPlace(getItem(absoluteAdapterPosition))
             }
         }
-        fun bind(item: FavoritePlaceEntity) {
+        fun bind(item: OtherFavoritePlaceEntity) {
+            val starImage = if(item.isFavoritePlace) R.drawable.ic_star_yellow_fill else R.drawable.ic_star_white_empty
+            binding.ivBookmarkJournalStar.setImageResource(starImage)
             binding.tvItemPlaceTitle.text = item.placeName
             binding.tvItemPlaceAddress.text = item.placeAddress
         }
@@ -38,11 +40,11 @@ class FavoritePlaceAdapter(
     }
 
     companion object {
-        private val diffUtil = object : DiffUtil.ItemCallback<FavoritePlaceEntity>() {
-            override fun areItemsTheSame(oldItem: FavoritePlaceEntity, newItem: FavoritePlaceEntity): Boolean =
+        private val diffUtil = object : DiffUtil.ItemCallback<OtherFavoritePlaceEntity>() {
+            override fun areItemsTheSame(oldItem: OtherFavoritePlaceEntity, newItem: OtherFavoritePlaceEntity): Boolean =
                 oldItem.placeId == newItem.placeId
 
-            override fun areContentsTheSame(oldItem: FavoritePlaceEntity, newItem: FavoritePlaceEntity): Boolean =
+            override fun areContentsTheSame(oldItem: OtherFavoritePlaceEntity, newItem: OtherFavoritePlaceEntity): Boolean =
                 oldItem == newItem
         }
     }

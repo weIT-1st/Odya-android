@@ -43,6 +43,15 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_life_shot_picker"
             app:destination="@id/fragment_life_shot_picker" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_lifeShotDetailFragment"
+            app:destination="@id/lifeShotDetailFragment" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_fragment_map"
+            app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_post_graph"
+            app:destination="@id/post_graph" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -231,6 +240,20 @@
         <action
             android:id="@+id/action_lifeShotSelectPlaceFragment_to_fragment_life_shot_picker"
             app:destination="@id/fragment_life_shot_picker" />
+    </fragment>
+    <fragment
+        android:id="@+id/lifeShotDetailFragment"
+        android:name="com.weit.presentation.ui.profile.lifeshot.detail.LifeShotDetailFragment"
+        android:label="LifeShotDetailFragment" >
+        <argument
+            android:name="images"
+            app:argType="com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO[]" />
+        <argument
+            android:name="position"
+            app:argType="integer" />
+        <argument
+            android:name="lifeshotRequestInfo"
+            app:argType="com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO" />
     </fragment>
     <fragment
         android:id="@+id/feedSelectPlaceFragment"

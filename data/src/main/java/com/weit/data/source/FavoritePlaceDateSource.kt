@@ -4,7 +4,19 @@ import com.weit.data.model.ListResponse
 import com.weit.data.model.favoritePlace.FavoritePlaceDTO
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.service.FavoritePlaceService
+import com.weit.domain.model.exception.InvalidPermissionException
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.community.ExistedCommunityIdException
+import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_CONFLICT
+import okhttp3.internal.http.HTTP_FORBIDDEN
+import okhttp3.internal.http.HTTP_NOT_FOUND
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.Response
 import javax.inject.Inject
 
 class FavoritePlaceDateSource @Inject constructor(
@@ -14,8 +26,8 @@ class FavoritePlaceDateSource @Inject constructor(
         service.register(favoritePlaceRegistration)
     }
 
-    suspend fun delete(favoritePlaceId: Long) {
-        service.delete(favoritePlaceId)
+    suspend fun delete(favoritePlaceId: Long): Response<Unit> {
+        return service.delete(favoritePlaceId)
     }
 
     suspend fun isFavoritePlace(placeId: String): Boolean =
@@ -30,4 +42,5 @@ class FavoritePlaceDateSource @Inject constructor(
             sortType = info.sortType,
             lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
+
 }

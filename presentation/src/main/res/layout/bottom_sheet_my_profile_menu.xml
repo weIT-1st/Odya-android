@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.profile.menu.ProfileMenuViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:background="@android:color/transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:behavior_draggable="true"
+        app:behavior_hideable="true"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_profile_image_select"
+            style="@style/body2"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:textColor="#0A84FF"
+            android:background="@drawable/corners_top_12_in_bottom_sheet"
+            android:backgroundTint="#A6545458"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:text="@string/profile_image_select"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_profile_image_none"
+            style="@style/body2"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/corners_bottom_12_in_bottom_sheet"
+            android:backgroundTint="#A6545458"
+            android:gravity="center"
+            android:textColor="#0A84FF"
+            android:textAlignment="center"
+            android:text="@string/profile_image_none"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_profile_image_select" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_my_profile_cancel"
+            style="@style/body2"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:background="@drawable/corners_all_12"
+            android:backgroundTint="#A6545458"
+            android:gravity="center"
+            android:layout_marginTop="8dp"
+            android:textColor="#0A84FF"
+            android:textAlignment="center"
+            android:text="@string/profile_image_cancel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_profile_image_none" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,8 +1,10 @@
 package com.weit.data.service
 
+import com.weit.data.model.ListResponse
+import com.weit.data.model.place.AverageRatingDTO
 import com.weit.data.model.place.IsExistPlaceReviewDTO
+import com.weit.data.model.place.PlaceReviewContentDTO
 import com.weit.data.model.place.PlaceReviewCountDTO
-import com.weit.data.model.place.PlaceReviewDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
 import retrofit2.Response
@@ -28,7 +30,7 @@ interface PlaceReviewService {
 
     @DELETE("/api/v1/place-reviews/{id}")
     suspend fun delete(
-        @Path("id") id: Long,
+        @Path("id") placeReviewId: Long,
     ): Response<Unit>
 
     @GET("/api/v1/place-reviews/places/{id}")
@@ -37,7 +39,7 @@ interface PlaceReviewService {
         @Query("size") size: Int,
         @Query("sortType") sortType: String?,
         @Query("lastId") lastPlaceReviewId: Long?,
-    ): PlaceReviewDTO
+    ): ListResponse<PlaceReviewContentDTO>
 
     @GET("/api/v1/place-reviews/users/{id}")
     suspend fun getReviewsByUserId(
@@ -45,7 +47,7 @@ interface PlaceReviewService {
         @Query("size") size: Int,
         @Query("sortType") sortType: String?,
         @Query("lastId") lastPlaceReviewId: Long?,
-    ): PlaceReviewDTO
+    ): ListResponse<PlaceReviewContentDTO>
 
     @GET("/api/v1/place-reviews/{id}")
     suspend fun isExistReview(
@@ -56,4 +58,9 @@ interface PlaceReviewService {
     suspend fun getReviewCount(
         @Path("id") placeId: String,
     ): PlaceReviewCountDTO
+
+    @GET("/api/v1/place-reviews/average/{id}")
+    suspend fun getAverageRating(
+        @Path("id") placeId: String
+    ): AverageRatingDTO
 }

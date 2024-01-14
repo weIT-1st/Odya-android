@@ -17,10 +17,11 @@ import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 
 class FeedAdapter(
     private val navigateTravelLog: (Long) -> Unit,
-    private val navigateFeedDetail: (Long) -> Unit,
+    private val navigateFeedDetail: (Long,String) -> Unit,
     private val onFollowChanged: (Long) -> Unit,
     private val onLikeChanged: (Long) -> Unit,
-    private val scrollListener: () -> Unit,
+    private val friendScrollListener: () -> Unit,
+    private val journalScrollListener: () -> Unit,
 ) :
     ListAdapter<Feed, RecyclerView.ViewHolder>(
         Callback,
@@ -76,6 +77,9 @@ class FeedAdapter(
     inner class PopularSpotViewHolder(
         private val binding: ItemPopularSpotBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
+        init{
+            binding.rvPopularSpotSummary.addOnScrollListener(infinityJournaldcrollListener)
+        }
         fun bind(popularTravelLog: Feed.PopularTravelLogItem) {
             val data = popularTravelLog.popularTravelLogList
             val popularSpotRecyclerView = binding.rvPopularSpotSummary
@@ -92,7 +96,7 @@ class FeedAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         init{
-            binding.rvMayknowFriendSummary.addOnScrollListener(infinityScrollListener)
+            binding.rvMayknowFriendSummary.addOnScrollListener(infinityFriendScrollListener)
         }
         fun bind(mayKnowFriend: Feed.MayknowFriendItem) {
             val data = mayKnowFriend.mayKnowFriendList
@@ -106,17 +110,24 @@ class FeedAdapter(
         }
     }
 
-    private val infinityScrollListener = object : InfinityScrollListener() {
+    private val infinityFriendScrollListener = object : InfinityScrollListener() {
         override fun loadNextPage() {
-            scrollListener()
+            friendScrollListener()
         }
     }
 
+    private val infinityJournaldcrollListener = object : InfinityScrollListener() {
+        override fun loadNextPage() {
+            journalScrollListener()
+        }
+    }
     inner class CommunityViewHolder(
         private val binding: ItemCommunityBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(feed: Feed.FeedItem) {
+            Logger.t("MainTest").i("${feed.createdDate} ")
+
             binding.feed = feed
 
             if (feed.travelJournalSimpleResponse == null) {
@@ -130,7 +141,7 @@ class FeedAdapter(
             }
 
             binding.viewCommunityContent.setOnClickListener {
-                navigateFeedDetail(feed.communityId)
+                navigateFeedDetail(feed.communityId,feed.writer.nickname)
             }
 
             val followImage = if(feed.writer.isFollowing) R.drawable.bt_following else R.drawable.bt_follow

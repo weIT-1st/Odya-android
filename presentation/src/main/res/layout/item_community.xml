@@ -93,6 +93,7 @@
             android:layout_height="32dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_profile"
             app:shapeAppearance="@style/ShapeableImageViewCircle"
             app:image_uri="@{feed.writer.profile.url}"
@@ -150,7 +151,7 @@
             android:textColor="@color/label_assistive"
             android:textSize="12dp"
             android:textStyle="bold"
-            app:text_created_date="@{feed.createdDate}"
+            android:text_created_date="@{feed.createdDate}"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toBottomOf="@+id/iv_community_profile"
             app:layout_constraintEnd_toStartOf="@+id/iv_community_follow"
@@ -182,7 +183,7 @@
             android:textColor="?attr/colorOnSurface"
             app:layout_constraintEnd_toEndOf="@+id/view_community_content"
             app:layout_constraintStart_toStartOf="@+id/view_community_content"
-            app:layout_constraintTop_toBottomOf="@+id/bt_community_follow"
+            app:layout_constraintTop_toBottomOf="@+id/iv_community_follow"
             android:text="@{feed.communityContent}" />
 
 

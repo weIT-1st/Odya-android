@@ -10,7 +10,8 @@ class GetMyTravelJournalListUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?
     ): Result<List<TravelJournalListInfo>> =
-        repository.getMyTravelJournalList(size, lastTravelJournal)
+        repository.getMyTravelJournalList(size, lastTravelJournal, placeId)
 }

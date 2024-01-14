@@ -1,7 +1,13 @@
 package com.weit.data.service
 
+import com.weit.data.model.ListResponse
+import com.weit.data.model.community.CommunityMyActivityContentDTO
+import com.weit.data.model.image.UserImageResponseDTO
+import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
+import com.weit.data.model.user.UserStatisticsDTO
 import com.weit.domain.model.user.User
+import com.weit.domain.model.user.UserStatistics
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
@@ -10,6 +16,8 @@ import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.Part
+import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface UserService {
 
@@ -39,4 +47,23 @@ interface UserService {
 
     @DELETE("/api/v1/users")
     suspend fun deleteUser(): Response<Unit>
+
+    @GET("/api/v1/users/search")
+    suspend fun getSearchUsers(
+        @Query("size") size: Int?,
+        @Query("lastId") userId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<SearchUserContentDTO>
+
+    @GET("/api/v1/users/{userId}/life-shots")
+    suspend fun getUserLifeShot(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") imageId: Long?,
+    ): ListResponse<UserImageResponseDTO>
+
+    @GET("/api/v1/users/{userId}/statistics")
+    suspend fun getUserStatistics(
+        @Path("userId") userId: Long,
+    ): UserStatisticsDTO
 }

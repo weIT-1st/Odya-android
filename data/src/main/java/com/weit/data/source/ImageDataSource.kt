@@ -4,14 +4,19 @@ import android.content.ContentResolver
 import android.content.ContentUris
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.domain.model.exception.ImageNotFoundException
 import com.weit.domain.model.image.ImageLatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import javax.inject.Inject
@@ -117,6 +122,25 @@ class ImageDataSource @Inject constructor(
             }
         }
         return orientation
+    }
+
+    suspend fun getImageByte(uri: String): ByteArray {
+        val bitmap = getBitmapByUri(uri)
+        val rotateBitmap = bitmap.getRotatedBitmap(getRotate(uri))
+        val scaleBitmap = getScaledBitmap(rotateBitmap)
+        val bytes = getCompressedBytes(scaleBitmap)
+        scaleBitmap.recycle()
+        return bytes
+    }
+
+    private fun Bitmap.getRotatedBitmap(degree: Float): Bitmap {
+        val matrix = Matrix().apply { postRotate(degree) }
+        return Bitmap.createBitmap(this, 0, 0, width, height, matrix, true) ?: this
+    }
+
+    suspend fun getRequestBody(uri: String): RequestBody{
+        val bytes = getImageByte(uri)
+        return bytes.toRequestBody("image/webp".toMediaType(), 0, bytes.size)
     }
 
 

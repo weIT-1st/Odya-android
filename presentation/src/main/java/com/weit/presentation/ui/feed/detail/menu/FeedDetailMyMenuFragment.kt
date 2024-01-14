@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.weit.presentation.databinding.BottomSheetFeedMyMenuBinding
+import com.weit.presentation.ui.feed.detail.FeedDetailFragmentArgs
+import com.weit.presentation.ui.feed.detail.FeedDetailFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -40,9 +42,10 @@ class FeedDetailMyMenuFragment(val feedId: Long) : BottomSheetDialogFragment() {
         binding.tvMyFeedUpdate.setOnClickListener {
             // TODO dismiss하면서 이동 금지
             dismiss()
-            val action = FeedDetailMyMenuFragmentDirections.actionFragmentFeedDetailMyMenuToFragmentFeedPost(
+            val action = FeedDetailFragmentDirections.actionFragmentFeedDetailToFragmentFeedPost(
                 emptyArray(), feedId
             )
+
             findNavController().navigate(action)
         }
         binding.tvMyFeedDelete.setOnClickListener {

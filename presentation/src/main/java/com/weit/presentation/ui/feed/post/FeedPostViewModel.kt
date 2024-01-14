@@ -7,15 +7,22 @@ import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityContent
 import com.weit.domain.model.community.CommunityRegistrationInfo
 import com.weit.domain.model.community.CommunityUpdateInfo
+import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.usecase.community.GetDetailCommunityUseCase
 import com.weit.domain.usecase.community.RegisterCommunityUseCase
 import com.weit.domain.usecase.community.UpdateCommunityUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
+import com.weit.domain.usecase.user.GetUserStatisticsUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
+import com.weit.presentation.model.feed.SelectTravelJournalDTO
 import com.weit.presentation.model.profile.lifeshot.SelectLifeShotPlaceDTO
 import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerViewModel
+import com.weit.presentation.ui.profile.myprofile.MyProfileViewModel
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -31,6 +38,9 @@ class FeedPostViewModel @AssistedInject constructor(
     private val registerCommunityUseCase: RegisterCommunityUseCase,
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val updateCommunityUseCase: UpdateCommunityUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val getUserStatisticsUseCase: GetUserStatisticsUseCase,
     @Assisted private val imageUris: List<String>,
     @Assisted private val feedId: Long,
     ): ViewModel() {
@@ -43,13 +53,22 @@ class FeedPostViewModel @AssistedInject constructor(
     private val _imageList = MutableStateFlow<List<String>>(emptyList())
     val imageList : StateFlow<List<String>> get() = _imageList
 
-    private var selectedPlace :SelectLifeShotPlaceDTO? = null
+    private val _topicList = MutableStateFlow<List<FeedTopic>>(emptyList())
+    val topicList : StateFlow<List<FeedTopic>> get() = _topicList
+
+    private val _placeName = MutableStateFlow<String>("")
+    val placeName : StateFlow<String> get() = _placeName
+
+    private val _journalTitle = MutableStateFlow<String?>(null)
+    val journalTitle : StateFlow<String?> get() = _journalTitle
+
+    private var selectedPlaceId :String? = null
     private var selectedTopicId :Long? = null
+    private var selectedTravelJournalId :Long? = null
     private var selectedVisibility :Visibility = Visibility.PUBLIC
 
     val content = MutableStateFlow("")
 
-    private val topicList = CopyOnWriteArrayList<FeedTopic>()
     private var feedState = feedRegister
 
     @AssistedFactory
@@ -83,11 +102,27 @@ class FeedPostViewModel @AssistedInject constructor(
                 feed.topic?.topicId?.let { updateTopicUI(it) }
                 selectedTopicId = feed.topic?.topicId
                 selectedVisibility = Visibility.valueOf(feed.visibility)
-                //TODO 장소
+                getPlaceName(feed.placeId)
+                feed.travelJournal?.let {
+                    selectedTravelJournalId = it.travelJournalId
+                    _journalTitle.emit(it.title)
+                }
                 _feed.emit(feed)
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    private fun getPlaceName(placeId: String?){
+        viewModelScope.launch {
+            if(placeId.isNullOrEmpty().not()){
+                val placeInfo = getPlaceDetailUseCase(placeId.toString())
+                if (placeInfo.name.isNullOrBlank().not()) {
+                    selectedPlaceId = placeId
+                    _placeName.emit(placeInfo.name.toString())
+                }
             }
         }
     }
@@ -102,7 +137,7 @@ class FeedPostViewModel @AssistedInject constructor(
                         it.topicId,it.topicWord,false
                     )
                 }
-                topicList.addAll(topics)
+                _topicList.emit(topics)
                 _event.emit(Event.OnChangeTopics(topics))
             } else {
                 Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
@@ -112,12 +147,10 @@ class FeedPostViewModel @AssistedInject constructor(
 
     fun updateTopicUI(topicId: Long) {
         viewModelScope.launch {
-            val newTopics = topicList.map { feedTopic ->
+            val newTopics = topicList.value.map { feedTopic ->
                 feedTopic.copy(isChecked = feedTopic.topicId == topicId)
             }
-            topicList.clear()
-            topicList.addAll(newTopics)
-            _event.emit(Event.OnChangeTopics(newTopics))
+            _topicList.emit(newTopics)
         }
     }
 
@@ -138,8 +171,8 @@ class FeedPostViewModel @AssistedInject constructor(
                         CommunityRegistrationInfo(
                             content.value,
                             selectedVisibility.name,
-                            selectedPlace?.placeId,
-                            null,
+                            selectedPlaceId,
+                            selectedTravelJournalId,
                             selectedTopicId
                         ),
                         _imageList.value?: emptyList()
@@ -158,11 +191,11 @@ class FeedPostViewModel @AssistedInject constructor(
                         CommunityUpdateInfo(
                             content.value,
                             selectedVisibility.name,
-                            selectedPlace?.placeId,
-                            null,
+                            selectedPlaceId,
+                            selectedTravelJournalId,
                             selectedTopicId,
                             originalImageIds),
-                        _imageList.value?: emptyList()
+                        _imageList.value?: emptyList() //현재 원래 이미지를 전부 지우고 새로 이미지를 선택했을 때 성공적으로 됨
                     )
                     if (result.isSuccess) {
                         _event.emit(Event.FeedUpdateSuccess)
@@ -187,8 +220,30 @@ class FeedPostViewModel @AssistedInject constructor(
 
     fun selectFeedPlace(place: SelectLifeShotPlaceDTO){
         viewModelScope.launch {
-            selectedPlace = place
-            _event.emit(Event.OnSelectPlaceCompleted(place.name))
+            selectedPlaceId = place.placeId
+            _placeName.emit(place.name)
+        }
+    }
+
+    fun selectTravelJournal(journal: SelectTravelJournalDTO){
+        viewModelScope.launch {
+            selectedTravelJournalId = journal.travelJournalId
+            _journalTitle.emit(journal.travelJournalTitle)
+        }
+    }
+
+    fun onClickTravelJournalView() {
+        viewModelScope.launch {
+            val userId = getUserUseCase().onSuccess {}.getOrThrow().userId
+            val result = getUserStatisticsUseCase(userId)
+            if (result.isSuccess) {
+                val journalCount = result.getOrThrow().travelJournalCount
+                val event =
+                    if (journalCount > 0) Event.GoSelectTravelJournal(selectedTravelJournalId) else Event.GoWriteTravelJournal
+                _event.emit(event)
+
+            } else {
+            }
         }
     }
 
@@ -197,9 +252,12 @@ class FeedPostViewModel @AssistedInject constructor(
             val topics: List<FeedTopic>,
         ) : FeedPostViewModel.Event()
 
-        data class OnSelectPlaceCompleted(
-            val placeName: String,
+        data class GoSelectTravelJournal(
+            val journalId: Long?,
         ) : FeedPostViewModel.Event()
+
+        object GoWriteTravelJournal : Event()
+
         object FeedPostSuccess : Event()
         object FeedUpdateSuccess : Event()
 

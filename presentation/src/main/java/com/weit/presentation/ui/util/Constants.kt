@@ -7,5 +7,5 @@ object Constants {
     const val feedFriend = "feedFriend"
     const val feedTopic = "feedTopic"
     const val TOPIC_CORNER_RADIUS = 100f
-
+    const val JOURNAL_CORNER_RADIUS = 8f
 }

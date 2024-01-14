@@ -7,6 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.bumptech.glide.Glide
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
@@ -148,6 +150,9 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         } else {
             binding.includeTravelLog.layoutTravelLog.visibility = View.VISIBLE
             binding.includeTravelLog.log = log
+            Glide.with(binding.root)
+                .load(log.mainImageUrl)
+                .into(binding.includeTravelLog.ivTravelLog)
             binding.includeTravelLog.layoutTravelLog.setOnClickListener {
                 navigateTravelLog(log.travelJournalId)
             }

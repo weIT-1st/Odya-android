@@ -152,6 +152,12 @@
             android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
             app:destination="@id/feedSelectPlaceFragment" />
         <action
+            android:id="@+id/action_fragment_feed_post_to_feedTravelJournalFragment"
+            app:destination="@id/feedTravelJournalFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedNoTravelJournalFragment"
+            app:destination="@id/feedNoTravelJournalFragment" />
+        <action
             android:id="@+id/action_fragment_feed_post_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail" />
     </fragment>
@@ -259,4 +265,20 @@
         android:id="@+id/feedSelectPlaceFragment"
         android:name="com.weit.presentation.ui.feed.post.FeedSelectPlaceFragment"
         android:label="FeedSelectPlaceFragment" />
+    <fragment
+        android:id="@+id/feedTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.FeedTravelJournalFragment"
+        android:label="FeedTravelJournalFragment" >
+        <argument
+            android:name="journalId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedNoTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.post.traveljournal.nojournal.FeedNoTravelJournalFragment"
+        android:label="FeedNoTravelJournalFragment" >
+        <action
+            android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
+            app:destination="@id/post_graph" />
+    </fragment>
 </navigation>

@@ -62,14 +62,6 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
         override fun onTabUnselected(tab: TabLayout.Tab?) {}
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
-    
-//    private val flexboxLayoutManager: FlexboxLayoutManager by lazy {
-//        FlexboxLayoutManager(requireContext()).apply {
-//            flexWrap = FlexWrap.WRAP
-//            flexDirection = FlexDirection.ROW
-//            alignItems = AlignItems.STRETCH
-//        }
-//    }
 
     @SuppressLint("UnsafeRepeatOnLifecycleDetector")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -112,7 +104,6 @@ class FeedPostFragment : BaseFragment<FragmentFeedPostBinding>(
 
     private fun initTopics(){
         binding.rvTopic.run{
-//            layoutManager = flexboxLayoutManager
             adapter = feedPostTopicAdapter
             setHasFixedSize(false)
         }

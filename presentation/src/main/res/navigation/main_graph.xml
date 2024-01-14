@@ -142,11 +142,18 @@
         <action
             android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
             app:destination="@id/feedSelectPlaceFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity"
         android:name="com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragment"
-        android:label="FeedMyActivityFragment" />
+        android:label="FeedMyActivityFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_my_activity_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity_post"
         android:name="com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragment"

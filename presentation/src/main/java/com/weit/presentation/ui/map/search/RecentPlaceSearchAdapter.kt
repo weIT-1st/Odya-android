@@ -1,12 +1,10 @@
 package com.weit.presentation.ui.map.search
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.weit.presentation.databinding.ItemPlaceRecentSearchBinding
 
 class RecentPlaceSearchAdapter(

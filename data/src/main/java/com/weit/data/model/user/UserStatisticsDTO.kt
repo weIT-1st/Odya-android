@@ -14,4 +14,5 @@ data class UserStatisticsDTO(
     @field:Json(name = "followingsCount") override val followingsCount: Int,
     @field:Json(name = "followersCount") override val followersCount: Int,
     @field:Json(name = "odyaCount") override val odyaCount: Int,
+    @field:Json(name = "lifeShotCount") override val lifeShotCount: Int,
     ) : UserStatistics

@@ -3,7 +3,6 @@ package com.weit.data.repository.auth
 import android.content.Context
 import com.kakao.sdk.common.model.ClientError
 import com.kakao.sdk.common.model.ClientErrorCause
-import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import com.weit.data.model.auth.KakaoAccessToken
 import com.weit.data.model.auth.UserTokenDTO

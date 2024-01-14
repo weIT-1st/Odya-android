@@ -11,7 +11,7 @@ import com.weit.presentation.databinding.ItemFeedPostImageBinding
 import com.weit.presentation.databinding.ItemProfileLifeshotBinding
 
 class MyProfileLifeShotAdapter(
-    private val selectImage: (UserImageResponseInfo) -> Unit,
+    private val selectImage: (UserImageResponseInfo, Int) -> Unit,
     ) : ListAdapter<UserImageResponseInfo, MyProfileLifeShotAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
@@ -20,7 +20,7 @@ class MyProfileLifeShotAdapter(
         init {
             binding.ivLifeshot.setOnClickListener {
                 val item = getItem(absoluteAdapterPosition)
-                selectImage(item)
+                selectImage(item,absoluteAdapterPosition)
             }
         }
         fun bind(item: UserImageResponseInfo) {

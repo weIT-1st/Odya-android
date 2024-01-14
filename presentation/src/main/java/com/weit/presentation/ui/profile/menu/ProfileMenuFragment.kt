@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ProfileMenuFragment(private val profileImage: (String) -> Unit) :
+class ProfileMenuFragment(private val profileImage: (String?) -> Unit) :
     BottomSheetDialogFragment() {
     private var _binding: BottomSheetMyProfileMenuBinding? = null
     private val binding get() = _binding!!
@@ -65,6 +65,7 @@ class ProfileMenuFragment(private val profileImage: (String) -> Unit) :
             }
 
             is ProfileMenuViewModel.Event.OnChangeProfileNoneSuccess -> {
+                profileImage(null)
                 dismiss()
             }
 

@@ -3,6 +3,7 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.favoritePlace.FavoritePlaceDTO
 import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -20,7 +21,7 @@ interface FavoritePlaceService {
     @DELETE("/api/v1/favorite-places/{id}")
     suspend fun delete(
         @Path("id") id: Long,
-    )
+    ) : Response<Unit>
 
     @GET("/api/v1/favorite-places/{placeId}")
     suspend fun isFavoritePlace(

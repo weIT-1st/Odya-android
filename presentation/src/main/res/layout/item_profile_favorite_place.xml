@@ -33,6 +33,7 @@
             tools:text="해운대 해수욕장"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_bookmark_journal_star"
             app:layout_constraintTop_toTopOf="@+id/iv_item_place_main_search"
             app:layout_constraintStart_toEndOf="@+id/iv_item_place_main_search"
              />
@@ -47,6 +48,7 @@
             android:ellipsize="end"
             tools:text="주소 경기 과천시"
             android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toStartOf="@+id/iv_bookmark_journal_star"
             android:layout_marginStart="8dp"
             app:layout_constraintStart_toEndOf="@+id/iv_item_place_main_search"
             app:layout_constraintTop_toBottomOf="@+id/iv_item_place_main_search" />
@@ -58,7 +60,7 @@
             android:layout_marginEnd="18dp"
             android:layout_marginTop="15dp"
             android:layout_marginStart="8dp"
-            tools:src="@drawable/ic_star_fill"
+            android:src="@drawable/ic_star_fill"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
 

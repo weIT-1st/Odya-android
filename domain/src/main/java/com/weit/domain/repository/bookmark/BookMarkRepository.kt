@@ -11,5 +11,12 @@ interface BookMarkRepository {
         sortType: String?
     ): Result<List<JournalBookMarkInfo>>
 
+    suspend fun getUserJournalBookmark(
+        userId: Long,
+        size: Int?,
+        lastId: Long?,
+        sortType: String?
+    ): Result<List<JournalBookMarkInfo>>
+
     suspend fun deleteJournalBookMark(travelJournalId: Long): Result<Unit>
 }

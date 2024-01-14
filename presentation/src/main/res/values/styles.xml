@@ -93,7 +93,7 @@
     </style>
 
     <style name="CustomRatingBar" parent="@android:style/Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/selector_star</item>
+        <item name="android:progressDrawable">@drawable/selector_star_bookmark</item>
         <item name="android:minHeight">15dip</item>
         <item name="android:maxHeight">47dip</item>
     </style>
@@ -118,6 +118,12 @@
         <item name="android:textColorPrimary">@color/label_normal</item>
     </style>
 
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
         <item name="chipBackgroundColor">@color/selector_my_activity_background</item>
         <item name="android:textColor">@color/selector_my_activity_text</item>
@@ -128,5 +134,9 @@
         <item name="android:windowFullscreen">false</item>
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
- </resources>
 
+    <style name="MemoryPopupMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="titleTextAppearance">@style/detail1</item>
+        <item name="android:textColor">@color/warning</item>
+    </style>
+</resources>

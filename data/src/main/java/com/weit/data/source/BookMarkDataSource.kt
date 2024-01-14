@@ -19,6 +19,14 @@ class BookMarkDataSource @Inject constructor(
     ): ListResponse<JournalBookMarkDTO> =
         service.getMyJournalBookMark(size, lastId, sortType)
 
+    suspend fun getUserJournalBookmark(
+        userId: Long,
+        size: Int?,
+        lastId: Long?,
+        sortType: String?
+    ): ListResponse<JournalBookMarkDTO> =
+        service.getUserJournalBookMark(userId, size, lastId, sortType)
+
     suspend fun deleteJournalBookMark(travelJournalId: Long): Response<Unit> =
         service.deleteJournalBookMark(travelJournalId)
 }

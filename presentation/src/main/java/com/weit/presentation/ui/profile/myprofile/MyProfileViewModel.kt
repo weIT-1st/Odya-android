@@ -2,6 +2,8 @@ package com.weit.presentation.ui.profile.myprofile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
+import com.weit.domain.model.bookmark.JournalBookMarkInfo
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
@@ -11,6 +13,9 @@ import com.weit.domain.model.reptraveljournal.RepTravelJournalListInfo
 import com.weit.domain.model.reptraveljournal.RepTravelJournalRequest
 import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.User
+import com.weit.domain.usecase.bookmark.CreateJournalBookMarkUseCase
+import com.weit.domain.usecase.bookmark.DeleteJournalBookMarkUseCase
+import com.weit.domain.usecase.bookmark.GetMyJournalBookMarkUseCase
 import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
@@ -42,7 +47,13 @@ class MyProfileViewModel @Inject constructor(
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getMyRepTravelJournalListUseCase: GetMyRepTravelJournalListUseCase,
- ) : ViewModel() {
+    private val getMyJournalBookMarkUseCase: GetMyJournalBookMarkUseCase,
+    private val createJournalBookMarkUseCase: CreateJournalBookMarkUseCase,
+    private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase
+) : ViewModel() {
+
+    private val _bookMarkTravelJournals = MutableStateFlow<List<JournalBookMarkInfo>>(emptyList())
+    val bookMarkTravelJournals: StateFlow<List<JournalBookMarkInfo>> get() = _bookMarkTravelJournals
 
     private val _repTravelJournals = MutableStateFlow<List<RepTravelJournalListInfo>>(emptyList())
     val repTravelJournals: StateFlow<List<RepTravelJournalListInfo>> get() = _repTravelJournals
@@ -65,7 +76,7 @@ class MyProfileViewModel @Inject constructor(
     private val _userInfo = MutableStateFlow<ProfileUserInfo?>(null)
     val userInfo: StateFlow<ProfileUserInfo?> get() = _userInfo
 
-    private lateinit var user : User
+    private lateinit var user: User
 
     private var lifeShotJob: Job = Job().apply {
         complete()
@@ -76,8 +87,12 @@ class MyProfileViewModel @Inject constructor(
         complete()
     }
     private var lastRepTravelJournalId: Long? = null
+    private var bookMarkLastId: Long? = null
+    private var bookMarkPageJob: Job = Job().apply {
+        complete()
+    }
 
-    fun initData(){
+    fun initData() {
         viewModelScope.launch {
             lastImageId = null
             _lifeshots.value = emptyList()
@@ -90,11 +105,12 @@ class MyProfileViewModel @Inject constructor(
                 loadFavoritePlaces()
                 getFavoritePlaceCount()
                 onNextRepTravelJournals()
+                onNextBookMarkJournal()
             }
         }
     }
 
-    fun getUserProfileNone(){
+    fun getUserProfileNone() {
         viewModelScope.launch {
             val result = getUserUseCase()
             if (result.isSuccess) {
@@ -109,7 +125,7 @@ class MyProfileViewModel @Inject constructor(
         viewModelScope.launch {
             val result = getUserStatisticsUseCase(user.userId)
             if (result.isSuccess) {
-                _userInfo.emit(ProfileUserInfo(user,result.getOrThrow()))
+                _userInfo.emit(ProfileUserInfo(user, result.getOrThrow()))
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }
@@ -154,11 +170,11 @@ class MyProfileViewModel @Inject constructor(
                     it.communityId
                 )
             }
-            _event.emit(Event.OnSelectLifeShot(lifeShots, position,lastImageId,user.userId))
+            _event.emit(Event.OnSelectLifeShot(lifeShots, position, lastImageId, user.userId))
         }
     }
 
-    private fun getFavoritePlaceCount(){
+    private fun getFavoritePlaceCount() {
         viewModelScope.launch {
             val result = getFavoritePlaceCountUseCase()
             if (result.isSuccess) {
@@ -177,9 +193,14 @@ class MyProfileViewModel @Inject constructor(
             )
             if (result.isSuccess) {
                 _favoritePlaces.value = emptyList()
-                val newFavoritePlaces = result.getOrThrow().map{
+                val newFavoritePlaces = result.getOrThrow().map {
                     val placeDetail = getPlaceDetailUseCase(it.placeId)
-                    FavoritePlaceEntity(it.favoritePlaceId,it.placeId,placeDetail.name,placeDetail.address)
+                    FavoritePlaceEntity(
+                        it.favoritePlaceId,
+                        it.placeId,
+                        placeDetail.name,
+                        placeDetail.address
+                    )
                 }
                 newFavoritePlaces.lastOrNull()?.let {
                     _favoritePlaces.emit(_favoritePlaces.value + newFavoritePlaces)
@@ -190,7 +211,7 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
-    fun deleteFavoritePlace(place: FavoritePlaceEntity){
+    fun deleteFavoritePlace(place: FavoritePlaceEntity) {
         viewModelScope.launch {
             val result = deleteFavoritePlaceUseCase(
                 place.favoritePlaceId
@@ -229,6 +250,48 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
+    fun onNextBookMarkJournal() {
+        if (bookMarkPageJob.isCompleted.not()) {
+            return
+        }
+        loadNextBookMarkJournals()
+    }
+
+    private fun loadNextBookMarkJournals() {
+        bookMarkPageJob = viewModelScope.launch {
+            val result = getMyJournalBookMarkUseCase(null, lastId = bookMarkLastId, null)
+
+            if (result.isSuccess) {
+                val newJournals = result.getOrThrow()
+                if (newJournals.isNotEmpty()) {
+                    bookMarkLastId = newJournals.last().travelJournalBookMarkId
+                }
+                _bookMarkTravelJournals.emit(bookMarkTravelJournals.value + newJournals)
+            } else {
+                // TODO 에러 처리
+                Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+            }
+        }
+    }
+
+    fun updateBookmarkTravelJournalBookmarkState(travelJournal: JournalBookMarkInfo) {
+        viewModelScope.launch {
+            val result = if (travelJournal.isBookmarked) {
+                deleteJournalBookMarkUseCase(travelJournal.travelJournalId)
+            } else {
+                createJournalBookMarkUseCase(travelJournal.travelJournalId)
+            }
+
+            if (result.isSuccess) {
+                val newJournals = _bookMarkTravelJournals.value.filterNot {
+                    travelJournal.travelJournalBookMarkId == it.travelJournalBookMarkId
+                }
+                _bookMarkTravelJournals.emit(newJournals)
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
 
     private suspend fun handleError(error: Throwable) {
         when (error) {

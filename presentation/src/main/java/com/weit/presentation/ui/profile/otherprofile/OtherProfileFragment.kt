@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
 import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceAdapter
 import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalAdapter
 import com.weit.presentation.ui.util.DimensionUtils
@@ -45,8 +46,13 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
 
     private val repTravelJournalAdapter = RepTravelJournalAdapter(
         selectTravelJournal = { journal ->
-            //TODO 여행일지 페이지로 이동
+            moveToJournalDetail(journal)
         }
+    )
+
+    private val bookmarkJournalAdapter = ProfileBookmarkJournalAdapter (
+        showDetail = { moveToJournalDetail(it) },
+        updateBookmarkState = { viewModel.updateBookmarkTravelJournalBookmarkState(it) }
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -78,6 +84,15 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             addOnScrollListener(repInfinityScrollListener)
             adapter = repTravelJournalAdapter
         }
+        binding.rvProfileBookmarkTravelJournal.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_feed_comment_space,
+                ),
+            )
+            adapter = bookmarkJournalAdapter
+        }
     }
 
     private val infinityScrollListener by lazy {
@@ -92,6 +107,14 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         object : InfinityScrollListener() {
             override fun loadNextPage() {
                 viewModel.onNextRepTravelJournals()
+            }
+        }
+    }
+
+    private val bookMarkJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextBookMarkJournal()
             }
         }
     }
@@ -155,6 +178,11 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                 repTravelJournalAdapter.submitList(list)
             }
         }
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.bookMarkTravelJournals.collectLatest { list ->
+                bookmarkJournalAdapter.submitList(list)
+            }
+        }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.userInfo.collectLatest { userInfo ->
                 if (userInfo != null) {
@@ -186,6 +214,11 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         }
     }
 
+    private fun moveToJournalDetail(travelId: Long){
+//        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
+//        findNavController().navigate(action)
+    }
+
     private fun handleEvent(event: OtherProfileViewModel.Event) {
 
         when (event) {
@@ -199,6 +232,8 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.rvProfileFavoritePlace.adapter = null
         binding.rvProfileTravelJournal.adapter = null
         binding.rvProfileTravelJournal.removeOnScrollListener(repInfinityScrollListener)
+        binding.rvProfileBookmarkTravelJournal.adapter = null
+        binding.rvProfileBookmarkTravelJournal.removeOnScrollListener(bookMarkJournalInfinityScrollListener)
         super.onDestroyView()
     }
 }

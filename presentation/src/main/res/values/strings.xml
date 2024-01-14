@@ -260,4 +260,13 @@
     <string name="feed_reaction_over_count">%d+</string>
     <string name="feed_detail_comment">%d개의 댓글 더보기</string>
     <string name="feed_comment_hint">댓글을 입력해주세요</string>
+    <string name="feed_travel_journal_no_title">작성된 여행일지가 없어요!</string>
+    <string name="feed_travel_journal_no_content">여행일지를 새로 작성하시겠습니까? 현재 작성 중인 피드 글은 사라집니다.</string>
+    <string name="feed_travel_journal_cancel">취소</string>
+    <string name="feed_travel_journal_write">작성하기</string>
+    <string name="feed_travel_journal_visibility_title">해당 날짜의 여행일지를 공개로 변경할까요?</string>
+    <string name="feed_travel_journal_visibility_content">공개된 여행일지만 연동 가능합니다.</string>
+    <string name="feed_travel_journal_visibility_update">변경하기</string>
+
+
 </resources>

@@ -10,7 +10,7 @@ import com.weit.presentation.databinding.ItemProfileFavoritePlaceBinding
 
 class FavoritePlaceAdapter(
     private val selectPlace: (FavoritePlaceEntity) -> Unit,
-    ) : ListAdapter<FavoritePlaceEntity, FavoritePlaceAdapter.ViewHolder>(diffUtil) {
+) : ListAdapter<FavoritePlaceEntity, FavoritePlaceAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(
         private val binding: ItemProfileFavoritePlaceBinding,

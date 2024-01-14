@@ -6,14 +6,15 @@
     <data>
         <variable
             name="log"
-            type="com.weit.presentation.model.PopularTravelLog" />
+            type="com.weit.presentation.ui.feed.post.traveljournal.FeedTravelJournalEntity" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@drawable/corners_all_8"
-        android:clipToOutline="true"
         android:id="@+id/layout_feed_travel_log"
         android:layout_width="match_parent"
+        android:clipToOutline="true"
         android:layout_height="100dp"
+        android:background="@drawable/corners_all_8"
         android:layout_marginEnd="8dp"
         >
 
@@ -22,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:image_uri="@{log.travelLogImage}"
             tools:src="@drawable/bg_popular_spot_summary"
+            app:image_uri="@{log.travelJournal.contentImageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +43,7 @@
             android:textColor="@color/label_normal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@{log.travelLogTitle}" />
+            android:text="@{log.travelJournal.travelJournalTitle}" />
 
         <ImageView
             android:id="@+id/iv_feed_travel_log_lock"
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            tools:src="@drawable/ic_lock"
+            android:src="@drawable/ic_lock"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -65,9 +66,7 @@
             android:textColor="@color/label_assistive"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            tools:text="date" />
-
-
+            android:text="@{log.travelJournal.travelStartDate}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

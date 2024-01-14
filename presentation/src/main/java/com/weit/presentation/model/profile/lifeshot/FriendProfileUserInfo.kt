@@ -1,11 +1,10 @@
 package com.weit.presentation.model.profile.lifeshot
 
-import android.os.Parcelable
+import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserStatistics
-import kotlinx.parcelize.Parcelize
 
-data class LifeShotUserInfo(
-    val user: User,
+data class FriendProfileUserInfo(
+    val user: SearchUserContent,
     val userStatistics: UserStatistics,
 )

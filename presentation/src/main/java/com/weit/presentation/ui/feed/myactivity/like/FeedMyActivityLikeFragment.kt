@@ -8,6 +8,7 @@ import com.weit.presentation.databinding.FragmentTabFeedLikeBinding
 import com.weit.presentation.databinding.FragmentTabFeedPostBinding
 import com.weit.presentation.databinding.FragmentTabPlaceCommunityBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragmentDirections
 import com.weit.presentation.ui.feed.myactivity.FeedMyActivityImageAdapter
 import com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragmentDirections
 import com.weit.presentation.ui.util.InfinityScrollListener
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class FeedMyActivityLikeFragment() : BaseFragment<FragmentTabFeedLikeBinding>(
+class FeedMyActivityLikeFragment(val nickname: String) : BaseFragment<FragmentTabFeedLikeBinding>(
     FragmentTabFeedLikeBinding::inflate,
 ) {
     private val viewModel: FeedMyActivityLikeViewModel by viewModels()
@@ -48,7 +49,7 @@ class FeedMyActivityLikeFragment() : BaseFragment<FragmentTabFeedLikeBinding>(
     }
 
     private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
+        val action = FeedMyActivityFragmentDirections.actionFragmentFeedMyActivityToFragmentFeedDetail(feedId,nickname)
         findNavController().navigate(action)
     }
 

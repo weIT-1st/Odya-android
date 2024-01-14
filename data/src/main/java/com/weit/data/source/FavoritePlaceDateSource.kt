@@ -11,6 +11,7 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.exception.community.ExistedCommunityIdException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
+import com.weit.domain.model.favoritePlace.FriendFavoritePlaceInfo
 import okhttp3.internal.http.HTTP_BAD_REQUEST
 import okhttp3.internal.http.HTTP_CONFLICT
 import okhttp3.internal.http.HTTP_FORBIDDEN
@@ -36,6 +37,9 @@ class FavoritePlaceDateSource @Inject constructor(
     suspend fun getFavoritePlaceCount(): Int =
         service.getFavoritePlaceCount()
 
+    suspend fun getFriendFavoritePlaceCount(userId: Long): Int =
+        service.getFriendFavoritePlaceCount(userId)
+
     suspend fun getFavoritePlaces(info: FavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFavoritePlaces(
             size = info.size,
@@ -43,4 +47,11 @@ class FavoritePlaceDateSource @Inject constructor(
             lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
 
+    suspend fun getFriendFavoritePlaces(info: FriendFavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
+        service.getFriendFavoritePlaces(
+            userId = info.userId,
+            size = info.size,
+            sortType = info.sortType,
+            lastFavoritePlaceId = info.lastFavoritePlaceId,
+        )
 }

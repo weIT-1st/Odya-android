@@ -31,8 +31,21 @@ interface FavoritePlaceService {
     @GET("/api/v1/favorite-places/counts")
     suspend fun getFavoritePlaceCount(): Int
 
+    @GET("/api/v1/favorite-places/counts/{userId}")
+    suspend fun getFriendFavoritePlaceCount(
+        @Path("userId") userId: Long,
+     ): Int
+
     @GET("/api/v1/favorite-places/list")
     suspend fun getFavoritePlaces(
+        @Query("size") size: Int?,
+        @Query("sortType") sortType: String?,
+        @Query("lastId") lastFavoritePlaceId: Long?,
+    ): ListResponse<FavoritePlaceDTO>
+
+    @GET("/api/v1/favorite-places/list/{userId}")
+    suspend fun getFriendFavoritePlaces(
+        @Path("userId") userId: Long,
         @Query("size") size: Int?,
         @Query("sortType") sortType: String?,
         @Query("lastId") lastFavoritePlaceId: Long?,

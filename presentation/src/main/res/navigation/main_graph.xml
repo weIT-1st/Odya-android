@@ -129,6 +129,10 @@
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
+        <argument
+            android:name="nickname"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -144,11 +148,27 @@
         <argument
             android:name="feedId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedSelectPlaceFragment"
+            app:destination="@id/feedSelectPlaceFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedTravelJournalFragment"
+            app:destination="@id/feedTravelJournalFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_feedNoTravelJournalFragment"
+            app:destination="@id/feedNoTravelJournalFragment" />
+        <action
+            android:id="@+id/action_fragment_feed_post_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity"
         android:name="com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragment"
-        android:label="FeedMyActivityFragment" />
+        android:label="FeedMyActivityFragment" >
+        <action
+            android:id="@+id/action_fragment_feed_my_activity_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_feed_my_activity_post"
         android:name="com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragment"
@@ -191,6 +211,9 @@
         <action
             android:id="@+id/action_fragment_feed_search_to_fragment_mypage"
             app:destination="@id/fragment_mypage" />
+        <action
+            android:id="@+id/action_fragment_feed_search_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_life_shot_picker"
@@ -240,5 +263,36 @@
         <argument
             android:name="lifeshotRequestInfo"
             app:argType="com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.weit.presentation.ui.profile.otherprofile.OtherProfileFragment"
+        android:label="OtherProfileFragment" >
+        <argument
+            android:name="userName"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_fragment_map"
+            app:destination="@id/fragment_map" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedSelectPlaceFragment"
+        android:name="com.weit.presentation.ui.feed.post.FeedSelectPlaceFragment"
+        android:label="FeedSelectPlaceFragment" />
+    <fragment
+        android:id="@+id/feedTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.FeedTravelJournalFragment"
+        android:label="FeedTravelJournalFragment" >
+        <argument
+            android:name="journalId"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/feedNoTravelJournalFragment"
+        android:name="com.weit.presentation.ui.feed.post.traveljournal.nojournal.FeedNoTravelJournalFragment"
+        android:label="FeedNoTravelJournalFragment" >
+        <action
+            android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
+            app:destination="@id/post_graph" />
     </fragment>
 </navigation>

@@ -7,12 +7,15 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.reptraveljournal.RepTravelJournalListInfo
+import com.weit.domain.model.reptraveljournal.RepTravelJournalRequest
 import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.User
 import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.repjournal.GetMyRepTravelJournalListUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
@@ -38,7 +41,12 @@ class MyProfileViewModel @Inject constructor(
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
     private val getFavoritePlaceCountUseCase: GetFavoritePlaceCountUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
+    private val getMyRepTravelJournalListUseCase: GetMyRepTravelJournalListUseCase,
  ) : ViewModel() {
+
+    private val _repTravelJournals = MutableStateFlow<List<RepTravelJournalListInfo>>(emptyList())
+    val repTravelJournals: StateFlow<List<RepTravelJournalListInfo>> get() = _repTravelJournals
+
     private val _favoritePlaces = MutableStateFlow<List<FavoritePlaceEntity>>(emptyList())
     val favoritePlaces: StateFlow<List<FavoritePlaceEntity>> get() = _favoritePlaces
 
@@ -64,17 +72,25 @@ class MyProfileViewModel @Inject constructor(
     }
     private var lastImageId: Long? = null
 
+    private var repTravelJournalJob: Job = Job().apply {
+        complete()
+    }
+    private var lastRepTravelJournalId: Long? = null
+
     fun initData(){
         viewModelScope.launch {
             lastImageId = null
             _lifeshots.value = emptyList()
+            lastRepTravelJournalId = null
+            _repTravelJournals.value = emptyList()
             getUserUseCase().onSuccess {
                 user = it
                 getUserStatistics()
                 onNextLifeShots()
+                loadFavoritePlaces()
+                getFavoritePlaceCount()
+                onNextRepTravelJournals()
             }
-            loadFavoritePlaces()
-            getFavoritePlaceCount()
         }
     }
 
@@ -184,6 +200,31 @@ class MyProfileViewModel @Inject constructor(
                 loadFavoritePlaces()
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
+    fun onNextRepTravelJournals() {
+        if (repTravelJournalJob.isCompleted.not()) {
+            return
+        }
+        loadNextRepTravelJournals()
+    }
+
+    private fun loadNextRepTravelJournals() {
+        repTravelJournalJob = viewModelScope.launch {
+            val result = getMyRepTravelJournalListUseCase(
+                RepTravelJournalRequest(DEFAULT_DATA_SIZE, lastRepTravelJournalId)
+            )
+            if (result.isSuccess) {
+                val newRepTravelJournals = result.getOrThrow()
+                newRepTravelJournals.lastOrNull()?.let {
+                    lastRepTravelJournalId = it.repTravelJournalId
+                    _repTravelJournals.emit(repTravelJournals.value + newRepTravelJournals)
+                }
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+
             }
         }
     }

@@ -8,6 +8,8 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.favoritePlace.FriendFavoritePlaceInfo
 import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.reptraveljournal.RepTravelJournalListInfo
+import com.weit.domain.model.reptraveljournal.RepTravelJournalRequest
 import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
@@ -18,6 +20,7 @@ import com.weit.domain.usecase.favoritePlace.GetFriendFavoritePlacesUseCase
 import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
+import com.weit.domain.usecase.repjournal.GetOtherRepTravelJournalListUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.SearchUserUseCase
@@ -45,6 +48,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
     private val getFriendFavoritePlaceCountUseCase: GetFriendFavoritePlaceCountUseCase,
+    private val getOtherRepTravelJournalListUseCase: GetOtherRepTravelJournalListUseCase,
     @Assisted private val userName: String,
 ) : ViewModel() {
 
@@ -57,7 +61,8 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
-
+    private val _repTravelJournals = MutableStateFlow<List<RepTravelJournalListInfo>>(emptyList())
+    val repTravelJournals: StateFlow<List<RepTravelJournalListInfo>> get() = _repTravelJournals
     private val _favoritePlaces = MutableStateFlow<List<OtherFavoritePlaceEntity>>(emptyList())
     val favoritePlaces: StateFlow<List<OtherFavoritePlaceEntity>> get() = _favoritePlaces
 
@@ -80,12 +85,23 @@ class OtherProfileViewModel @AssistedInject constructor(
         complete()
     }
     private var lastImageId: Long? = null
-    init {
-        lastImageId = null
-        _lifeshots.value = emptyList()
-        getUserInfo()
-    }
 
+    private var repTravelJournalJob: Job = Job().apply {
+        complete()
+    }
+    private var lastRepTravelJournalId: Long? = null
+    init {
+        initData()
+    }
+    fun initData(){
+        viewModelScope.launch {
+            lastImageId = null
+            _lifeshots.value = emptyList()
+            lastRepTravelJournalId = null
+            _repTravelJournals.value = emptyList()
+            getUserInfo()
+        }
+    }
     private fun getUserInfo() {
         viewModelScope.launch {
             val result = searchUserUseCase(
@@ -100,6 +116,7 @@ class OtherProfileViewModel @AssistedInject constructor(
                     onNextLifeShots()
                     loadFavoritePlaces()
                     getFavoritePlaceCount()
+                    onNextRepTravelJournals()
                 }
             }
         }
@@ -205,6 +222,31 @@ class OtherProfileViewModel @AssistedInject constructor(
                 _followState.emit(!currentFollowState)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
+            }
+        }
+    }
+
+    fun onNextRepTravelJournals() {
+        if (repTravelJournalJob.isCompleted.not()) {
+            return
+        }
+        loadNextRepTravelJournals()
+    }
+
+    private fun loadNextRepTravelJournals() {
+        repTravelJournalJob = viewModelScope.launch {
+            val result = getOtherRepTravelJournalListUseCase(
+               RepTravelJournalRequest(Constants.DEFAULT_DATA_SIZE, lastRepTravelJournalId),user.userId
+            )
+            if (result.isSuccess) {
+                val newRepTravelJournals = result.getOrThrow()
+                newRepTravelJournals.lastOrNull()?.let {
+                    lastRepTravelJournalId = it.repTravelJournalId
+                    _repTravelJournals.emit(repTravelJournals.value + newRepTravelJournals)
+                }
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+
             }
         }
     }

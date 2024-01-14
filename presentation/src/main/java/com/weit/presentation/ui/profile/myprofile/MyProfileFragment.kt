@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.profile.myprofile
 
+import android.graphics.Rect
 import android.graphics.Shader
 import android.os.Build
 import android.os.Bundle
@@ -12,13 +13,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
+import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.feed.FavoriteTopicAdapter
+import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
+import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalAdapter
+import com.weit.presentation.ui.util.DimensionUtils
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -43,14 +50,17 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     )
 
+    private val repTravelJournalAdapter = RepTravelJournalAdapter(
+        selectTravelJournal = { journal ->
+            //TODO 여행일지 페이지로 이동
+        }
+    )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         viewModel.initData()
         initRecyclerView()
-        //TODO 관심장소
-        //TODO 즐겨찾기 여행일지
-        //TODO 대표여행일지
 
     }
 
@@ -82,7 +92,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             findNavController().navigate(action)
         }
 
-        binding.ivProfileTravelJournalPencil.setOnClickListener {
+        binding.tvProfileRepTravelJournal.setOnClickListener {
             val action = MyProfileFragmentDirections.actionFragmentMypageToRepTravelJournalFragment()
             findNavController().navigate(action)
         }
@@ -97,6 +107,14 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         object : InfinityScrollListener() {
             override fun loadNextPage() {
                 viewModel.onNextLifeShots()
+            }
+        }
+    }
+
+    private val repInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextRepTravelJournals()
             }
         }
     }
@@ -120,6 +138,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                 ),
             )
             adapter = favoritePlaceAdapter
+        }
+        binding.rvProfileTravelJournal.run {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.main_my_journal_margin))
+            addOnScrollListener(repInfinityScrollListener)
+            adapter = repTravelJournalAdapter
         }
     }
 
@@ -156,6 +179,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
                 favoritePlaceAdapter.submitList(list)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.repTravelJournals.collectLatest { list ->
+                repTravelJournalAdapter.submitList(list)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
@@ -207,8 +235,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
 
     override fun onDestroyView() {
         binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
+        binding.rvProfileTravelJournal.removeOnScrollListener(repInfinityScrollListener)
         binding.rvProfileLifeshot.adapter = null
         binding.rvProfileFavoritePlace.adapter = null
+        binding.rvProfileTravelJournal.adapter = null
         super.onDestroyView()
     }
 }

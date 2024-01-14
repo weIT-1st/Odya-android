@@ -1,16 +1,20 @@
 package com.weit.presentation.ui.profile.otherprofile
 
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceAdapter
+import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalAdapter
+import com.weit.presentation.ui.util.DimensionUtils
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -38,10 +42,15 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             viewModel.selectFavoritePlace(place)
         }
     )
+
+    private val repTravelJournalAdapter = RepTravelJournalAdapter(
+        selectTravelJournal = { journal ->
+            //TODO 여행일지 페이지로 이동
+        }
+    )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-
     }
 
     private fun initRecyclerView() {
@@ -64,12 +73,25 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             )
             adapter = favoritePlaceAdapter
         }
+        binding.rvProfileTravelJournal.run {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.main_my_journal_margin))
+            addOnScrollListener(repInfinityScrollListener)
+            adapter = repTravelJournalAdapter
+        }
     }
 
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
                 viewModel.onNextLifeShots()
+            }
+        }
+    }
+
+    private val repInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextRepTravelJournals()
             }
         }
     }
@@ -129,6 +151,11 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
+            viewModel.repTravelJournals.collectLatest { list ->
+                repTravelJournalAdapter.submitList(list)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.userInfo.collectLatest { userInfo ->
                 if (userInfo != null) {
                     Glide.with(binding.root)
@@ -170,6 +197,8 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
         binding.rvProfileLifeshot.adapter = null
         binding.rvProfileFavoritePlace.adapter = null
+        binding.rvProfileTravelJournal.adapter = null
+        binding.rvProfileTravelJournal.removeOnScrollListener(repInfinityScrollListener)
         super.onDestroyView()
     }
 }

@@ -222,7 +222,7 @@ class FollowRepositoryImpl @Inject constructor(
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
-            followDataSource.getOtherSearchFollowers(userId,searchFollowRequestInfo)
+            followDataSource.getOtherSearchFollowings(userId,searchFollowRequestInfo)
         }
         return if (result.isSuccess) {
             val searchUser = result.getOrThrow()

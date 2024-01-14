@@ -146,7 +146,7 @@ class OtherFriendManageFragment : BaseFragment<FragmentOtherFriendManageBinding>
                     viewModel.updateSearchRv()
                     viewModel.onSearch(query)
                 }else{
-                    viewModel.updateDefaultRv()
+                    viewModel.initData()
                 }
             }
         }

@@ -166,7 +166,7 @@ class MyFriendManageFragment : BaseFragment<FragmentMyFriendManageBinding>(
                     viewModel.updateSearchRv()
                     viewModel.onSearch(query)
                 }else{
-                    viewModel.updateDefaultRv()
+                    viewModel.initData()
                 }
             }
         }

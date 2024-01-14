@@ -2,6 +2,7 @@ package com.weit.presentation.ui.friendmanage.my
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.follow.FollowFollowingIdInfo
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowerSearchInfo
@@ -90,6 +91,8 @@ class MyFriendManageViewModel @Inject constructor(
 
 
     fun selectFollowMenu(follow: Follow) {
+        Logger.t("MainTest").i("selectFollowMenu호출됨")
+
         followState = follow
         initData()
     }
@@ -197,22 +200,6 @@ class MyFriendManageViewModel @Inject constructor(
         }
     }
 
-
-//    fun selectFriend(friend: FollowUserContent) {
-//        viewModelScope.launch {
-//            val result =  if (followState == Follow.FOLLOWING) {
-//                deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))
-//            } else {
-//                deleteFollowerUseCase(friend.userId)
-//            }
-//
-//            if (result.isSuccess) {
-////                initData()
-//
-//            } else {
-//            }
-//        }
-//    }
     fun selectSearchFollowing(friend: FollowUserContent) {
         viewModelScope.launch {
              val result =  deleteFollowUseCase(FollowFollowingIdInfo(friend.userId))

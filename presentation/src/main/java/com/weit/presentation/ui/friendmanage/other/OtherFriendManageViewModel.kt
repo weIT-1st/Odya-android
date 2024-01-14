@@ -149,15 +149,12 @@ class OtherFriendManageViewModel @AssistedInject constructor(
     private fun loadNextSearchFollowersAndFollowings(query: String, lastUserId: Long?) {
         searchJob = viewModelScope.launch {
             val result = if (followState == Follow.FOLLOWING) {
-                Logger.t("MainTest").i("${userId}")
-
                 searchFollowingsUseCase(userId, SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, lastUserId, query))
             }else{
                 searchFollowersUseCase(userId, SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, lastUserId, query))
             }
             if (result.isSuccess) {
                 val newFollowersOrFollowings = result.getOrThrow()
-
                 val lastId = if (newFollowersOrFollowings.isNotEmpty()) newFollowersOrFollowings.last().userId else null
 
                 if (followState == Follow.FOLLOWING) {
@@ -205,7 +202,6 @@ class OtherFriendManageViewModel @AssistedInject constructor(
             if (result.isSuccess) {
                 val newFollowingsOrFollowers = result.getOrThrow()
                 if (followState == Follow.FOLLOWING){
-                    Logger.t("MainTest").i("$newFollowingsOrFollowers")
                     defaultFollowingPage += 1
                     _defaultFollowings.emit(defaultFollowings.value + newFollowingsOrFollowers)
                 } else {

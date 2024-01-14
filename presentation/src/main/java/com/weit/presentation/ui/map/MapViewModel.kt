@@ -60,6 +60,8 @@ class MapViewModel @Inject constructor(
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
             }
         }
+
+        getTopic()
     }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
@@ -67,6 +69,7 @@ class MapViewModel @Inject constructor(
             val result = getPlacesByCoordinateUseCase(latitude, longitude)
 
             if (result.isSuccess) {
+
                 val place = result.getOrThrow()
                 _touchPlaceId.emit(place[0].placeId)
             }
@@ -123,7 +126,6 @@ class MapViewModel @Inject constructor(
     private fun getTopic() {
         viewModelScope.launch {
             val result = getFavoriteTopicListUseCase()
-
             if (result.isSuccess) {
                 val list = result.getOrThrow()
 

@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.weit.presentation.R
 import com.weit.presentation.databinding.DialogLoginFriendBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,6 +20,13 @@ class LoginFriendFragment: BaseFragment<DialogLoginFriendBinding>(
     val viewModel: LoginFriendViewModel by viewModels()
 
     private val mayKnowFriendAdapter = MayKnowFriendAdapter{ viewModel.createFollowState(it) }
+    private val infinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextFriends()
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,10 +49,17 @@ class LoginFriendFragment: BaseFragment<DialogLoginFriendBinding>(
         }
     }
 
+    override fun onDestroyView() {
+        binding.rvLoginFriend.removeOnScrollListener(infinityScrollListener)
+        binding.rvLoginFriend.adapter = null
+        super.onDestroyView()
+    }
+
     private fun initMayKnowFriendRV() {
         binding.rvLoginFriend.apply {
             adapter = mayKnowFriendAdapter
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_may_know_friend_space))
+            addOnScrollListener(infinityScrollListener)
         }
     }
 

@@ -37,6 +37,8 @@
     <dimen name="item_feed_comment_space">16dp</dimen>
     <dimen name="item_travel_journal_space">10dp</dimen>
 
+    <dimen name="item_may_know_friend_space">32dp</dimen>
+
     <!-- margin -->
     <dimen name="feed_my_activity_tab_margin">20dp</dimen>
 

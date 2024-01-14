@@ -1,9 +1,7 @@
 package com.weit.presentation.ui.map
 
-import android.app.Notification
 import android.content.res.Resources
 import android.graphics.Bitmap
-import android.graphics.Canvas
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
@@ -13,12 +11,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.PixelCopy
 import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -34,6 +31,7 @@ import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.login.input.topic.LoginTopicFragment
 import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
 import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -103,6 +101,12 @@ class MapFragment :
                 for (item in it) {
                     addMarker(item)
                 }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest {event ->
+                handleEvent(event)
             }
         }
     }
@@ -272,8 +276,17 @@ class MapFragment :
     }
 
 
+    private fun handleEvent(event : MapViewModel.Event) {
+        when (event) {
+            MapViewModel.Event.FirstLogin -> {
+                val action = MapFragmentDirections.actionFragmentMapToLoginTopicFragment()
+                findNavController().navigate(action)
+            }
+        }
+    }
+
     companion object {
-        private val TAG = "MapFragment"
+        private const val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"
         private val DEFAULT_LAT_LNG = LatLng(37.55476719052827, 126.97082417355988)
     }

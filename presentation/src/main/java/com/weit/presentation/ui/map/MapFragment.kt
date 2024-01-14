@@ -51,7 +51,7 @@ class MapFragment :
     private var mainSearchTopSheetFragment: MainSearchTopSheetFragment? = null
 
     private var mapFragment: SupportMapFragment? = null
-    private lateinit var coordinates: LatLng
+    private var coordinates : LatLng = DEFAULT_LAT_LNG
     private var map: GoogleMap? = null
     private var marker: Marker? = null
 
@@ -139,8 +139,12 @@ class MapFragment :
     }
 
     private fun updateMap(latLng: LatLng) {
-        marker!!.position = latLng
-        map!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        marker.let {
+            marker?.position = latLng
+        }
+        map.let{
+            map?.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -284,5 +288,6 @@ class MapFragment :
     companion object {
         private const val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"
+        private val DEFAULT_LAT_LNG = LatLng(37.55476719052827, 126.97082417355988)
     }
 }

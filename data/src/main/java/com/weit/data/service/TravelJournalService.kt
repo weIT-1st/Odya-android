@@ -49,13 +49,15 @@ interface TravelJournalService {
     @GET("/api/v1/travel-journals/friends")
     suspend fun getFriendTravelJournalList(
         @Query("size") size: Int? = 10,
-        @Query("lastId") lastTravelJournalId: Long?
+        @Query("lastId") lastTravelJournalId: Long?,
+        @Query("placeId") placeId: String?,
     ): ListResponse<TravelJournalListDTO>
 
     @GET("/api/v1/travel-journals/recommends")
     suspend fun getRecommendTravelJournalList(
         @Query("size") size: Int? = 10,
-        @Query("lastId") lastTravelJournalId: Long?
+        @Query("lastId") lastTravelJournalId: Long?,
+        @Query("placeId") placeId: String?,
     ): ListResponse<TravelJournalListDTO>
 
     @GET("/api/v1/travel-journals/tagged")

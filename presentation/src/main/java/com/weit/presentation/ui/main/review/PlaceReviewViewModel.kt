@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.review
+package com.weit.presentation.ui.main.review
 
 import android.content.res.Resources.NotFoundException
 import android.util.Log

@@ -1,12 +1,10 @@
-package com.weit.presentation.ui.searchplace.community
+package com.weit.presentation.ui.main.community
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentTabPlaceCommunityBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragmentDirections
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,6 +51,11 @@ class PlaceCommunityFragment(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
     override fun onDestroyView() {
         binding.rvTabPlaceCommunity.removeOnScrollListener(infinityScrollListener)
         binding.rvTabPlaceCommunity.adapter = null
@@ -60,7 +63,7 @@ class PlaceCommunityFragment(
     }
 
     private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
-        findNavController().navigate(action)
+//        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
+//        findNavController().navigate(action)
     }
 }

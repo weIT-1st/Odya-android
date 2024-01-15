@@ -1,17 +1,12 @@
-package com.weit.presentation.ui.searchplace.journey
+package com.weit.presentation.ui.main.journal
 
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
-import androidx.core.view.marginEnd
 import androidx.fragment.app.viewModels
-import androidx.recyclerview.widget.RecyclerView
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.util.DimensionUtils
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -19,16 +14,16 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class PlaceJourneyFragment(
+class PlaceJournalFragment(
     private val placeId: String
 ) : BaseFragment<FragmentTabPlaceJourneyBinding> (
     FragmentTabPlaceJourneyBinding::inflate,
 ) {
     @Inject
-    lateinit var viewModelFactory: PlaceJourneyViewModel.PlaceIdFactory
+    lateinit var viewModelFactory: PlaceJournalViewModel.PlaceIdFactory
 
-    private val viewModel: PlaceJourneyViewModel by viewModels{
-        PlaceJourneyViewModel.provideFactory(viewModelFactory, placeId)
+    private val viewModel: PlaceJournalViewModel by viewModels{
+        PlaceJournalViewModel.provideFactory(viewModelFactory, placeId)
     }
 
     private val myJournalAdapter: MyJournalAdapter = MyJournalAdapter(placeId)
@@ -66,6 +61,11 @@ class PlaceJourneyFragment(
                 recommendJournalAdapter.submitList(recommendJournals)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
     }
 
     override fun onDestroyView() {

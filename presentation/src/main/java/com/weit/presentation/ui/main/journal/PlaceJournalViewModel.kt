@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.journey
+package com.weit.presentation.ui.main.journal
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class PlaceJourneyViewModel @AssistedInject constructor(
+class PlaceJournalViewModel @AssistedInject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
     private val getTravelJournalInfoUseCase: GetTravelJournalUseCase,
     private val getFriendTravelJournalListUseCase: GetFriendTravelJournalListUseCase,
@@ -37,7 +37,7 @@ class PlaceJourneyViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface PlaceIdFactory{
-        fun create(placeId: String): PlaceJourneyViewModel
+        fun create(placeId: String): PlaceJournalViewModel
     }
 
     init {
@@ -68,14 +68,14 @@ class PlaceJourneyViewModel @AssistedInject constructor(
                 val info = result.getOrThrow()
                 _myJournalDetails.emit(currentList.plus(info))
             } else {
-                Log.d("getournalList", "fail : ${result.exceptionOrNull()}")
+                Log.d("getJournalList", "fail : ${result.exceptionOrNull()}")
             }
         }
     }
 
     private fun getFriendJournalList(){
         viewModelScope.launch{
-            val result = getFriendTravelJournalListUseCase(null, null)
+            val result = getFriendTravelJournalListUseCase(null, null, placeId)
             if (result.isSuccess){
                 val list = result.getOrThrow()
                 _friendJournalList.emit(list)
@@ -88,7 +88,7 @@ class PlaceJourneyViewModel @AssistedInject constructor(
     private fun getRecommendJournalList(){
         viewModelScope.launch {
             // todo 무한 스크롤
-            val result = getRecommendTravelJournalListUseCase(null, null)
+            val result = getRecommendTravelJournalListUseCase(null, null, placeId)
             if (result.isSuccess){
                 val list = result.getOrThrow()
                 _recommendJournalList.emit(list)

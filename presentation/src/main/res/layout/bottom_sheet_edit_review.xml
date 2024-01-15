@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.weit.presentation.ui.searchplace.editreview.EditPlaceReviewViewModel" />
+            type="com.weit.presentation.ui.main.editreview.EditPlaceReviewViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

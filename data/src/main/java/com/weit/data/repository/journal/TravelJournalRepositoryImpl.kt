@@ -137,7 +137,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
 
     override suspend fun getFriendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextFriendJournal,
@@ -145,14 +146,16 @@ class TravelJournalRepositoryImpl @Inject constructor(
             runCatching {
                 travelJournalDataSource.getFriendTravelJournalList(
                     size,
-                    lastTravelJournal
+                    lastTravelJournal,
+                    placeId
                 )
             }
         )
 
     override suspend fun getRecommendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>> {
         if (lastTravelJournal == null) {
             hasNextRecommendJournal.set(true)
@@ -163,7 +166,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
         val result = kotlin.runCatching {
             travelJournalDataSource.getRecommendTravelJournalList(
                 size,
-                lastTravelJournal
+                lastTravelJournal,
+                placeId
             )
         }
 
@@ -209,7 +213,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             hasNextTaggedJournal,
             lastTravelJournal,
             runCatching {
-                travelJournalDataSource.getRecommendTravelJournalList(
+                travelJournalDataSource.getTaggedTravelJournalList(
                     size,
                     lastTravelJournal
                 )

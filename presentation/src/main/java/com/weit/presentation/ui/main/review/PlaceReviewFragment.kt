@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.review
+package com.weit.presentation.ui.main.review
 
 import android.os.Bundle
 import android.text.Spannable
@@ -10,8 +10,8 @@ import androidx.fragment.app.viewModels
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceReviewBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.searchplace.editreview.EditPlaceReviewFragment
-import com.weit.presentation.ui.searchplace.report.ReviewReportFragment
+import com.weit.presentation.ui.main.editreview.EditPlaceReviewFragment
+import com.weit.presentation.ui.main.report.ReviewReportFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +21,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaceReviewFragment(
     private val placeId: String,
-    private val placeTitle: String,
 ) : BaseFragment<FragmentTabPlaceReviewBinding>(
     FragmentTabPlaceReviewBinding::inflate,
 ) {
@@ -46,7 +45,8 @@ class PlaceReviewFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPlaceReviewRV()
-        binding.tvTabHowAboutThis.text = getString(R.string.place_how_about, placeTitle)
+        // todo 장소 이름 검색
+//        binding.tvTabHowAboutThis.text = getString(R.string.place_how_about, placeTitle)
     }
 
     override fun initListener() {
@@ -95,6 +95,11 @@ class PlaceReviewFragment(
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
     }
 
     override fun onDestroyView() {

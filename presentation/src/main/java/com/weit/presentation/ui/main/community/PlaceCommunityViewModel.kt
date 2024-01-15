@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.community
+package com.weit.presentation.ui.main.community
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -64,7 +64,7 @@ class PlaceCommunityViewModel @AssistedInject constructor(
                     return@launch
                 }
 
-                communityLastId = newImages.last().communityId
+                communityLastId = newImages.lastOrNull()?.communityId
                 if (newImages.isEmpty()){
                     onNextImages()
                 }

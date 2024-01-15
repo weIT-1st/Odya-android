@@ -49,20 +49,12 @@
     </string-array>
     <string name="login_loading">메인페이지를\n생성중이에요</string>
     
-    <string name="login_topic_sea">바다여행</string>
-    <string name="login_topic_camping">캠핑여행</string>
-    <string name="login_topic_hobby">취미여행</string>
-    <string name="login_topic_food">식도락</string>
-    <string name="login_topic_rest">휴양지</string>
-    <string name="login_topic_winter">겨울여행</string>
-    <string name="login_topic_summer">여름여행</string>
-    <string name="login_topic_flower">꽃놀이</string>
-    <string name="login_topic_fall">가을여행</string>
-    <string name="login_topic_festival">지역축제</string>
-    <string name="login_topic_family">가족여행</string>
-    <string name="login_topic_couple">커플여행</string>
-    <string name="login_topic_alone">나홀로여행</string>
-    <string name="login_topic_country">촌캉스</string>
+    <string name="login_topic_question">%s님은\n어떤 여행을 좋아하시나요?</string>
+    <string name="login_topic_explain">취향을 선택하고 나에게 맞는 홈을 받아보세요</string>
+    <string name="login_topic_minimum">최소 3개 이상</string>
+
+    <string name="login_friend_active_friend">활동중인 친구를\n오댜에서 만나요!</string>
+    <string name="login_friend_recommend">연락처에 있는 친구를 추천해드려요</string>
 
     <string name="sign_up">등록하기</string>
     <string name="sign_complete">등록 완료</string>
@@ -186,8 +178,27 @@
     <string name="profile_bookmark_travel_jouranl">즐겨찾기 여행일지</string>
     <string name="profile_favorite_place">관심장소</string>
     <string name="profile_my_community">내 커뮤니티 활동</string>
-    <string name="profile_total_travel_count">%s님은 %d곳을 여행하고,\n총 %d개의 여행일지를 작성했어요!</string>
+    <string name="profile_total_travel_count">%s님은 &lt;span style=\"color:#FFD41F\">%d곳을&lt;/span> 여행하고,&lt;br>총 &lt;span style=\"color:#FFD41F\">%d개의&lt;/span> 여행일지를 작성했어요!</string>
     <string name="profile_bookmark_place">%d개의 관심장소 더보기</string>
+    <string name="profile_image_select">앨범에서 사진 선택</string>
+    <string name="profile_image_none">기본 이미지로 변경</string>
+    <string name="profile_image_cancel">취소</string>
+    <string name="profile_no_lifeshot_content">다녀온 장소의 인생샷을\n업로드 해주세요!</string>
+    <string name="profile_no_lifeshot_add">인생샷 추가</string>
+    <string name="profile_no_rep_journal">대표 여행일지가 없어요.</string>
+    <string name="profile_no_journal">여행일지가 없어요.</string>
+    <string name="profile_no_favorite_place">관심장소가 없어요.</string>
+
+
+    <!-- lifeshot -->
+    <string name="lifeshot_title">인생샷</string>
+    <string name="lifeshot_hint">여행일지 및 커뮤니티에서 작성된 이미지입니다</string>
+    <string name="lifeshot_close">닫기</string>
+    <string name="lifeshot_register">등록하기</string>
+    <string name="lifeshot_delete">삭제하기</string>
+    <string name="lifeshot_cancel">Cancel</string>
+    <string name="lifeshot_count">%d / %d</string>
+
 
 
     <string name="place_main_hot_place">🔥 오댜 핫플</string>
@@ -239,7 +250,16 @@
     <string name="feed_my_activity_like">좋아요</string>
     <string name="feed_search_hint">친구를 찾아보세요!</string>
     <string name="feed_search_title">최근 검색</string>
-    <string name="feed_comment_hint">댓글을 입력해주세요</string>
-    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
     <string name="feed_reaction_over_count">%d+</string>
+    <string name="feed_detail_comment">%d개의 댓글 더보기</string>
+    <string name="feed_comment_hint">댓글을 입력해주세요</string>
+    <string name="feed_travel_journal_no_title">작성된 여행일지가 없어요!</string>
+    <string name="feed_travel_journal_no_content">여행일지를 새로 작성하시겠습니까? 현재 작성 중인 피드 글은 사라집니다.</string>
+    <string name="feed_travel_journal_cancel">취소</string>
+    <string name="feed_travel_journal_write">작성하기</string>
+    <string name="feed_travel_journal_visibility_title">해당 날짜의 여행일지를 공개로 변경할까요?</string>
+    <string name="feed_travel_journal_visibility_content">공개된 여행일지만 연동 가능합니다.</string>
+    <string name="feed_travel_journal_visibility_update">변경하기</string>
+
+
 </resources>

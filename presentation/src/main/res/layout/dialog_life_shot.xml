@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <data>
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.profile.lifeshot.LifeShotDialogViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:background="@drawable/corners_all_12"
+        android:backgroundTint="@color/background_normal">
+
+        <ImageView
+            android:id="@+id/iv_lifeshot"
+            android:padding="1.5dp"
+            android:layout_width="0dp"
+            android:layout_height="207dp"
+            android:layout_marginStart="21dp"
+            android:layout_marginEnd="21dp"
+            app:layout_constraintDimensionRatio="1.5"
+            tools:src="@drawable/ic_heart"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_lifeshot_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/elevation4"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:hint="@string/post_travel_log_daily_place"
+            android:textColorHint="@color/label_assistive"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_assistive"
+            android:textAlignment="textStart"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/line_alternative"
+            app:cornerRadius="@dimen/button_small_radius"
+            app:icon="@drawable/ic_home"
+            app:iconSize="24dp"
+            app:iconTint="@color/label_assistive"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_lifeshot"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_lifeshot_close"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/h6"
+            android:text="@string/lifeshot_close"
+            app:cornerRadius="8dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:textColor="@color/label_inactive"
+            android:backgroundTint="@color/system_inactive"
+            android:layout_marginTop="18dp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_lifeshot_register"
+            app:layout_constraintTop_toBottomOf="@+id/btn_lifeshot_place"
+            app:layout_constraintStart_toStartOf="parent"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_lifeshot_register"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/h6"
+            android:text="@string/lifeshot_register"
+            android:textColor="@color/label_reversed"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/primary"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="6dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_lifeshot_place"
+            app:layout_constraintStart_toEndOf="@+id/btn_lifeshot_close"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

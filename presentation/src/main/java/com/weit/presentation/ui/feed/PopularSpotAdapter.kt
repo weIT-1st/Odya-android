@@ -5,12 +5,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.presentation.databinding.ItemPopularSpotSummaryBinding
 import com.weit.presentation.model.PopularTravelLog
 
 class PopularSpotAdapter(
     private val navigateTravelLog: (Long) -> Unit,
-) : ListAdapter<PopularTravelLog, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
+) : ListAdapter<TravelJournalListInfo, PopularSpotAdapter.PopularSpotViewHolder>(PopularSpotCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularSpotViewHolder {
         return PopularSpotViewHolder(
@@ -31,27 +32,30 @@ class PopularSpotAdapter(
         private val binding: ItemPopularSpotSummaryBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(popularTravelLog: PopularTravelLog) {
-            binding.log = popularTravelLog
+        init{
             binding.layoutPopularSpotSummary.setOnClickListener {
-                navigateTravelLog(popularTravelLog.travelLogId)
+                navigateTravelLog(getItem(absoluteAdapterPosition).travelJournalId)
             }
+        }
+
+        fun bind(popularTravelLog: TravelJournalListInfo) {
+            binding.log = popularTravelLog
         }
     }
 
     companion object {
-        private val PopularSpotCallback: DiffUtil.ItemCallback<PopularTravelLog> =
-            object : DiffUtil.ItemCallback<PopularTravelLog>() {
+        private val PopularSpotCallback: DiffUtil.ItemCallback<TravelJournalListInfo> =
+            object : DiffUtil.ItemCallback<TravelJournalListInfo>() {
                 override fun areItemsTheSame(
-                    oldItem: PopularTravelLog,
-                    newItem: PopularTravelLog,
+                    oldItem: TravelJournalListInfo,
+                    newItem: TravelJournalListInfo,
                 ): Boolean {
-                    return oldItem.travelLogId == newItem.travelLogId
+                    return oldItem.travelJournalId == newItem.travelJournalId
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: PopularTravelLog,
-                    newItem: PopularTravelLog,
+                    oldItem: TravelJournalListInfo,
+                    newItem: TravelJournalListInfo,
                 ): Boolean {
                     return oldItem == newItem
                 }

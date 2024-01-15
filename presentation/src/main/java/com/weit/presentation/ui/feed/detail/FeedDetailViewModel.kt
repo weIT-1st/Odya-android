@@ -23,6 +23,7 @@ import com.weit.domain.usecase.community.comment.GetCommentsUseCase
 import com.weit.domain.usecase.community.comment.RegisterCommentsUseCase
 import com.weit.domain.usecase.community.comment.UpdateCommentsUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -36,6 +37,7 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
 
 class FeedDetailViewModel @AssistedInject constructor(
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
     private val registerCommentsUseCase: RegisterCommentsUseCase,
     private val getCommentsUseCase: GetCommentsUseCase,
@@ -66,6 +68,9 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     private val _commentNum = MutableStateFlow<Int>(0)
     val commentNum: StateFlow<Int> get() = _commentNum
+
+    private val _placeName = MutableStateFlow<String>("0")
+    val placeName: StateFlow<String> get() = _placeName
 
     private val _followState = MutableStateFlow<Boolean>(false)
     val followState: StateFlow<Boolean> get() = _followState
@@ -99,12 +104,24 @@ class FeedDetailViewModel @AssistedInject constructor(
         getFeedDetailComments(feedId)
     }
 
+    private fun setPlaceName(placeId: String?){
+        viewModelScope.launch {
+            if(placeId.isNullOrEmpty().not()){
+                val placeInfo = getPlaceDetailUseCase(placeId.toString())
+                if (placeInfo.name.isNullOrBlank().not()) {
+                    _placeName.emit(placeInfo.name.toString())
+                }
+            }
+        }
+    }
+
     private fun getFeed() {
         viewModelScope.launch {
             val result = getDetailCommunityUseCase(feedId)
             if (result.isSuccess) {
                 val feed = result.getOrThrow()
                 userId = feed.writer.userId
+                setPlaceName(feed.placeId)
                 setFeedDetail(feed)
                 _isWriter.emit(feed.isWriter)
                 val uris = feed.communityContentImages.map{

@@ -64,7 +64,7 @@ class FeedSearchViewModel @Inject constructor(
                 )
             )
             insertUserSearchUseCase(newSearchInfo)
-            _event.emit(Event.MoveToProfile)
+            _event.emit(Event.MoveToProfile(user.nickname))
         }
     }
 
@@ -118,7 +118,7 @@ class FeedSearchViewModel @Inject constructor(
     }
 
     sealed class Event {
-        object MoveToProfile : Event()
+        data class MoveToProfile(val userName: String) : Event()
     }
 
 }

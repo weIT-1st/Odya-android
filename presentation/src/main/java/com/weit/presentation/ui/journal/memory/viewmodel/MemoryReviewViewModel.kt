@@ -53,10 +53,6 @@ class MemoryReviewViewModel @Inject constructor(
                     reviewLastId = newReviews.last().placeReviewId
                 }
 
-                if (newReviews.isEmpty()) {
-                    loadNextReviews()
-                }
-
                 val originalReviews = reviews
                 reviews.clear()
                 reviews.addAll(originalReviews + newReviews)

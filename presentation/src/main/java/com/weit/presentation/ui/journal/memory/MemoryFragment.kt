@@ -102,6 +102,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.isEmptyMyJournal.collectLatest {isEmpty ->
+                binding.ivJournalMemoryMyProfile.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.tvFeedNoTravelLogHint2.isGone = true
                 binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.tvJournalMemory.isGone = isEmpty

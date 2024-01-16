@@ -104,6 +104,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
             myJournalViewModel.isEmptyMyJournal.collectLatest {isEmpty ->
                 binding.ivJournalMemoryMyProfile.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.tvFeedNoTravelLogHint2.isGone = true
+                binding.lyJournalMemoryDecoration.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.tvJournalMemory.isGone = isEmpty
                 binding.includeJournalMemoryLastJournal.root.isGone = isEmpty

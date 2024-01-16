@@ -71,10 +71,10 @@ class MyJournalViewModel @Inject constructor(
         if (pageJob.isCompleted.not()) {
             return
         }
-        loadNextMyReviews()
+        loadNextMyJournal()
     }
 
-    private fun loadNextMyReviews() {
+    private fun loadNextMyJournal() {
         pageJob = viewModelScope.launch {
             val result = getMyTravelJournalListUseCase(
                 size = DEFAULT_PAGE,

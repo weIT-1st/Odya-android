@@ -158,6 +158,8 @@
     <string name="place_friend_journal">친구의 여행일지</string>
     <string name="place_recommend_journal">추천 여행일지</string>
 
+    <string name="place_no_journal">여행일지가 없어요.</string>
+
     <string name="place_community">커뮤니티</string>
 
     <!--  main  -->

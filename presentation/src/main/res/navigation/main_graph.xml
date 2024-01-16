@@ -316,4 +316,12 @@
             android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
             app:destination="@id/post_graph" />
     </fragment>
+    <fragment
+        android:id="@+id/placeJournalFragment"
+        android:name="com.weit.presentation.ui.main.journal.PlaceJournalFragment"
+        android:label="PlaceJournalFragment" >
+        <action
+            android:id="@+id/action_placeJournalFragment_to_post_graph"
+            app:destination="@id/post_graph" />
+    </fragment>
 </navigation>

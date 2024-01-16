@@ -13,21 +13,22 @@ import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class PlaceJournalViewModel @AssistedInject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
-    private val getTravelJournalInfoUseCase: GetTravelJournalUseCase,
     private val getFriendTravelJournalListUseCase: GetFriendTravelJournalListUseCase,
     private val getRecommendTravelJournalListUseCase: GetRecommendTravelJournalListUseCase,
     @Assisted private val placeId: String
 ) : ViewModel(){
 
-    private val _myJournalDetails = MutableStateFlow<List<TravelJournalInfo>>(emptyList())
-    val myJournalDetail : StateFlow<List<TravelJournalInfo>> get() = _myJournalDetails
+    private val _myRandomJournal = MutableStateFlow<TravelJournalListInfo?>(null)
+    val myRandomJournal : StateFlow<TravelJournalListInfo?> get() = _myRandomJournal
 
+    val myJournalContent = MutableStateFlow("")
 
     private val _friendJournalList = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
     val friendJournalList: StateFlow<List<TravelJournalListInfo>> get() = _friendJournalList
@@ -35,6 +36,11 @@ class PlaceJournalViewModel @AssistedInject constructor(
     private val _recommendJournalList = MutableStateFlow<List<TravelJournalListInfo>>(emptyList())
     val recommendJournalList: StateFlow<List<TravelJournalListInfo>> get() = _recommendJournalList
 
+    private var friendLastID : Long? = null
+    private var recommendLastID : Long? = null
+
+    private var friendJob: Job = Job().apply { complete() }
+    private var recommendJob: Job = Job().apply { complete() }
     @AssistedFactory
     interface PlaceIdFactory{
         fun create(placeId: String): PlaceJournalViewModel
@@ -50,32 +56,28 @@ class PlaceJournalViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val result = getMyTravelJournalListUseCase(null, null, placeId)
             if (result.isSuccess){
-                val list = result.getOrThrow()
-                list.forEach { getTravelJournalList(it.travelJournalId) }
+                val random = result.getOrThrow().randomOrNull()
+                _myRandomJournal.emit(random)
+
+                setMyJournalContent()
             } else {
                 Log.d("getMyJournalList", "fail : ${result.exceptionOrNull()}")
             }
         }
     }
 
-    private fun getTravelJournalList(journalId: Long){
+    private fun setMyJournalContent() {
         viewModelScope.launch {
-            val currentList = myJournalDetail.value
-
-            val result = getTravelJournalInfoUseCase(journalId)
-
-            if (result.isSuccess) {
-                val info = result.getOrThrow()
-                _myJournalDetails.emit(currentList.plus(info))
-            } else {
-                Log.d("getJournalList", "fail : ${result.exceptionOrNull()}")
+            val journal = myRandomJournal.value
+            journal?.content?.let {
+                myJournalContent.emit(it)
             }
         }
     }
 
     private fun getFriendJournalList(){
         viewModelScope.launch{
-            val result = getFriendTravelJournalListUseCase(null, null, placeId)
+            val result = getFriendTravelJournalListUseCase(null, null, null)
             if (result.isSuccess){
                 val list = result.getOrThrow()
                 _friendJournalList.emit(list)
@@ -99,6 +101,7 @@ class PlaceJournalViewModel @AssistedInject constructor(
     }
 
     companion object{
+        const val DEFAULT_PAGE_SIZE = 10
         fun provideFactory(
            assistedFactory: PlaceIdFactory,
            placeId: String

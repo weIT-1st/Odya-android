@@ -86,4 +86,3 @@ fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         }
     }
 }
-

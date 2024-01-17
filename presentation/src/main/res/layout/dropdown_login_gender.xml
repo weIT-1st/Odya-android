@@ -2,7 +2,7 @@
 <TextView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tv_login_dropdown_gender"
+    android:id="@+id/tv_login_gender_spinner"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:textColor="@color/label_inactive"

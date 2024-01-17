@@ -32,13 +32,13 @@ class LoginLoadingFragment: BaseFragment<FragmentLoginLoadingBinding>(
     }
 
     private fun moveToInput(){
-        val action = LoginLoadingFragmentDirections.actionLoginLoadingFragmentToLoginNicknameFragment()
-        findNavController().navigate(action)
+//        val action = LoginLoadingFragmentDirections.actionLoginLoadingFragmentToLoginNicknameFragment()
+//        findNavController().navigate(action)
     }
 
     private fun moveToLogin(){
-        val action = LoginLoadingFragmentDirections.actionLoginLoadingFragmentToLoginFragment()
-        findNavController().navigate(action)
+//        val action = LoginLoadingFragmentDirections.actionLoginLoadingFragmentToLoginFragment()
+//        findNavController().navigate(action)
     }
 
     private fun handelEvent(event: LoginLoadingViewModel.Event) {

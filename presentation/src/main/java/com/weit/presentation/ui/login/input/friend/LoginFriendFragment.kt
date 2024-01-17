@@ -69,8 +69,8 @@ class LoginFriendFragment: BaseFragment<DialogLoginFriendBinding>(
                 findNavController().popBackStack()
             }
             LoginFriendViewModel.Event.StartOdya -> {
-                val action = LoginFriendFragmentDirections.actionLoginFriendFragmentToFragmentMap()
-                findNavController().navigate(action)
+//                val action = LoginFriendFragmentDirections.actionLoginFriendFragmentToFragmentMap()
+//                findNavController().navigate(action)
             }
 
             is LoginFriendViewModel.Event.CreateFollowSuccess -> {

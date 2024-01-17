@@ -197,6 +197,13 @@ class PostTravelLogViewModel @Inject constructor(
             val travelCompanionNames: List<String> = friends.map { it.nickname }
             val dailyTravelLog = dailyTravelLogs.value
 
+            dailyTravelLog.forEach { log ->
+                if (log.date == null) {
+                    onInputWrongDate(log.day)
+                    return@launch
+                }
+            }
+
             val travelJournalRegistration = TravelJournalRegistrationInfo(
                 title = journalTitle,
                 travelStartDate = start,
@@ -210,12 +217,7 @@ class PostTravelLogViewModel @Inject constructor(
                         placeId = log.place?.placeId,
                         latitudes = emptyList(),
                         longitudes = emptyList(),
-                        travelDate = if (log.date == null) {
-                            noInputDate(log.day)
-                            return@launch
-                        } else {
-                            listOf(log.date.year, log.date.monthValue, log.date.dayOfMonth)
-                        },
+                        travelDate = listOf(log.date!!.year, log.date.monthValue, log.date.dayOfMonth),
                         contentImageNames = log.images.map {
                             it.split("/").last() + IMAGE_EXTENSION_WEBP
                         }
@@ -269,7 +271,7 @@ class PostTravelLogViewModel @Inject constructor(
         return minDate.toMillis()
     }
 
-    private fun noInputDate(day : Int) {
+    private fun onInputWrongDate(day : Int) {
         viewModelScope.launch {
             _event.emit(Event.NoDateInLog(day))
         }

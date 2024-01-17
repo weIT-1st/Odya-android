@@ -27,7 +27,7 @@
 
     <fragment
         android:id="@+id/loginNicknameFragment"
-        android:name="com.weit.presentation.ui.login.nickname.LoginNicknameFragment"
+        android:name="com.weit.presentation.ui.login.input.nickname.nickname.LoginNicknameFragment"
         android:label="LoginNicknameFragment">
         <action
             android:id="@+id/action_loginNicknameFragment_to_loginInputUserInfoFragment"

@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.nickname.LoginNicknameViewModel"/>
+            type="com.weit.presentation.ui.login.input.nickname.nickname.LoginNicknameViewModel"/>
 
     </data>
 
@@ -16,7 +16,7 @@
         android:layout_height="match_parent"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        tools:context=".ui.login.nickname.LoginNicknameFragment">
+        tools:context=".ui.login.input.nickname.nickname.LoginNicknameFragment">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_login_one_go_back_step"

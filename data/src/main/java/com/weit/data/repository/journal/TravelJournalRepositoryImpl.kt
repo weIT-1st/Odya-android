@@ -1,7 +1,6 @@
 package com.weit.data.repository.journal
 
 import android.content.res.Resources.NotFoundException
-import android.util.Log
 import com.squareup.moshi.Moshi
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalCompanionsDTO
@@ -10,7 +9,6 @@ import com.weit.data.model.journal.TravelJournalContentsImagesDTO
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalWriterDTO
-import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
@@ -31,7 +29,6 @@ import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -69,7 +66,6 @@ class TravelJournalRepositoryImpl @Inject constructor(
                 } catch (e: Exception) {
                     return Result.failure(e)
                 }
-                Log.d("jomi", "filesName : $fileName")
                 MultipartBody.Part.createFormData(
                     TRAVEL_JOURNAL_CONTENT_IMAGE,
                     "$fileName.webp",
@@ -78,8 +74,6 @@ class TravelJournalRepositoryImpl @Inject constructor(
             }
             val adapter = moshi.adapter(TravelJournalRegistrationInfo::class.java)
             val travelJournalInfoJson = adapter.toJson(travelJournalRegistrationInfo)
-            Log.d("jomi", "travelJournalInfoJson : $travelJournalInfoJson")
-            Log.d("jomi", "files : ${files.forEach { it }}")
 
             val travelJournalRequestBody =
                 travelJournalInfoJson.toRequestBody("application/json".toMediaTypeOrNull())

@@ -6,6 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.navigation.navGraphViewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
@@ -72,6 +73,9 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
     }
 
     override fun initListener() {
+        binding.tbPostTravelLog.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
         binding.includePostTravelLogFriends.btnTravelFriendsAdd.setOnClickListener {
             viewModel.onEditTravelFriends()
         }
@@ -80,6 +84,17 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
         }
         binding.includePostTravelLogEnd.root.setOnClickListener {
             viewModel.showDatePicker()
+        }
+        binding.btnPostTravelLogPost.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.post_travel_log_registration_modal_title))
+                .setNegativeButton(getString(R.string.post_travel_log_registration_modal_negative)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.post_travel_log_registration_modal_positive)) { _, _ ->
+                    viewModel.onPost()
+                }
+                .show()
         }
     }
 
@@ -148,8 +163,12 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 )
             }
 
-            PostTravelLogViewModel.Event.SuccessPostJoruanl -> {
+            PostTravelLogViewModel.Event.SuccessPostJournal -> {
                findNavController().popBackStack()
+            }
+
+            is PostTravelLogViewModel.Event.NoDateInLog -> {
+                sendSnackBar("DAY${event.day} 날짜를 선택해주세요.")
             }
         }
     }

@@ -27,6 +27,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
+import kotlin.math.min
 
 @HiltViewModel
 class PostTravelLogViewModel @Inject constructor(
@@ -69,7 +70,7 @@ class PostTravelLogViewModel @Inject constructor(
 
         val friendsSummary = if (travelFriends.size >= DEFAULT_FRIENDS_SUMMARY_COUNT) {
             travelFriends
-                .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
+                .slice(0 until min(DEFAULT_FRIENDS_SUMMARY_COUNT, travelFriends.size))
                 .map { it.profile }
         } else {
             travelFriends
@@ -146,7 +147,8 @@ class PostTravelLogViewModel @Inject constructor(
 
     private fun updateSelectPlace(selectPlace: SelectPlaceDTO) {
         val updatedLogs = dailyTravelLogs.value.toMutableList()
-        val log = updatedLogs.removeAt(selectPlace.position).copy(place = selectPlace.toPlacePrediction())
+        val log =
+            updatedLogs.removeAt(selectPlace.position).copy(place = selectPlace.toPlacePrediction())
         updatedLogs.add(selectPlace.position, log)
         updateDailyTravelLogs(updatedLogs)
     }
@@ -177,8 +179,8 @@ class PostTravelLogViewModel @Inject constructor(
         }
     }
 
-    fun selectTravelLogVisibility(selectedVisibility: Visibility){
-        viewModelScope.launch{
+    fun selectTravelLogVisibility(selectedVisibility: Visibility) {
+        viewModelScope.launch {
             _visibility.emit(selectedVisibility)
         }
     }
@@ -187,7 +189,8 @@ class PostTravelLogViewModel @Inject constructor(
         viewModelScope.launch {
             val journalTitle: String = title.value
             val date = travelPeriod.value
-            val start: List<Int> = listOf(date.start.year, date.start.monthValue, date.start.dayOfMonth)
+            val start: List<Int> =
+                listOf(date.start.year, date.start.monthValue, date.start.dayOfMonth)
             val end: List<Int> = listOf(date.end.year, date.end.monthValue, date.end.dayOfMonth)
             val visibility = visibility.value.name
             val companionIds: List<Long> = friends.map { it.userId }
@@ -201,14 +204,21 @@ class PostTravelLogViewModel @Inject constructor(
                 visibility = visibility,
                 travelCompanionIds = companionIds,
                 travelCompanionNames = travelCompanionNames,
-                travelJournalContentRequests = dailyTravelLog.map {log ->
+                travelJournalContentRequests = dailyTravelLog.map { log ->
                     TravelJournalContentRequest(
                         content = log.contents,
                         placeId = log.place?.placeId,
                         latitudes = emptyList(),
                         longitudes = emptyList(),
-                        travelDate = listOf(log.date!!.year, log.date.monthValue, log.date.dayOfMonth),
-                        contentImageNames = log.images.map { it.split("/").last() + IMAGE_EXTENSION_WEBP }
+                        travelDate = if (log.date == null) {
+                            noInputDate(log.day)
+                            return@launch
+                        } else {
+                            listOf(log.date.year, log.date.monthValue, log.date.dayOfMonth)
+                        },
+                        contentImageNames = log.images.map {
+                            it.split("/").last() + IMAGE_EXTENSION_WEBP
+                        }
                     )
                 },
                 travelDurationDays = dailyTravelLog.count(),
@@ -216,7 +226,7 @@ class PostTravelLogViewModel @Inject constructor(
             )
             val travelJournalImages = emptyList<String>().toMutableList()
 
-            for (log in dailyTravelLog){
+            for (log in dailyTravelLog) {
                 log.images.forEach { image ->
                     travelJournalImages.add(image)
                 }
@@ -224,10 +234,11 @@ class PostTravelLogViewModel @Inject constructor(
 
             val result = registerTravelJournalUseCase(
                 travelJournalRegistrationInfo = travelJournalRegistration,
-                travelJournalImages = travelJournalImages)
+                travelJournalImages = travelJournalImages
+            )
 
             if (result.isSuccess) {
-                _event.emit(Event.SuccessPostJoruanl)
+                _event.emit(Event.SuccessPostJournal)
             } else {
                 //todo 에러처리
                 Log.d("register travel", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
@@ -253,8 +264,15 @@ class PostTravelLogViewModel @Inject constructor(
     }
 
     private fun getMinDateMillis(position: Int): Long {
-        val minDate = dailyTravelLogs.value.getOrNull(position - 1)?.date ?: travelPeriod.value.start
+        val minDate =
+            dailyTravelLogs.value.getOrNull(position - 1)?.date ?: travelPeriod.value.start
         return minDate.toMillis()
+    }
+
+    private fun noInputDate(day : Int) {
+        viewModelScope.launch {
+            _event.emit(Event.NoDateInLog(day))
+        }
     }
 
     sealed class Event {
@@ -279,7 +297,10 @@ class PostTravelLogViewModel @Inject constructor(
         ) : Event()
 
         object ClearDatePickerDialog : Event()
-        object SuccessPostJoruanl : Event()
+        object SuccessPostJournal : Event()
+        data class NoDateInLog(
+            val day: Int
+        ) : Event()
     }
 
     data class TravelFriendsInfo(

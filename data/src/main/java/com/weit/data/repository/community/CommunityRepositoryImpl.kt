@@ -1,6 +1,5 @@
 package com.weit.data.repository.community
 
-import com.google.gson.Gson
 import com.orhanobut.logger.Logger
 import com.squareup.moshi.Moshi
 import com.weit.data.repository.image.ImageRepositoryImpl
@@ -51,7 +50,6 @@ class CommunityRepositoryImpl @Inject constructor(
     private val hasNextMyLikeCommunity = AtomicBoolean(true)
     private val hasNextMyCommentCommunity = AtomicBoolean(true)
 
-
     override suspend fun registerCommunity(
         communityRegistrationInfo: CommunityRegistrationInfo,
         communityImages: List<String>
@@ -97,7 +95,7 @@ class CommunityRepositoryImpl @Inject constructor(
             return Result.failure(NoMoreItemException())
         }
         val result = runCatching {
-            communityDataSource.getCommunities(communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType)
+            communityDataSource.getCommunities(communityRequestInfo.size,communityRequestInfo.lastId,communityRequestInfo.sortType,communityRequestInfo.placeId)
         }
         return if (result.isSuccess) {
             val communities = result.getOrThrow()

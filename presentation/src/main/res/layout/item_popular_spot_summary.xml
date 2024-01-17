@@ -6,7 +6,7 @@
     <data>
         <variable
             name="log"
-            type="com.weit.presentation.model.PopularTravelLog" />
+            type="com.weit.domain.model.journal.TravelJournalListInfo" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@drawable/corners_all_8"
@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            app:image_uri="@{log.travelLogImage}"
+            app:image_uri="@{log.contentImageUrl}"
             tools:src="@drawable/bg_popular_spot_summary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,8 +36,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:src="@drawable/ic_profile"
-            app:image_uri="@{log.userProfile.url}"
-            app:profile_background="@{log.userProfile}"
+            app:image_uri="@{log.writer.profile.url}"
+            app:profile_background="@{log.writer.profile}"
             android:scaleType="centerCrop"
             app:shapeAppearanceOverlay="@style/ShapeableImageViewCircle"
             app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
             app:layout_constraintStart_toEndOf="@+id/iv_popular_spot_summary_profile"
             app:layout_constraintTop_toTopOf="@id/iv_popular_spot_summary_profile"
             app:layout_constraintWidth_max="wrap"
-            tools:text="@{log.userNickname}" />
+            android:text="@{log.writer.nickname}" />
 
         <ImageView
             android:id="@+id/iv_popular_spot_summary_diary"
@@ -90,7 +90,7 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/iv_popular_spot_summary_diary"
             app:layout_constraintTop_toTopOf="@+id/iv_popular_spot_summary_diary"
-            tools:text="@{log.travelLogTitle}" />
+            android:text="@{log.travelJournalTitle}" />
 
         <TextView
             android:id="@+id/tv_popular_spot_hot"

@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.weit.domain.model.user.UserProfile
+import com.weit.domain.model.user.search.UserProfileInfo
 import com.weit.presentation.R
 import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 import java.time.LocalDateTime
@@ -27,6 +28,13 @@ fun bindProfileBackground(view: ImageView, profile: UserProfile?) {
     }
 }
 
+@BindingAdapter("search_profile_background")
+fun bindSearchProfileBackground(view: ImageView, profile: UserProfileInfo?) {
+    profile?.color?.let { color ->
+        view.setBackgroundColor(Color.rgb(color.red, color.green, color.blue))
+    }
+}
+
 @BindingAdapter("text_reaction_count")
 fun bindReactionCount(textView: TextView, count: Int?) {
     count?.let { count ->
@@ -42,9 +50,10 @@ fun bindReactionCount(textView: TextView, count: Int?) {
     }
 }
 
-@BindingAdapter("text_created_date")
+
+@BindingAdapter("android:text_created_date")
 fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
-    if(date == null){
+    if (date == null) {
         textView.text = ""
     }
     date?.let { date ->
@@ -54,15 +63,18 @@ fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         val days = diff.toDays()
 
         when {
-            hours <= 3 -> textView.text =  textView.resources.getString(
+            hours <= 3 -> textView.text = textView.resources.getString(
                 R.string.feed_date_now
             )
+
             hours <= 24 -> textView.text = textView.resources.getString(
                 R.string.feed_date_today
             )
+
             days <= 30 -> textView.text = textView.resources.getString(
                 R.string.feed_date_days, days
             )
+
             else -> {
                 val formattedDate: String = if (date.year == now.year) {
                     date.format(DateTimeFormatter.ofPattern("M월 d일", Locale.getDefault()))
@@ -74,3 +86,4 @@ fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         }
     }
 }
+

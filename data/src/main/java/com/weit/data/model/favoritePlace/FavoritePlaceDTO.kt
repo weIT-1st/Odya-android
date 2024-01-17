@@ -8,4 +8,5 @@ data class FavoritePlaceDTO(
     @field:Json(name = "id") val favoritePlaceId: Long,
     @field:Json(name = "placeId") val placeId: String,
     @field:Json(name = "userId") val userId: Long,
+    @field:Json(name = "isFavoritePlace") val isFavoritePlace: Boolean
 )

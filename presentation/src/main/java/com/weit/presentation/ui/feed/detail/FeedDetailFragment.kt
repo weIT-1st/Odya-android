@@ -7,6 +7,8 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.DividerItemDecoration
+import com.bumptech.glide.Glide
+import com.orhanobut.logger.Logger
 import com.weit.domain.model.community.CommunityTravelJournal
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFeedDetailBinding
@@ -127,7 +129,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     }
                 } else {
                     if (otherMenuDialog == null) {
-                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId)
+                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId,args.nickname?:"")
 
                     }
                     if (otherMenuDialog?.isAdded?.not() == true) {
@@ -148,6 +150,9 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
         } else {
             binding.includeTravelLog.layoutTravelLog.visibility = View.VISIBLE
             binding.includeTravelLog.log = log
+            Glide.with(binding.root)
+                .load(log.mainImageUrl)
+                .into(binding.includeTravelLog.ivTravelLog)
             binding.includeTravelLog.layoutTravelLog.setOnClickListener {
                 navigateTravelLog(log.travelJournalId)
             }
@@ -164,7 +169,10 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                 binding.ivCommunityLike.setImageResource(imageResource)
 
                 feedImageAdapter.submitList(event.feedImages)
-                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)
+                binding.tvTopic.visibility = if(event.feed.topic==null) View.GONE else View.VISIBLE
+                if(event.feed.topic != null){
+                binding.tvTopic.text = getString(R.string.feed_detail_topic, event.feed.topic?.topicWord)}
+
                 binding.btnFeedCommentMore.text =
                     getString(R.string.feed_detail_comment, event.feed.communityCommentCount)
                 setTravelLog(event.feed.travelJournal)

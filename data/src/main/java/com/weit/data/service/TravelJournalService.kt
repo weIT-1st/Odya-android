@@ -1,13 +1,17 @@
 package com.weit.data.service
 
 import com.weit.data.model.ListResponse
+import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
+import com.weit.data.model.journal.TravelJournalVisibility
 import okhttp3.MultipartBody
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
@@ -74,6 +78,12 @@ interface TravelJournalService {
         @Part travelJournalContentUpdate: MultipartBody.Part,
         @Part images: List<MultipartBody.Part>
     )
+
+    @PATCH("/api/v1/travel-journals/{travelJournalId}/visibility")
+    suspend fun updateTravelJournalVisibility(
+        @Path("travelJournalId") travelJournalId: Long,
+        @Body visibility: TravelJournalVisibility,
+    ): Response<Unit>
 
     @DELETE("/api/v1/travel-journals/{travelJournalId}")
     suspend fun deleteTravelJournal(

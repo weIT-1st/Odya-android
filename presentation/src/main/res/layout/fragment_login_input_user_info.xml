@@ -7,158 +7,145 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.inputuserinfo.LoginInputUserInfoViewModel"/>
+            type="com.weit.presentation.ui.login.input.userinfo.LoginInputUserInfoViewModel"/>
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
-        tools:context=".ui.login.inputuserinfo.LoginInputUserInfoFragment">
+        android:paddingBottom="32dp"
+        tools:context=".ui.login.input.userinfo.LoginInputUserInfoFragment">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login_two_go_back_step"
-            android:layout_width="wrap_content"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tool_bar_login_input_user_info"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@color/background_normal"
-            android:text="@string/go_back_step"
-            android:textColor="@color/primary"
-            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_login_two_go_next_step"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_login_input_user_info_go_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/go_back_step"
+                android:textAppearance="@style/detail2"
+                android:textColor="@color/primary"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:background="@android:color/transparent"/>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_login_input_user_info_start"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/background_normal"
-            android:text="@string/go_next_step"
-            android:textColor="@color/primary"
-            android:visibility="visible"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <ImageView
-            android:id="@+id/iv_dot_indicator_first"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="@drawable/ic_dot_yellow"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
-            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_second"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/btn_login_two_go_back_step"
-            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_login_input_user_info_end"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
+        <View
+            android:id="@+id/view_login_input_user_info_yellow_line"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            app:layout_constraintWidth_percent="1"
+            app:layout_constraintHorizontal_bias="0"
+            android:background="@color/primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_login_input_user_info"/>
 
-        <ImageView
-            android:id="@+id/iv_dot_indicator_second"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ic_dot_yellow"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
-            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_third"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_first"
-            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
-
-        <ImageView
-            android:id="@+id/iv_dot_indicator_third"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ic_dot_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
-            app:layout_constraintEnd_toStartOf="@+id/iv_dot_indicator_fourth"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_second"
-            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
-
-        <ImageView
-            android:id="@+id/iv_dot_indicator_fourth"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:layout_marginStart="8dp"
-            android:background="@drawable/ic_dot_gray"
-            app:layout_constraintBottom_toBottomOf="@+id/btn_login_two_go_back_step"
-            app:layout_constraintEnd_toStartOf="@+id/btn_login_two_go_next_step"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/iv_dot_indicator_third"
-            app:layout_constraintTop_toTopOf="@+id/btn_login_two_go_back_step" />
+        <View
+            android:id="@+id/view_login_input_user_info_grey_line"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:background="@color/system_inactive"
+            app:layout_constraintStart_toEndOf="@+id/view_login_input_user_info_yellow_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_login_input_user_info"/>
 
 
-
-        <TextView
-            android:id="@+id/tv_login_birth_gender"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_login_input_user_info_title"
             style="@style/h3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="21dp"
             android:text="@string/login_who_you"
-            app:layout_constraintBottom_toTopOf="@+id/ti_login_birth"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/tb_login_input_user_info_warning"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_user_info_start"
+            tools:text="길동아밥먹자님이\n궁금해요!"/>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/ti_login_birth"
-            style="@style/edit_text_box"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tb_login_input_user_info_warning"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:focusable="false"
+            android:textAppearance="@style/body2"
+            android:textColor="@color/label_assistive"
+            android:text="@string/login_who_you_warning"
+            android:layout_marginBottom="44dp"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_user_info_start"
+            app:layout_constraintBottom_toTopOf="@id/et_login_input_user_info_birth"/>
+
+
+        <EditText
+            android:id="@+id/et_login_input_user_info_birth"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:background="@drawable/corners_all_8"
-            app:boxBackgroundColor="@color/elevation3"
+            android:backgroundTint="@color/elevation3"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_normal"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
             android:drawableEnd="@drawable/ic_direction_down"
             android:padding="0dp"
             android:hint="@string/login_birth_hint"
             android:textColorHint="@color/label_inactive"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_login_birth"
-                style="@style/body1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:drawableEnd="@drawable/ic_direction_down"
-                android:padding="12dp"
-                android:textColorHint="@color/label_inactive"
-                android:textColor="@color/label_inactive"/>
-
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:focusable="false"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_user_info_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_login_input_user_info_end"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_login_input_user_info"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
         <Spinner
-            android:id="@+id/spinner_login_gender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginTop="14dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ti_login_birth"
-            />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_sign_up"
+            android:id="@+id/spinner_login_input_user_info_gender"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginTop="13dp"
-            android:layout_marginBottom="32dp"
-            android:text="@string/sign_up"
-            android:onClick="@{() -> vm.registerUser()}"
-            android:backgroundTint="@color/primary"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/selector_spinner_gender_option"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_user_info_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_login_input_user_info_end"
+            app:layout_constraintTop_toBottomOf="@+id/et_login_input_user_info_birth" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login_input_user_info_go_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:textAppearance="@style/h6"
-            android:textColor="@color/label_reversed"
-            app:cornerRadius="@dimen/button_large_radius"
-            app:layout_constraintTop_toBottomOf="@+id/spinner_login_gender"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:textColor="@color/label_reversed_normal"
+            android:text="@string/sign_complete"
+            android:background="@drawable/corners_all_8"
+            android:onClickListener="@{() -> vm.completeRegister()}"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_user_info_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_login_input_user_info_end"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

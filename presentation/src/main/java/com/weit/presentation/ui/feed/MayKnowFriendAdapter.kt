@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.presentation.databinding.ItemMayknowFriendSummaryBinding
-import com.weit.presentation.model.MayKnowFriend
 
 class MayKnowFriendAdapter(private val onFollowChanged: (Int, Long, Boolean) -> Unit) :
     ListAdapter<FollowUserContent, MayKnowFriendAdapter.MayKnowFriendViewHolder>(MayKnowFriendCallback) {

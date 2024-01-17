@@ -6,7 +6,7 @@ import com.weit.domain.model.community.CommunityTravelJournal
 
 @JsonClass(generateAdapter = true)
 data class TravelJournalDTO(
-    @field:Json(name = "communityId") override val travelJournalId: Long,
+    @field:Json(name = "travelJournalId") override val travelJournalId: Long,
     @field:Json(name = "title") override val title: String,
-    @field:Json(name = "mainImageUrl") override val mainImageUrl: String,
+    @field:Json(name = "mainImageUrl") override val mainImageUrl: String?,
 ) : CommunityTravelJournal

@@ -27,13 +27,8 @@ class FavoritePlaceDateSource @Inject constructor(
         service.register(favoritePlaceRegistration)
     }
 
-    suspend fun delete(favoritePlaceId: Long): Result<Unit> {
-        val response = service.delete(favoritePlaceId)
-        return if (response.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleDeleteError(response))
-        }
+    suspend fun delete(favoritePlaceId: Long): Response<Unit> {
+        return service.delete(favoritePlaceId)
     }
 
     suspend fun isFavoritePlace(placeId: String): Boolean =
@@ -42,12 +37,16 @@ class FavoritePlaceDateSource @Inject constructor(
     suspend fun getFavoritePlaceCount(): Int =
         service.getFavoritePlaceCount()
 
+    suspend fun getFriendFavoritePlaceCount(userId: Long): Int =
+        service.getFriendFavoritePlaceCount(userId)
+
     suspend fun getFavoritePlaces(info: FavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFavoritePlaces(
             size = info.size,
             sortType = info.sortType,
             lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
+
     suspend fun getFriendFavoritePlaces(info: FriendFavoritePlaceInfo): ListResponse<FavoritePlaceDTO> =
         service.getFriendFavoritePlaces(
             userId = info.userId,
@@ -55,20 +54,4 @@ class FavoritePlaceDateSource @Inject constructor(
             sortType = info.sortType,
             lastFavoritePlaceId = info.lastFavoritePlaceId,
         )
-    private fun handleDeleteError(response: Response<*>): Throwable {
-        return handleCode(response.code())
-    }
-
-    private fun handleCode(code: Int): Throwable {
-        return when (code) {
-            HTTP_NOT_FOUND -> NotExistCommunityIdOrCommunityCommentsException()
-            HTTP_UNAUTHORIZED -> InvalidTokenException()
-            HTTP_FORBIDDEN -> InvalidPermissionException()
-            HTTP_CONFLICT -> ExistedCommunityIdException()
-            HTTP_BAD_REQUEST -> InvalidRequestException()
-            else -> {
-                UnKnownException()
-            }
-        }
-    }
 }

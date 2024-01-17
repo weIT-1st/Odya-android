@@ -6,20 +6,16 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.domain.model.image.ImageDoubleLatLng
-import com.weit.domain.model.image.ImageLatLng
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.user.ImageUserType
 import com.weit.domain.usecase.image.GetCoordinateUserImageUseCase
 import com.weit.domain.usecase.place.GetCurrentPlaceUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlacesByCoordinateUseCase
+import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -30,7 +26,8 @@ class MapViewModel @Inject constructor(
     val getPlacesByCoordinateUseCase: GetPlacesByCoordinateUseCase,
     val getCurrentPlaceUseCase: GetCurrentPlaceUseCase,
     val getPlaceDetailUseCase: GetPlaceDetailUseCase,
-    val getCoordinateUserImageUseCase: GetCoordinateUserImageUseCase
+    val getCoordinateUserImageUseCase: GetCoordinateUserImageUseCase,
+    val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase
 ) : ViewModel() {
 
     private val _touchPlaceId = MutableStateFlow("")
@@ -51,6 +48,10 @@ class MapViewModel @Inject constructor(
     private val _odyaToggle = MutableStateFlow<Boolean>(false)
     val odyaToggle: StateFlow<Boolean> get() = _odyaToggle
 
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
+
+
     init {
         viewModelScope.launch {
             val current = getCurrentPlaceUseCase()
@@ -59,6 +60,8 @@ class MapViewModel @Inject constructor(
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
             }
         }
+
+        getTopic()
     }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
@@ -66,6 +69,7 @@ class MapViewModel @Inject constructor(
             val result = getPlacesByCoordinateUseCase(latitude, longitude)
 
             if (result.isSuccess) {
+
                 val place = result.getOrThrow()
                 _touchPlaceId.emit(place[0].placeId)
             }
@@ -117,6 +121,25 @@ class MapViewModel @Inject constructor(
         } else {
             _odyaList.emit(list.filterNot { it.imageUserType == ImageUserType.OTHER })
         }
+    }
+
+    private fun getTopic() {
+        viewModelScope.launch {
+            val result = getFavoriteTopicListUseCase()
+            if (result.isSuccess) {
+                val list = result.getOrThrow()
+
+                if (list.isEmpty()) {
+                    _event.emit(Event.FirstLogin)
+                }
+            } else {
+                Log.d("getFavoriteTopic", "Get Favorite Topic Fail : ${result.exceptionOrNull()}")
+            }
+        }
+    }
+
+    sealed class Event {
+        object FirstLogin : Event()
     }
 
     companion object {

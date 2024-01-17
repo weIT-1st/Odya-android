@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.login.input.nickname.LoginNicknameViewModel"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="32dp"
+        tools:context=".ui.login.input.nickname.LoginNicknameFragment">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tool_bar_login_input_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_login_input_name_start"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_login_input_name_end"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <View
+            android:id="@+id/view_login_input_name_yellow_line"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            app:layout_constraintWidth_percent="0.5"
+            app:layout_constraintHorizontal_bias="0"
+            android:background="@color/primary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_login_input_name"/>
+
+        <View
+            android:id="@+id/view_login_input_name_grey_line"
+            android:layout_width="0dp"
+            android:layout_height="6dp"
+            android:background="@color/system_inactive"
+            app:layout_constraintStart_toEndOf="@+id/view_login_input_name_yellow_line"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_login_input_name"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_login_input_name_title"
+            style="@style/h3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:text="@string/login_what_name"
+            android:textColor="@color/label_normal"
+            app:layout_constraintBottom_toTopOf="@+id/tv_login_input_name_detail"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_name_start" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_login_input_name_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/body2"
+            android:textColor="@color/label_assistive"
+            android:text="@string/login_what_name_detail"
+            android:layout_marginBottom="78dp"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_name_start"
+            app:layout_constraintBottom_toTopOf="@+id/et_login_input_name"/>
+
+
+        <EditText
+            android:id="@+id/et_login_input_name"
+            style="@style/body1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_8"
+            android:backgroundTint="@color/elevation3"
+            android:drawableEnd="@drawable/ic_x_cirecle"
+            android:hint="@string/login_name_hint"
+            android:inputType="text"
+            android:padding="12dp"
+            android:text="@={vm.nickname}"
+            android:textColor="@color/label_normal"
+            android:textColorHint="@color/label_inactive"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintVertical_bias="0.6"
+            app:layout_constraintTop_toBottomOf="@id/tool_bar_login_input_name"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/gl_login_input_name_end"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_name_start" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_login_input_name_go_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/h6"
+            android:textColor="@color/label_reversed_normal"
+            android:text="@string/go_next_step"
+            android:background="@drawable/corners_all_8"
+            android:onClickListener="@{() -> vm.setNickname()}"
+            app:layout_constraintStart_toStartOf="@id/gl_login_input_name_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_login_input_name_end"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

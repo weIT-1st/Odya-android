@@ -5,6 +5,7 @@ import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
+import com.weit.domain.model.journal.TravelJournalVisibilityInfo
 
 interface TravelJournalRepository {
 
@@ -56,6 +57,10 @@ interface TravelJournalRepository {
         travelJournalContentId: Long,
         travelJournalContentUpdateInfo: TravelJournalContentUpdateInfo,
         travelJournalContentImages: List<String>
+    ): Result<Unit>
+
+    suspend fun updateTravelJournalVisibility(
+        travelJournalVisibilityInfo: TravelJournalVisibilityInfo,
     ): Result<Unit>
     suspend fun deleteTravelJournal(travelJournalId: Long): Result<Unit>
 

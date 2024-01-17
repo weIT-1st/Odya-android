@@ -13,17 +13,39 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_memory_name"
-            style="@style/detail1"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/ly_memory_travel_journal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="?attr/colorOnSurface"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:text="memory fragment입니다" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_memory_last_trip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h3"
+                android:textColor="@color/label_normal"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="이은재님,\n지난 여행을 다시 볼까요?"/>
+            
+            <com.google.android.material.imageview.ShapeableImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile"
+                app:shapeAppearance="@style/ShapeableImageViewCircle"
+                app:layout_constraintHorizontal_bias="1"
+                app:layout_constraintTop_toTopOf="@+id/tv_memory_last_trip"
+                app:layout_constraintBottom_toBottomOf="@+id/tv_memory_last_trip"
+                app:layout_constraintStart_toEndOf="@+id/tv_memory_last_trip"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:src="@tools:sample/avatars"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

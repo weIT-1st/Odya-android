@@ -13,6 +13,7 @@ import com.weit.domain.model.user.SearchUserContent
 import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.UserStatistics
 import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
+import com.weit.domain.usecase.favoritePlace.GetFriendFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFriendFavoritePlacesUseCase
 import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
@@ -43,6 +44,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
+    private val getFriendFavoritePlaceCountUseCase: GetFriendFavoritePlaceCountUseCase,
     @Assisted private val userName: String,
 ) : ViewModel() {
 
@@ -97,8 +99,20 @@ class OtherProfileViewModel @AssistedInject constructor(
                     getUserStatistics()
                     onNextLifeShots()
                     loadFavoritePlaces()
-//                    getFavoritePlaceCount()
+                    getFavoritePlaceCount()
                 }
+            }
+        }
+    }
+
+    private fun getFavoritePlaceCount(){
+        viewModelScope.launch {
+            val result = getFriendFavoritePlaceCountUseCase(user.userId)
+            if (result.isSuccess) {
+                _favoritePlaceCount.emit(result.getOrThrow())
+            } else {
+                handleError(result.exceptionOrNull() ?: UnKnownException())
+
             }
         }
     }

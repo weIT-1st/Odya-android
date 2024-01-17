@@ -30,8 +30,8 @@ class CommunityDataSource @Inject constructor(
         return service.getDetailCommunity(communityId)
     }
 
-    suspend fun getCommunities(size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMainContentDTO> {
-        return service.getCommunities(size,communityId,sortType)
+    suspend fun getCommunities(size: Int?, communityId: Long?, sortType: String?, placeId: String?) : ListResponse<CommunityMainContentDTO> {
+        return service.getCommunities(size,communityId,sortType,placeId)
     }
 
     suspend fun getMyCommunities(size: Int?, communityId: Long?, sortType: String?) : ListResponse<CommunityMyActivityContentDTO> {

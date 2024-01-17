@@ -108,6 +108,19 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
+            viewModel.favoritePlaceCount.collectLatest { count ->
+                if(count > 4){
+                    binding.btnProfileFavoritePlaceMore.text = getString(
+                        R.string.profile_bookmark_place,
+                        count-4
+                    )
+                    binding.btnProfileFavoritePlaceMore.visibility = View.VISIBLE
+                }else{
+                    binding.btnProfileFavoritePlaceMore.visibility = View.INVISIBLE
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
                 favoritePlaceAdapter.submitList(list)
             }

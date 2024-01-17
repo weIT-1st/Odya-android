@@ -5,7 +5,7 @@ import com.weit.data.model.ListResponse
 import com.weit.data.model.place.PlaceReviewContentDTO
 import com.weit.data.model.place.PlaceReviewModification
 import com.weit.data.model.place.PlaceReviewRegistration
-import com.weit.data.source.PlaceReviewDateSource
+import com.weit.data.source.PlaceReviewDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.exception.ForbiddenException
 import com.weit.domain.model.exception.InvalidRequestException
@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class PlaceReviewRepositoryImpl @Inject constructor(
-    private val dataSource: PlaceReviewDateSource,
+    private val dataSource: PlaceReviewDataSource,
 ) : PlaceReviewRepository {
 
     private val hasNextReviewByPlaceID = AtomicBoolean(true)

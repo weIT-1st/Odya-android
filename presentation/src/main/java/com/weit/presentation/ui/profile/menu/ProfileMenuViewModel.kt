@@ -33,7 +33,6 @@ class ProfileMenuViewModel @Inject constructor(
         }
     }
 
-    @SuppressLint("SuspiciousIndentation")
     fun onUpdateProfileImageNone() {
         viewModelScope.launch {
             val result = updateProfileUseCase(null)

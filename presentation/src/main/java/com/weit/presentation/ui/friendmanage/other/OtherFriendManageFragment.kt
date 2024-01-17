@@ -13,6 +13,7 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentOtherFriendManageBinding
 import com.weit.presentation.model.Follow
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.friendmanage.showDeleteFollowingDialog
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -34,42 +35,33 @@ class OtherFriendManageFragment : BaseFragment<FragmentOtherFriendManageBinding>
         OtherFriendManageViewModel.provideFactory(viewModelFactory, args.userId)
     }
 
-    private val followingSearchAdapter = OtherFollowingSearchAdapter(
-        onClickFollowing = { user ->
-            if(user.isFollowing) showDeleteDialog(user,SEARCH_FOLLOWING) else viewModel.createFollow(user,SEARCH_FOLLOWING)
-        }
-    )
-
-    private val myFollowingAdapter = OtherFollowingAdapter(
-        onClickFollowing = { user ->
-            if(user.isFollowing) showDeleteDialog(user, DEFAULT_FOLLOWING) else viewModel.createFollow(user,DEFAULT_FOLLOWING)
-        }
-    )
-
-    private val otherFollowerSearchAdapter = OtherFollowerSearchAdapter(
-        onClickFollower = { user ->
-            if(user.isFollowing) showDeleteDialog(user, SEARCH_FOLLOWER) else viewModel.createFollow(user,SEARCH_FOLLOWER)
-        }
-    )
-
-    private val otherFollowerAdapter = OtherFollowerAdapter(
-        onClickFollower = { user ->
-            if(user.isFollowing) showDeleteDialog(user, DEFAULT_FOLLOWER) else viewModel.createFollow(user,DEFAULT_FOLLOWER)
-        }
-    )
-
-    private fun showDeleteDialog(friend : FollowUserContent, type: String){
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.friend_manage_following_delete_title))
-            .setMessage(getString(R.string.friend_manage_following_delete_content))
-            .setNegativeButton(getString(R.string.friend_manage_cancel)) { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.friend_manage_delete)) { dialog, which ->
-                viewModel.deleteFollow(friend,type)
-            }
-            .show()
+    private val followingSearchAdapter = OtherFollowingSearchAdapter { user ->
+        if (user.isFollowing) {
+            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, SEARCH_FOLLOWING) }
+        } else viewModel.createFollow(user, SEARCH_FOLLOWING)
     }
+
+
+    private val myFollowingAdapter = OtherFollowingAdapter { user ->
+        if (user.isFollowing) {
+            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, DEFAULT_FOLLOWING) }
+        } else viewModel.createFollow(user, DEFAULT_FOLLOWING)
+    }
+
+
+    private val otherFollowerSearchAdapter = OtherFollowerSearchAdapter { user ->
+            if(user.isFollowing) {
+            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, SEARCH_FOLLOWER) }
+            } else viewModel.createFollow(user,SEARCH_FOLLOWER)
+        }
+
+
+    private val otherFollowerAdapter = OtherFollowerAdapter{ user ->
+        if(user.isFollowing) {
+            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, DEFAULT_FOLLOWER) }
+        } else viewModel.createFollow(user,DEFAULT_FOLLOWER)
+    }
+
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab) {

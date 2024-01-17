@@ -12,6 +12,8 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyFriendManageBinding
 import com.weit.presentation.model.Follow
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.friendmanage.showDeleteFollowerDialog
+import com.weit.presentation.ui.friendmanage.showDeleteFollowingDialog
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -24,21 +26,21 @@ class MyFriendManageFragment : BaseFragment<FragmentMyFriendManageBinding>(
 ) {
     private val viewModel: MyFriendManageViewModel by viewModels()
 
-    private val followingSearchAdapter = FollowingSearchAdapter(
-        onClickFollowing = { user -> selectSearchFollowing(user)}
-    )
+    private val followingSearchAdapter = FollowingSearchAdapter { user ->
+        showDeleteFollowingDialog(context) { viewModel.selectSearchFollowing(user) }
+    }
 
-    private val myFollowingAdapter = MyFollowingAdapter(
-        onClickFollowing = { user -> selectDefaultFollowing(user)}
-    )
+    private val myFollowingAdapter = MyFollowingAdapter { user ->
+        showDeleteFollowingDialog(context) { viewModel.selectDefaultFollowing(user) }
+    }
 
-    private val followerSearchAdapter = FollowerSearchAdapter(
-        onClickFollower = { user -> selectSearchFollower(user)}
-    )
+    private val followerSearchAdapter = FollowerSearchAdapter{ user ->
+        showDeleteFollowerDialog(context) { viewModel.selectSearchFollower(user) }
+    }
 
-    private val myFollowerAdapter = MyFollowerAdapter(
-        onClickFollower = { user -> selectDefaultFollower(user)}
-    )
+    private val myFollowerAdapter = MyFollowerAdapter{ user ->
+        showDeleteFollowerDialog(context) { viewModel.selectDefaultFollower(user) }
+    }
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab) {
@@ -49,57 +51,6 @@ class MyFriendManageFragment : BaseFragment<FragmentMyFriendManageBinding>(
         override fun onTabReselected(tab: TabLayout.Tab?) {}
     }
 
-    private fun selectSearchFollowing(friend : FollowUserContent){
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.friend_manage_following_delete_title))
-            .setMessage(getString(R.string.friend_manage_following_delete_content))
-            .setNegativeButton(getString(R.string.friend_manage_cancel)) { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.friend_manage_delete)) { dialog, which ->
-                viewModel.selectSearchFollowing(friend)
-            }
-            .show()
-    }
-
-    private fun selectDefaultFollowing(friend : FollowUserContent){
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.friend_manage_following_delete_title))
-            .setMessage(getString(R.string.friend_manage_following_delete_content))
-            .setNegativeButton(getString(R.string.friend_manage_cancel)) { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.friend_manage_delete)) { dialog, which ->
-                viewModel.selectDefaultFollowing(friend)
-            }
-            .show()
-    }
-
-    private fun selectSearchFollower(friend : FollowUserContent){
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.friend_manage_follower_delete_title))
-            .setMessage(getString(R.string.friend_manage_follower_delete_content))
-            .setNegativeButton(getString(R.string.friend_manage_cancel)) { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.friend_manage_delete)) { dialog, which ->
-                viewModel.selectSearchFollower(friend)
-            }
-            .show()
-    }
-
-    private fun selectDefaultFollower(friend : FollowUserContent){
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(getString(R.string.friend_manage_follower_delete_title))
-            .setMessage(getString(R.string.friend_manage_follower_delete_content))
-            .setNegativeButton(getString(R.string.friend_manage_cancel)) { dialog, which ->
-                dialog.dismiss()
-            }
-            .setPositiveButton(getString(R.string.friend_manage_delete)) { dialog, which ->
-                viewModel.selectDefaultFollower(friend)
-            }
-            .show()
-    }
 
     private val infinitySearchScrollListener by lazy {
         object : InfinityScrollListener() {

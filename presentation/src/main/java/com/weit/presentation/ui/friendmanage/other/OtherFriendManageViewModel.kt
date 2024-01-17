@@ -39,6 +39,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 class OtherFriendManageViewModel @AssistedInject constructor(
@@ -75,8 +76,8 @@ class OtherFriendManageViewModel @AssistedInject constructor(
 
     private var searchFollowingLastId: Long? = null
     private var searchFollowerLastId: Long? = null
-    private var defaultFollowingPage = 0
-    private var defaultFollowerPage = 0
+    private val defaultFollowingPage = AtomicInteger(0)
+    private val defaultFollowerPage = AtomicInteger(0)
 
 
     private var searchJob: Job = Job().apply {
@@ -93,8 +94,8 @@ class OtherFriendManageViewModel @AssistedInject constructor(
     fun initData(){
         searchFollowingLastId = null
         searchFollowerLastId = null
-        defaultFollowingPage = 0
-        defaultFollowerPage = 0
+        defaultFollowingPage.set(0)
+        defaultFollowerPage.set(0)
         query.value = ""
         _searchResultFollowings.value = emptyList()
         _searchResultFollowers.value = emptyList()
@@ -185,7 +186,7 @@ class OtherFriendManageViewModel @AssistedInject constructor(
                 getFollowingsUseCase(
                     FollowingSearchInfo(
                         userId = userId,
-                        page = defaultFollowingPage,
+                        page = defaultFollowingPage.get(),
                         size = DEFAULT_PAGE_SIZE,
                     )
                 )
@@ -193,7 +194,7 @@ class OtherFriendManageViewModel @AssistedInject constructor(
                 getFollowersUseCase(
                     FollowerSearchInfo(
                         userId = userId,
-                        page = defaultFollowerPage,
+                        page = defaultFollowerPage.get(),
                         size = DEFAULT_PAGE_SIZE,
                     )
                 )
@@ -202,10 +203,10 @@ class OtherFriendManageViewModel @AssistedInject constructor(
             if (result.isSuccess) {
                 val newFollowingsOrFollowers = result.getOrThrow()
                 if (followState == Follow.FOLLOWING){
-                    defaultFollowingPage += 1
+                    defaultFollowingPage.incrementAndGet()
                     _defaultFollowings.emit(defaultFollowings.value + newFollowingsOrFollowers)
                 } else {
-                    defaultFollowerPage += 1
+                    defaultFollowerPage.incrementAndGet()
                     _defaultFollowers.emit(defaultFollowers.value + newFollowingsOrFollowers)
                 }
             } else{

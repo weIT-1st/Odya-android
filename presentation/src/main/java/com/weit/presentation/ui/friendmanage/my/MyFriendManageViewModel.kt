@@ -24,6 +24,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.concurrent.atomic.AtomicInteger
 import javax.inject.Inject
 
 @HiltViewModel
@@ -60,8 +61,8 @@ class MyFriendManageViewModel @Inject constructor(
 
     private var searchFollowingLastId: Long? = null
     private var searchFollowerLastId: Long? = null
-    private var defaultFollowingPage = 0
-    private var defaultFollowerPage = 0
+    private val defaultFollowingPage = AtomicInteger(0)
+    private val defaultFollowerPage = AtomicInteger(0)
 
 
     private var searchJob: Job = Job().apply {
@@ -78,8 +79,8 @@ class MyFriendManageViewModel @Inject constructor(
     fun initData(){
         searchFollowingLastId = null
         searchFollowerLastId = null
-        defaultFollowingPage = 0
-        defaultFollowerPage = 0
+        defaultFollowingPage.set(0)
+        defaultFollowerPage.set(0)
         query.value = ""
         _searchResultFollowings.value = emptyList()
         _searchResultFollowers.value = emptyList()
@@ -91,8 +92,6 @@ class MyFriendManageViewModel @Inject constructor(
 
 
     fun selectFollowMenu(follow: Follow) {
-        Logger.t("MainTest").i("selectFollowMenu호출됨")
-
         followState = follow
         initData()
     }
@@ -142,7 +141,7 @@ class MyFriendManageViewModel @Inject constructor(
             }
             if (result.isSuccess) {
                 val newFollowersOrFollowings = result.getOrThrow()
-                val lastId = if (newFollowersOrFollowings.isNotEmpty()) newFollowersOrFollowings.last().userId else null
+                val lastId = newFollowersOrFollowings.lastOrNull()?.userId
 
                 if (followState == Follow.FOLLOWING) {
                     searchFollowingLastId = lastId
@@ -171,7 +170,7 @@ class MyFriendManageViewModel @Inject constructor(
                 getFollowingsUseCase(
                     FollowingSearchInfo(
                         userId = userId,
-                        page = defaultFollowingPage,
+                        page = defaultFollowingPage.get(),
                         size = DEFAULT_PAGE_SIZE,
                     )
                 )
@@ -179,7 +178,7 @@ class MyFriendManageViewModel @Inject constructor(
                 getFollowersUseCase(
                     FollowerSearchInfo(
                         userId = userId,
-                        page = defaultFollowerPage,
+                        page = defaultFollowerPage.get(),
                         size = DEFAULT_PAGE_SIZE,
                     )
                 )
@@ -188,10 +187,10 @@ class MyFriendManageViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newFollowingsOrFollowers = result.getOrThrow()
                 if (followState == Follow.FOLLOWING){
-                    defaultFollowingPage += 1
+                    defaultFollowingPage.incrementAndGet()
                     _defaultFollowings.emit(defaultFollowings.value + newFollowingsOrFollowers)
                 } else {
-                    defaultFollowerPage += 1
+                    defaultFollowerPage.incrementAndGet()
                     _defaultFollowers.emit(defaultFollowers.value + newFollowingsOrFollowers)
                 }
             } else{

@@ -27,19 +27,19 @@ class MyFriendManageFragment : BaseFragment<FragmentMyFriendManageBinding>(
     private val viewModel: MyFriendManageViewModel by viewModels()
 
     private val followingSearchAdapter = FollowingSearchAdapter { user ->
-        showDeleteFollowingDialog(context) { viewModel.selectSearchFollowing(user) }
+        context?.let { showDeleteFollowingDialog(it) { viewModel.selectSearchFollowing(user) } }
     }
 
     private val myFollowingAdapter = MyFollowingAdapter { user ->
-        showDeleteFollowingDialog(context) { viewModel.selectDefaultFollowing(user) }
+        context?.let { showDeleteFollowingDialog(it) { viewModel.selectDefaultFollowing(user) } }
     }
 
     private val followerSearchAdapter = FollowerSearchAdapter{ user ->
-        showDeleteFollowerDialog(context) { viewModel.selectSearchFollower(user) }
+        context?.let { showDeleteFollowerDialog(it) { viewModel.selectSearchFollower(user) } }
     }
 
     private val myFollowerAdapter = MyFollowerAdapter{ user ->
-        showDeleteFollowerDialog(context) { viewModel.selectDefaultFollower(user) }
+        context?.let { showDeleteFollowerDialog(it) { viewModel.selectDefaultFollower(user) } }
     }
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {

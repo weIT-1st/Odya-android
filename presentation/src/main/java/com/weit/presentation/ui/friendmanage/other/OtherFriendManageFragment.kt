@@ -37,28 +37,28 @@ class OtherFriendManageFragment : BaseFragment<FragmentOtherFriendManageBinding>
 
     private val followingSearchAdapter = OtherFollowingSearchAdapter { user ->
         if (user.isFollowing) {
-            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, SEARCH_FOLLOWING) }
+            context?.let { showDeleteFollowingDialog(it) { viewModel.deleteFollow(user, SEARCH_FOLLOWING) } }
         } else viewModel.createFollow(user, SEARCH_FOLLOWING)
     }
 
 
     private val myFollowingAdapter = OtherFollowingAdapter { user ->
         if (user.isFollowing) {
-            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, DEFAULT_FOLLOWING) }
+            context?.let { showDeleteFollowingDialog(it) { viewModel.deleteFollow(user, DEFAULT_FOLLOWING) } }
         } else viewModel.createFollow(user, DEFAULT_FOLLOWING)
     }
 
 
     private val otherFollowerSearchAdapter = OtherFollowerSearchAdapter { user ->
             if(user.isFollowing) {
-            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, SEARCH_FOLLOWER) }
+                context?.let { showDeleteFollowingDialog(it) { viewModel.deleteFollow(user, SEARCH_FOLLOWER) } }
             } else viewModel.createFollow(user,SEARCH_FOLLOWER)
         }
 
 
     private val otherFollowerAdapter = OtherFollowerAdapter{ user ->
         if(user.isFollowing) {
-            showDeleteFollowingDialog(context) { viewModel.deleteFollow(user, DEFAULT_FOLLOWER) }
+            context?.let { showDeleteFollowingDialog(it) { viewModel.deleteFollow(user, DEFAULT_FOLLOWER) } }
         } else viewModel.createFollow(user,DEFAULT_FOLLOWER)
     }
 

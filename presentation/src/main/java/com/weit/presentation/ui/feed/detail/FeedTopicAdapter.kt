@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.topic.TopicDetail
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemFeedDetailTopicBinding
-import com.weit.presentation.model.TopicDTO
 
 class FeedTopicAdapter() :
     androidx.recyclerview.widget.ListAdapter<TopicDetail, FeedTopicAdapter.FeedTopicViewHolder>(

@@ -42,7 +42,7 @@ class AuthRepositoryImpl @Inject constructor(
         return if (result.isSuccess) {
             Result.success(Unit)
         } else {
-            Result.failure(handleRegistrationError(result.exceptionOrNull()!!))
+            Result.failure(handleRegistrationError(result.exception()))
         }
     }
 

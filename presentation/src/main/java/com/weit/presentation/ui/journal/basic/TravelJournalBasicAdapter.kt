@@ -6,12 +6,12 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.journal.TravelJournalContentsInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetailBasicModelBinding
+import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import com.weit.presentation.ui.util.SpaceDecoration
 
-class TravelJournalBasicAdapter: ListAdapter<TravelJournalContentsInfo, TravelJournalBasicAdapter.ViewHolder>(diffUtil) {
+class TravelJournalBasicAdapter: ListAdapter<TravelJournalDetailInfo, TravelJournalBasicAdapter.ViewHolder>(diffUtil) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
         ViewHolder(ItemJournalDetailBasicModelBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
@@ -38,29 +38,28 @@ class TravelJournalBasicAdapter: ListAdapter<TravelJournalContentsInfo, TravelJo
             }
         }
 
-        fun bind(item: TravelJournalContentsInfo) {
+        fun bind(item: TravelJournalDetailInfo) {
             binding.tvItemJournalDetailBasicDay.text = binding.root.context.getString(R.string.journal_detail_day, layoutPosition + 1)
             binding.tvItemJournalDetailBasicDate.text = item.travelDate
             binding.tvItemJournalDetailBasicContent.text = item.content
-            binding.tvItemJournalDetailBasicPlace.text = item.placeDetail.name
-            binding.tvItemJournalDetailBasicAddress.text =
-                item.placeDetail.address?.split(" ")?.slice(1..2)?.joinToString(" ") ?: ""
+            binding.tvItemJournalDetailBasicPlace.text = item.placeName
+            binding.tvItemJournalDetailBasicAddress.text = item.placeAddress
 
             imageAdapter.submitList(item.travelJournalContentImages)
         }
     }
 
     companion object{
-        private val diffUtil = object : DiffUtil.ItemCallback<TravelJournalContentsInfo>() {
+        private val diffUtil = object : DiffUtil.ItemCallback<TravelJournalDetailInfo>() {
             override fun areItemsTheSame(
-                oldItem: TravelJournalContentsInfo,
-                newItem: TravelJournalContentsInfo
+                oldItem: TravelJournalDetailInfo,
+                newItem: TravelJournalDetailInfo
             ): Boolean =
                 oldItem.travelJournalContentId == newItem.travelJournalContentId
 
             override fun areContentsTheSame(
-                oldItem: TravelJournalContentsInfo,
-                newItem: TravelJournalContentsInfo
+                oldItem: TravelJournalDetailInfo,
+                newItem: TravelJournalDetailInfo
             ): Boolean =
                 oldItem == newItem
         }

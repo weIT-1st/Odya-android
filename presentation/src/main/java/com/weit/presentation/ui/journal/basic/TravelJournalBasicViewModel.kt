@@ -1,11 +1,10 @@
 package com.weit.presentation.ui.journal.basic
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.model.journal.TravelJournalContentsInfo
 import com.weit.domain.model.journal.TravelJournalInfo
+import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -22,16 +21,26 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
         fun crate(travelJournalInfo: TravelJournalInfo): TravelJournalBasicViewModel
     }
 
-    private val _journalContents = MutableStateFlow<List<TravelJournalContentsInfo>>(emptyList())
-    val journalContents: StateFlow<List<TravelJournalContentsInfo>> get() = _journalContents
+    private val _journalContents = MutableStateFlow<List<TravelJournalDetailInfo>>(emptyList())
+    val journalContents: StateFlow<List<TravelJournalDetailInfo>> get() = _journalContents
 
     init {
-        getContentsInfo()
+        initContentsInfo()
     }
 
-    private fun getContentsInfo() {
+    private fun initContentsInfo() {
         viewModelScope.launch {
-            _journalContents.emit(travelJournalInfo.travelJournalContents)
+            val basicJournalInfo = travelJournalInfo.travelJournalContents.map {
+                TravelJournalDetailInfo(
+                    it.travelJournalContentId,
+                    it.travelDate,
+                    it.content,
+                    it.placeDetail.name,
+                    it.placeDetail.address?.split(" ")?.slice(1..2)?.joinToString(" "),
+                    it.travelJournalContentImages
+                )
+            }
+            _journalContents.emit(basicJournalInfo)
         }
     }
 

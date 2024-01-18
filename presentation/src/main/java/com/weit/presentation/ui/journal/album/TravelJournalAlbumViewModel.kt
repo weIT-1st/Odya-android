@@ -3,16 +3,14 @@ package com.weit.presentation.ui.journal.album
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.weit.domain.model.journal.TravelJournalContentsInfo
 import com.weit.domain.model.journal.TravelJournalInfo
+import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 class TravelJournalAlbumViewModel @AssistedInject constructor(
     @Assisted private val travelJournalInfo: TravelJournalInfo
@@ -22,20 +20,26 @@ class TravelJournalAlbumViewModel @AssistedInject constructor(
         fun create(travelJournalInfo: TravelJournalInfo): TravelJournalAlbumViewModel
     }
 
-    private val _journalInfo = MutableStateFlow(travelJournalInfo)
-    val journalInfo: StateFlow<TravelJournalInfo> get() = _journalInfo
-
-    private val _journalContents = MutableStateFlow<List<TravelJournalContentsInfo>>(emptyList())
-    val journalContents: StateFlow<List<TravelJournalContentsInfo>> get() = _journalContents
+    private val _journalContents = MutableStateFlow<List<TravelJournalDetailInfo>>(emptyList())
+    val journalContents: StateFlow<List<TravelJournalDetailInfo>> get() = _journalContents
 
     init {
-        getContentsInfo()
+        initAlbumJournalInfo()
     }
 
-    private fun getContentsInfo() {
+    private fun initAlbumJournalInfo() {
         viewModelScope.launch {
-            val journal = journalInfo.value
-            _journalContents.emit(journal.travelJournalContents)
+            val albumJournalInfo = travelJournalInfo.travelJournalContents.map {
+                TravelJournalDetailInfo(
+                    it.travelJournalContentId,
+                    it.travelDate,
+                    it.content,
+                    it.placeDetail.name,
+                    it.placeDetail.address?.split(" ")?.slice(1..2)?.joinToString(" "),
+                    it.travelJournalContentImages
+                )
+            }
+            _journalContents.emit(albumJournalInfo)
         }
     }
 

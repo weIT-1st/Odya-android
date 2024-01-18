@@ -89,9 +89,7 @@ class MyJournalViewModel @Inject constructor(
                     journalLastId = newJournals.last().travelJournalId
                 }
 
-                val originalJournal = journals
-                journals.clear()
-                journals.addAll(originalJournal + newJournals)
+                journals.addAll(newJournals)
 
                 _myJournals.emit(journals)
                 _randomJournal.emit(journals.random())

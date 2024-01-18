@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
-import com.weit.presentation.databinding.ItemJournalDetailAlbumModelBinding
 import com.weit.presentation.databinding.ItemJournalDetialModelBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.SpaceDecoration
@@ -45,6 +44,11 @@ class TravelJournalAlbumFragment(
                 travelJournalAlbumAdapter.submitList(info)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        binding.rvItemJournalDetailModel.adapter = null
+        super.onDestroyView()
     }
 
     private fun initTravelJournalAlbumRV() {

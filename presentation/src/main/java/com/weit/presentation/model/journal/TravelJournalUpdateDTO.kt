@@ -10,5 +10,6 @@ data class TravelJournalUpdateDTO (
     val travelStartDate: LocalDate,
     val travelEndDate: LocalDate,
     val visibility: String?,
+    // todo journal update 작업할때 수정
 //    val travelJournalCompanions: List<TravelJournalCompanionsInfo>,
 ) : Parcelable

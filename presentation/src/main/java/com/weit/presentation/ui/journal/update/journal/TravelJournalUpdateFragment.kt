@@ -24,6 +24,7 @@ import javax.inject.Inject
 class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
     FragmentPostTravelLogBinding::inflate
 ) {
+    // todo 업데이트 기능 정리하기
 
     @Inject
     lateinit var viewModelFactory: TravelJournalUpdateViewModel.TravelJournalUpdateFactory
@@ -82,15 +83,6 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
         }
 
-//        repeatOnStarted(viewLifecycleOwner) {
-//            viewModel.travelFriendsInfo.collectLatest { info ->
-//                travelFriendsAdapter.submitList(info.friendsSummary)
-//                if (info.remainingFriendsCount > 0) {
-//                    binding.includePostTravelLogFriends.tvTravelFriendsCount.text =
-//                        getString(R.string.post_travel_log_friends_count, info.remainingFriendsCount)
-//                }
-//            }
-//        }
     }
 
     private fun LocalDate.toDateString(): String {

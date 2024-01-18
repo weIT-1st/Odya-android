@@ -16,7 +16,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="72dp">
+            android:layout_marginBottom="32dp">
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/gl_tab_place_journal_start"

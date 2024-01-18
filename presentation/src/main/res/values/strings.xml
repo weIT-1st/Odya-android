@@ -149,7 +149,8 @@
     <string name="place_review_count">리뷰 총 %d개</string>
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
-    <string name="place_my_review">내가 작성한 리뷰</string>기
+    <string name="place_my_review">내가 작성한 리뷰</string>
+    <string name="place_more_review">%d개의 댓글 더보기</string>
 
     <string name="place_journey">여행일지</string>
     <string name="place_journey_date">%s ~ %s</string>
@@ -159,6 +160,8 @@
     <string name="place_recommend_journal">추천 여행일지</string>
 
     <string name="place_no_journal">여행일지가 없어요.</string>
+    <string name="place_no_review">아직 리뷰가 없어요</string>
+    <string name="place_no_community">아직 개시물이 없어요</string>
 
     <string name="place_community">커뮤니티</string>
 

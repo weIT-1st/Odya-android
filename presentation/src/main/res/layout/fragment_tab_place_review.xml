@@ -3,50 +3,75 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="72dp">
+            android:layout_marginTop="28dp"
+            android:layout_marginBottom="32dp"
+            >
 
-            <TextView
-                android:id="@+id/tv_tab_place_review_title"
-                style="@style/h5"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_tab_place_review_start"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="20dp"
-                android:text="@string/place_review"
-                android:textColor="@color/label_normal"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="20dp"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_tab_place_review_score"
-                style="@style/body2"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_tab_place_review_end"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_tab_place_review_title"
+                android:textAppearance="@style/h5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/place_review"
+                android:textColor="@color/label_normal"
+                app:layout_constraintStart_toStartOf="@id/gl_tab_place_review_start"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_tab_place_review_score"
+                android:textAppearance="@style/body2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:text="@string/place_score"
                 android:textColor="@color/label_assistive"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_tab_place_review_title"
                 app:layout_constraintStart_toEndOf="@+id/tv_tab_place_review_title"
-                app:layout_constraintTop_toTopOf="@+id/tv_tab_place_review_title" />
+                app:layout_constraintTop_toTopOf="@+id/tv_tab_place_review_title"
+                tools:text="3.0"/>
 
-            <!-- textStyle 임의 배치. 수정 가능성 있음 -->
-            <TextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tv_tab_place_recent"
-                style="@style/body2"
-                android:layout_width="wrap_content"
+                android:textAppearance="@style/body2"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingEnd="20dp"
                 android:text="@string/place_review_count"
                 android:textColor="@color/label_normal"
+                android:gravity="end"
+                app:layout_constraintStart_toEndOf="@id/tv_tab_place_review_score"
+                app:layout_constraintEnd_toEndOf="@id/gl_tab_place_review_end"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_tab_place_review_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/tv_tab_place_review_title" />
+                app:layout_constraintTop_toTopOf="@+id/tv_tab_place_review_title"
+                tools:text="리뷰 총 20개"/>
 
             <com.willy.ratingbar.BaseRatingBar
                 android:id="@+id/ratingbar_tab_place_review"
@@ -72,13 +97,14 @@
                 android:textAppearance="@style/detail2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="12dp"
                 android:background="@android:color/transparent"
                 android:drawableEnd="@drawable/ic_direrction_down"
-                android:paddingEnd="20dp"
                 android:text="@string/place_recent_review_sort"
                 android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_tab_place_review_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_tab_place_review_end"
+                app:layout_constraintHorizontal_bias="1"
                 app:layout_constraintTop_toBottomOf="@+id/ly_tab_create_review" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -88,45 +114,70 @@
                 android:layout_marginTop="24dp"
                 android:background="@color/elevation4"
                 android:padding="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ratingbar_tab_place_review">
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_tab_how_about_this"
-                    style="@style/detail2"
+                    android:textAppearance="@style/detail2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="@string/place_how_about"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="해운대 해수욕장의 방문 경험은 어떠셨나요?"/>
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_tab_create_review"
-                    style="@style/body1"
-                    android:layout_width="match_parent"
+                    android:textAppearance="@style/body1"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/corners_all_8_stroke_yellow"
                     android:text="@string/place_write_review"
                     android:textColor="@color/primary"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_tab_how_about_this" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_tab_place_review"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/gl_tab_place_review_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_tab_place_review_end"
                 app:layout_constraintTop_toBottomOf="@+id/btn_tap_place_recent_sort"
-                tools:itemCount="3"
+                tools:itemCount="4"
                 tools:listitem="@layout/item_place_review" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_tab_place_review_more"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:textAppearance="@style/detail2"
+                android:textColor="@color/label_assistive"
+                android:text="@string/place_more_review"
+                app:backgroundTint="@color/elevation3"
+                app:cornerRadius="8dp"
+                app:strokeColor="@color/line_alternative"
+                app:strokeWidth="1dp"
+                app:icon="@drawable/ic_right_arrow"
+                app:iconGravity="textEnd"
+                app:iconTint="@color/label_assistive"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/gl_tab_place_review_end"
+                app:layout_constraintStart_toStartOf="@id/gl_tab_place_review_start"
+                app:layout_constraintTop_toBottomOf="@id/rv_tab_place_review"
+                app:layout_constraintVertical_bias="1.0" />
 
-    </ScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </layout>

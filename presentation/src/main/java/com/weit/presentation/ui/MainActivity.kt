@@ -79,8 +79,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         startForegroundService(serviceIntent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        navController.removeOnDestinationChangedListener(destinationChangedListener)
-    }
+//    override fun onDestroy() {
+//        navController.removeOnDestinationChangedListener(destinationChangedListener)
+//        super.onDestroy()
+//    }
 }

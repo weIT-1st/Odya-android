@@ -133,14 +133,16 @@
         android:label="FeedDetailFragment" >
         <argument
             android:name="feedId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
         <argument
             android:name="nickname"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="username"/>
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"

@@ -31,7 +31,6 @@ import com.weit.domain.model.image.CoordinateUserImageResponseInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.login.input.topic.LoginTopicFragment
 import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
 import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -183,11 +182,11 @@ class MapFragment :
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        map?.clear()
-        mapFragment?.onDestroyView()
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        map?.clear()
+//        mapFragment?.onDestroyView()
+//    }
 
     private fun placeBottomSheetUp(placeId: String) {
         if (searchPlaceBottomSheetFragment == null){

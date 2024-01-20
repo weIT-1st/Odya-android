@@ -3,6 +3,7 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityMyActivityContentDTO
 import com.weit.data.model.image.UserImageResponseDTO
+import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.model.user.UserStatisticsDTO
@@ -43,6 +44,11 @@ interface UserService {
     @PATCH("/api/v1/users/profile")
     suspend fun updateUserProfile(
         @Part profile: MultipartBody.Part?,
+    ): Response<Unit>
+
+    @PATCH("/api/v1/users/fcm-token")
+    suspend fun updateFcmToken(
+        @Body fcmToken: FcmToken,
     ): Response<Unit>
 
     @DELETE("/api/v1/users")

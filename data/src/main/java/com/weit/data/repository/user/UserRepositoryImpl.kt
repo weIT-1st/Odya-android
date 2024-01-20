@@ -1,6 +1,7 @@
 package com.weit.data.repository.user
 
 import android.content.res.Resources.NotFoundException
+import com.weit.data.model.user.FcmToken
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
@@ -75,6 +76,14 @@ class UserRepositoryImpl @Inject constructor(
     // 이걸 가져오지 못하면 자신의 UserId가 필요한 기능 수행이 불가능하므로 에러를 throw 함
     override suspend fun getUserId(): Long =
         userInfoDataSource.getUserId() ?: throw NotFoundException()
+
+    override suspend fun updateFcmToken(fcmToken: String): Result<Unit> {
+        val result = userDataSource.updateFcmToken(FcmToken(fcmToken))
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleUserError(result))
+        }    }
 
     override suspend fun deleteUser(): Result<Unit> {
         val result = userDataSource.deleteUser()

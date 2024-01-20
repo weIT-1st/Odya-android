@@ -22,6 +22,8 @@ interface UserRepository {
     suspend fun setUserId(userId: Long)
 
     suspend fun getUserId(): Long
+    suspend fun updateFcmToken(fcmToken: String): Result<Unit>
+
 
     suspend fun deleteUser() : Result<Unit>
 

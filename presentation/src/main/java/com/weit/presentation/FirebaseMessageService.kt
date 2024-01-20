@@ -9,14 +9,19 @@ import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.weit.domain.usecase.user.UpdateFcmTokenUseCase
 import com.weit.presentation.model.NotificationType
 import com.weit.presentation.ui.MainActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 class FirebaseMessageService : FirebaseMessagingService() {
 
+    @Inject
+    lateinit var updateFcmTokenUseCase: UpdateFcmTokenUseCase
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
@@ -31,7 +36,9 @@ class FirebaseMessageService : FirebaseMessagingService() {
         }
     }
     override fun onNewToken(token: String) {
-        //message token 변경
+        scope.launch {
+            updateFcmTokenUseCase(token)
+        }
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

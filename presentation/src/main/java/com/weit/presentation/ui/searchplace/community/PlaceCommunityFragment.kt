@@ -60,7 +60,7 @@ class PlaceCommunityFragment(
     }
 
     private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
-        findNavController().navigate(action)
+//        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId)
+//        findNavController().navigate(action)
     }
 }

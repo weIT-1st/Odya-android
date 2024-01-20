@@ -9,6 +9,7 @@ import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.SearchFollowRequestInfo
+import com.weit.domain.model.user.User
 import com.weit.domain.usecase.follow.CreateFollowCreateUseCase
 import com.weit.domain.usecase.follow.DeleteFollowUseCase
 import com.weit.domain.usecase.follow.DeleteFollowerUseCase
@@ -22,6 +23,8 @@ import com.weit.domain.usecase.follow.OtherSearchFollowingsUseCase
 import com.weit.domain.usecase.follow.SearchFollowersUseCase
 import com.weit.domain.usecase.follow.SearchFollowingsUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
+import com.weit.domain.usecase.user.GetUserUseCase
+import com.weit.domain.usecase.userinfo.GetUsernameUseCase
 import com.weit.presentation.model.Follow
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
 import com.weit.presentation.model.user.FollowUserContentImpl
@@ -49,6 +52,7 @@ class OtherFriendManageViewModel @AssistedInject constructor(
     private val searchFollowingsUseCase: OtherSearchFollowingsUseCase,
     private val deleteFollowUseCase: DeleteFollowUseCase,
     private val createFollowCreateUseCase: CreateFollowCreateUseCase,
+    private val getUserUseCase: GetUserUseCase,
     @Assisted private val userId: Long,
 ) : ViewModel() {
 
@@ -78,6 +82,7 @@ class OtherFriendManageViewModel @AssistedInject constructor(
     private var searchFollowerLastId: Long? = null
     private val defaultFollowingPage = AtomicInteger(0)
     private val defaultFollowerPage = AtomicInteger(0)
+    private lateinit var user : User
 
 
     private var searchJob: Job = Job().apply {
@@ -92,17 +97,22 @@ class OtherFriendManageViewModel @AssistedInject constructor(
     }
 
     fun initData(){
-        searchFollowingLastId = null
-        searchFollowerLastId = null
-        defaultFollowingPage.set(0)
-        defaultFollowerPage.set(0)
-        query.value = ""
-        _searchResultFollowings.value = emptyList()
-        _searchResultFollowers.value = emptyList()
-        _defaultFollowers.value = emptyList()
-        _defaultFollowings.value = emptyList()
-        updateDefaultRv()
-        onDefault()
+        viewModelScope.launch {
+            getUserUseCase().onSuccess { userInfo ->
+                user = userInfo
+            }
+            searchFollowingLastId = null
+            searchFollowerLastId = null
+            defaultFollowingPage.set(0)
+            defaultFollowerPage.set(0)
+            query.value = ""
+            _searchResultFollowings.value = emptyList()
+            _searchResultFollowers.value = emptyList()
+            _defaultFollowers.value = emptyList()
+            _defaultFollowings.value = emptyList()
+            updateDefaultRv()
+            onDefault()
+        }
     }
 
 
@@ -155,7 +165,9 @@ class OtherFriendManageViewModel @AssistedInject constructor(
                 searchFollowersUseCase(userId, SearchFollowRequestInfo(DEFAULT_PAGE_SIZE, lastUserId, query))
             }
             if (result.isSuccess) {
-                val newFollowersOrFollowings = result.getOrThrow()
+                val newFollowersOrFollowings = result.getOrThrow().filterNot {
+                    it.nickname == user.nickname
+                }
                 val lastId = if (newFollowersOrFollowings.isNotEmpty()) newFollowersOrFollowings.last().userId else null
 
                 if (followState == Follow.FOLLOWING) {
@@ -201,7 +213,9 @@ class OtherFriendManageViewModel @AssistedInject constructor(
             }
 
             if (result.isSuccess) {
-                val newFollowingsOrFollowers = result.getOrThrow()
+                val newFollowingsOrFollowers = result.getOrThrow().filterNot {
+                    it.nickname == user.nickname
+                }
                 if (followState == Follow.FOLLOWING){
                     defaultFollowingPage.incrementAndGet()
                     _defaultFollowings.emit(defaultFollowings.value + newFollowingsOrFollowers)

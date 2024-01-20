@@ -168,6 +168,15 @@ class RepTravelJournalRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteRepTravelJournal(repTravelJournalId: Long): Result<Unit> {
+        val response = repTravelJournalDataSource.deleteRepTravelJournal(repTravelJournalId)
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleJournalError((handleResponseError(response))))
+        }
+    }
+
 
     private fun handleResponseError(response: Response<*>): Throwable {
         return handleCode(response.code())

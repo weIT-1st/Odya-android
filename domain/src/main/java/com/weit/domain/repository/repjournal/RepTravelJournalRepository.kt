@@ -24,4 +24,8 @@ interface RepTravelJournalRepository {
         userId: Long
     ): Result<List<RepTravelJournalListInfo>>
 
+    suspend fun deleteRepTravelJournal(
+        repTravelJournalId: Long,
+    ): Result<Unit>
+
 }

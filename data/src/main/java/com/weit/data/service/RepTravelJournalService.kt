@@ -42,5 +42,8 @@ interface RepTravelJournalService {
         @Query("sortType") sortType: String?
     ): ListResponse<RepTravelJournalListDTO>
 
-
+    @DELETE("/api/v1/rep-travel-journals/{repTravelJournalId}")
+    suspend fun deleteRepTravelJournal(
+        @Path("repTravelJournalId") repTravelJournalId: Long,
+    ): Response<Unit>
 }

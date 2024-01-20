@@ -39,4 +39,7 @@ class RepTravelJournalDataSource @Inject constructor(
     ): ListResponse<RepTravelJournalListDTO> =
         service.getOtherTravelJournalList(userId, size, lastRepTravelJournalId, sortType)
 
+    suspend fun deleteRepTravelJournal(repTravelJournalId: Long): Response<Unit> {
+        return service.deleteRepTravelJournal(repTravelJournalId)
+    }
 }

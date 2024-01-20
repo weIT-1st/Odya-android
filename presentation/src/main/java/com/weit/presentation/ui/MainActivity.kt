@@ -2,16 +2,20 @@ package com.weit.presentation.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
 import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
+import com.weit.domain.usecase.user.UpdateFcmTokenUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ActivityMainBinding
 import com.weit.presentation.ui.base.BaseActivity
@@ -36,6 +40,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
 
+
+
     private val destinationChangedListener =
         NavController.OnDestinationChangedListener { _, destination, _ ->
             setBottomNavigationVisibility(destination)
@@ -49,6 +55,13 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                return@OnCompleteListener
+            }
+            val token = task.result
+            viewModel.updateToken(token)
+        })
         setupBottomNavigation()
         viewModel.verifyIgnoringBatteryOptimization(verifyIgnoringBatteryOptimizationUseCase)
         viewModel.verifyNotificationSetting(verifyNotificationSettingUseCase)

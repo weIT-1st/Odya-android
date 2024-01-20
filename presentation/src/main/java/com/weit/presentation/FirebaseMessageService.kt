@@ -9,6 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.user.UpdateFcmTokenUseCase
 import com.weit.presentation.model.NotificationType
 import com.weit.presentation.ui.MainActivity

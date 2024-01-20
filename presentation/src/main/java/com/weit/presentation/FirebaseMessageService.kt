@@ -84,7 +84,33 @@ class FirebaseMessageService : FirebaseMessagingService() {
                     addDestination(R.id.fragment_feed_detail)
                 }
             }
-
+            NotificationType.FOLLOWING_TRAVEL_JOURNAL.name -> {
+                val arguments = Bundle().apply {
+                    putString("travelJournalId", message.data["travelJournalId"])
+                }
+                deepLinkBuilder.apply {
+                    setArguments(arguments)
+//                    addDestination(R.id.fragment_feed_detail)
+                }
+            }
+            NotificationType.TRAVEL_JOURNAL_TAG.name -> {
+                val arguments = Bundle().apply {
+                    putString("travelJournalId", message.data["travelJournalId"])
+                }
+                deepLinkBuilder.apply {
+                    setArguments(arguments)
+//                    addDestination(R.id.fragment_feed_detail)
+                }
+            }
+            NotificationType.FOLLOWER_ADD.name -> {
+                val arguments = Bundle().apply {
+                    putString("userName", message.data["userName"])
+                }
+                deepLinkBuilder.apply {
+                    setArguments(arguments)
+                    addDestination(R.id.otherProfileFragment)
+                }
+            }
         }
 
         return deepLinkBuilder.createPendingIntent()

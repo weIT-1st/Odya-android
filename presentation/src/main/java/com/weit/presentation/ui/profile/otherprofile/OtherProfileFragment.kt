@@ -40,8 +40,9 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val userName = arguments?.getString("userName")
+        viewModel.initialize(userName)
         initRecyclerView()
-
     }
 
     private fun initRecyclerView() {

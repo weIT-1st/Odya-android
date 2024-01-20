@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="follower"
+            type="com.weit.domain.model.follow.FollowUserContent" />
+    </data>
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="36dp"
     android:layout_marginTop="8dp">
@@ -14,19 +22,22 @@
         android:layout_marginBottom="2dp"
         android:src="@drawable/ic_profile"
         android:scaleType="centerCrop"
+        app:image_uri="@{follower.profile.url}"
+        app:profile_background="@{follower.profile}"
         app:shapeAppearance="@style/ShapeableImageViewCircle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@tools:sample/avatars"/>
 
-    <TextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_friend_name"
         style="@style/body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:ellipsize="end"
+        android:text="@{follower.nickname}"
         android:maxLines="1"
         app:layout_constrainedWidth="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -45,24 +56,21 @@
         android:layout_marginEnd="4dp"
         android:src="@drawable/ic_badge"
         app:layout_constraintBottom_toBottomOf="@+id/tv_friend_name"
-        app:layout_constraintEnd_toStartOf="@+id/bt_friend_follow"
+        app:layout_constraintEnd_toStartOf="@+id/iv_friend_follow"
         app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/tv_friend_name"
         app:layout_constraintTop_toTopOf="@+id/tv_friend_name" />
 
-    <ToggleButton
-        android:id="@+id/bt_friend_follow"
+    <ImageView
+        android:id="@+id/iv_friend_follow"
         android:layout_width="54dp"
         android:layout_height="29dp"
-        android:background="@drawable/selector_follower_following"
-        android:checked="true"
-        android:textOff="@string/follower"
-        android:textOn="@string/following"
-        android:textColor="@drawable/selector_follow_color"
-        style="@style/detail2"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/bt_following"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

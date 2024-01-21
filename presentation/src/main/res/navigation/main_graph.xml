@@ -58,6 +58,9 @@
             android:id="@+id/action_fragment_mypage_to_fragment_map"
             app:destination="@id/fragment_map" />
         <action
+            android:id="@+id/action_fragment_mypage_to_myFriendManageFragment"
+            app:destination="@id/myFriendManageFragment" />
+        <action
             android:id="@+id/action_fragment_mypage_to_post_graph"
             app:destination="@id/post_graph" />
     </fragment>
@@ -331,6 +334,21 @@
         <action
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_otherFriendManageFragment"
+            app:destination="@id/otherFriendManageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.my.MyFriendManageFragment"
+        android:label="MyFriendManageFragment" />
+    <fragment
+        android:id="@+id/otherFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.other.OtherFriendManageFragment"
+        android:label="OtherFriendManageFragment" >
+        <argument
+            android:name="userId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/feedSelectPlaceFragment"

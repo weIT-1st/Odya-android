@@ -6,4 +6,5 @@ interface FollowUserContent {
     val userId: Long
     val nickname: String
     val profile: UserProfile
+    val isFollowing: Boolean
 }

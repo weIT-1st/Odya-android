@@ -17,6 +17,7 @@ import com.weit.presentation.databinding.BottomSheetPlaceSearchBinding
 import com.weit.presentation.ui.main.community.PlaceCommunityFragment
 import com.weit.presentation.ui.main.journal.PlaceJournalFragment
 import com.weit.presentation.ui.main.review.PlaceReviewFragment
+import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -88,6 +89,16 @@ class SearchPlaceBottomSheetFragment(
                 binding.tvBsPlaceAddress.text = info.address
             }
         }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.isFavoritePlace.collectLatest { isFavorite ->
+                if (isFavorite) {
+                    binding.btnBsPlaceBookMark.setBackgroundResource(R.drawable.ic_book_mark_yellow)
+                } else {
+                    binding.btnBsPlaceBookMark.setBackgroundResource(R.drawable.ic_book_mark)
+                }
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -117,7 +128,10 @@ class SearchPlaceBottomSheetFragment(
     }
 
     private fun initExperiencedFriendRV() {
-        binding.rvPlaceExperiencedFriendProfile.adapter = experiencedFriendAdapter
+        binding.rvPlaceExperiencedFriendProfile.apply {
+            adapter = experiencedFriendAdapter
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_travel_friends_space))
+        }
     }
 
     companion object {

@@ -9,6 +9,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.domain.usecase.bookmark.CreateJournalBookMarkUseCase
 import com.weit.domain.usecase.favoritePlace.GetIsFavoritePlaceUseCase
+import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlaceImageUseCase
@@ -26,6 +27,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getPlaceImageUseCase: GetPlaceImageUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getIsFavoritePlaceUseCase: GetIsFavoritePlaceUseCase,
+    private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     @Assisted private val placeId: String,
 ) : ViewModel() {
 
@@ -37,6 +39,9 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
 
     private val _placeInfo = MutableStateFlow(PlaceInformation())
     val placeInfo: StateFlow<PlaceInformation> get() = _placeInfo
+
+    private val _isFavoritePlace = MutableStateFlow(false)
+    val isFavoritePlace : MutableStateFlow<Boolean> get() = _isFavoritePlace
 
     @AssistedFactory
     interface PlaceIdFactory {
@@ -87,14 +92,40 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
         }
     }
 
+    fun updateFavoritePlace() {
+        viewModelScope.launch {
+            val isFavorite = isFavoritePlace.value
+
+            if (isFavorite) {
+                deleteFavoritePlace()
+            } else {
+                registerFavoritePlace()
+            }
+        }
+    }
+
     private fun getIsFavoritePlace() {
         viewModelScope.launch {
             val result = getIsFavoritePlaceUseCase(placeId)
 
             if (result.isSuccess) {
-
+                _isFavoritePlace.emit(result.getOrThrow())
             }
         }
+    }
+
+    private fun registerFavoritePlace() {
+        viewModelScope.launch{
+            val result = registerFavoritePlaceUseCase(placeId)
+
+            if (result.isSuccess) {
+                getIsFavoritePlaceUseCase
+            }
+        }
+    }
+
+    private fun deleteFavoritePlace() {
+        // todo 관심장소 삭제
     }
 
     data class ExperiencedFriendInfo (

@@ -150,7 +150,7 @@
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
     <string name="place_my_review">내가 작성한 리뷰</string>
-    <string name="place_more_review">%d개의 댓글 더보기</string>
+    <string name="place_more_review">댓글 더보기</string>
 
     <string name="place_journey">여행일지</string>
     <string name="place_journey_date">%s ~ %s</string>

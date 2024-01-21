@@ -12,6 +12,12 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp">
 
+            <include
+                android:id="@+id/include_tab_place_no_feed"
+                layout="@layout/item_main_no_contents"
+                android:layout_width="match_parent"
+                android:layout_height="280dp"/>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_tab_place_community"
                 android:layout_width="match_parent"

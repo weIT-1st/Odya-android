@@ -28,6 +28,7 @@
                 app:tint="@color/label_assistive" />
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_main_no_contents"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/detail1"

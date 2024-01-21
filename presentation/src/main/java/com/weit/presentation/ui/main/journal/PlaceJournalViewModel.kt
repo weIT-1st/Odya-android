@@ -48,8 +48,54 @@ class PlaceJournalViewModel @AssistedInject constructor(
 
     init {
         getMyJournalList()
-        getFriendJournalList()
-        getRecommendJournalList()
+        onNextFriendJournal()
+        onNextRecommendJournal()
+    }
+
+    fun onNextFriendJournal() {
+        if (friendJob.isCompleted.not()) {
+            return
+        }
+        loadNextFriendJournal()
+    }
+
+    private fun loadNextFriendJournal() {
+        friendJob = viewModelScope.launch {
+            val result = getFriendTravelJournalListUseCase(DEFAULT_PAGE_SIZE, friendLastID, placeId)
+
+            if (result.isSuccess) {
+                val newFriendJournals = result.getOrThrow()
+                newFriendJournals.lastOrNull()?.let {
+                    friendLastID = it.travelJournalId
+                    _friendJournalList.emit(friendJournalList.value + newFriendJournals)
+                }
+            } else {
+                Log.d("getFriendJournalList", "fail : ${result.exceptionOrNull()}")
+            }
+        }
+    }
+
+    fun onNextRecommendJournal() {
+        if (recommendJob.isCompleted.not()) {
+            return
+        }
+        loadNextRecommendJournal()
+    }
+
+    private fun loadNextRecommendJournal() {
+        recommendJob = viewModelScope.launch {
+            val result = getRecommendTravelJournalListUseCase(DEFAULT_PAGE_SIZE, recommendLastID, placeId)
+
+            if (result.isSuccess) {
+                val newRecommendJournals = result.getOrThrow()
+                newRecommendJournals.lastOrNull()?.let {
+                    recommendLastID = it.travelJournalId
+                    _recommendJournalList.emit(recommendJournalList.value + newRecommendJournals)
+                }
+            } else {
+                Log.d("getRecommendJournalList", "fail : ${result.exceptionOrNull()}")
+            }
+        }
     }
 
     private fun getMyJournalList(){
@@ -71,31 +117,6 @@ class PlaceJournalViewModel @AssistedInject constructor(
             val journal = myRandomJournal.value
             journal?.content?.let {
                 myJournalContent.emit(it)
-            }
-        }
-    }
-
-    private fun getFriendJournalList(){
-        viewModelScope.launch{
-            val result = getFriendTravelJournalListUseCase(null, null, null)
-            if (result.isSuccess){
-                val list = result.getOrThrow()
-                _friendJournalList.emit(list)
-            } else {
-                Log.d("getFriendJournalList", "fail : ${result.exceptionOrNull()}")
-            }
-        }
-    }
-
-    private fun getRecommendJournalList(){
-        viewModelScope.launch {
-            // todo 무한 스크롤
-            val result = getRecommendTravelJournalListUseCase(null, null, placeId)
-            if (result.isSuccess){
-                val list = result.getOrThrow()
-                _recommendJournalList.emit(list)
-            } else {
-                Log.d("getRecommendJournalList", "fail : ${result.exceptionOrNull()}")
             }
         }
     }

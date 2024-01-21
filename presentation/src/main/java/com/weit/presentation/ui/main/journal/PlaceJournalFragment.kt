@@ -9,6 +9,7 @@ import androidx.navigation.fragment.findNavController
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,7 +30,23 @@ class PlaceJournalFragment(
     }
 
     private val friendJournalAdapter: FriendJournalAdapter = FriendJournalAdapter()
-    private val recommendJournalAdapter: RecommendJournalAdapter = RecommendJournalAdapter() 
+    private val recommendJournalAdapter: RecommendJournalAdapter = RecommendJournalAdapter()
+
+    private val friendInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextFriendJournal()
+            }
+        }
+    }
+
+    private val recommendInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextRecommendJournal()
+            }
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -94,6 +111,9 @@ class PlaceJournalFragment(
     override fun onDestroyView() {
         binding.rvTabPlaceFriendJournal.adapter = null
         binding.rvTabPlaceRecommendJournal.adapter = null
+
+        binding.rvTabPlaceFriendJournal.removeOnScrollListener(friendInfinityScrollListener)
+        binding.rvTabPlaceRecommendJournal.removeOnScrollListener(recommendInfinityScrollListener)
         super.onDestroyView()
     }
 
@@ -101,6 +121,7 @@ class PlaceJournalFragment(
         binding.rvTabPlaceFriendJournal.apply {
             adapter = friendJournalAdapter
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.main_journal_margin))
+            addOnScrollListener(friendInfinityScrollListener)
         }
     }
 
@@ -108,6 +129,7 @@ class PlaceJournalFragment(
         binding.rvTabPlaceRecommendJournal.apply {
             adapter = recommendJournalAdapter
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.main_journal_margin))
+            addOnScrollListener(recommendInfinityScrollListener)
         }
     }
 

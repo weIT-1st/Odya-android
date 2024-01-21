@@ -339,17 +339,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_tab_place_my_journey_content"
                     style="@style/detail2"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textColor="@color/label_assistive"
                     app:layout_constraintStart_toEndOf="@id/iv_tab_place_pencil"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/iv_tab_place_pencil"
-                    tools:text="일반적인 Android 앱에는 활동, 프래그먼트, 서비스, 콘텐츠 제공자, broadcast receiver를 비롯하여 " />
+                    tools:text="일반적인 Android 앱에는 활동,dddddddddddddddd 프래그먼트, 서비스, 콘텐츠 제공자, broadcast receiver를 비롯하여 " />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

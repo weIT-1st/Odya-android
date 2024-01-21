@@ -9,4 +9,5 @@ data class TravelJournalCompanionsDTO(
     @field:Json(name = "nickname") val nickname: String,
     @field:Json(name = "profileUrl") val profileUrl: String,
     @field:Json(name = "isRegistered") val isRegistered: Boolean,
+    @field:Json(name = "isFollowing") val isFollowing: Boolean,
 )

@@ -9,4 +9,5 @@ data class TravelJournalWriterDTO(
     @field:Json(name = "userId") val userId: Long,
     @field:Json(name = "nickname") val nickname: String,
     @field:Json(name = "profile") val profile: UserProfileDTO,
+    @field:Json(name = "isFollowing") val isFollowing: Boolean,
 )

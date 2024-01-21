@@ -5,6 +5,6 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class TravelCompanionSimpleResponsesDTO(
-    @field:Json(name = "username") val username: String,
-    @field:Json(name = "profileUrl") val profileUrl: String,
+    @field:Json(name = "username") val username: String?,
+    @field:Json(name = "profileUrl") val profileUrl: String?,
 )

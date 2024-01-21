@@ -27,8 +27,7 @@ interface TravelJournalService {
         @Part images: List<MultipartBody.Part>
     )
 
-
-    @GET("/api/v1/travel-journals/")
+    @GET("/api/v1/travel-journals/{travelJournalId}")
     suspend fun getTravelJournal(
         @Path("travelJournalId") travelJournalId: Long
     ): TravelJournalDTO

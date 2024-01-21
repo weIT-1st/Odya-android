@@ -43,7 +43,7 @@ class PlaceJourneyFragment(
         repeatOnStarted(viewLifecycleOwner){
             viewModel.myJournalList.collectLatest { myJournals ->
                 myJournalAdapter.submitList(myJournals)
-                binding.tvTabPlaceMyJourneyContent.text = myJournals.first().content
+                binding.tvTabPlaceMyJourneyContent.text = myJournals.firstOrNull()?.content
             }
         }
 
@@ -78,7 +78,7 @@ class PlaceJourneyFragment(
                 val position = parent.getChildAdapterPosition(view)
 
                 if (position != 0){
-                    outRect.left = DimensionUtils.dpToPx(requireContext(), 10).toInt() * -1
+                    outRect.left = DimensionUtils.dpToPx(requireContext(), 10) * -1
                 }
             }
         })

@@ -7,6 +7,7 @@ import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
+import com.weit.domain.repository.place.PlaceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,9 +30,10 @@ class TravelJournalModule {
         travelJournalDataSource: TravelJournalDataSource,
         imageRepository: ImageRepository,
         imageDataSource: ImageDataSource,
+        placeRepository: PlaceRepository,
         moshi: Moshi
     ): TravelJournalRepository =
-        TravelJournalRepositoryImpl(travelJournalDataSource, imageRepository, imageDataSource, moshi)
+        TravelJournalRepositoryImpl(travelJournalDataSource, imageRepository, imageDataSource, placeRepository, moshi)
 
     @ActivityRetainedScoped
     @Provides

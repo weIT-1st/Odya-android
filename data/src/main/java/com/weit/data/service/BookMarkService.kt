@@ -23,6 +23,14 @@ interface BookMarkService {
         @Query("sortType") sortType: String?
     ): ListResponse<JournalBookMarkDTO>
 
+    @GET("/api/v1/travel-journal-bookmarks/{userId}")
+    suspend fun getUserJournalBookMark(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int? = 10,
+        @Query("lastId") lastId: Long?,
+        @Query("sortType") sortType: String?
+    ): ListResponse<JournalBookMarkDTO>
+
     @DELETE("/api/v1/travel-journal-bookmarks/{travelJournalId}")
     suspend fun deleteJournalBookMark(
         @Path("travelJournalId") travelJournalId: Long

@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/corners_all_8"
             android:backgroundTint="@color/elevation3"
-            android:drawableEnd="@drawable/ic_x_cirecle"
+            android:drawableEnd="@drawable/ic_x_circle"
             android:hint="@string/login_name_hint"
             android:inputType="text"
             android:padding="12dp"

@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tb_update_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/background_normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_direction_left"
+            app:title="@string/update_info_title"
+            app:titleCentered="true"
+            app:titleTextAppearance="@style/h6"
+            app:titleTextColor="@color/label_normal" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintTop_toBottomOf="@id/tb_update_info"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@color/elevation2">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_update_info_start"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_begin="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_update_info_end"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_end="20dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_normal"
+                android:text="@string/update_info_nickname"
+                android:layout_marginTop="20dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_update_info_nickname"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:expandedHintEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toStartOf="@+id/btn_update_info_nickname_change"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_nickname"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_update_info_nickname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/elevation4"
+                    android:drawableEnd="@drawable/ic_x_circle"
+                    android:hint="@string/update_info_nickname_hint"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textAppearance="@style/body1"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="@color/label_inactive" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_update_info_nickname_change"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_inactive"
+                android:text="@string/update_info_change"
+                android:backgroundTint="@color/system_inactive"
+                app:cornerRadius="8dp"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                app:layout_constraintTop_toTopOf="@id/tl_update_info_nickname"
+                app:layout_constraintBottom_toBottomOf="@id/tl_update_info_nickname"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_nickname_detail"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/detail2"
+                android:textColor="@color/label_normal"
+                android:text="@string/update_info_nickname_detail"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@id/tl_update_info_nickname"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/line_alternative"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_nickname_detail"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_normal"
+                android:text="@string/update_info_phone"
+                android:layout_marginTop="28dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_nickname_detail"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_update_info_phone"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:expandedHintEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toStartOf="@+id/btn_update_info_phone_change"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_phone"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_update_info_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/elevation4"
+                    android:drawableEnd="@drawable/ic_x_warning"
+                    android:hint="@string/update_info_phone_hint"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textAppearance="@style/body1"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="@color/label_inactive" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_update_info_phone_change"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_inactive"
+                android:text="@string/update_info_change"
+                android:backgroundTint="@color/system_inactive"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                app:cornerRadius="8dp"
+                app:layout_constraintTop_toTopOf="@id/tl_update_info_phone"
+                app:layout_constraintBottom_toBottomOf="@id/tl_update_info_phone"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_update_info_certification_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:expandedHintEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toStartOf="@+id/btn_update_info_certification_number"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_phone"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_update_info_certification_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/elevation4"
+                    android:drawableEnd="@drawable/ic_x_warning"
+                    android:hint="@string/update_info_certification_number"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textAppearance="@style/body1"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="@color/label_inactive" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_update_info_certification_number"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_inactive"
+                android:text="@string/update_info_confirm"
+                android:backgroundTint="@color/primary"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                app:cornerRadius="8dp"
+                app:layout_constraintTop_toTopOf="@id/tl_update_info_certification_number"
+                app:layout_constraintBottom_toBottomOf="@id/tl_update_info_certification_number"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/line_alternative"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_certification_number"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_normal"
+                android:text="@string/update_info_mail"
+                android:layout_marginTop="28dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_certification_number"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_update_info_email"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:expandedHintEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_email"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_update_info_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/elevation4"
+                    android:hint="@string/update_info_mail_hint"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textAppearance="@style/body1"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="@color/label_inactive" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tl_update_info_address"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                app:boxStrokeWidth="0dp"
+                app:expandedHintEnabled="false"
+                app:hintEnabled="false"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toStartOf="@+id/btn_update_info_certification_number"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_email"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_update_info_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/corners_all_8"
+                    android:backgroundTint="@color/elevation4"
+                    android:drawableEnd="@drawable/ic_direction_down"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:padding="12dp"
+                    android:textAppearance="@style/body1"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textColorHint="@color/label_inactive"
+                    tools:text="naver.com"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_update_info_address"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_inactive"
+                android:text="@string/update_info_change"
+                android:backgroundTint="@color/system_inactive"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                app:cornerRadius="8dp"
+                app:layout_constraintTop_toTopOf="@id/tl_update_info_address"
+                app:layout_constraintBottom_toBottomOf="@id/tl_update_info_address"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/line_alternative"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_address"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_logout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/label_normal"
+                android:text="@string/update_info_logout"
+                android:layout_marginTop="28dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tl_update_info_address"/>
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/line_alternative"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_logout"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_update_info_withdraw"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/h6"
+                android:textColor="@color/warning"
+                android:text="@string/update_info_withdraw"
+                android:layout_marginTop="28dp"
+                app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
+                app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
+                app:layout_constraintTop_toBottomOf="@+id/tv_update_info_logout"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

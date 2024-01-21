@@ -280,5 +280,34 @@
     <string name="feed_travel_journal_visibility_content">공개된 여행일지만 연동 가능합니다.</string>
     <string name="feed_travel_journal_visibility_update">변경하기</string>
 
+    <!--  setting  -->
+    <string name="setting_title">환경설정</string>
+    <string name="setting_update_user_info">회원정보 수정</string>
+    <string name="setting_privacy_policy">개인정보 보호정책</string>
+    <string name="setting_terms_of_use">이용약관</string>
+    <string name="setting_alarm">알림설정</string>
+    <string name="setting_alarm_all">전체 알람</string>
+    <string name="setting_alarm_community_like">커뮤니티 좋아요 알람</string>
+    <string name="setting_alarm_community_comment">커뮤니티 댓글 알람</string>
+    <string name="setting_alarm_marketing">마케팅 알람</string>
+    <string name="setting_open_source">오픈소스</string>
+    <string name="setting_location">위치정보 수집</string>
+    <string name="setting_location_detail">해당 기능을 끄면 여행일지의 동선이 간략화 됩니다.</string>
+    <string name="setting_version">버전 정보</string>
 
+    <!--  update_user_info  -->
+    <string name="update_info_title">회원 정보 수정</string>
+    <string name="update_info_nickname">닉네임</string>
+    <string name="update_info_nickname_hint">홍길동</string>
+    <string name="update_info_nickname_detail">*최소 2자~최대8장, 특수문자 불가능</string>
+    <string name="update_info_phone">휴대폰 번호</string>
+    <string name="update_info_phone_hint">010 - 1234 - 5678</string>
+    <string name="update_info_certification_number">인증번호를 입력해 주세요</string>
+    <string name="update_info_mail">이메일 주소</string>
+    <string name="update_info_mail_hint">flyingbread</string>
+    <string name="update_info_logout">로그아웃</string>
+    <string name="update_info_withdraw">회원탈퇴</string>
+
+    <string name="update_info_change">변경</string>
+    <string name="update_info_confirm">확인</string>
 </resources>

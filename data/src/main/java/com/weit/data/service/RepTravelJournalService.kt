@@ -34,7 +34,7 @@ interface RepTravelJournalService {
         @Query("sortType") sortType: String?
     ): ListResponse<RepTravelJournalListDTO>
 
-    @GET("/api/v1/travel-journals/{userId}")
+    @GET("/api/v1/rep-travel-journals/{userId}")
     suspend fun getOtherTravelJournalList(
         @Path("userId") userId: Long,
         @Query("size") size: Int? = 10,

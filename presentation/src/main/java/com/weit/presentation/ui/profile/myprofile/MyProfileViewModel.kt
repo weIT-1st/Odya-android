@@ -26,6 +26,7 @@ import com.weit.domain.usecase.user.GetUserStatisticsUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO
 import com.weit.presentation.model.profile.lifeshot.ProfileUserInfo
+import com.weit.presentation.model.profile.lifeshot.SelectRepTravelJournalDTO
 import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceEntity
 import com.weit.presentation.ui.util.Constants.DEFAULT_DATA_SIZE
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -55,8 +56,8 @@ class MyProfileViewModel @Inject constructor(
     private val _bookMarkTravelJournals = MutableStateFlow<List<JournalBookMarkInfo>>(emptyList())
     val bookMarkTravelJournals: StateFlow<List<JournalBookMarkInfo>> get() = _bookMarkTravelJournals
 
-    private val _repTravelJournals = MutableStateFlow<List<RepTravelJournalListInfo>>(emptyList())
-    val repTravelJournals: StateFlow<List<RepTravelJournalListInfo>> get() = _repTravelJournals
+    private val _repTravelJournal = MutableStateFlow<RepTravelJournalListInfo?>(null)
+    val repTravelJournal: StateFlow<RepTravelJournalListInfo?> get() = _repTravelJournal
 
     private val _favoritePlaces = MutableStateFlow<List<FavoritePlaceEntity>>(emptyList())
     val favoritePlaces: StateFlow<List<FavoritePlaceEntity>> get() = _favoritePlaces
@@ -97,14 +98,14 @@ class MyProfileViewModel @Inject constructor(
             lastImageId = null
             _lifeshots.value = emptyList()
             lastRepTravelJournalId = null
-            _repTravelJournals.value = emptyList()
+            _repTravelJournal.value = null
             getUserUseCase().onSuccess {
                 user = it
                 getUserStatistics()
                 onNextLifeShots()
                 loadFavoritePlaces()
                 getFavoritePlaceCount()
-                onNextRepTravelJournals()
+                loadNextRepTravelJournals()
                 onNextBookMarkJournal()
             }
         }
@@ -225,24 +226,15 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
-    fun onNextRepTravelJournals() {
-        if (repTravelJournalJob.isCompleted.not()) {
-            return
-        }
-        loadNextRepTravelJournals()
-    }
 
     private fun loadNextRepTravelJournals() {
-        repTravelJournalJob = viewModelScope.launch {
+        viewModelScope.launch {
             val result = getMyRepTravelJournalListUseCase(
-                RepTravelJournalRequest(DEFAULT_DATA_SIZE, lastRepTravelJournalId)
+                RepTravelJournalRequest(DEFAULT_DATA_SIZE, null)
             )
             if (result.isSuccess) {
-                val newRepTravelJournals = result.getOrThrow()
-                newRepTravelJournals.lastOrNull()?.let {
-                    lastRepTravelJournalId = it.repTravelJournalId
-                    _repTravelJournals.emit(repTravelJournals.value + newRepTravelJournals)
-                }
+                val newRepTravelJournal = result.getOrThrow().first()
+                _repTravelJournal.emit(newRepTravelJournal)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
 
@@ -293,6 +285,19 @@ class MyProfileViewModel @Inject constructor(
         }
     }
 
+    fun updateRepTravelJournal() {
+        viewModelScope.launch {
+            _event.emit(
+                Event.OnSelectRepJournal(
+                    SelectRepTravelJournalDTO(
+                        repTravelJournal.value?.repTravelJournalId?:0,
+                        repTravelJournal.value?.travelJournalId?:0
+                    )
+                )
+            )
+        }
+    }
+
     private suspend fun handleError(error: Throwable) {
         when (error) {
             is InvalidRequestException -> _event.emit(Event.InvalidRequestException)
@@ -308,6 +313,10 @@ class MyProfileViewModel @Inject constructor(
             val position: Int,
             val lastImageId: Long?,
             val userId: Long,
+        ) : Event()
+
+        data class OnSelectRepJournal(
+            val selectRepTravelJournalDTO: SelectRepTravelJournalDTO,
         ) : Event()
 
         object InvalidRequestException : Event()

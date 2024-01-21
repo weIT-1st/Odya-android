@@ -295,18 +295,63 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_line1" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_profile_travel_journal"
-                    android:layout_width="match_parent"
+                <include
+                    android:id="@+id/item_profile_rep_travel_journal"
+                    layout="@layout/item_profile_rep_travel_journal"
+                    android:layout_width="wrap_content"
                     android:layout_height="280dp"
                     android:layout_marginTop="27dp"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_profile_rep_travel_journal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_rep_travel_journal"
-                    tools:itemCount="8"/>
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_rep_travel_journal" />
+
+                <View
+                    android:id="@+id/view_journal_memory_decoration_elev2"
+                    android:layout_width="24dp"
+                    android:layout_height="280dp"
+                    android:layout_marginStart="-10dp"
+                    android:background="@drawable/corners_right_8"
+                    android:backgroundTint="@color/label_inactive"
+                    app:layout_constraintBottom_toBottomOf="@id/item_profile_rep_travel_journal"
+                app:layout_constraintStart_toEndOf="@id/item_profile_rep_travel_journal"
+                    app:layout_constraintTop_toTopOf="@id/item_profile_rep_travel_journal" />
+
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/view_tab_place_my_journey"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/corners_all_12"
+                    android:backgroundTint="@color/elevation4"
+                    android:padding="20dp"
+                    app:layout_constraintTop_toBottomOf="@+id/item_profile_rep_travel_journal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+
+                <ImageView
+                    android:id="@+id/iv_tab_place_pencil"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_pencil"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_tab_place_my_journey_content"
+                    style="@style/detail2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:textColor="@color/label_assistive"
+                    app:layout_constraintStart_toEndOf="@id/iv_tab_place_pencil"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/iv_tab_place_pencil"
+                    tools:text="일반적인 Android 앱에는 활동, 프래그먼트, 서비스, 콘텐츠 제공자, broadcast receiver를 비롯하여 " />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_profile_bookmark_travel_journal"
@@ -319,7 +364,7 @@
                     android:text="@string/profile_bookmark_travel_jouranl"
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_profile_travel_journal" />
+                    app:layout_constraintTop_toBottomOf="@+id/view_tab_place_my_journey" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_bookmark_travel_journal"

@@ -7,6 +7,7 @@ data class RepTravelJournalListInfo(
     val repTravelJournalId: Long,
     val travelJournalId: Long,
     val title: String,
+    val content: String,
     val travelJournalMainImageUrl: String,
     val travelStartDate: String,
     val travelEndDate: String,

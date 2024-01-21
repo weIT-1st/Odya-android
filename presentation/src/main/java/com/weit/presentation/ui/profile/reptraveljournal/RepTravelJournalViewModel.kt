@@ -16,13 +16,16 @@ import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
 import com.weit.domain.usecase.journal.UpdateTravelJournalVisibilityUseCase
 import com.weit.domain.usecase.repjournal.CreateRepTravelJournalUseCase
+import com.weit.domain.usecase.repjournal.DeleteRepTravelJournalUseCase
 import com.weit.domain.usecase.topic.GetTopicListUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.feed.FeedTopic
 import com.weit.presentation.model.profile.lifeshot.SelectLifeShotPlaceDTO
+import com.weit.presentation.model.profile.lifeshot.SelectRepTravelJournalDTO
 import com.weit.presentation.ui.feed.detail.FeedDetailViewModel
 import com.weit.presentation.ui.feed.post.FeedSelectPlaceViewModel
 import com.weit.presentation.ui.feed.post.traveljournal.FeedTravelJournalEntity
+import com.weit.presentation.ui.feed.post.traveljournal.FeedTravelJournalViewModel
 import com.weit.presentation.ui.profile.lifeshot.LifeShotPickerViewModel
 import com.weit.presentation.ui.util.Constants.DEFAULT_REACTION_COUNT
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -38,12 +41,18 @@ import kotlinx.coroutines.launch
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 
-@HiltViewModel
-class RepTravelJournalViewModel @Inject constructor(
+class RepTravelJournalViewModel @AssistedInject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
     private val updateTravelJournalVisibilityUseCase: UpdateTravelJournalVisibilityUseCase,
-    private val createRepTravelJournalUseCase : CreateRepTravelJournalUseCase
+    private val createRepTravelJournalUseCase : CreateRepTravelJournalUseCase,
+    private val deleteRepTravelJournalUseCase: DeleteRepTravelJournalUseCase,
+    @Assisted private val selectRepTravelJournalDTO: SelectRepTravelJournalDTO,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface RepTravelJournalFactory {
+        fun create(selectRepTravelJournalDTO: SelectRepTravelJournalDTO): RepTravelJournalViewModel
+    }
 
     private val _event = MutableEventFlow<RepTravelJournalViewModel.Event>()
     val event = _event.asEventFlow()
@@ -76,7 +85,7 @@ class RepTravelJournalViewModel @Inject constructor(
             )
             if (result.isSuccess) {
                 val newJournals = result.getOrThrow().map {
-                    FeedTravelJournalEntity(it, false)
+                    FeedTravelJournalEntity(it, selectRepTravelJournalDTO.journalId == it.travelJournalId)
                 }
                 newJournals.lastOrNull()?.let {
                     journalLastId = it.travelJournal.travelJournalId
@@ -123,17 +132,28 @@ class RepTravelJournalViewModel @Inject constructor(
         }
     }
 
+
+
     fun onCreateRepTravelJournal(){
         viewModelScope.launch {
-            val result = createRepTravelJournalUseCase(
-                selectedTravelJournal?.travelJournalId ?:0
-            )
-            if (result.isSuccess) {
-                _event.emit(Event.OnCompleted)
-            } else {
-                Logger.t("MainTest").i("실패 ${result.exceptionOrNull()?.javaClass?.name}")
+
+                val deleteResult = deleteRepTravelJournalUseCase(
+                    selectRepTravelJournalDTO.journalId
+                )
+                if (deleteResult.isSuccess) {
+                    val createResult = createRepTravelJournalUseCase(
+                        selectedTravelJournal?.travelJournalId ?:0
+                    )
+                    if (createResult.isSuccess) {
+                        _event.emit(Event.OnCompleted)
+                    } else {
+                        Logger.t("MainTest").i("실패 ${createResult.exceptionOrNull()?.javaClass?.name}")
+                    }
+                } else {
+                    Logger.t("MainTest").i("실패 ${deleteResult.exceptionOrNull()?.javaClass?.name}")
+                }
             }
-        }
+
     }
 
 
@@ -141,5 +161,16 @@ class RepTravelJournalViewModel @Inject constructor(
         object OnClickPublicJournalSuccess : Event()
 
         object OnCompleted : Event()
+    }
+
+    companion object {
+        fun provideFactory(
+            assistedFactory: RepTravelJournalViewModel.RepTravelJournalFactory,
+            selectRepTravelJournalDTO: SelectRepTravelJournalDTO,
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return assistedFactory.create(selectRepTravelJournalDTO) as T
+            }
+        }
     }
 }

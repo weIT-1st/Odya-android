@@ -304,7 +304,11 @@
     <fragment
         android:id="@+id/repTravelJournalFragment"
         android:name="com.weit.presentation.ui.feed.RepTravelJournalFragment"
-        android:label="RepTravelJournalFragment" />
+        android:label="RepTravelJournalFragment" >
+        <argument
+            android:name="repJournalInfo"
+            app:argType="com.weit.presentation.model.profile.lifeshot.SelectRepTravelJournalDTO" />
+    </fragment>
     <dialog
         android:id="@+id/travelJournalDetailFragment"
         android:name="com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment"

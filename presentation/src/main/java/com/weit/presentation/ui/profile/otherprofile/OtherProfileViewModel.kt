@@ -73,8 +73,8 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val _bookMarkTravelJournals = MutableStateFlow<List<JournalBookMarkInfo>>(emptyList())
     val bookMarkTravelJournals: StateFlow<List<JournalBookMarkInfo>> get() = _bookMarkTravelJournals
 
-    private val _repTravelJournals = MutableStateFlow<List<RepTravelJournalListInfo>>(emptyList())
-    val repTravelJournals: StateFlow<List<RepTravelJournalListInfo>> get() = _repTravelJournals
+    private val _repTravelJournal = MutableStateFlow<RepTravelJournalListInfo?>(null)
+    val repTravelJournal: StateFlow<RepTravelJournalListInfo?> get() = _repTravelJournal
     private val _favoritePlaces = MutableStateFlow<List<OtherFavoritePlaceEntity>>(emptyList())
     val favoritePlaces: StateFlow<List<OtherFavoritePlaceEntity>> get() = _favoritePlaces
 
@@ -117,7 +117,7 @@ class OtherProfileViewModel @AssistedInject constructor(
             lastImageId = null
             _lifeshots.value = emptyList()
             lastRepTravelJournalId = null
-            _repTravelJournals.value = emptyList()
+            _repTravelJournal.value = null
             getUserInfo()
         }
     }
@@ -136,7 +136,7 @@ class OtherProfileViewModel @AssistedInject constructor(
                     onNextLifeShots()
                     loadFavoritePlaces()
                     getFavoritePlaceCount()
-                    onNextRepTravelJournals()
+                    loadNextRepTravelJournals()
                     onNextBookMarkJournal()
 
                 }
@@ -254,25 +254,16 @@ class OtherProfileViewModel @AssistedInject constructor(
         }
     }
 
-    fun onNextRepTravelJournals() {
-        if (repTravelJournalJob.isCompleted.not()) {
-            return
-        }
-        loadNextRepTravelJournals()
-    }
 
     private fun loadNextRepTravelJournals() {
-        repTravelJournalJob = viewModelScope.launch {
+      viewModelScope.launch {
             val result = getOtherRepTravelJournalListUseCase(
                 RepTravelJournalRequest(Constants.DEFAULT_DATA_SIZE, lastRepTravelJournalId),
                 user.userId
             )
             if (result.isSuccess) {
-                val newRepTravelJournals = result.getOrThrow()
-                newRepTravelJournals.lastOrNull()?.let {
-                    lastRepTravelJournalId = it.repTravelJournalId
-                    _repTravelJournals.emit(repTravelJournals.value + newRepTravelJournals)
-                }
+                val newRepTravelJournal = result.getOrThrow().first()
+                _repTravelJournal.emit(newRepTravelJournal)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
 

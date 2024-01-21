@@ -58,7 +58,14 @@ class RepTravelJournalFragment : BaseFragment<FragmentProfileRepTravellogBinding
         handleAdapterAction(action)
     }
 
-    private val viewModel: RepTravelJournalViewModel by viewModels()
+    private val args: RepTravelJournalFragmentArgs by navArgs()
+
+    @Inject
+    lateinit var viewModelFactory: RepTravelJournalViewModel.RepTravelJournalFactory
+
+    private val viewModel: RepTravelJournalViewModel by viewModels {
+        RepTravelJournalViewModel.provideFactory(viewModelFactory, args.repJournalInfo)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

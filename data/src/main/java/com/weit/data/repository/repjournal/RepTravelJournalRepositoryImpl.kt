@@ -1,6 +1,7 @@
 package com.weit.data.repository.repjournal
 
 import android.content.res.Resources.NotFoundException
+import com.orhanobut.logger.Logger
 import com.squareup.moshi.Moshi
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalCompanionsDTO
@@ -97,6 +98,7 @@ class RepTravelJournalRepositoryImpl @Inject constructor(
                     it.repTravelJournalId,
                     it.travelJournalId,
                     it.travelJournalTitle,
+                    it.content,
                     it.travelJournalMainImageUrl,
                     it.travelEndDate,
                     it.travelStartDate,
@@ -147,6 +149,7 @@ class RepTravelJournalRepositoryImpl @Inject constructor(
                     it.repTravelJournalId,
                     it.travelJournalId,
                     it.travelJournalTitle,
+                    it.content,
                     it.travelJournalMainImageUrl,
                     it.travelEndDate,
                     it.travelStartDate,

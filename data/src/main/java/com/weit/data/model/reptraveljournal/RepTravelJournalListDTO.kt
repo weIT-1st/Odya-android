@@ -10,6 +10,7 @@ data class RepTravelJournalListDTO(
     @field:Json(name = "repTravelJournalId") val repTravelJournalId: Long,
     @field:Json(name = "travelJournalId") val travelJournalId: Long,
     @field:Json(name = "title") val travelJournalTitle: String,
+    @field:Json(name = "content") val content: String,
     @field:Json(name = "travelJournalMainImageUrl") val travelJournalMainImageUrl: String,
     @field:Json(name = "travelStartDate") val travelStartDate: String,
     @field:Json(name = "travelEndDate") val travelEndDate: String,

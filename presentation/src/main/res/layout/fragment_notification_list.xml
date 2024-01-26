@@ -30,12 +30,9 @@
             app:titleTextColor="@color/label_normal" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_friend_manage_search_follower"
-            android:layout_width="0dp"
+            android:id="@+id/rv_notification"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

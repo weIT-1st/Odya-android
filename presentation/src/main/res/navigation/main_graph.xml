@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_search"
             app:destination="@id/fragment_feed_search" />
+        <action
+            android:id="@+id/action_fragment_feed_to_notificationListFragment"
+            app:destination="@id/notificationListFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
@@ -337,5 +340,16 @@
         <action
             android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
             app:destination="@id/post_graph" />
+    </fragment>
+    <fragment
+        android:id="@+id/notificationListFragment"
+        android:name="com.weit.presentation.ui.feed.notification.NotificationListFragment"
+        android:label="NotificationListFragment" >
+        <action
+            android:id="@+id/action_notificationListFragment_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+        <action
+            android:id="@+id/action_notificationListFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
     </fragment>
 </navigation>

@@ -10,21 +10,35 @@ import androidx.navigation.NavDeepLinkBuilder
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.orhanobut.logger.Logger
-import com.weit.domain.usecase.user.UpdateFcmTokenUseCase
+import com.weit.domain.model.notification.NotificationInfo
+import com.weit.domain.model.user.search.UserProfileColorInfo
+import com.weit.domain.model.user.search.UserProfileInfo
+import com.weit.domain.usecase.notification.GetNotificationsUseCase
+import com.weit.domain.usecase.notification.InsertNotificationUseCase
+import com.weit.domain.usecase.notification.UpdateFcmTokenUseCase
 import com.weit.presentation.model.NotificationType
 import com.weit.presentation.ui.MainActivity
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.UUID
 import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class FirebaseMessageService : FirebaseMessagingService() {
 
     @Inject
     lateinit var updateFcmTokenUseCase: UpdateFcmTokenUseCase
 
-    private val scope = CoroutineScope(Dispatchers.IO)
+    @Inject
+    lateinit var insertNotificationUseCase: InsertNotificationUseCase
+
+    @Inject
+    lateinit var getNotificationsUseCase: GetNotificationsUseCase
+
+    private val scope = CoroutineScope(Dispatchers.Main)
 
     private val notificationManager: NotificationManager by lazy {
         (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).apply {
@@ -38,8 +52,65 @@ class FirebaseMessageService : FirebaseMessagingService() {
     }
     override fun onNewToken(token: String) {
         scope.launch {
+            Logger.t("fcmtoken").i("$token")
             updateFcmTokenUseCase(token)
         }
+    }
+
+    private fun getNotificationInfo(message: RemoteMessage) : NotificationInfo{
+
+        val type = message.data["eventType"]
+        val contentId =
+            when (type) {
+                NotificationType.FOLLOWING_COMMUNITY.name -> {
+                    message.data["communityId"]?.toLong()
+                }
+                NotificationType.COMMUNITY_COMMENT.name -> {
+                    message.data["communityId"]?.toLong()
+                }
+                NotificationType.COMMUNITY_LIKE.name -> {
+                    message.data["communityId"]?.toLong()
+                }
+                NotificationType.FOLLOWING_TRAVEL_JOURNAL.name -> {
+                    message.data["travelJournalId"]?.toLong()
+                }
+                NotificationType.TRAVEL_JOURNAL_TAG.name -> {
+                    message.data["travelJournalId"]?.toLong()
+                }
+                else -> {
+                    0L
+                }
+        }
+
+        val noti = NotificationInfo(
+            generateRandomId(),
+            contentId,
+            message.data["userName"] ?: "",
+            message.data["eventType"] ?: "",
+            message.data["content"] ?: "",
+            UserProfileInfo(
+                message.data["userProfileUrl"] ?: "",
+                UserProfileColorInfo(
+                    message.data["profileColorHex"] ?: "",
+                    message.data["profileColorRed"]?.toInt() ?: 0,
+                    message.data["profileColorGreen"]?.toInt() ?: 0,
+                    message.data["profileColorBlue"]?.toInt() ?: 0
+                )
+            ),
+            message.data["contentImage"]?: "",
+            message.data["notifiedAt"]?: ""
+        )
+        return noti
+    }
+
+    private fun setNoti(message: RemoteMessage){
+        scope.launch {
+            val noti = getNotificationInfo(message)
+            withContext(Dispatchers.IO) {
+               insertNotificationUseCase(noti)
+            }
+        }
+
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
@@ -52,9 +123,11 @@ class FirebaseMessageService : FirebaseMessagingService() {
             .setAutoCancel(true)
 
         notificationManager.notify(0, builder.build())
+        setNoti(message)
     }
 
     private fun createPendingIntent(message: RemoteMessage): PendingIntent {
+
         val type = message.data["eventType"]
 
         val deepLinkBuilder = NavDeepLinkBuilder(this)
@@ -122,6 +195,11 @@ class FirebaseMessageService : FirebaseMessagingService() {
         }
 
         return deepLinkBuilder.createPendingIntent()
+    }
+
+    private fun generateRandomId(): String {
+        val randomUUID = UUID.randomUUID()
+        return randomUUID.toString().replace("-", "").toUpperCase()
     }
 
 

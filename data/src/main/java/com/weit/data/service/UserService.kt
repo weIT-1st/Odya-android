@@ -46,10 +46,6 @@ interface UserService {
         @Part profile: MultipartBody.Part?,
     ): Response<Unit>
 
-    @PATCH("/api/v1/users/fcm-token")
-    suspend fun updateFcmToken(
-        @Body fcmToken: FcmToken,
-    ): Response<Unit>
 
     @DELETE("/api/v1/users")
     suspend fun deleteUser(): Response<Unit>

@@ -42,9 +42,7 @@ class UserDataSource @Inject constructor(
         return userService.updateUserProfile(profile)
     }
 
-    suspend fun updateFcmToken(fcmToken: FcmToken): Response<Unit> {
-        return userService.updateFcmToken(fcmToken)
-    }
+
 
     suspend fun deleteUser(): Response<Unit> {
         return userService.deleteUser()

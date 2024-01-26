@@ -50,12 +50,14 @@ class FeedDetailViewModel @AssistedInject constructor(
     ) : ViewModel() {
     private var communityId: Long = 0
 
-    fun initialize(savedFeedId: Long?=0) {
-        communityId = if(savedFeedId?.toInt() == 0){
+    fun initialize(savedFeedId : Long?) {
+        communityId = if(savedFeedId == null){
             feedId
         }else{
-            savedFeedId ?:0
+            savedFeedId.toLong()
         }
+        Logger.t("MainTest").i("communityId $communityId")
+
         getFeed()
         getFeedDetailComments(communityId)
     }

@@ -1,29 +1,33 @@
 package com.weit.data.repository.notification
 
-import com.weit.data.model.coordinate.Coordinate
 import com.weit.data.model.notification.Notification
-import com.weit.data.model.user.search.UserSearch
+import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.search.UserSearchProfile
 import com.weit.data.model.user.search.UserSearchProfileColor
-import com.weit.data.source.CoordinateDataSource
 import com.weit.data.source.NotificationDataSource
-import com.weit.data.source.UserSearchDataSource
-import com.weit.domain.model.CoordinateInfo
-import com.weit.domain.model.CoordinateTimeInfo
+import com.weit.domain.model.exception.InvalidRequestException
+import com.weit.domain.model.exception.InvalidTokenException
+import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.notification.NotificationInfo
 import com.weit.domain.model.user.search.UserProfileColorInfo
 import com.weit.domain.model.user.search.UserProfileInfo
-import com.weit.domain.model.user.search.UserSearchInfo
-import com.weit.domain.repository.coordinate.CoordinateRepository
 import com.weit.domain.repository.notification.NotificationRepository
-import com.weit.domain.repository.user.UserSearchRepository
-import kotlinx.coroutines.flow.map
+import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
+import retrofit2.Response
 import javax.inject.Inject
 
 class NotificationRepositoryImpl @Inject constructor(
     private val dataSource: NotificationDataSource,
 ) : NotificationRepository {
-
+    override suspend fun updateFcmToken(fcmToken: String): Result<Unit> {
+        val result = dataSource.updateFcmToken(FcmToken(fcmToken))
+        return if (result.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleError(result))
+        }
+    }
     private fun NotificationInfo.toNotification(): Notification =
         Notification(
             notificationId,
@@ -74,5 +78,19 @@ class NotificationRepositoryImpl @Inject constructor(
                 it.notifiedAt
             )
         }
+    }
+
+    private fun handleCode(code: Int): Throwable {
+        return when (code) {
+            HTTP_BAD_REQUEST -> InvalidRequestException()
+            HTTP_UNAUTHORIZED -> InvalidTokenException()
+            else -> {
+                UnKnownException()
+            }
+        }
+    }
+
+    private fun handleError(response: Response<Unit>): Throwable {
+        return handleCode(response.code())
     }
 }

@@ -77,13 +77,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserId(): Long =
         userInfoDataSource.getUserId() ?: throw NotFoundException()
 
-    override suspend fun updateFcmToken(fcmToken: String): Result<Unit> {
-        val result = userDataSource.updateFcmToken(FcmToken(fcmToken))
-        return if (result.isSuccessful) {
-            Result.success(Unit)
-        } else {
-            Result.failure(handleUserError(result))
-        }    }
+
 
     override suspend fun deleteUser(): Result<Unit> {
         val result = userDataSource.deleteUser()

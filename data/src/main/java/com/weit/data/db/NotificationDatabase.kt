@@ -2,11 +2,10 @@ package com.weit.data.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.weit.data.model.user.search.UserSearch
-import com.weit.domain.model.notification.NotificationInfo
+import com.weit.data.model.notification.Notification
 
 @Database(
-    entities = [NotificationInfo::class],
+    entities = [Notification::class],
     version = 1,
     exportSchema = false,
 )

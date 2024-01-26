@@ -2,13 +2,12 @@ package com.weit.presentation.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
 import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.domain.usecase.user.SetUserIdUseCase
-import com.weit.domain.usecase.user.UpdateFcmTokenUseCase
+import com.weit.domain.usecase.notification.UpdateFcmTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,7 +16,6 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val getUserUseCase: GetUserUseCase,
     private val setUserIdUseCase: SetUserIdUseCase,
-    private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
 ) : ViewModel() {
 
     init {
@@ -55,11 +53,4 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun updateToken(
-        token: String,
-    ) {
-        viewModelScope.launch {
-            updateFcmTokenUseCase(token)
-        }
-    }
 }

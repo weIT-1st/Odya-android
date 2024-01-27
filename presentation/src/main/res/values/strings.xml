@@ -299,7 +299,8 @@
     <string name="update_info_title">회원 정보 수정</string>
     <string name="update_info_nickname">닉네임</string>
     <string name="update_info_nickname_hint">홍길동</string>
-    <string name="update_info_nickname_detail">*최소 2자~최대8장, 특수문자 불가능</string>
+    <string name="update_info_nickname_warning">*최소 2자~최대8장, 특수문자 불가능</string>
+    <string name="update_info_nickname_detail">사용할 수 있는 닉네임 입니다.</string>
     <string name="update_info_phone">휴대폰 번호</string>
     <string name="update_info_phone_hint">010 - 1234 - 5678</string>
     <string name="update_info_certification_number">인증번호를 입력해 주세요</string>

@@ -68,4 +68,64 @@ class UserInfoRepositoryImpl @Inject constructor(
             userinfoDataSource.getTermIdList()
         }
     }
+
+    override suspend fun getIsAlarmAll(): Result<Boolean?> {
+        return runCatching {
+            userinfoDataSource.getIsAlarmAll()
+        }
+    }
+
+    override suspend fun setIsAlarmAll(isAlarmAll: Boolean): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setIsAlarmAll(isAlarmAll)
+        }
+    }
+
+    override suspend fun getIsAlarmLike(): Result<Boolean?> {
+        return runCatching {
+            userinfoDataSource.getIsAlarmLike()
+        }
+    }
+
+    override suspend fun setIsAlarmLike(isAlarmLike: Boolean): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setIsAlarmLike(isAlarmLike)
+        }
+    }
+
+    override suspend fun getIsAlarmComment(): Result<Boolean?> {
+        return runCatching {
+            userinfoDataSource.getIsAlarmComment()
+        }
+    }
+
+    override suspend fun setIsAlarmComment(isAlarmComment: Boolean): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setIsAlarmComment(isAlarmComment)
+        }
+    }
+
+    override suspend fun getIsAlarmMarketing(): Result<Boolean?> {
+        return runCatching {
+            userinfoDataSource.getIsAlarmMarketing()
+        }
+    }
+
+    override suspend fun setIsAlarmMarketing(isAlarmMarketing: Boolean): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setIsAlarmMarketing(isAlarmMarketing)
+        }
+    }
+
+    override suspend fun getIsLocationInfo(): Result<Boolean?> {
+        return runCatching {
+            userinfoDataSource.getIsLocationInfo()
+        }
+    }
+
+    override suspend fun setIsLocationInfo(isLocationInfo: Boolean): Result<Unit> {
+        return runCatching {
+            userinfoDataSource.setIsLocationInfo(isLocationInfo)
+        }
+    }
 }

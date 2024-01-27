@@ -3,6 +3,7 @@ package com.weit.data.source
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.longPreferencesKey
@@ -30,6 +31,11 @@ class UserInfoDataSource @Inject constructor(
         val KEY_GENDER = stringPreferencesKey(name = "gender")
         val KEY_TERM_ID_LIST = stringSetPreferencesKey(name = "termidlist")
         val KEY_USER_ID = longPreferencesKey(name = "userId")
+        val KEY_IS_ALARM_ALL = booleanPreferencesKey(name = "isAlarmAll")
+        val KEY_IS_ALARM_LIKE = booleanPreferencesKey(name = "isAlarmLike")
+        val KEY_IS_ALARM_COMMENT = booleanPreferencesKey(name = "isAlarmComment")
+        val KEY_IS_ALARM_MARKETING = booleanPreferencesKey(name = "isAlarmMarketing")
+        val KEY_IS_LOCATION_INFO = booleanPreferencesKey(name = "isLocationInfo")
     }
 
     suspend fun setUserId(userId: Long) {
@@ -154,6 +160,111 @@ class UserInfoDataSource @Inject constructor(
             }
             .map { preference ->
                 preference[KEY_TERM_ID_LIST]
+            }
+        return flow.firstOrNull()
+    }
+
+    suspend fun setIsAlarmAll(isAlarmAll : Boolean) {
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_IS_ALARM_ALL] = isAlarmAll
+        }
+    }
+
+    suspend fun getIsAlarmAll() : Boolean? {
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_IS_ALARM_ALL]
+            }
+        return flow.firstOrNull()
+    }
+
+    suspend fun setIsAlarmLike(isAlarmLike : Boolean) {
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_IS_ALARM_LIKE] = isAlarmLike
+        }
+    }
+
+    suspend fun getIsAlarmLike() : Boolean? {
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_IS_ALARM_LIKE]
+            }
+        return flow.firstOrNull()
+    }
+
+    suspend fun setIsAlarmComment(isAlarmComment : Boolean) {
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_IS_ALARM_COMMENT] = isAlarmComment
+        }
+    }
+
+    suspend fun getIsAlarmComment() : Boolean? {
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_IS_ALARM_COMMENT]
+            }
+        return flow.firstOrNull()
+    }
+
+    suspend fun setIsAlarmMarketing(isAlarmMarketing : Boolean) {
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_IS_ALARM_MARKETING] = isAlarmMarketing
+        }
+    }
+
+    suspend fun getIsAlarmMarketing() : Boolean? {
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_IS_ALARM_MARKETING]
+            }
+        return flow.firstOrNull()
+    }
+
+    suspend fun setIsLocationInfo(isLocationInfo : Boolean) {
+        context.userInfoDataStore.edit { preference ->
+            preference[KEY_IS_LOCATION_INFO] = isLocationInfo
+        }
+    }
+
+    suspend fun getIsLocationInfo() : Boolean? {
+        val flow = context.userInfoDataStore.data
+            .catch { exception ->
+                if (exception is IOException) {
+                    emit(emptyPreferences())
+                } else {
+                    throw exception
+                }
+            }
+            .map { preference ->
+                preference[KEY_IS_LOCATION_INFO]
             }
         return flow.firstOrNull()
     }

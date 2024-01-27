@@ -6,7 +6,6 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
@@ -90,6 +89,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         binding.viewProfileTotalCount.setOnClickListener {
             val action = MyProfileFragmentDirections.actionFragmentMypageToMyFriendManageFragment()
+            findNavController().navigate(action)
+        }
+        binding.ivProfileSetting.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToSettingFragment()
             findNavController().navigate(action)
         }
     }

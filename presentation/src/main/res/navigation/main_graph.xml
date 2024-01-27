@@ -63,6 +63,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_post_graph"
             app:destination="@id/post_graph" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_settingFragment"
+            app:destination="@id/settingFragment" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -370,4 +373,27 @@
             android:id="@+id/action_feedNoTravelJournalFragment_to_post_graph"
             app:destination="@id/post_graph" />
     </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.weit.presentation.ui.profile.preferences.setting.SettingFragment"
+        android:label="SettingFragment" >
+        <action
+            android:id="@+id/action_settingFragment_to_settingDetailFragment"
+            app:destination="@id/settingDetailFragment" />
+        <action
+            android:id="@+id/action_settingFragment_to_updateUserInfoFragment"
+            app:destination="@id/updateUserInfoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingDetailFragment"
+        android:name="com.weit.presentation.ui.profile.preferences.detail.SettingDetailFragment"
+        android:label="SettingDetailFragment" >
+        <argument
+            android:name="settingDetailType"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateUserInfoFragment"
+        android:name="com.weit.presentation.ui.profile.preferences.update.UpdateUserInfoFragment"
+        android:label="UpdateUserInfoFragment" />
 </navigation>

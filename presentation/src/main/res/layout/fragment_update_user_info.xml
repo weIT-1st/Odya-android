@@ -3,6 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <variable
+            name="vm"
+            type="com.weit.presentation.ui.profile.preferences.update.UpdateUserInfoViewModel" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -59,6 +64,8 @@
                 android:textColor="@color/label_normal"
                 android:text="@string/update_info_nickname"
                 android:layout_marginTop="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
                 app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -69,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
+                app:helperText=""
                 app:boxStrokeWidth="0dp"
                 app:expandedHintEnabled="false"
                 app:hintEnabled="false"
@@ -84,6 +92,7 @@
                     android:background="@drawable/corners_all_8"
                     android:backgroundTint="@color/elevation4"
                     android:drawableEnd="@drawable/ic_x_circle"
+                    android:text="@={vm.newNickname}"
                     android:hint="@string/update_info_nickname_hint"
                     android:inputType="text"
                     android:maxLines="1"
@@ -115,7 +124,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/detail2"
                 android:textColor="@color/label_normal"
-                android:text="@string/update_info_nickname_detail"
+                android:text="@string/update_info_nickname_warning"
                 android:layout_marginTop="4dp"
                 app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
                 app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
@@ -164,7 +173,8 @@
                     android:backgroundTint="@color/elevation4"
                     android:drawableEnd="@drawable/ic_x_warning"
                     android:hint="@string/update_info_phone_hint"
-                    android:inputType="text"
+                    android:text="@={vm.newPhoneNum}"
+                    android:inputType="phone"
                     android:maxLines="1"
                     android:padding="12dp"
                     android:textAppearance="@style/body1"
@@ -276,6 +286,7 @@
                     android:background="@drawable/corners_all_8"
                     android:backgroundTint="@color/elevation4"
                     android:hint="@string/update_info_mail_hint"
+                    android:text="@={vm.newEmail}"
                     android:inputType="text"
                     android:maxLines="1"
                     android:padding="12dp"
@@ -347,7 +358,9 @@
                 android:textAppearance="@style/h6"
                 android:textColor="@color/label_normal"
                 android:text="@string/update_info_logout"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="20dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
                 app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
                 app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
                 app:layout_constraintTop_toBottomOf="@+id/tl_update_info_address"/>
@@ -368,7 +381,9 @@
                 android:textAppearance="@style/h6"
                 android:textColor="@color/warning"
                 android:text="@string/update_info_withdraw"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="20dp"
+                android:paddingBottom="16dp"
+                android:paddingTop="16dp"
                 app:layout_constraintStart_toStartOf="@id/gl_update_info_start"
                 app:layout_constraintEnd_toEndOf="@id/gl_update_info_end"
                 app:layout_constraintTop_toBottomOf="@+id/tv_update_info_logout"/>

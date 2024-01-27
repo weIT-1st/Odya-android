@@ -2,9 +2,9 @@ package com.weit.domain.model.user
 
 interface User {
     val userId: Long
-    val email: String?
-    val nickname: String
-    val phoneNumber: String?
+    var email: String?
+    var nickname: String
+    var phoneNumber: String?
     val gender: String
     val birthday: String
     val socialType: String

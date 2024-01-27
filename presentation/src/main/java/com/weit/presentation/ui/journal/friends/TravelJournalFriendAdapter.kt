@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
-import com.weit.presentation.databinding.ItemFriendsBinding
+import com.weit.presentation.databinding.ItemRoundProfileBigBinding
 
 class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(
     diffUtil
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-        = ViewHolder(ItemFriendsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        = ViewHolder(ItemRoundProfileBigBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -20,10 +20,11 @@ class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, Trave
     }
 
     inner class ViewHolder(
-        private val binding: ItemFriendsBinding
+        private val binding: ItemRoundProfileBigBinding
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: TravelJournalCompanionsInfo) {
-            binding.friends = item
+            //todo 수정
+//            binding.profile = item
         }
     }
     companion object{

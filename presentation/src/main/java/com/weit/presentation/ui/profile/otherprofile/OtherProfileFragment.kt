@@ -118,6 +118,9 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.ivProfileBack.setOnClickListener {
             findNavController().popBackStack()
         }
+        binding.viewProfileTotalCount.setOnClickListener {
+            viewModel.goToFriendManage()
+        }
     }
 
 
@@ -215,6 +218,10 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     private fun handleEvent(event: OtherProfileViewModel.Event) {
 
         when (event) {
+            is OtherProfileViewModel.Event.GoToFriendManage -> {
+                val action = OtherProfileFragmentDirections.actionOtherProfileFragmentToOtherFriendManageFragment(event.userId)
+                findNavController().navigate(action)
+            }
             else -> {}
         }
     }

@@ -12,7 +12,7 @@
             </item>
 
             <item
-                android:drawable="@drawable/ic_direrction_down"
+                android:drawable="@drawable/ic_direction_down"
                 android:gravity="center|end"
                 android:width="36dp"
                 android:height="36dp"/>

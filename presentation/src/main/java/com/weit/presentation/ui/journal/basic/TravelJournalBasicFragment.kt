@@ -47,6 +47,11 @@ class TravelJournalBasicFragment(
         }
     }
 
+    override fun onDestroyView() {
+        binding.rvItemJournalDetailModel.adapter = null
+        super.onDestroyView()
+    }
+
     private fun initTravelJournalBasicRV(){
         binding.rvItemJournalDetailModel.apply {
             adapter = travelJournalBasicAdapter

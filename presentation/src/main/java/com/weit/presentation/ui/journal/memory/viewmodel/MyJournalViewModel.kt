@@ -71,10 +71,10 @@ class MyJournalViewModel @Inject constructor(
         if (pageJob.isCompleted.not()) {
             return
         }
-        loadNextMyReviews()
+        loadNextMyJournal()
     }
 
-    private fun loadNextMyReviews() {
+    private fun loadNextMyJournal() {
         pageJob = viewModelScope.launch {
             val result = getMyTravelJournalListUseCase(
                 size = DEFAULT_PAGE,
@@ -89,15 +89,10 @@ class MyJournalViewModel @Inject constructor(
                     journalLastId = newJournals.last().travelJournalId
                 }
 
-                if (newJournals.isEmpty()) {
-                    loadNextMyReviews()
-                }
-
-                val originalJournal = journals
-                journals.clear()
-                journals.addAll(originalJournal + newJournals)
+                journals.addAll(newJournals)
 
                 _myJournals.emit(journals)
+                _randomJournal.emit(journals.random())
                 _isEmptyMyJournal.emit(journals.isEmpty())
 
             } else {

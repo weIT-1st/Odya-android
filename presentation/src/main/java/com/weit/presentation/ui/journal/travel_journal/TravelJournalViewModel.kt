@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.math.min
 
 class TravelJournalViewModel @AssistedInject constructor(
     private val getUserIdUseCase: GetUserIdUseCase,
@@ -45,10 +46,10 @@ class TravelJournalViewModel @AssistedInject constructor(
     val event = _event.asEventFlow()
 
     init {
-        getJournalInfo()
+        initJournalInfo()
     }
 
-    private fun getJournalInfo() {
+    private fun initJournalInfo() {
         viewModelScope.launch {
             val result = getTravelJournalUseCase(travelJournalId)
 
@@ -87,7 +88,7 @@ class TravelJournalViewModel @AssistedInject constructor(
         return if (friendCount < MAX_ABLE_SHOW_FRIENDS_NUM) {
             info.travelJournalCompanions
         } else {
-            info.travelJournalCompanions.slice(0 until MAX_ABLE_SHOW_FRIENDS_NUM)
+            info.travelJournalCompanions.slice(0 until min(MAX_ABLE_SHOW_FRIENDS_NUM, friendCount))
         }
     }
 

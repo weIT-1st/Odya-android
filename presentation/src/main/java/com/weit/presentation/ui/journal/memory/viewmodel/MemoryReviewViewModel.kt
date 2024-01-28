@@ -53,13 +53,7 @@ class MemoryReviewViewModel @Inject constructor(
                     reviewLastId = newReviews.last().placeReviewId
                 }
 
-                if (newReviews.isEmpty()) {
-                    loadNextReviews()
-                }
-
-                val originalReviews = reviews
-                reviews.clear()
-                reviews.addAll(originalReviews + newReviews)
+                reviews.addAll(newReviews)
                 _myReviews.emit(reviews)
             } else {
                 // TODO 에러 처리

@@ -87,31 +87,7 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
                         info.travelJournalCompanions.size < MAX_ABLE_SHOW_FRIENDS_NUM
 
                     initJournalModelViewPager(info)
-
-                    val latitudes = emptyList<Double>()
-                    val longitudes = emptyList<Double>()
-                    info.travelJournalContents.forEach {
-                        val lat = it.placeDetail.latitude
-                        val lng = it.placeDetail.longitude
-
-                        if (lat == null) {
-                            return@forEach
-                        }
-
-                        if (lng == null) {
-                            return@forEach
-                        }
-
-                        latitudes.plus(lat)
-                        longitudes.plus(lng)
-                        val marker = MarkerOptions().apply {
-                            position(LatLng(lat, lng))
-                            icon(marker)
-                        }
-                        map?.addMarker(marker)
-                    }
-
-                    moveToTravelCenter(latitudes, longitudes)
+                    initTravelJournalMap(info)
                 }
             }
         }
@@ -196,6 +172,33 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
                 }
             }
         }.attach()
+    }
+
+    private fun initTravelJournalMap(info: TravelJournalInfo) {
+        val latitudes = emptyList<Double>()
+        val longitudes = emptyList<Double>()
+        info.travelJournalContents.forEach {
+            val lat = it.placeDetail.latitude
+            val lng = it.placeDetail.longitude
+
+            if (lat == null) {
+                return@forEach
+            }
+
+            if (lng == null) {
+                return@forEach
+            }
+
+            latitudes.plus(lat)
+            longitudes.plus(lng)
+            val marker = MarkerOptions().apply {
+                position(LatLng(lat, lng))
+                icon(marker)
+            }
+            map?.addMarker(marker)
+        }
+
+        moveToTravelCenter(latitudes, longitudes)
     }
 
     private fun popUpJournalMenuBottomSheet() {

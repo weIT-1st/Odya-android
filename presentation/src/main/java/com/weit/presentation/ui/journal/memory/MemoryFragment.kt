@@ -35,16 +35,16 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     private val reviewViewModel: MemoryReviewViewModel by viewModels()
 
     private val myJournalAdapter = MyJournalAdapter(
-        { myJournalViewModel.moveToJournal(it)},
-        { myJournalViewModel.updateTravelJournalBookmarkState(it) }
+        { journalId -> myJournalViewModel.moveToJournal(journalId) },
+        { journalId -> myJournalViewModel.updateTravelJournalBookmarkState(journalId) }
         )
     private val bookmarkJournalAdapter = BookmarkJournalAdapter (
-        { moveToJournalDetail(it) },
-        { otherJournalViewModel.updateBookmarkTravelJournalBookmarkState(it) }
+        { journalId -> moveToJournalDetail(journalId) },
+        { journalId -> otherJournalViewModel.updateBookmarkTravelJournalBookmarkState(journalId) }
     )
     private val taggedJournalAdapter = TaggedJournalAdapter(
-        { moveToJournalDetail(it) },
-        { otherJournalViewModel.updateTaggedTravelJournalBookmarkState(it) },
+        { journalId -> moveToJournalDetail(journalId) },
+        { journalId -> otherJournalViewModel.updateTaggedTravelJournalBookmarkState(journalId) },
         { otherJournalViewModel.deleteTaggedJournal() }
     )
     private val myReviewAdapter = MyReviewAdapter { reviewViewModel.deleteReview(it) }
@@ -102,7 +102,9 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             myJournalViewModel.isEmptyMyJournal.collectLatest {isEmpty ->
+                binding.ivJournalMemoryMyProfile.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.tvFeedNoTravelLogHint2.isGone = true
+                binding.lyJournalMemoryDecoration.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.tvJournalMemory.isGone = isEmpty
                 binding.includeJournalMemoryLastJournal.root.isGone = isEmpty

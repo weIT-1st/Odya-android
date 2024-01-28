@@ -65,10 +65,6 @@ class OtherJournalViewModel @Inject constructor(
                     bookMarkLastId = newJournals.last().travelJournalId
                 }
 
-                if (newJournals.isEmpty()) {
-                    loadNextBookMarkJournals()
-                }
-
                 val originalJournals = bookMarkJournals
                 bookMarkJournals.clear()
                 bookMarkJournals.addAll(originalJournals + newJournals)
@@ -96,10 +92,6 @@ class OtherJournalViewModel @Inject constructor(
 
                 if (newJournals.isNotEmpty()) {
                     taggedLastId = newJournals.last().travelJournalId
-                }
-
-                if (newJournals.isEmpty()) {
-                    loadNextTaggedJournals()
                 }
 
                 val originalJournals = taggedJournals

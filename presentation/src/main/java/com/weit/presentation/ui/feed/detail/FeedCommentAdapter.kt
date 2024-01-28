@@ -49,7 +49,6 @@ class FeedCommentAdapter(
     private fun showPopUpMenu(position:Int, it: View) {
         PopupMenu(it.context, it).apply {
            menuInflater.inflate(R.menu.menu_feed_comment, this.menu)
-
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.item_update_comment -> {

@@ -10,7 +10,6 @@ import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalVisibility
 import com.weit.data.model.journal.TravelJournalWriterDTO
-import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
@@ -67,7 +66,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         val result = runCatching {
             val files = travelJournalImages.map {
                 val requestFile = imageDataSource.getRequestBody(it)
-                val fileName = try{
+                val fileName = try {
                     imageDataSource.getImageName(it)
                 } catch (e: Exception) {
                     return Result.failure(e)
@@ -91,7 +90,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             )
             travelJournalDataSource.registerTravelJournal(travelJournalPart, files)
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleJournalError(result.exception()))
@@ -235,7 +234,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             travelJournalDataSource.updateTravelJournal(travelJournalId, travelJournalUpdatePart)
         }
 
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(result.exception())
@@ -266,16 +265,23 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val adapter = moshi.adapter(TravelJournalContentUpdateInfo::class.java)
             val travelJournalContentUpdateInfoJson = adapter.toJson(travelJournalContentUpdateInfo)
 
-            val travelJournalContentRequestBody = travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+            val travelJournalContentRequestBody =
+                travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalContentPart = MultipartBody.Part.createFormData(
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
-                travelJournalContentRequestBody)
-            travelJournalDataSource.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentPart, files)
+                travelJournalContentRequestBody
+            )
+            travelJournalDataSource.updateTravelJournalContent(
+                travelJournalId,
+                travelJournalContentId,
+                travelJournalContentPart,
+                files
+            )
         }
 
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleJournalError(result.exception()))
@@ -303,7 +309,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
         travelJournalId: Long,
         travelJournalContentId: Long
     ): Result<Unit> =
-        delete(travelJournalDataSource.deleteTravelJournalContent(travelJournalId, travelJournalContentId))
+        delete(
+            travelJournalDataSource.deleteTravelJournalContent(
+                travelJournalId,
+                travelJournalContentId
+            )
+        )
 
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
@@ -313,7 +324,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         lastId: Long?,
         result: Result<ListResponse<TravelJournalListDTO>>
     ): Result<List<TravelJournalListInfo>> {
-        if (lastId == null){
+        if (lastId == null) {
             hasNext.set(true)
         }
 
@@ -440,7 +451,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
         private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
         private const val TRAVEL_JOURNAL = "travel-journal"
         private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"
-        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE = "travel-journal-content-image-update"
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE =
+            "travel-journal-content-image-update"
         private const val TRAVEL_JOURNAL_CONTENT_UPDATE = "travel-journal-content-update"
     }
 }

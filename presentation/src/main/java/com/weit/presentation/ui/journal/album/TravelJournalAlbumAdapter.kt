@@ -6,24 +6,32 @@ import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.weit.domain.model.journal.TravelJournalContentsInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetailAlbumModelBinding
+import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import com.weit.presentation.ui.util.SpaceDecoration
 
-class TravelJournalAlbumAdapter: ListAdapter<TravelJournalContentsInfo, TravelJournalAlbumAdapter.ViewHolder>(diffUtil) {
-
+class TravelJournalAlbumAdapter :
+    ListAdapter<TravelJournalDetailInfo, TravelJournalAlbumAdapter.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
-        ViewHolder(ItemJournalDetailAlbumModelBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        ViewHolder(
+            ItemJournalDetailAlbumModelBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
     }
+
     inner class ViewHolder(
         private val binding: ItemJournalDetailAlbumModelBinding
     ) : RecyclerView.ViewHolder(binding.root) {
         private val imageAdapter = TravelJournalAlbumImageAdapter()
+
         init {
             binding.rvItemJournalDetailAlbumContentImages.apply {
                 adapter = imageAdapter
@@ -31,7 +39,7 @@ class TravelJournalAlbumAdapter: ListAdapter<TravelJournalContentsInfo, TravelJo
             }
 
             binding.btnItemJournalDetailDown.setOnCheckedChangeListener { _, isChecked ->
-            binding.lyItemJournalDetailAlbum.isGone = isChecked
+                binding.lyItemJournalDetailAlbum.isGone = isChecked
             }
 
             binding.btnItemJournalDetailKebab.setOnClickListener {
@@ -39,29 +47,28 @@ class TravelJournalAlbumAdapter: ListAdapter<TravelJournalContentsInfo, TravelJo
             }
         }
 
-        fun bind(item: TravelJournalContentsInfo) {
+        fun bind(item: TravelJournalDetailInfo) {
             binding.tvItemJournalDetailAlbumDay.text = binding.root.context.getString(R.string.journal_detail_day, layoutPosition + 1)
             binding.tvItemJournalDetailAlbumDate.text = item.travelDate
             binding.tvItemJournalDetailAlbumContent.text = item.content
-            binding.tvItemJournalDetailAlbumPlace.text = item.placeDetail.name
-            binding.tvItemJournalDetailAlbumAddress.text =
-                item.placeDetail.address?.split(" ")?.slice(1..2)?.joinToString(" ") ?: ""
+            binding.tvItemJournalDetailAlbumPlace.text = item.placeName
+            binding.tvItemJournalDetailAlbumAddress.text = item.placeAddress
 
             imageAdapter.submitList(item.travelJournalContentImages)
         }
     }
 
-    companion object{
-        private val diffUtil = object : DiffUtil.ItemCallback<TravelJournalContentsInfo>() {
+    companion object {
+        private val diffUtil = object : DiffUtil.ItemCallback<TravelJournalDetailInfo>() {
             override fun areItemsTheSame(
-                oldItem: TravelJournalContentsInfo,
-                newItem: TravelJournalContentsInfo
+                oldItem: TravelJournalDetailInfo,
+                newItem: TravelJournalDetailInfo
             ): Boolean =
                 oldItem.travelJournalContentId == newItem.travelJournalContentId
 
             override fun areContentsTheSame(
-                oldItem: TravelJournalContentsInfo,
-                newItem: TravelJournalContentsInfo
+                oldItem: TravelJournalDetailInfo,
+                newItem: TravelJournalDetailInfo
             ): Boolean =
                 oldItem == newItem
         }

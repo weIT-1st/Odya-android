@@ -1,6 +1,5 @@
 package com.weit.domain.usecase.place
 
-import com.weit.domain.model.place.PlaceReviewBySearching
 import com.weit.domain.model.place.PlaceReviewByUserIdQuery
 import com.weit.domain.model.place.PlaceReviewContent
 import com.weit.domain.repository.place.PlaceReviewRepository

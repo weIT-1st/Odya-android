@@ -1,9 +1,7 @@
 package com.weit.data.repository.community
 
-import com.orhanobut.logger.Logger
 import com.weit.data.source.CommentDataSource
 import com.weit.data.util.exception
-import com.weit.data.util.getErrorMessage
 import com.weit.domain.model.community.comment.CommentContent
 import com.weit.domain.model.community.comment.CommentDeleteInfo
 import com.weit.domain.model.community.comment.CommentInfo

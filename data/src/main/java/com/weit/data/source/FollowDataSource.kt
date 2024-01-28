@@ -11,6 +11,7 @@ import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.MayknowUserSearchInfo
+import com.weit.domain.model.follow.SearchFollowRequestInfo
 import retrofit2.Response
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
@@ -28,6 +29,10 @@ class FollowDataSource @Inject constructor(
 
     suspend fun deleteFollow(followFollowingId: FollowFollowingId): Response<Unit> {
         return followService.deleteFollow(followFollowingId)
+    }
+
+    suspend fun deleteFollower(followerId: Long): Response<Unit> {
+        return followService.deleteFollower(followerId)
     }
 
     suspend fun getFollowNumber(
@@ -73,6 +78,50 @@ class FollowDataSource @Inject constructor(
 
     fun getCachedFollowings(): List<FollowUserContent> = followings
 
+    suspend fun getSearchFollowings(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchFollowings(
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
+    suspend fun getSearchFollowers(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchFollowers(
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
+    suspend fun getOtherSearchFollowings(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchOtherFollowings(
+            userId,
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
+    suspend fun getOtherSearchFollowers(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): ListResponse<FollowUserContentDTO> {
+        return followService.searchOtherFollowers(
+            userId,
+            searchFollowRequestInfo.size,
+            searchFollowRequestInfo.lastId,
+            searchFollowRequestInfo.nickname
+        )
+    }
+
     suspend fun getExperiencedFriend(placeId: String): ExperiencedFriendDTO =
         followService.getExperiencedFriend(placeId)
 
@@ -82,7 +131,7 @@ class FollowDataSource @Inject constructor(
     ): ListResponse<FollowUserContentDTO> {
         return followService.getMayknowUsers(
             size = mayknowUserSearchInfo.size,
-            lasId = mayknowUserSearchInfo.lastId,
+            lastId = mayknowUserSearchInfo.lastId,
         )
     }
 

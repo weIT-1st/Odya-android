@@ -8,6 +8,7 @@ import com.weit.data.model.journal.TravelJournalContentsDTO
 import com.weit.data.model.journal.TravelJournalContentsImagesDTO
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
+import com.weit.data.model.journal.TravelJournalVisibility
 import com.weit.data.model.journal.TravelJournalWriterDTO
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
@@ -26,9 +27,12 @@ import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
+import com.weit.domain.model.journal.TravelJournalVisibilityInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
+import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
+import com.weit.domain.repository.place.PlaceRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -45,6 +49,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     private val travelJournalDataSource: TravelJournalDataSource,
     private val imageRepository: ImageRepository,
     private val imageDataSource: ImageDataSource,
+    private val placeRepository: PlaceRepository,
     private val moshi: Moshi
 ) : TravelJournalRepository {
 
@@ -61,7 +66,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         val result = runCatching {
             val files = travelJournalImages.map {
                 val requestFile = imageDataSource.getRequestBody(it)
-                val fileName = try{
+                val fileName = try {
                     imageDataSource.getImageName(it)
                 } catch (e: Exception) {
                     return Result.failure(e)
@@ -85,7 +90,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             )
             travelJournalDataSource.registerTravelJournal(travelJournalPart, files)
         }
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleJournalError(result.exception()))
@@ -122,7 +127,13 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextMyJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getMyTravelJournalList(size, lastTravelJournal, placeId) }
+            runCatching {
+                travelJournalDataSource.getMyTravelJournalList(
+                    size,
+                    lastTravelJournal,
+                    placeId
+                )
+            }
         )
 
     override suspend fun getFriendTravelJournalList(
@@ -132,7 +143,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextFriendJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getFriendTravelJournalList(size, lastTravelJournal) }
+            runCatching {
+                travelJournalDataSource.getFriendTravelJournalList(
+                    size,
+                    lastTravelJournal
+                )
+            }
         )
 
     override suspend fun getRecommendTravelJournalList(
@@ -174,7 +190,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             travelJournalDataSource.updateTravelJournal(travelJournalId, travelJournalUpdatePart)
         }
 
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(result.exception())
@@ -205,19 +221,40 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val adapter = moshi.adapter(TravelJournalContentUpdateInfo::class.java)
             val travelJournalContentUpdateInfoJson = adapter.toJson(travelJournalContentUpdateInfo)
 
-            val travelJournalContentRequestBody = travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+            val travelJournalContentRequestBody =
+                travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalContentPart = MultipartBody.Part.createFormData(
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
-                travelJournalContentRequestBody)
-            travelJournalDataSource.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentPart, files)
+                travelJournalContentRequestBody
+            )
+            travelJournalDataSource.updateTravelJournalContent(
+                travelJournalId,
+                travelJournalContentId,
+                travelJournalContentPart,
+                files
+            )
         }
 
-        return if (result.isSuccess){
+        return if (result.isSuccess) {
             Result.success(result.getOrThrow())
         } else {
             Result.failure(handleJournalError(result.exception()))
+        }
+    }
+
+    override suspend fun updateTravelJournalVisibility(travelJournalVisibilityInfo: TravelJournalVisibilityInfo): Result<Unit> {
+        val response =
+            travelJournalDataSource.updateTravelJournalVisibility(
+                travelJournalVisibilityInfo.travelJournalId,
+                TravelJournalVisibility(travelJournalVisibilityInfo.visibility)
+            )
+
+        return if (response.isSuccessful) {
+            Result.success(Unit)
+        } else {
+            Result.failure(handleJournalError((handleResponseError(response))))
         }
     }
 
@@ -233,12 +270,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
 
-    private fun getInfiniteJournalList(
+    private suspend fun getInfiniteJournalList(
         hasNext: AtomicBoolean,
         lastId: Long?,
         result: Result<ListResponse<TravelJournalListDTO>>
     ): Result<List<TravelJournalListInfo>> {
-        if (lastId == null){
+        if (lastId == null) {
             hasNext.set(true)
         }
 
@@ -257,17 +294,22 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
+                    it.placeIds.map { placeId ->
+                        placeRepository.getPlaceDetail(placeId).getOrThrow()
+                    },
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
                         it.writer.profile
                     ),
+                    it.visibility,
                     it.travelCompanionSimpleResponses.map { response ->
                         TravelCompanionSimpleResponsesInfo(
                             response.username,
                             response.profileUrl
                         )
-                    }
+                    },
+                    it.isBookmark
                 )
             })
         } else {
@@ -304,7 +346,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
+    private suspend fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
         TravelJournalInfo(
             travelJournalId = travelJournalId,
             travelJournalTitle = travelJournalTitle,
@@ -324,11 +366,16 @@ class TravelJournalRepositoryImpl @Inject constructor(
             profile = profile
         )
 
-    private fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
+    private suspend fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
         TravelJournalContentsInfo(
             travelJournalContentId = travelJournalContentId,
             content = content,
-            placeId = placeId,
+            placeDetail = if (placeId == null){
+                // placeId를 입력받지 못한 경우
+                PlaceDetail("", null, null, null, null)
+            } else {
+                placeRepository.getPlaceDetail(placeId).getOrThrow()
+                   },
             latitude = latitude,
             longitude = longitude,
             travelDate = travelDate,
@@ -347,10 +394,11 @@ class TravelJournalRepositoryImpl @Inject constructor(
             userId = userId,
             nickname = nickname,
             profileUrl = profileUrl,
-            isRegistered = isRegistered
+            isRegistered = isRegistered,
+            isFollowing = isFollowing
         )
 
-    companion object{
+    companion object {
         private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
         private const val TRAVEL_JOURNAL = "travel-journal"
         private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"

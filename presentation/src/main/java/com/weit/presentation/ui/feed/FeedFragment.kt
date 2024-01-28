@@ -24,11 +24,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     private val viewModel: FeedViewModel by viewModels()
     private val feedAdapter = FeedAdapter(
         navigateTravelLog = { travelLogId -> navigateTravelLog(travelLogId) },
-        navigateFeedDetail = { feedId -> navigateFeedDetail(feedId) },
+        navigateFeedDetail = { feedId, writerName -> navigateFeedDetail(feedId,writerName) },
         onFollowChanged = { communityId -> viewModel.onFollowStateChange(communityId) },
         onLikeChanged = { communityId -> viewModel.onLikeStateChange(communityId)},
-        scrollListener = { viewModel.onNextFriends() }
-        )
+        friendScrollListener = { viewModel.onNextFriends() },
+        journalScrollListener = { viewModel.onNextJournals() },
+    )
     private val topicAdapter = FavoriteTopicAdapter(
         selectTopic = { topicId, position ->
             viewModel.selectFeedTopic(topicId, position)
@@ -96,12 +97,12 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     private fun navigateTravelLog(travelLogId: Long) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)
+        val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravelJournal(travelLogId)
         findNavController().navigate(action)
     }
 
-    private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedDetail(feedId)
+    private fun navigateFeedDetail(feedId: Long, writerNickname: String) {
+        val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedDetail(feedId,writerNickname)
         findNavController().navigate(action)
     }
 

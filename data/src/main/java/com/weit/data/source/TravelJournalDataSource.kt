@@ -8,6 +8,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
+import com.weit.data.model.journal.TravelJournalVisibility
 import com.weit.data.service.TravelJournalService
 import com.weit.domain.model.journal.TravelJournalListInfo
 import kotlinx.coroutines.flow.catch
@@ -78,6 +79,12 @@ class TravelJournalDataSource @Inject constructor(
     ) {
         service.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentUpdate, images)
     }
+
+    suspend fun updateTravelJournalVisibility(
+        travelJournalId: Long,
+        travelJournalVisibility: TravelJournalVisibility
+    ): Response<Unit> =
+        service.updateTravelJournalVisibility(travelJournalId,travelJournalVisibility)
 
     suspend fun deleteTravelJournal(
         travelJournalId: Long

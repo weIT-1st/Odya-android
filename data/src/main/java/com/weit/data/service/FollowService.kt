@@ -7,6 +7,7 @@ import com.weit.data.model.follow.FollowNumDTO
 import com.weit.data.model.follow.FollowUserContentDTO
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.POST
@@ -24,6 +25,11 @@ interface FollowService {
     suspend fun deleteFollow(
         @Body followFollowingId: FollowFollowingId,
     ): Response<Unit>
+
+    @DELETE("/api/v1/follows/follower/{followerId}")
+    suspend fun deleteFollower(
+        @Path("followerId") followerId: Long,
+    ) : Response<Unit>
 
     @GET("/api/v1/follows/{userId}}/counts")
     suspend fun getFollowNumber(
@@ -46,6 +52,36 @@ interface FollowService {
         @Query("sortType") sortType: String,
     ): ListResponse<FollowUserContentDTO>
 
+    @GET("/api/v1/follows/followings/search")
+    suspend fun searchFollowings(
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/{userId}/followers/search")
+    suspend fun searchOtherFollowers(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/{userId}/followings/search")
+    suspend fun searchOtherFollowings(
+        @Path("userId") userId: Long,
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
+    @GET("/api/v1/follows/followers/search")
+    suspend fun searchFollowers(
+        @Query("size") size: Int?,
+        @Query("lastId") lastId: Long?,
+        @Query("nickname") nickname: String,
+    ): ListResponse<FollowUserContentDTO>
+
     @GET("/api/v1/follows/{placeId}")
     suspend fun getExperiencedFriend(
         @Path("placeId") placeId: String,
@@ -55,7 +91,7 @@ interface FollowService {
     @GET("/api/v1/follows/may-know")
     suspend fun getMayknowUsers(
         @Query("size") size: Int?,
-        @Query("lasId") lasId: Long?,
+        @Query("lastId") lastId: Long?,
     ): ListResponse<FollowUserContentDTO>
 
 

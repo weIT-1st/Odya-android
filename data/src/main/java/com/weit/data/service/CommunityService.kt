@@ -44,7 +44,8 @@ interface CommunityService {
         @Query("size") size: Int?,
         @Query("lastId") lastCommunityId: Long?,
         @Query("sortType") sortType: String?,
-        ): ListResponse<CommunityMainContentDTO>
+        @Query("placeId") placeId: String?,
+    ): ListResponse<CommunityMainContentDTO>
 
     @GET("/api/v1/communities/me")
     suspend fun getMyCommunities(

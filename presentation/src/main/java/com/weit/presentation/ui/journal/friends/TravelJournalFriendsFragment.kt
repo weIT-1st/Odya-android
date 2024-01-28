@@ -26,7 +26,7 @@ class TravelJournalFriendsFragment(
     private var _binding: BottomSheetJournalFriendsBinding? = null
     private val binding get() = _binding!!
 
-    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
+//    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,9 +43,9 @@ class TravelJournalFriendsFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvTravelJournalFriends.adapter = travelJournalFriendAdapter
-
-        travelJournalFriendAdapter.submitList(friends)
+//        binding.rvTravelJournalFriends.adapter = travelJournalFriendAdapter
+//
+//        travelJournalFriendAdapter.submitList(friends)
     }
 
     override fun onDestroyView() {

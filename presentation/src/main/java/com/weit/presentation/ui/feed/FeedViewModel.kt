@@ -251,7 +251,6 @@ class FeedViewModel @Inject constructor(
                     it.createdDate,
                 )
             }
-            Logger.t("MainTest").i("${feeds}")
 
             val original = feedItems
             feedItems.clear()

@@ -144,6 +144,7 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             is PostTravelLogViewModel.Event.OnSelectPlace -> {
                 val action = PostTravelLogFragmentDirections.actionPostTravelLogFragmentToSelectPlaceFragment(
                     event.imagePlaces.toTypedArray(),
+                    event.dailyTravelLogPosition
                 )
                 findNavController().navigate(action)
             }

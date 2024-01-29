@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_fragment_memory_to_fragment_travel_Journal"
             app:destination="@id/fragment_travel_Journal" />
+        <action
+            android:id="@+id/action_fragment_memory_to_post_graph"
+            app:destination="@id/post_graph" />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"

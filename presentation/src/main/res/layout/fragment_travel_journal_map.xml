@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_travel_journal_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_travel_journal_map_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/h6"
+            android:textColor="@color/label_normal"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginTop="28dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="oo이랑 행복했던 부산 여행"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_travel_journal_map_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/body2"
+            android:textColor="@color/label_assistive"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@id/tv_travel_journal_map_title"
+            app:layout_constraintEnd_toEndOf="@id/tv_travel_journal_map_title"
+            app:layout_constraintTop_toBottomOf="@id/tv_travel_journal_map_title"
+            tools:text="2023.08.01 ~ 08.12"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_travel_journal_map_friend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintEnd_toStartOf="@+id/btn_travel_journal_map_more_friend"
+            app:layout_constraintTop_toTopOf="@id/btn_travel_journal_map_more_friend"
+            app:layout_constraintBottom_toBottomOf="@id/btn_travel_journal_map_more_friend"
+            tools:itemCount="3"
+            tools:listitem="@layout/item_round_profile_big"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_travel_journal_map_more_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_normal"
+            android:text="@string/journal_detail_more_friends"
+            android:background="@android:color/transparent"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -8,4 +8,5 @@ data class JournalBookMarkInfo(
     val travelStartDate: String,
     val travelJournalMainImageUrl: String,
     val writer: Writer,
+    var isBookmarked : Boolean
 )

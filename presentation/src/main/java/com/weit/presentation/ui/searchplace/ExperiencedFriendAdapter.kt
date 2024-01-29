@@ -15,8 +15,6 @@ class ExperiencedFriendAdapter() : ListAdapter<ExperiencedFriendContent, Experie
     }
 
     override fun onBindViewHolder(holder: ExperiencedFriendAdapter.ViewHolder, position: Int) {
-        val item = getItem(position)
-        holder.bind(item)
     }
 
     inner class ViewHolder(

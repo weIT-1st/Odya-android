@@ -32,7 +32,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedMyActivityPostViewModel @Inject constructor(
     private val getMyCommunitiesUseCase: GetMyCommunitiesUseCase
-) : ViewModel() {
+) : ViewModel(){
 
     private val _event = MutableEventFlow<FeedViewModel.Event>()
     val event = _event.asEventFlow()
@@ -43,8 +43,7 @@ class FeedMyActivityPostViewModel @Inject constructor(
     private var communityLastId: Long? = null
     private val _postImages = MutableStateFlow<List<CommunityMyActivityContent>>(emptyList())
     val postImages: StateFlow<List<CommunityMyActivityContent>> get() = _postImages
-
-    init {
+    init{
         onNextImages()
     }
 
@@ -85,7 +84,6 @@ class FeedMyActivityPostViewModel @Inject constructor(
             else -> _event.emit(FeedViewModel.Event.UnknownException)
         }
     }
-
     companion object {
         private const val DEFAULT_PAGE_SIZE = 18
 

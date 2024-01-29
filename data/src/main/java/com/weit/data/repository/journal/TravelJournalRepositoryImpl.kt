@@ -10,7 +10,6 @@ import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalVisibility
 import com.weit.data.model.journal.TravelJournalWriterDTO
-import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.TravelJournalDataSource
 import com.weit.data.util.exception
@@ -30,9 +29,10 @@ import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.journal.TravelJournalVisibilityInfo
 import com.weit.domain.model.journal.TravelJournalWriterInfo
+import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.journal.TravelJournalRepository
-import okhttp3.MediaType.Companion.toMediaType
+import com.weit.domain.repository.place.PlaceRepository
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -49,6 +49,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     private val travelJournalDataSource: TravelJournalDataSource,
     private val imageRepository: ImageRepository,
     private val imageDataSource: ImageDataSource,
+    private val placeRepository: PlaceRepository,
     private val moshi: Moshi
 ) : TravelJournalRepository {
 
@@ -178,20 +179,22 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
-                    it.placeIds,
+                    it.placeIds.map { placeId ->
+                        placeRepository.getPlaceDetail(placeId).getOrThrow()
+                    },
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
                         it.writer.profile
                     ),
+                    it.visibility,
                     it.travelCompanionSimpleResponses.map { response ->
                         TravelCompanionSimpleResponsesInfo(
                             response.username,
                             response.profileUrl
                         )
                     },
-                    it.visibility,
-                    it.isBookmarked
+                    it.isBookmark
                 )
             })
         } else {
@@ -208,12 +211,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextTaggedJournal,
             lastTravelJournal,
-            runCatching {
-                travelJournalDataSource.getRecommendTravelJournalList(
-                    size,
-                    lastTravelJournal
-                )
-            }
+            runCatching { travelJournalDataSource.getTaggedTravelJournalList(size, lastTravelJournal) }
         )
 
     // 여행일지 수정 Api
@@ -321,7 +319,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
 
-    private fun getInfiniteJournalList(
+    private suspend fun getInfiniteJournalList(
         hasNext: AtomicBoolean,
         lastId: Long?,
         result: Result<ListResponse<TravelJournalListDTO>>
@@ -345,20 +343,22 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     it.contentImageUrl,
                     it.travelStartDate,
                     it.travelEndDate,
-                    it.placeIds,
+                    it.placeIds.map { placeId ->
+                        placeRepository.getPlaceDetail(placeId).getOrThrow()
+                    },
                     TravelJournalWriterInfo(
                         it.writer.userId,
                         it.writer.nickname,
                         it.writer.profile
                     ),
+                    it.visibility,
                     it.travelCompanionSimpleResponses.map { response ->
                         TravelCompanionSimpleResponsesInfo(
                             response.username,
                             response.profileUrl
                         )
                     },
-                    it.visibility,
-                    it.isBookmarked
+                    it.isBookmark
                 )
             })
         } else {
@@ -395,7 +395,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         }
     }
 
-    private fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
+    private suspend fun TravelJournalDTO.toTravelJournalInfo(): TravelJournalInfo =
         TravelJournalInfo(
             travelJournalId = travelJournalId,
             travelJournalTitle = travelJournalTitle,
@@ -415,11 +415,16 @@ class TravelJournalRepositoryImpl @Inject constructor(
             profile = profile
         )
 
-    private fun TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
+    private suspend fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
         TravelJournalContentsInfo(
             travelJournalContentId = travelJournalContentId,
             content = content,
-            placeId = placeId,
+            placeDetail = if (placeId == null){
+                // placeId를 입력받지 못한 경우
+                PlaceDetail("", null, null, null, null)
+            } else {
+                placeRepository.getPlaceDetail(placeId).getOrThrow()
+                   },
             latitude = latitude,
             longitude = longitude,
             travelDate = travelDate,
@@ -438,7 +443,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             userId = userId,
             nickname = nickname,
             profileUrl = profileUrl,
-            isRegistered = isRegistered
+            isRegistered = isRegistered,
+            isFollowing = isFollowing
         )
 
     companion object {

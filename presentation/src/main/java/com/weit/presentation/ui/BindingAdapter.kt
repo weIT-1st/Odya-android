@@ -50,7 +50,6 @@ fun bindReactionCount(textView: TextView, count: Int?) {
     }
 }
 
-
 @BindingAdapter("android:text_created_date")
 fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
     if (date == null) {
@@ -86,4 +85,6 @@ fun bindCreatedDate(textView: TextView, date: LocalDateTime?) {
         }
     }
 }
+
+
 

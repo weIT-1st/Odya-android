@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="18dp"
+        android:paddingBottom="18dp"
+        android:clipToOutline="true"
+        android:background="@drawable/corners_all_16"
+        android:backgroundTint="#80000000">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_journal_memory_detail_box_start"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_journal_memory_detail_box_end"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_journal_memory_detail_box_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_normal"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="@id/gl_journal_memory_detail_box_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_detail_box_end"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="이번 해에 두번째 방문하는 돼지런한 서울 여행 야무제기 먹여야지 새ㅔ"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_journal_memory_detail_box_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_assistive"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="@id/gl_journal_memory_detail_box_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_detail_box_end"
+            app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_detail_box_title"
+            tools:text="2021. 06. 01 ~ 2023. 06. 04"/>
+
+        <ImageView
+            android:id="@+id/iv_journal_memory_detail_box_pin"
+            android:layout_width="16dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_location"
+            android:layout_marginTop="16dp"
+            app:layout_constraintStart_toStartOf="@id/gl_journal_memory_detail_box_start"
+            app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_detail_box_date" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_journal_memory_detail_box_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_alternative"
+            android:layout_marginStart="8dp"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@+id/iv_journal_memory_detail_box_pin"
+            app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_detail_box_end"
+            app:layout_constraintTop_toTopOf="@id/iv_journal_memory_detail_box_pin"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_journal_memory_detail_box_pin"
+            tools:text="해운대 해수욕"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

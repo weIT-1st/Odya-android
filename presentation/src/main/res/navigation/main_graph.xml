@@ -7,8 +7,11 @@
 
     <fragment
         android:id="@+id/fragment_memory"
-        android:name="com.weit.presentation.ui.memory.MemoryFragment"
-        android:label="MemoryFragment" >
+        android:name="com.weit.presentation.ui.journal.memory.MemoryFragment"
+        android:label="MemoryFragment">
+        <action
+            android:id="@+id/action_fragment_memory_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/fragment_map"
@@ -23,8 +26,8 @@
         android:name="com.weit.presentation.ui.feed.FeedFragment"
         android:label="FeedFragment" >
         <action
-            android:id="@+id/action_fragment_feed_to_fragment_travellog"
-            app:destination="@id/fragment_travellog" />
+            android:id="@+id/action_fragment_feed_to_fragment_TravelJournal"
+            app:destination="@id/fragment_travel_Journal" />
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_detail"
             app:destination="@id/fragment_feed_detail" />
@@ -54,6 +57,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_myFriendManageFragment"
+            app:destination="@id/myFriendManageFragment" />
         <action
             android:id="@+id/action_fragment_mypage_to_post_graph"
             app:destination="@id/post_graph" />
@@ -117,12 +123,21 @@
         </fragment>
     </navigation>
     <fragment
-        android:id="@+id/fragment_travellog"
-        android:name="com.weit.presentation.ui.travellog.TravelLogFragment"
-        android:label="TravelLogFragment" >
+        android:id="@+id/fragment_travel_Journal"
+        android:name="com.weit.presentation.ui.journal.travel_journal.TravelJournalFragment"
+        android:label="TravelJournalFragment">
         <argument
-            android:name="travelLogId"
+            android:name="travelJournalId"
             app:argType="long" />
+        <action
+            android:id="@+id/action_fragment_travel_Journal_to_travelJournalDetailFragment"
+            app:destination="@id/travelJournalDetailFragment" />
+        <action
+            android:id="@+id/action_fragment_travel_Journal_to_travelJournalDetailMenuFragment"
+            app:destination="@id/travelJournalDetailMenuFragment" />
+        <action
+            android:id="@+id/action_fragment_travel_Journal_to_travelJournalUpdateFragment"
+            app:destination="@id/travelJournalUpdateFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_detail"
@@ -209,6 +224,30 @@
             android:id="@+id/action_fragment_feed_detail_my_menu_to_fragment_feed"
             app:destination="@id/fragment_feed" />
     </dialog>
+    <dialog
+        android:id="@+id/travelJournalDetailFragment"
+        android:name="com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment"
+        android:label="TravelJournalDetailFragment">
+
+    </dialog>
+
+    <dialog
+        android:id="@+id/travelJournalDetailMenuFragment"
+        android:name="com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment"
+        android:label="TravelJournalDetailMenuFragment">
+    </dialog>
+
+
+    <fragment
+        android:id="@+id/travelJournalUpdateFragment"
+        android:name="com.weit.presentation.ui.journal.update.journal.TravelJournalUpdateFragment"
+        android:label="TravelJournalUpdateFragment">
+        <argument
+            android:name="travelJounalUpdateDTO"
+            app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO" />
+    </fragment>
+
+
     <fragment
         android:id="@+id/fragment_feed_search"
         android:name="com.weit.presentation.ui.feed.search.FeedSearchFragment"
@@ -295,6 +334,21 @@
         <action
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_otherFriendManageFragment"
+            app:destination="@id/otherFriendManageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/myFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.my.MyFriendManageFragment"
+        android:label="MyFriendManageFragment" />
+    <fragment
+        android:id="@+id/otherFriendManageFragment"
+        android:name="com.weit.presentation.ui.friendmanage.other.OtherFriendManageFragment"
+        android:label="OtherFriendManageFragment" >
+        <argument
+            android:name="userId"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/feedSelectPlaceFragment"

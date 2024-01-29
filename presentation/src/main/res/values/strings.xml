@@ -68,12 +68,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- myinfo_friend -->
-    <string name="myinfo_friend_title">친구 관리</string>
-    <string name="follower">팔로우</string>
+    <string name="friend_manage_title">친구 관리</string>
+    <string name="friend_manage_follower">팔로워</string>
+    <string name="friend_manage_following">팔로잉</string>
+    <string name="follower">팔로워</string>
     <string name="following">팔로잉</string>
     <string name="hint_find_friend">친구를 찾아보세요!</string>
-    <string name="sort_new">• 최신순</string>
-    <string name="sort_abc">• 가나다순</string>
+    <string name="friend_manage_following_delete_title">팔로잉을 취소하시겠습니까?</string>
+    <string name="friend_manage_following_delete_content">팔로잉 취소는 알림이 가지 않으며,\n커뮤니티 게시글 등의 구독이 취소됩니다.</string>
+    <string name="friend_manage_cancel">취소</string>
+    <string name="friend_manage_delete">삭제</string>
+    <string name="friend_manage_follower_delete_title">팔로워를 삭제하시겠습니까?</string>
+    <string name="friend_manage_follower_delete_content">팔로워 삭제는 알림이 가지 않으며,\n삭제 시 특정 여행일지 및 게시글이 노출되지 않습니다.</string>
 
     <!-- popular_spot -->
     <string name="popular_spot_title">인기 여행일지</string>
@@ -109,6 +115,20 @@
     <string name="post_travel_log_daily_post">등록하기</string>
     <string name="post_travel_log_upload_feed">공개 여부</string>
     <string name="post_travel_log_daily_picture_count">%d / %d</string>
+
+    <!--  journal memory  -->
+    <string name="journal_memory_last_travel">%s님\n지난 여행을 다시 볼까요?</string>
+    <string name="journal_memory_my_travel">내 여행일지</string>
+    <string name="journal_memory_my_travel_date">%s ~ %s</string>
+    <string name="journal_memory_bookmark_travel">즐겨찾는 여행일지</string>
+    <string name="journal_memory_tag_travel">태그된 여행일지</string>
+    <string name="journal_memory_my_review">내가 쓴 한줄 리뷰</string>
+
+    <!--  journal detail  -->
+    <string name="journal_detail_more_friends">더보기</string>
+    <string name="journal_detail_all_journal">전부 펼처보기</string>
+    <string name="journal_detail_day">Day %d</string>
+    <string name="journal_detail_friends">함께 간 친구</string>
 
     <!-- travel friend search -->
     <string name="travel_friend_title">함께 간 친구</string>

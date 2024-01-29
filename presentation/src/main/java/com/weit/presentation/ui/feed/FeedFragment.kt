@@ -97,7 +97,7 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
     }
 
     private fun navigateTravelLog(travelLogId: Long) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravellog(travelLogId)
+        val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravelJournal(travelLogId)
         findNavController().navigate(action)
     }
 

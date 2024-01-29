@@ -8,6 +8,7 @@ import com.weit.domain.model.follow.FollowUserIdInfo
 import com.weit.domain.model.follow.FollowerSearchInfo
 import com.weit.domain.model.follow.FollowingSearchInfo
 import com.weit.domain.model.follow.MayknowUserSearchInfo
+import com.weit.domain.model.follow.SearchFollowRequestInfo
 
 interface FollowRepository {
 
@@ -19,6 +20,10 @@ interface FollowRepository {
         followFollowingIdInfo: FollowFollowingIdInfo,
     ): Result<Unit>
 
+    suspend fun deleteFollower(
+        followerId: Long
+    ): Result<Unit>
+
     suspend fun getFollowNumber(
         followUserIdInfo: FollowUserIdInfo,
     ): Result<FollowNumDetail>
@@ -26,6 +31,14 @@ interface FollowRepository {
     suspend fun getInfiniteFollowing(
         followingSearchInfo: FollowingSearchInfo,
         query: String,
+    ): Result<List<FollowUserContent>>
+
+    suspend fun getFollowers(
+        followerSearchInfo: FollowerSearchInfo
+        ): Result<List<FollowUserContent>>
+
+    suspend fun getFollowings(
+        followingSearchInfo: FollowingSearchInfo
     ): Result<List<FollowUserContent>>
 
     suspend fun getInfiniteFollower(
@@ -41,7 +54,23 @@ interface FollowRepository {
         query: String,
     ): List<FollowUserContent>
 
+    suspend fun getSearchFollowings(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
 
+    suspend fun getSearchFollowers(
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
+
+    suspend fun getOtherSearchFollowings(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
+
+    suspend fun getOtherSearchFollowers(
+        userId: Long,
+        searchFollowRequestInfo: SearchFollowRequestInfo,
+    ): Result<List<FollowUserContent>>
     suspend fun getMayknowUsers(
         mayknowUserSearchInfo: MayknowUserSearchInfo,
     ): Result<List<FollowUserContent>>

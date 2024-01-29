@@ -74,8 +74,8 @@ class PlaceReviewAdapter(
     private fun showPopUpMenu(type: Int, it: View, placeReviewId: Long, writer: String) {
         PopupMenu(it.context, it).apply {
             when (type) {
-                friendReviewType -> menuInflater.inflate(R.menu.friend_place_review, this.menu)
-                myReviewType -> menuInflater.inflate(R.menu.my_place_reivew_menu, this.menu)
+                friendReviewType -> menuInflater.inflate(R.menu.menu_friend_place_review, this.menu)
+                myReviewType -> menuInflater.inflate(R.menu.menu_my_place_reivew_menu, this.menu)
             }
 
             setOnMenuItemClickListener {

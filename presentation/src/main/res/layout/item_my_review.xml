@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="review"
+            type="com.weit.domain.model.place.PlaceMyReviewInfo" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="18dp"
+        android:background="@drawable/corners_all_8"
+        android:backgroundTint="@color/elevation2"
+        android:paddingStart="12dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="16dp">
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_my_review_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_normal"
+            android:text="@{review.placeName}"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btn_item_place_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="해운대 해수욕장" />
+
+        <com.willy.ratingbar.BaseRatingBar
+            android:id="@+id/ratingbar_item_my_review"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:rating="@{review.rating}"
+            app:layout_constraintTop_toBottomOf="@+id/tv_item_my_review_place"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srb_clickable="false"
+            app:srb_drawableEmpty="@drawable/ic_star_white_empty"
+            app:srb_drawableFilled="@drawable/ic_star_yellow_fill"
+            app:srb_numStars="5"
+            app:srb_scrollable="false"
+            app:srb_starHeight="17dp"
+            app:srb_starPadding="1dp"
+            app:srb_starWidth="17dp"
+            app:srb_stepSize="0.5" />
+
+
+        <ImageButton
+            android:id="@+id/btn_item_place_menu"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:background="@color/elevation2"
+            android:src="@drawable/ic_dotdotdot"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/label_normal" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_place_review_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_assistive"
+            android:text="@{review.review}"
+            android:layout_marginTop="12dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ratingbar_item_my_review"
+            tools:text="노을뷰가 너무 예뻐요~ 노을뷰가 너무 예뻐요~" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_item_place_review_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_reversed_assistive"
+            android:layout_marginStart="8dp"
+            app:layout_constraintStart_toEndOf="@+id/ratingbar_item_my_review"
+            app:layout_constraintTop_toTopOf="@+id/ratingbar_item_my_review"
+            app:layout_constraintBottom_toBottomOf="@+id/ratingbar_item_my_review"
+            tools:text="2023.08.01" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

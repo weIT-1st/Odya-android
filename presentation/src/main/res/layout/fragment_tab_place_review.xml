@@ -99,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:background="@android:color/transparent"
-                android:drawableEnd="@drawable/ic_direrction_down"
+                android:drawableEnd="@drawable/ic_direction_down"
                 android:text="@string/place_recent_review_sort"
                 android:textColor="@color/label_normal"
                 app:layout_constraintStart_toStartOf="@id/gl_tab_place_review_start"

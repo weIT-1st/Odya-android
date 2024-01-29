@@ -59,7 +59,6 @@ class PlaceJournalFragment(
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner){
             viewModel.myRandomJournal.collectLatest { journal ->
-                Log.d("jomi", "myJournal List : $journal")
                 binding.includeTabPlaceNoMyJournal.root.isGone = (journal != null)
 
                 binding.lyTabPlaceMyJournal.isGone = (journal == null)
@@ -69,10 +68,10 @@ class PlaceJournalFragment(
                     binding.lyTabPlaceMyJournal.setOnClickListener {
                         moveToTravelJournalDetail(journal.travelJournalId)
                     }
-                    binding.includeTabPlaceMyJournal.tvItemMyJournalTitle.text = journal?.travelJournalTitle
+                    binding.includeTabPlaceMyJournal.tvItemMyJournalTitle.text = journal.travelJournalTitle
                     binding.includeTabPlaceMyJournal.tvItemMyJournalDate.text =
-                        requireContext().getString(R.string.place_journey_date, journal?.travelStartDate, journal?.travelEndDate)
-                    binding.tvTabPlaceMyJournalContent.text = journal?.content
+                        requireContext().getString(R.string.place_journey_date, journal.travelStartDate, journal.travelEndDate)
+                    binding.tvTabPlaceMyJournalContent.text = journal.content
 
                     binding.includeTabPlaceMyJournal.btnItemMyJournalMoreFriend.isGone =
                         journal.travelCompanionSimpleResponses.size < DEFAULT_FRIEND_COUNT

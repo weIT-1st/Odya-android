@@ -157,53 +157,19 @@ class TravelJournalRepositoryImpl @Inject constructor(
         size: Int?,
         lastTravelJournal: Long?,
         placeId: String?,
-    ): Result<List<TravelJournalListInfo>> {
-        if (lastTravelJournal == null) {
-            hasNextRecommendJournal.set(true)
-        }
-        if (hasNextRecommendJournal.get().not()) {
-            return Result.failure(NoMoreItemException())
-        }
-        val result = kotlin.runCatching {
-            travelJournalDataSource.getRecommendTravelJournalList(
-                size,
-                lastTravelJournal,
-                placeId
-            )
-        }
-
-        return if (result.isSuccess) {
-            val listSearch = result.getOrThrow()
-            hasNextRecommendJournal.set(listSearch.hasNext)
-            Result.success(listSearch.content.map {
-                TravelJournalListInfo(
-                    it.travelJournalId,
-                    it.travelJournalTitle,
-                    it.testContent,
-                    it.contentImageUrl,
-                    it.travelStartDate,
-                    it.travelEndDate,
-                    it.placeIds,
-                    TravelJournalWriterInfo(
-                        it.writer.userId,
-                        it.writer.nickname,
-                        it.writer.profile
-                    ),
-                    it.travelCompanionSimpleResponses.map { response ->
-                        TravelCompanionSimpleResponsesInfo(
-                            response.username,
-                            response.profileUrl
-                        )
-                    },
-                    it.visibility,
-                    it.isBookmarked
+    ): Result<List<TravelJournalListInfo>> =
+        getInfiniteJournalList(
+            hasNextRecommendJournal,
+            lastTravelJournal,
+            runCatching {
+                travelJournalDataSource.getRecommendTravelJournalList(
+                    size,
+                    lastTravelJournal,
+                    placeId
                 )
-            })
-        } else {
-            Result.failure(handleJournalError(result.exception()))
-        }
+            }
+        )
 
-    }
 
 
     override suspend fun getTaggedTravelJournalList(

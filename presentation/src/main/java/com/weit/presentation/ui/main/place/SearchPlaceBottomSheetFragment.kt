@@ -67,6 +67,10 @@ class SearchPlaceBottomSheetFragment(
         initExperiencedFriendRV()
         initTabViewPager()
 
+        binding.btnBsPlaceBookMark.setOnClickListener {
+            viewModel.updateFavoritePlace()
+        }
+
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.experiencedFriendInfo.collectLatest { info ->
                 binding.tvBsPlaceExperiencedFriend.text = String.format(getString(R.string.place_experienced_friend_count), info.count)

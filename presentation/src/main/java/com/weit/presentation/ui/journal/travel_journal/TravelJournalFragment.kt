@@ -17,7 +17,6 @@ import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
 import com.weit.presentation.ui.base.BaseMapFragment
-import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.getMarkerIconFromDrawable
@@ -41,7 +40,7 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
 
     private var travelJournalDetailMenuFragment: TravelJournalDetailMenuFragment? = null
 
-    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
+//    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
 
     private val sheetBehavior by lazy {
         BottomSheetBehavior.from(binding.bsTravelJournalDetail)
@@ -55,7 +54,7 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
 
-        initFriendRV()
+//        initFriendRV()
         initBottomSheet()
     }
 
@@ -131,18 +130,18 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
         }
     }
 
-    private fun initFriendRV() {
-        binding.rvJournalDetailFriends.apply {
-            addItemDecoration(
-                SpaceDecoration(
-                    resources,
-                    rightDP = R.dimen.item_journal_friends_space
-                )
-            )
-            adapter = travelJournalFriendAdapter
-        }
-        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
-    }
+//    private fun initFriendRV() {
+//        binding.rvJournalDetailFriends.apply {
+//            addItemDecoration(
+//                SpaceDecoration(
+//                    resources,
+//                    rightDP = R.dimen.item_journal_friends_space
+//                )
+//            )
+//            adapter = travelJournalFriendAdapter
+//        }
+//        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
+//    }
 
     private fun initBottomSheet() {
         sheetBehavior.run {

@@ -8,6 +8,7 @@ import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.domain.usecase.bookmark.CreateJournalBookMarkUseCase
+import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceByPlaceIdUseCase
 import com.weit.domain.usecase.favoritePlace.GetIsFavoritePlaceUseCase
 import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.follow.GetExperiencedFriendUseCase
@@ -28,6 +29,7 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getIsFavoritePlaceUseCase: GetIsFavoritePlaceUseCase,
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
+    private val deleteFavoritePlaceByPlaceIdUseCase: DeleteFavoritePlaceByPlaceIdUseCase,
     @Assisted private val placeId: String,
 ) : ViewModel() {
 
@@ -119,13 +121,19 @@ class SearchPlaceBottomSheetViewModel @AssistedInject constructor(
             val result = registerFavoritePlaceUseCase(placeId)
 
             if (result.isSuccess) {
-                getIsFavoritePlaceUseCase
+                getIsFavoritePlace()
             }
         }
     }
 
     private fun deleteFavoritePlace() {
-        // todo 관심장소 삭제
+        viewModelScope.launch {
+            val result = deleteFavoritePlaceByPlaceIdUseCase(placeId)
+
+            if (result.isSuccess) {
+                getIsFavoritePlace()
+            }
+        }
     }
 
     data class ExperiencedFriendInfo (

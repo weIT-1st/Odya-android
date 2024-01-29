@@ -13,7 +13,7 @@ import com.weit.domain.model.place.PlaceReviewByUserIdQuery
 import retrofit2.Response
 import javax.inject.Inject
 
-class PlaceReviewDataSource @Inject constructor(
+class PlaceReviewDateSource @Inject constructor(
     private val service: PlaceReviewService,
 ) {
 

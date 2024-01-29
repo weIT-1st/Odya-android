@@ -36,6 +36,7 @@ class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+        initTabViewPager()
 
     }
 
@@ -63,20 +64,17 @@ class FeedMyActivityFragment: BaseFragment<FragmentFeedMyActivityBinding>(
                     )
                 }
                 binding.tvMyActivityHint.text = spannableStringBuilder
-                if (nickname != null) {
-                    initTabViewPager(nickname)
-                }
             }
         }
     }
 
-    private fun initTabViewPager(nickname: String) {
+    private fun initTabViewPager() {
         val viewPager = binding.vpFeedMyActivity
         val tabLayout = binding.tlFeedMyActivity
 
-        tabItem.add(tabPost, FeedMyActivityPostFragment(nickname))
-        tabItem.add(tabComment, FeedMyActivityCommentFragment(nickname))
-        tabItem.add(tabLike, FeedMyActivityLikeFragment(nickname))
+        tabItem.add(tabPost, FeedMyActivityPostFragment())
+        tabItem.add(tabComment, FeedMyActivityCommentFragment())
+        tabItem.add(tabLike, FeedMyActivityLikeFragment())
 
         viewPager.apply {
             adapter = FeedMyActivityAdapter(this.findFragment(), tabItem)

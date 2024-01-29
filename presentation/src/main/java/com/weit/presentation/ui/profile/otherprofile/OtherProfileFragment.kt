@@ -10,7 +10,9 @@ import com.bumptech.glide.Glide
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
 import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceAdapter
+import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalFriendAdapter
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -38,10 +40,15 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             viewModel.selectFavoritePlace(place)
         }
     )
+    private val repJournalFriendAdapter = RepTravelJournalFriendAdapter()
+
+    private val bookmarkJournalAdapter = ProfileBookmarkJournalAdapter (
+        showDetail = { moveToJournalDetail(it) },
+        updateBookmarkState = { viewModel.updateBookmarkTravelJournalBookmarkState(it) }
+    )
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRecyclerView()
-
     }
 
     private fun initRecyclerView() {
@@ -64,12 +71,38 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             )
             adapter = favoritePlaceAdapter
         }
+        binding.itemProfileRepTravelJournal.rvItemMyJournalFriends.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_journal_friends_space,
+                ),
+            )
+            adapter = repJournalFriendAdapter
+        }
+        binding.rvProfileBookmarkTravelJournal.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_feed_comment_space,
+                ),
+            )
+            adapter = bookmarkJournalAdapter
+        }
     }
 
     private val infinityScrollListener by lazy {
         object : InfinityScrollListener() {
             override fun loadNextPage() {
                 viewModel.onNextLifeShots()
+            }
+        }
+    }
+
+    private val bookMarkJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextBookMarkJournal()
             }
         }
     }
@@ -132,6 +165,21 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
+            viewModel.repTravelJournal.collectLatest { item ->
+                if (item != null) {
+                    binding.tvTabPlaceMyJourneyContent.text = item.content
+                    binding.itemProfileRepTravelJournal.tvItemMyJournalTitle.text = item.title
+                    binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text = binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
+                    repJournalFriendAdapter.submitList(item.travelCompanionSimpleResponses.map{it.profileUrl})
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.bookMarkTravelJournals.collectLatest { list ->
+                bookmarkJournalAdapter.submitList(list)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.userInfo.collectLatest { userInfo ->
                 if (userInfo != null) {
                     Glide.with(binding.root)
@@ -162,6 +210,11 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         }
     }
 
+    private fun moveToJournalDetail(travelId: Long){
+//        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
+//        findNavController().navigate(action)
+    }
+
     private fun handleEvent(event: OtherProfileViewModel.Event) {
 
         when (event) {
@@ -177,6 +230,8 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
         binding.rvProfileLifeshot.adapter = null
         binding.rvProfileFavoritePlace.adapter = null
+        binding.rvProfileBookmarkTravelJournal.adapter = null
+        binding.rvProfileBookmarkTravelJournal.removeOnScrollListener(bookMarkJournalInfinityScrollListener)
         super.onDestroyView()
     }
 }

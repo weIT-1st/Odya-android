@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.login.login
+package com.weit.presentation.ui.login.user.login
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
@@ -12,8 +12,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor(
-) : ViewModel() {
+class LoginViewModel @Inject constructor() : ViewModel() {
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -32,6 +31,12 @@ class LoginViewModel @Inject constructor(
                     _event.emit(Event.LoginFailed)
                 }
             }
+        }
+    }
+
+    fun deleteUser(){
+        viewModelScope.launch {
+
         }
     }
 

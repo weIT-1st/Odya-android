@@ -34,7 +34,7 @@ import kotlinx.coroutines.tasks.await
 import java.util.Locale
 import javax.inject.Inject
 
-class PlaceDataSource @Inject constructor(
+class PlaceDateSource @Inject constructor(
     @ActivityContext private val context: Context,
     private val service: PlaceService,
     private val sessionToken: AutocompleteSessionToken,

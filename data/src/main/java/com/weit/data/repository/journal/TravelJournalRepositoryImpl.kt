@@ -154,12 +154,55 @@ class TravelJournalRepositoryImpl @Inject constructor(
     override suspend fun getRecommendTravelJournalList(
         size: Int?,
         lastTravelJournal: Long?
-    ): Result<List<TravelJournalListInfo>> =
-        getInfiniteJournalList(
-            hasNextRecommendJournal,
-            lastTravelJournal,
-            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
-        )
+    ): Result<List<TravelJournalListInfo>> {
+        if (lastTravelJournal == null) {
+            hasNextRecommendJournal.set(true)
+        }
+        if (hasNextRecommendJournal.get().not()) {
+            return Result.failure(NoMoreItemException())
+        }
+        val result = kotlin.runCatching {
+            travelJournalDataSource.getRecommendTravelJournalList(
+                size,
+                lastTravelJournal
+            )
+        }
+
+        return if (result.isSuccess) {
+            val listSearch = result.getOrThrow()
+            hasNextRecommendJournal.set(listSearch.hasNext)
+            Result.success(listSearch.content.map {
+                TravelJournalListInfo(
+                    it.travelJournalId,
+                    it.travelJournalTitle,
+                    it.testContent,
+                    it.contentImageUrl,
+                    it.travelStartDate,
+                    it.travelEndDate,
+                    it.placeIds.map { placeId ->
+                        placeRepository.getPlaceDetail(placeId).getOrThrow()
+                    },
+                    TravelJournalWriterInfo(
+                        it.writer.userId,
+                        it.writer.nickname,
+                        it.writer.profile
+                    ),
+                    it.visibility,
+                    it.travelCompanionSimpleResponses.map { response ->
+                        TravelCompanionSimpleResponsesInfo(
+                            response.username,
+                            response.profileUrl
+                        )
+                    },
+                    it.isBookmark
+                )
+            })
+        } else {
+            Result.failure(handleJournalError(result.exception()))
+        }
+
+    }
+
 
     override suspend fun getTaggedTravelJournalList(
         size: Int?,
@@ -180,7 +223,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val adapter = moshi.adapter(TravelJournalUpdateInfo::class.java)
             val travelJournalUpdateInfoJson = adapter.toJson(travelJournalUpdateInfo)
 
-            val travelJournalUpdateRequestBody = travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+            val travelJournalUpdateRequestBody =
+                travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalUpdatePart = MultipartBody.Part.createFormData(
                 TRAVEL_JOURNAL_UPDATE,
@@ -265,7 +309,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
         travelJournalId: Long,
         travelJournalContentId: Long
     ): Result<Unit> =
-        delete(travelJournalDataSource.deleteTravelJournalContent(travelJournalId, travelJournalContentId))
+        delete(
+            travelJournalDataSource.deleteTravelJournalContent(
+                travelJournalId,
+                travelJournalContentId
+            )
+        )
 
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
@@ -402,7 +451,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
         private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
         private const val TRAVEL_JOURNAL = "travel-journal"
         private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"
-        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE = "travel-journal-content-image-update"
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE =
+            "travel-journal-content-image-update"
         private const val TRAVEL_JOURNAL_CONTENT_UPDATE = "travel-journal-content-update"
     }
 }

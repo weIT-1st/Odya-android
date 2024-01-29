@@ -1,31 +1,31 @@
-package com.weit.presentation.ui.login.consent.privacy
+package com.weit.presentation.ui.login.consent
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
-import com.weit.presentation.databinding.BottomSheetLoginConsentPrivacyBinding
+import com.weit.presentation.databinding.BottomSheetLoginConsentBinding
+import com.weit.presentation.ui.login.preview.LoginPreviewThirdFragmentDirections
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class LoginConsentPrivacyDialogFragment : BottomSheetDialogFragment() {
-    private var _binding: BottomSheetLoginConsentPrivacyBinding? = null
+class LoginConsentDialogFragment : BottomSheetDialogFragment() {
+    private var _binding: BottomSheetLoginConsentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel: LoginConsentPrivacyDialogViewModel by viewModels()
+    private val viewModel: LoginConsentDialogViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        _binding = BottomSheetLoginConsentPrivacyBinding.inflate(inflater, container, false)
+        _binding = BottomSheetLoginConsentBinding.inflate(inflater, container, false)
         binding.vm = viewModel
         initCollector()
         return binding.root
@@ -44,21 +44,17 @@ class LoginConsentPrivacyDialogFragment : BottomSheetDialogFragment() {
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.termContent.collectLatest { content ->
-                binding.tvTermsContent.text = HtmlCompat.fromHtml(content, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                binding.tvTermsContent.text = content
             }
         }
     }
 
-    private fun moveToInputName(){
-        val action = LoginConsentPrivacyDialogFragmentDirections.actionLoginConsentDialogFragmentToLoginNicknameFragment()
-        findNavController().navigate(action)
-    }
-
-    private fun handleEvent(event: LoginConsentPrivacyDialogViewModel.Event) {
+    private fun handleEvent(event: LoginConsentDialogViewModel.Event) {
         when (event) {
-            is LoginConsentPrivacyDialogViewModel.Event.OnAgreeSuccess -> {
+            is LoginConsentDialogViewModel.Event.OnAgreeSuccess -> {
                 dismiss()
-                moveToInputName()
+                val action = LoginPreviewThirdFragmentDirections.actionLoginPreviewThirdFragmentToLoginNicknameFragment()
+                findNavController().navigate(action)
             }
             else -> {}
         }

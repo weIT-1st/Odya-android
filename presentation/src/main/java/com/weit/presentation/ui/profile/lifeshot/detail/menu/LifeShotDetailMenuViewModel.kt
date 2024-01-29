@@ -27,11 +27,13 @@ class LifeShotDetailMenuViewModel @AssistedInject constructor(
 
     fun deleteLifeShot() {
         viewModelScope.launch {
-            val result = deleteLifeShotUseCase(imageId)
-            if (result.isSuccess) {
-                _event.emit(Event.OnDeleteLifeShotSuccess)
-            } else {
-                // TODO 에러 처리
+            viewModelScope.launch {
+                val result = deleteLifeShotUseCase(imageId)
+                if (result.isSuccess) {
+                    _event.emit(Event.OnDeleteLifeShotSuccess)
+                } else {
+                    // TODO 에러 처리
+                }
             }
         }
     }

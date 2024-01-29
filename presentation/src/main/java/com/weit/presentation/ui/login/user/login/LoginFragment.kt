@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.login.login
+package com.weit.presentation.ui.login.user.login
 
 import android.content.Intent
 import androidx.fragment.app.viewModels
@@ -24,6 +24,9 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         binding.btnLoginKakao.setOnClickListener {
             viewModel.onLoginWithKakao(loginWithKakaoUseCase)
         }
+        binding.btnToMain.setOnClickListener {
+            moveToMain()
+        }
     }
 
     override fun initCollector() {
@@ -34,27 +37,25 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>(
         }
     }
 
-    private fun moveToMain() {
-        requireActivity().run {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
-    }
-
-    private fun moveToLogin(){
-        val action = LoginFragmentDirections.actionLoginFragmentToLoginOnboardingFragment()
-        findNavController().navigate(action)
-    }
-
     private fun handleEvent(event: LoginViewModel.Event) {
         when (event) {
-            is LoginViewModel.Event.UserRegistrationRequired -> {moveToLogin()}
             LoginViewModel.Event.LoginFailed -> {
-                moveToLogin()
+                // TODO 그냥 실패 시 에러 처리 필요
+            }
+            is LoginViewModel.Event.UserRegistrationRequired -> {
+                val action = LoginFragmentDirections.actionLoginFragmentToLoginPreviewThirdFragment()
+                findNavController().navigate(action)
             }
             LoginViewModel.Event.LoginSuccess -> {
                 moveToMain()
             }
+        }
+    }
+
+    private fun moveToMain() {
+        requireActivity().run {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 }

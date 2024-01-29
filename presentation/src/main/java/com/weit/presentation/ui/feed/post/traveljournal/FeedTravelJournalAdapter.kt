@@ -56,7 +56,23 @@ class FeedTravelJournalAdapter(
                     binding.ivFeedTravelLog.foreground = ColorDrawable(ContextCompat.getColor(binding.root.context, R.color.background_dim))
                 }
             }
+
         }
+
+//        private fun createBorderDrawable(borderColor: Int): Drawable {
+//            val borderSizeInDp = 2
+//            val borderSizeInPixel = TypedValue.applyDimension(
+//                TypedValue.COMPLEX_UNIT_DIP,
+//                borderSizeInDp.toFloat(),
+//                binding.root.context.resources.displayMetrics
+//            ).toInt()
+//
+//            val gradientDrawable = GradientDrawable()
+//            gradientDrawable.setStroke(borderSizeInPixel, ContextCompat.getColor(binding.root.context, borderColor))
+//
+//            return gradientDrawable
+//        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

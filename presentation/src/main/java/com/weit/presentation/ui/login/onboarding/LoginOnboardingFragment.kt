@@ -75,7 +75,7 @@ class LoginOnboardingFragment: BaseFragment<FragmentLoginOnboardingBinding>(
     }
 
     private fun moveToConsent(){
-        val action = LoginOnboardingFragmentDirections.actionLoginOnboardingFragmentToLoginConsentDeviceFragment()
-        findNavController().navigate(action)
+//        val action = LoginOnboardingFragmentDirections.actionLoginOnboardingFragmentToLoginConsentDeviceFragment()
+//        findNavController().navigate(action)
     }
 }

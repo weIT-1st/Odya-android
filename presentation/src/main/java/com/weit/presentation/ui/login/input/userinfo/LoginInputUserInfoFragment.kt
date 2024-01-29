@@ -60,19 +60,19 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.vm = viewModel
+//        binding.vm = viewModel
 
         genderDropbox()
     }
 
     override fun initListener() {
-        binding.etLoginInputUserInfoBirth.setOnClickListener {
-            datePicker.show()
-        }
-
-        binding.btnLoginInputUserInfoGoBack.setOnClickListener {
-            findNavController().popBackStack()
-        }
+//        binding.etLoginInputUserInfoBirth.setOnClickListener {
+//            datePicker.show()
+//        }
+//
+//        binding.btnLoginInputUserInfoGoBack.setOnClickListener {
+//            findNavController().popBackStack()
+//        }
     }
 
     override fun initCollector() {
@@ -85,14 +85,14 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.birth.collectLatest { birth ->
                 if (birth != null) {
-                    binding.etLoginInputUserInfoBirth.setText(
-                        requireContext().getString(
-                            R.string.edit_text_birth,
-                            birth.year,
-                            birth.monthValue,
-                            birth.dayOfMonth
-                        ),
-                    )
+//                    binding.etLoginInputUserInfoBirth.setText(
+//                        requireContext().getString(
+//                            R.string.edit_text_birth,
+//                            birth.year,
+//                            birth.monthValue,
+//                            birth.dayOfMonth
+//                        ),
+//                    )
                 }
             }
         }
@@ -105,9 +105,9 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
     }
 
     private fun moveToMainLoading() {
-        val action =
-            LoginInputUserInfoFragmentDirections.actionLoginInputUserInfoFragmentToLoginLoadingFragment()
-        findNavController().navigate(action)
+//        val action =
+//            LoginInputUserInfoFragmentDirections.actionLoginInputUserInfoFragmentToLoginLoadingFragment()
+//        findNavController().navigate(action)
     }
 
     private fun highlightNickname(nickname: String) {
@@ -121,16 +121,16 @@ class LoginInputUserInfoFragment : BaseFragment<FragmentLoginInputUserInfoBindin
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
-        binding.tvLoginInputUserInfoTitle.text = spannableStringBuilder
+//        binding.tvLoginInputUserInfoTitle.text = spannableStringBuilder
     }
 
     private fun genderDropbox() {
         val list = resources.getStringArray(R.array.login_gender).toList()
 
-        binding.spinnerLoginInputUserInfoGender.adapter =
-            GenderOptionSpinnerAdapter(requireContext(), R.layout.dropdown_login_gender, list)
-        binding.spinnerLoginInputUserInfoGender.onItemSelectedListener =
-            genderSpinnerItemSelectedListener
+//        binding.spinnerLoginInputUserInfoGender.adapter =
+//            GenderOptionSpinnerAdapter(requireContext(), R.layout.dropdown_login_gender, list)
+//        binding.spinnerLoginInputUserInfoGender.onItemSelectedListener =
+//            genderSpinnerItemSelectedListener
     }
 
     private fun handleEvent(event: LoginInputUserInfoViewModel.Event) {

@@ -50,7 +50,7 @@ class FeedDetailOtherMenuFragment(val feedId: Long,val nickname: String) : Botto
             }
 
             if (!feedReportFragment!!.isAdded){
-                feedReportFragment!!.show(childFragmentManager, FeedDetailOtherMenuFragment.TAG)
+                feedReportFragment!!.show(childFragmentManager, "Report Dialog")
             }
         }
     }

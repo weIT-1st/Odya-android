@@ -307,7 +307,7 @@
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_feed_comment"
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="40dp"
                     android:layout_marginTop="24dp"
@@ -339,7 +339,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     app:shapeAppearance="@style/ShapeableImageViewCircle"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginStart="40dp"
                     android:src="@drawable/ic_profile"
                     android:scaleType="centerCrop"
                     app:image_uri="@{vm.user.profile.url}"

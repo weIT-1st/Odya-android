@@ -10,6 +10,8 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:clipToOutline="true"
+        android:background="@drawable/corners_all_8"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -18,9 +20,8 @@
             android:id="@+id/iv_community_bg"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@drawable/corners_top_8"
             android:scaleType="centerCrop"
-            android:src="@drawable/background"
+            tools:src="@drawable/background"
             app:image_uri="@{feed.communityMainImageUrl}"
             app:layout_constraintDimensionRatio="1.2"
             app:layout_constraintEnd_toEndOf="parent"

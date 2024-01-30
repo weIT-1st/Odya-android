@@ -46,27 +46,13 @@ class FeedDetailViewModel @AssistedInject constructor(
     private val getDetailCommunityUseCase: GetDetailCommunityUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val changeLikeStateUseCase: ChangeLikeStateUseCase,
-    @Assisted private val feedId: Long=0,
-    ) : ViewModel() {
-    private var communityId: Long = 0
+    @Assisted private val feedId: Long,
+) : ViewModel() {
 
-    fun initialize(savedFeedId : Long?) {
-        communityId = if(savedFeedId == null){
-            feedId
-        }else{
-            savedFeedId.toLong()
-        }
-        Logger.t("MainTest").i("communityId $communityId")
-
-        getFeed()
-        getFeedDetailComments(communityId)
-    }
     @AssistedFactory
     interface FeedDetailFactory {
         fun create(feedId: Long): FeedDetailViewModel
     }
-
-
     val user = MutableStateFlow<User?>(null)
     private val _isWriter = MutableStateFlow<Boolean>(false)
     val isWriter: StateFlow<Boolean> get() = _isWriter
@@ -114,7 +100,8 @@ class FeedDetailViewModel @AssistedInject constructor(
                 user.value = it
             }
         }
-
+        getFeed()
+        getFeedDetailComments(feedId)
     }
 
     private fun setPlaceName(placeId: String?){
@@ -130,7 +117,7 @@ class FeedDetailViewModel @AssistedInject constructor(
 
     private fun getFeed() {
         viewModelScope.launch {
-            val result = getDetailCommunityUseCase(communityId)
+            val result = getDetailCommunityUseCase(feedId)
             if (result.isSuccess) {
                 val feed = result.getOrThrow()
                 userId = feed.writer.userId
@@ -180,12 +167,12 @@ class FeedDetailViewModel @AssistedInject constructor(
                commentRegister ->{
                    val result = registerCommentsUseCase(
                        CommentRegistrationInfo(
-                           communityId, writedComment.value
+                           feedId, writedComment.value
                        )
                    )
                    if (result.isSuccess) {
                        writedComment.emit("")
-                       getFeedDetailComments(communityId)
+                       getFeedDetailComments(feedId)
 
                    } else {
                         //TODO 에러
@@ -196,11 +183,11 @@ class FeedDetailViewModel @AssistedInject constructor(
                    val commentId = commentList[currentPosition].communityCommentId
                    val result = updateCommentsUseCase(
                            CommentUpdateInfo(
-                               communityId, commentId, writedComment.value
+                               feedId, commentId, writedComment.value
                            )
                    )
                    if (result.isSuccess) {
-                       getFeedDetailComments(communityId)
+                       getFeedDetailComments(feedId)
                    } else {
                        //TODO 에러
                    }
@@ -226,11 +213,11 @@ class FeedDetailViewModel @AssistedInject constructor(
             val commentId = commentList[position].communityCommentId
             val result = deleteCommentsUseCase(
                 CommentDeleteInfo(
-                    communityId, commentId
+                    feedId, commentId
                 )
             )
             if (result.isSuccess) {
-                getFeedDetailComments(communityId)
+                getFeedDetailComments(feedId)
             } else {
                 //TODO 에러
             }
@@ -252,7 +239,7 @@ class FeedDetailViewModel @AssistedInject constructor(
     fun onLikeStateChange() {
         viewModelScope.launch {
             val currentLikeState = _feed.value?.isUserLiked ?: return@launch
-            val result = changeLikeStateUseCase(communityId, !currentLikeState)
+            val result = changeLikeStateUseCase(feedId, !currentLikeState)
             if (result.isSuccess) {
                 getFeed()
             } else {

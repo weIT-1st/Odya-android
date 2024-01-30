@@ -126,6 +126,8 @@ class FeedAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(feed: Feed.FeedItem) {
+            Logger.t("MainTest").i("${feed.createdDate} ")
+
             binding.feed = feed
 
             if (feed.travelJournalSimpleResponse == null) {

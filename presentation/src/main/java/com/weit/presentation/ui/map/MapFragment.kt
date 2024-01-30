@@ -179,11 +179,11 @@ class MapFragment :
         }
     }
 
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        map?.clear()
-//        mapFragment?.onDestroyView()
-//    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        map?.clear()
+        mapFragment?.onDestroyView()
+    }
 
     private fun placeBottomSheetUp(placeId: String) {
         if (searchPlaceBottomSheetFragment == null){

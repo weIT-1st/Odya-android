@@ -3,7 +3,6 @@ package com.weit.data.source
 import android.content.Context
 import com.weit.data.model.ListResponse
 import com.weit.data.model.image.UserImageResponseDTO
-import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.model.user.UserStatisticsDTO
@@ -41,8 +40,6 @@ class UserDataSource @Inject constructor(
     suspend fun updateProfile(profile: MultipartBody.Part?): Response<Unit> {
         return userService.updateUserProfile(profile)
     }
-
-
 
     suspend fun deleteUser(): Response<Unit> {
         return userService.deleteUser()

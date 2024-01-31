@@ -13,6 +13,10 @@ interface FavoritePlaceRepository {
         favoritePlaceId: Long,
     ): Result<Unit>
 
+    suspend fun deleteByPlaceId(
+        placeId: String,
+    ): Result<Unit>
+
     suspend fun isFavoritePlace(
         placeId: String,
     ): Result<Boolean>

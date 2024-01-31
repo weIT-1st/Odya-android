@@ -49,4 +49,12 @@ interface AuthService {
     suspend fun getTermContent(
         @Path("id") termId: Long,
     ): TermContentDTO
+
+    @GET("/api/v1/terms")
+    suspend fun getAgreedTerms(): AgreedTermListDTO
+
+    @PATCH("/api/v1/terms")
+    suspend fun setTerms(
+        @Body termsIdList: TermIdList,
+    ): Response<Unit>
 }

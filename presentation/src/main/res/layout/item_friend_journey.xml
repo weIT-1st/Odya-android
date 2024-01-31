@@ -8,20 +8,20 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="232dp"
-        android:layout_height="200dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:background="@drawable/corners_all_8"
-        android:layout_marginEnd="8dp"
         android:clipToOutline="true">
 
         <ImageView
             android:id="@+id/iv_item_friend_journey_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            tools:src="@drawable/haeundae"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="232:200"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            tools:src="@drawable/haeundae" />
 
         <TextView
             android:id="@+id/tv_item_fiend_journey_title"
@@ -76,8 +76,6 @@
             app:layout_constraintTop_toTopOf="@+id/include_item_friend_journey_profile"
             app:layout_constraintBottom_toBottomOf="@+id/include_item_friend_journey_profile"
             tools:text="2023.05.28"/>
-
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

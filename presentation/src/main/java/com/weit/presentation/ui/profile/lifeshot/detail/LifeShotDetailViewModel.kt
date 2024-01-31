@@ -13,7 +13,6 @@ import com.weit.domain.model.user.User
 import com.weit.domain.usecase.image.GetUserImageUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
 import com.weit.domain.usecase.user.GetUserStatisticsUseCase
-import com.weit.presentation.model.profile.lifeshot.LifeShotCount
 import com.weit.presentation.model.profile.lifeshot.LifeShotImageDetailDTO
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.model.profile.lifeshot.SelectLifeShotImageDTO
@@ -55,9 +54,6 @@ class LifeShotDetailViewModel @AssistedInject constructor(
     private val _lifeshots = MutableStateFlow<List<UserImageResponseInfo>>(emptyList())
     val lifeshots: StateFlow<List<UserImageResponseInfo>> get() = _lifeshots
 
-    private val _lifeshotCount = MutableStateFlow<LifeShotCount?>(null)
-    val lifeshotCount: StateFlow<LifeShotCount?> get() = _lifeshotCount
-
     private var lastImageId: Long? = null
     private var totalLifeshotCount: Int = 0
     init {
@@ -80,12 +76,18 @@ class LifeShotDetailViewModel @AssistedInject constructor(
         getUserStatistics()
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private fun getUserStatistics() {
         viewModelScope.launch {
             val result = getUserStatisticsUseCase(lifeshotRequestInfo.userId)
             if (result.isSuccess) {
                 totalLifeshotCount = result.getOrThrow().lifeShotCount
-                _lifeshotCount.emit(LifeShotCount(position,result.getOrThrow().lifeShotCount))
+                _event.emit(
+                    LifeShotDetailViewModel.Event.GetUserStatisticsSuccess(
+                        position,
+                        result.getOrThrow().lifeShotCount
+                    )
+                )
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
             }
@@ -115,10 +117,10 @@ class LifeShotDetailViewModel @AssistedInject constructor(
             _event.emit(
                 LifeShotDetailViewModel.Event.OnTransformImage(
                     position,
+                    totalLifeshotCount,
                     _lifeshots.value.get(position).imageId
                 )
             )
-            _lifeshotCount.emit(LifeShotCount(position,totalLifeshotCount))
         }
     }
 
@@ -129,8 +131,11 @@ class LifeShotDetailViewModel @AssistedInject constructor(
                 removeAt(currentPosition)
             }
             _lifeshots.emit(currentLifeShots)
-            _lifeshotCount.emit(LifeShotCount(1,totalLifeshotCount))
-            _event.emit(Event.OnDeleteSuccess)
+            _event.emit(
+                LifeShotDetailViewModel.Event.OnDeleteSuccess(
+                    totalLifeshotCount,
+                )
+            )
         }
     }
 
@@ -151,11 +156,14 @@ class LifeShotDetailViewModel @AssistedInject constructor(
         ) : Event()
 
         data class OnTransformImage(
-            val currentPosition: Int,
+            val currentPosition : Int,
+            val totalCount: Int,
             val imageId: Long
         ) : Event()
 
-        object OnDeleteSuccess : Event()
+        data class OnDeleteSuccess(
+            val totalCount: Int,
+        ) : Event()
     }
 
     companion object {

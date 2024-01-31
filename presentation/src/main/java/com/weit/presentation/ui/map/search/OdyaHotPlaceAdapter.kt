@@ -1,6 +1,7 @@
 package com.weit.presentation.ui.map.search
 
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -13,11 +14,11 @@ import com.weit.presentation.databinding.ItemOdyaHotPlaceRankBinding
 import com.weit.presentation.model.HotPlaceRank
 
 class OdyaHotPlaceAdapter(
-) : ListAdapter<HotPlaceRank, OdyaHotPlaceAdapter.ViewHolder>(DiffCallback) {
+
+): ListAdapter<HotPlaceRank, OdyaHotPlaceAdapter.ViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val halfWidth =
-            ItemOdyaHotPlaceRankBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val halfWidth = ItemOdyaHotPlaceRankBinding.inflate(LayoutInflater.from(parent.context),parent, false)
         parent.doOnNextLayout {
             val params = halfWidth.root.layoutParams
             params.width = parent.width / 2
@@ -32,46 +33,28 @@ class OdyaHotPlaceAdapter(
         val item = getItem(position)
         holder.bind(item)
     }
-
     class ViewHolder(
         private val binding: ItemOdyaHotPlaceRankBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: HotPlaceRank) {
+    ):RecyclerView.ViewHolder(binding.root){
+        fun bind(item : HotPlaceRank){
             val rankText = itemView.context.getString(R.string.place_main_hot_place_rank, item.rank)
-            if (item.rank < SPECIAL_RANK) {
-                binding.tvItemHotPlaceRank.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context.applicationContext,
-                        R.color.primary
-                    )
-                )
+            if (item.rank < SPECIAL_RANK){
+                binding.tvItemHotPlaceRank.setTextColor(ContextCompat.getColor(itemView.context.applicationContext, R.color.primary))
             } else {
-                binding.tvItemHotPlaceRank.setTextColor(
-                    ContextCompat.getColor(
-                        itemView.context.applicationContext,
-                        R.color.system_inactive
-                    )
-                )
+                binding.tvItemHotPlaceRank.setTextColor(ContextCompat.getColor(itemView.context.applicationContext, R.color.system_inactive))
             }
             binding.tvItemHotPlaceRank.text = rankText
             binding.tvItemHotPlaceRankTitle.text = item.place
         }
     }
-
-    companion object {
+    companion object{
         private val DiffCallback: DiffUtil.ItemCallback<HotPlaceRank> =
-            object : DiffUtil.ItemCallback<HotPlaceRank>() {
-                override fun areItemsTheSame(
-                    oldItem: HotPlaceRank,
-                    newItem: HotPlaceRank
-                ): Boolean {
+            object : DiffUtil.ItemCallback<HotPlaceRank>(){
+                override fun areItemsTheSame(oldItem: HotPlaceRank, newItem: HotPlaceRank): Boolean {
                     return oldItem.rank == newItem.rank
                 }
 
-                override fun areContentsTheSame(
-                    oldItem: HotPlaceRank,
-                    newItem: HotPlaceRank
-                ): Boolean {
+                override fun areContentsTheSame(oldItem: HotPlaceRank, newItem: HotPlaceRank): Boolean {
                     return oldItem == newItem
                 }
 

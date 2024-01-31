@@ -48,15 +48,17 @@ class TravelJournalDataSource @Inject constructor(
 
     suspend fun getFriendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?
     ): ListResponse<TravelJournalListDTO> =
-        service.getFriendTravelJournalList(size, lastTravelJournal)
+        service.getFriendTravelJournalList(size, lastTravelJournal, placeId)
 
     suspend fun getRecommendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?
     ): ListResponse<TravelJournalListDTO> =
-        service.getRecommendTravelJournalList(size, lastTravelJournal)
+        service.getRecommendTravelJournalList(size, lastTravelJournal, placeId)
 
     suspend fun getTaggedTravelJournalList(
         size: Int?,

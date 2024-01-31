@@ -92,7 +92,7 @@ class MyJournalViewModel @Inject constructor(
                 journals.addAll(newJournals)
 
                 _myJournals.emit(journals)
-                _randomJournal.emit(journals.random())
+                _randomJournal.emit(journals.randomOrNull())
                 _isEmptyMyJournal.emit(journals.isEmpty())
 
             } else {

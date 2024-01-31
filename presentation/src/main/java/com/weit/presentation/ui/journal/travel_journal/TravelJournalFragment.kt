@@ -54,7 +54,7 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
 
-        initFriendRV()
+//        initFriendRV()
         initBottomSheet()
     }
 
@@ -130,18 +130,18 @@ class TravelJournalFragment : BaseMapFragment<FragmentTravelJournalBinding>(
         }
     }
 
-    private fun initFriendRV() {
-        binding.rvJournalDetailFriends.apply {
-            addItemDecoration(
-                SpaceDecoration(
-                    resources,
-                    rightDP = R.dimen.item_journal_friends_space
-                )
-            )
+//    private fun initFriendRV() {
+//        binding.rvJournalDetailFriends.apply {
+//            addItemDecoration(
+//                SpaceDecoration(
+//                    resources,
+//                    rightDP = R.dimen.item_journal_friends_space
+//                )
+//            )
 //            adapter = travelJournalFriendAdapter
-        }
+//        }
 //        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
-    }
+//    }
 
     private fun initBottomSheet() {
         sheetBehavior.run {

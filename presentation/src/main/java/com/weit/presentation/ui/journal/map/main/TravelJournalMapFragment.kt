@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.map
+package com.weit.presentation.ui.journal.map.main
 
 import android.os.Bundle
 import android.view.View
@@ -15,6 +15,8 @@ import com.weit.domain.model.place.PlaceDetail
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalMapBinding
 import com.weit.presentation.ui.base.BaseMapFragment
+import com.weit.presentation.ui.journal.map.ImagePinInfo
+import com.weit.presentation.ui.util.getImageMarkerIconFromLayout
 import com.weit.presentation.ui.util.getMarkerIconFromDrawable
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -52,7 +54,7 @@ class TravelJournalMapFragment(
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.mainPlaceList.collectLatest { placePinInfo ->
-                setMapPin(placePinInfo)
+//                setMapPin(placePinInfo)
                 moveToTravelCenter(
                     placePinInfo.map { it.latitude },
                     placePinInfo.map { it.longitude })
@@ -62,6 +64,12 @@ class TravelJournalMapFragment(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.allPlaceList.collectLatest {
                 setMapLine(it)
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.mainPlaceImageList.collectLatest {
+                setMapImagePin(it)
             }
         }
     }
@@ -86,6 +94,7 @@ class TravelJournalMapFragment(
 
         viewModel.initMainPlaceList()
         viewModel.initAllPlaceList()
+        viewModel.initMainImage()
     }
 
     private fun setMapPin(placeList: List<PlaceDetail>) {
@@ -102,8 +111,6 @@ class TravelJournalMapFragment(
                 icon(marker)
             }
             map?.addMarker(markerOption)
-
-
         }
     }
 
@@ -117,6 +124,24 @@ class TravelJournalMapFragment(
         }
 
         map?.addPolyline(polyLineOption)
+    }
+
+    private fun setMapImagePin(placeList: List<ImagePinInfo>) {
+        placeList.forEach { info ->
+            if (info.latitude == null) {
+                return@forEach
+            }
+            if (info.longitude == null) {
+                return@forEach
+            }
+
+            val imageMarker = getImageMarkerIconFromLayout(requireContext(), info.url)
+            val markerOption = MarkerOptions().apply {
+                    position(LatLng(info.latitude, info.longitude))
+                    icon(imageMarker)
+                }
+            map?.addMarker(markerOption)
+        }
     }
 
     private fun moveToTravelCenter(latitudes: List<Double?>, longitudes: List<Double?>) {

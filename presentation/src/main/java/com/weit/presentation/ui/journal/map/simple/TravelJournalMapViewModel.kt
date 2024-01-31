@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.map
+package com.weit.presentation.ui.journal.map.simple
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.place.PlaceDetail
+import com.weit.presentation.ui.journal.map.ImagePinInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,6 +20,9 @@ class TravelJournalMapViewModel @AssistedInject constructor(
 
     private val _mainPlaceList = MutableStateFlow<List<PlaceDetail>>(emptyList())
     val mainPlaceList: StateFlow<List<PlaceDetail>> get() = _mainPlaceList
+
+    private val _mainPlaceImageList = MutableStateFlow<List<ImagePinInfo>>(emptyList())
+    val mainPlaceImageList: StateFlow<List<ImagePinInfo>> get() = _mainPlaceImageList
 
     private val _allPlaceList = MutableStateFlow<List<LatLng>>(emptyList())
     val allPlaceList: StateFlow<List<LatLng>> get() = _allPlaceList
@@ -52,6 +56,22 @@ class TravelJournalMapViewModel @AssistedInject constructor(
             }
 
             _allPlaceList.emit(placeList)
+        }
+    }
+
+    fun initMainImage() {
+        viewModelScope.launch {
+            val list = travelJournalInfo.travelJournalContents.map {
+                ImagePinInfo(
+                    placeId = it.placeDetail.placeId,
+                    name = it.placeDetail.name,
+                    address = it.placeDetail.address,
+                    latitude = it.placeDetail.latitude,
+                    longitude = it.placeDetail.longitude,
+                    url = it.travelJournalContentImages.randomOrNull()?.contentImageUrl
+                )
+            }
+            _mainPlaceImageList.emit(list)
         }
     }
 

@@ -60,7 +60,6 @@
                     android:layout_marginBottom="32dp"
                     app:shapeAppearance="@style/ShapeableImageViewCircle"
                     android:src="@drawable/ic_profile"
-                    app:image_uri="@{vm.feed.writer.profile.url}"
                     android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="@+id/view_community_content"
                     app:layout_constraintTop_toTopOf="@+id/view_community_content"

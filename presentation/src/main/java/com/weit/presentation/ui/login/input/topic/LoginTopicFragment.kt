@@ -74,8 +74,8 @@ class LoginTopicFragment : BaseFragment<DialogLoginTopicBinding>(
                 sendSnackBar("관심 토픽을 3개이상 골라 주세요!")
             }
             LoginTopicViewModel.Event.RegisterTopicSuccess -> {
-                val action = LoginTopicFragmentDirections.actionLoginTopicFragmentToLoginFriendFragment()
-                findNavController().navigate(action)
+//                val action = LoginTopicFragmentDirections.actionLoginTopicFragmentToLoginFriendFragment()
+//                findNavController().navigate(action)
             }
         }
     }

@@ -86,25 +86,26 @@ class LifeShotDetailFragment() : BaseFragment<FragmentLifeShotDetailBinding>(
                 handleEvent(event)
             }
         }
-        repeatOnStarted(viewLifecycleOwner) {
-            viewModel.lifeshotCount.collectLatest { count ->
-                binding.tvLifeshotCount.text =
-                    getString(R.string.lifeshot_count,
-                        count?.currentPosition?.plus(1), count?.totalCount)
-                binding.vpLifeshot.currentItem = args.position
-            }
-        }
     }
 
     private fun handleEvent(event: LifeShotDetailViewModel.Event) {
 
         when (event) {
+            is LifeShotDetailViewModel.Event.GetUserStatisticsSuccess -> {
+                binding.tvLifeshotCount.text =
+                    getString(R.string.lifeshot_count, event.currentPosition+1, event.totalCount)
+                binding.vpLifeshot.currentItem = args.position
+            }
             is LifeShotDetailViewModel.Event.OnTransformImage -> {
+                binding.tvLifeshotCount.text =
+                    getString(R.string.lifeshot_count, event.currentPosition + 1, event.totalCount)
                 lifeShotDetailMenuFragment = LifeShotDetailMenuFragment(
                     imageId = event.imageId,
                     onComplete = { viewModel.onDeleteCompeleted(event.currentPosition) })
             }
             is LifeShotDetailViewModel.Event.OnDeleteSuccess -> {
+                binding.tvLifeshotCount.text =
+                        getString(R.string.lifeshot_count, 1, event.totalCount)
                 binding.vpLifeshot.currentItem = 0
             }
             else -> {}

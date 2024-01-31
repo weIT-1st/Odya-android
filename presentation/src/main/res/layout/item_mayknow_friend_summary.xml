@@ -26,25 +26,25 @@
             app:shapeAppearanceOverlay="@style/ShapeableImageViewCircle"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:src="@tools:sample/avatars"/>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-
-        <com.google.android.material.textview.MaterialTextView
+        <TextView
             android:id="@+id/tv_mayknow_friend_summary_nickname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:ellipsize="end"
+            tools:text="@{friend.nickname}"
             android:maxLines="1"
-            android:textAppearance="@style/body1"
+            android:ellipsize="end"
+            style="@style/body1"
             android:textColor="@color/label_normal"
-            android:gravity="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_mayknow_friend_summary_profile"
+            android:layout_marginTop="16dp"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintWidth_max="wrap"
-            tools:text="@tools:sample/full_names" />
+            app:layout_constraintTop_toBottomOf="@+id/iv_mayknow_friend_summary_profile"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            />
+
 
         <ToggleButton
             android:id="@+id/btn_mayknow_friend_summary_follow"

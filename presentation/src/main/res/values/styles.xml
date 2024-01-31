@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <style name="h1" parent="Widget.MaterialComponents.TextView">
         <item name="android:textSize">@dimen/h1</item>
         <item name="android:textStyle">bold</item>
@@ -117,6 +116,12 @@
     <style name="datepicker" parent="@android:style/Widget.Material.DatePicker">
         <item name="android:headerBackground">@color/background_normal</item>
         <item name="android:textColorPrimary">@color/label_normal</item>
+    </style>
+
+    <style name="AppBottomSheetDialogTheme"
+        parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/AppModalStyle</item>
+        <item name="android:windowIsFloating">false</item>
     </style>
 
     <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">

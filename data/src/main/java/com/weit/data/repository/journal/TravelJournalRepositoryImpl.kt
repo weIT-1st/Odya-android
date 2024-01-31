@@ -179,12 +179,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextTaggedJournal,
             lastTravelJournal,
-            runCatching {
-                travelJournalDataSource.getTaggedTravelJournalList(
-                    size,
-                    lastTravelJournal
-                )
-            }
+            runCatching { travelJournalDataSource.getTaggedTravelJournalList(size, lastTravelJournal) }
         )
 
     // 여행일지 수정 Api
@@ -424,7 +419,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
         private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
         private const val TRAVEL_JOURNAL = "travel-journal"
         private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"
-        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE = "travel-journal-content-image-update"
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE =
+            "travel-journal-content-image-update"
         private const val TRAVEL_JOURNAL_CONTENT_UPDATE = "travel-journal-content-update"
     }
 }

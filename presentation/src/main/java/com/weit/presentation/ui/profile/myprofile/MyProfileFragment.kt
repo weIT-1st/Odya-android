@@ -11,8 +11,10 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
+import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
 import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
+import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
+import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalFriendAdapter
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -37,13 +39,18 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     )
 
+    private val bookmarkJournalAdapter = ProfileBookmarkJournalAdapter (
+        showDetail = { moveToJournalDetail(it) },
+        updateBookmarkState = { viewModel.updateBookmarkTravelJournalBookmarkState(it) }
+    )
+
+    private val repJournalFriendAdapter = RepTravelJournalFriendAdapter()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
         viewModel.initData()
         initRecyclerView()
-        //TODO 즐겨찾기 여행일지
-        //TODO 대표여행일지
 
     }
 
@@ -54,6 +61,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     if (uri == null) viewModel.getUserProfileNone() else Glide.with(binding.root)
                         .load(uri).into(binding.ivProfileUser)
                 }
+
             }
             if (profileMenuDialog?.isAdded?.not() == true) {
                 profileMenuDialog?.show(
@@ -69,19 +77,13 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             findNavController().navigate(action)
         }
 
-        binding.layoutProfileNoLifeshot.btnAddLifeshot.setOnClickListener {
-            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentLifeShotPicker()
-            findNavController().navigate(action)
-        }
-
-        binding.layoutProfileNoTravellog.btnFeedNoTravelLogWrite.setOnClickListener {
-            val action = MyProfileFragmentDirections.actionFragmentMypageToPostGraph()
-            findNavController().navigate(action)
-        }
-
         binding.tvProfileMyCommunity.setOnClickListener {
             val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentFeedMyActivity()
             findNavController().navigate(action)
+        }
+
+        binding.tvProfileRepTravelJournal.setOnClickListener {
+            viewModel.updateRepTravelJournal()
         }
 
         binding.btnProfileFavoritePlaceMore.setOnClickListener {
@@ -102,7 +104,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     }
 
-    private fun initRecyclerView() {
+    private val bookMarkJournalInfinityScrollListener by lazy {
+        object : InfinityScrollListener() {
+            override fun loadNextPage() {
+                viewModel.onNextBookMarkJournal()
+            }
+        }
+    }
+
+    private fun initRecyclerView(){
         binding.rvProfileLifeshot.run {
             addItemDecoration(
                 SpaceDecoration(
@@ -122,6 +132,26 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             )
             adapter = favoritePlaceAdapter
         }
+
+        binding.rvProfileBookmarkTravelJournal.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_feed_comment_space,
+                ),
+            )
+            adapter = bookmarkJournalAdapter
+        }
+
+        binding.itemProfileRepTravelJournal.rvItemMyJournalFriends.run {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_journal_friends_space,
+                ),
+            )
+            adapter = repJournalFriendAdapter
+        }
     }
 
     override fun initCollector() {
@@ -138,44 +168,40 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.lifeshots.collectLatest { lifeshots ->
-                if (lifeshots.isNotEmpty()) {
+                if (!lifeshots.isNullOrEmpty()) {
                     Glide.with(binding.root)
                         .load(lifeshots.first().imageUrl)
                         .into(binding.ivProfileBg)
-                    binding.layoutProfileNoLifeshot.root.visibility = View.GONE
-                    binding.rvProfileLifeshot.visibility = View.VISIBLE
-                }else{
-                    binding.layoutProfileNoLifeshot.root.visibility = View.VISIBLE
-                    binding.rvProfileLifeshot.visibility = View.INVISIBLE
+                    myProfileLifeShotAdapter.submitList(lifeshots)
                 }
-                myProfileLifeShotAdapter.submitList(lifeshots)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaceCount.collectLatest { count ->
-               if(count > 4){
-                   binding.btnProfileFavoritePlaceMore.text = getString(
-                       R.string.profile_bookmark_place,
-                       count - 4
-                   )
-                   binding.btnProfileFavoritePlaceMore.visibility = View.VISIBLE
-               }else{
-                   binding.btnProfileFavoritePlaceMore.visibility = View.INVISIBLE
-               }
+                binding.btnProfileFavoritePlaceMore.text = getString(
+                    R.string.profile_bookmark_place,
+                    count
+                )
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
-                if(list.isEmpty()){
-                    binding.tvProfileNoFavoritePlace.visibility = View.VISIBLE
-                    binding.view2.visibility = View.VISIBLE
-                    binding.rvProfileFavoritePlace.visibility = View.INVISIBLE
-                }else{
-                    binding.tvProfileNoFavoritePlace.visibility = View.GONE
-                    binding.view2.visibility = View.INVISIBLE
-                    binding.rvProfileFavoritePlace.visibility = View.VISIBLE
-                }
                 favoritePlaceAdapter.submitList(list)
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.repTravelJournal.collectLatest { item ->
+                if (item != null) {
+                    binding.tvTabPlaceMyJourneyContent.text = item.content
+                    binding.itemProfileRepTravelJournal.tvItemMyJournalTitle.text = item.title
+                    binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text = binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
+                    repJournalFriendAdapter.submitList(item.travelCompanionSimpleResponses.map{it.profileUrl})
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner){
+            viewModel.bookMarkTravelJournals.collectLatest { list ->
+                bookmarkJournalAdapter.submitList(list)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
@@ -198,15 +224,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-                    if(userInfo.userStatistics.travelJournalCount <= 0){
-                            binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
-                            binding.ivProfileImage.visibility = View.INVISIBLE
-                            binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
-                    }else{
-                            binding.layoutProfileNoTravellog.root.visibility = View.GONE
-                            binding.ivProfileImage.visibility = View.VISIBLE
-                            binding.tvProfileTotalTravelCount.visibility = View.VISIBLE
-                    }
+
                     binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
                         baseString,
                         HtmlCompat.FROM_HTML_MODE_COMPACT,
@@ -228,15 +246,26 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     )
                 findNavController().navigate(action)
             }
+            is MyProfileViewModel.Event.OnSelectRepJournal -> {
+                val action = MyProfileFragmentDirections.actionFragmentMypageToRepTravelJournalFragment(event.selectRepTravelJournalDTO)
+                findNavController().navigate(action)
+            }
 
             else -> {}
         }
     }
 
+    private fun moveToJournalDetail(travelId: Long){
+//        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
+//        findNavController().navigate(action)
+    }
+
     override fun onDestroyView() {
         binding.rvProfileLifeshot.removeOnScrollListener(infinityScrollListener)
+        binding.rvProfileBookmarkTravelJournal.removeOnScrollListener(bookMarkJournalInfinityScrollListener)
         binding.rvProfileLifeshot.adapter = null
         binding.rvProfileFavoritePlace.adapter = null
+        binding.rvProfileBookmarkTravelJournal.adapter = null
         super.onDestroyView()
     }
 }

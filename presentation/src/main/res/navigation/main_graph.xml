@@ -417,4 +417,24 @@
             android:name="travelJounalUpdateDTO"
             app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO" />
     </fragment>
+    <fragment
+        android:id="@+id/placeJournalFragment"
+        android:name="com.weit.presentation.ui.main.journal.PlaceJournalFragment"
+        android:label="PlaceJournalFragment" >
+        <action
+            android:id="@+id/action_placeJournalFragment_to_post_graph"
+            app:destination="@id/post_graph" />
+    </fragment>
+    <fragment
+        android:id="@+id/placeReviewFragment"
+        android:name="com.weit.presentation.ui.main.review.PlaceReviewFragment"
+        android:label="PlaceReviewFragment" >
+        <action
+            android:id="@+id/action_placeReviewFragment_to_editPlaceReviewFragment"
+            app:destination="@id/editPlaceReviewFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/editPlaceReviewFragment"
+        android:name="com.weit.presentation.ui.main.editreview.EditPlaceReviewFragment"
+        android:label="EditPlaceReviewFragment" />
 </navigation>

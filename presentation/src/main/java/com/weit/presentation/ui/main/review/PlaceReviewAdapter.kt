@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.review
+package com.weit.presentation.ui.main.review
 
 import android.view.LayoutInflater
 import android.view.View

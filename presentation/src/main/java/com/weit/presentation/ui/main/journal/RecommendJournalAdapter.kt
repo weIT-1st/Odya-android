@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.journey
+package com.weit.presentation.ui.main.journal
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -7,9 +7,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.weit.domain.model.journal.TravelJournalListInfo
-import com.weit.presentation.R
-import com.weit.presentation.databinding.ItemFriendJourneyBinding
-import com.weit.presentation.databinding.ItemMyJounalBinding
 import com.weit.presentation.databinding.ItemRecommendJourneyBinding
 
 class RecommendJournalAdapter(): ListAdapter<TravelJournalListInfo, RecommendJournalAdapter.ViewHolder>(diffUtil) {

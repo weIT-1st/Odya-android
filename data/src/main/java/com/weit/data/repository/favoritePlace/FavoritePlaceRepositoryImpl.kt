@@ -40,6 +40,12 @@ class FavoritePlaceRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun deleteByPlaceId(placeId: String): Result<Unit> {
+        return handleFavoritePlaceResult {
+            dataSource.deleteByPlaceId(placeId)
+        }
+    }
+
     override suspend fun isFavoritePlace(placeId: String): Result<Boolean> {
         return handleFavoritePlaceResult {
             dataSource.isFavoritePlace(placeId)

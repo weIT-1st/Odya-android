@@ -1,12 +1,12 @@
 package com.weit.presentation.ui.journal.friends
-//
-//import android.view.LayoutInflater
-//import android.view.ViewGroup
-//import androidx.recyclerview.widget.DiffUtil
-//import androidx.recyclerview.widget.ListAdapter
-//import androidx.recyclerview.widget.RecyclerView
-//import com.weit.domain.model.journal.TravelJournalCompanionsInfo
-//
+
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.weit.domain.model.journal.TravelJournalCompanionsInfo
+
 //class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(
 //    diffUtil
 //) {

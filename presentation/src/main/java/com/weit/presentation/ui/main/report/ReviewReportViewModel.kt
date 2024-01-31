@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.report
+package com.weit.presentation.ui.main.report
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

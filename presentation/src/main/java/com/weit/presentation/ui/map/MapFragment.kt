@@ -35,7 +35,7 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMapBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.map.search.MainSearchTopSheetFragment
-import com.weit.presentation.ui.searchplace.SearchPlaceBottomSheetFragment
+import com.weit.presentation.ui.main.place.SearchPlaceBottomSheetFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest

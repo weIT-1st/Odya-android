@@ -330,7 +330,7 @@ class FeedViewModel @Inject constructor(
     private fun loadNextJournals() {
         travelJournalJob = viewModelScope.launch {
             val result = getRecommendTravelJournalListUseCase(
-                DEFAULT_PAGE_SIZE,travelJournalLastId
+                DEFAULT_PAGE_SIZE,travelJournalLastId, null
             )
             if (result.isSuccess) {
                 val newJournals = result.getOrThrow()

@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.report
+package com.weit.presentation.ui.main.report
 
 import android.os.Bundle
 import android.view.LayoutInflater

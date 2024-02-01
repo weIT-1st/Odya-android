@@ -223,7 +223,6 @@
                     app:layout_constraintStart_toStartOf="@+id/gl_feed_post_start"
                     />
 
-
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tl_feed_post_visibility"
                     android:layout_width="match_parent"

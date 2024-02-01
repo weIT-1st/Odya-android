@@ -1,11 +1,19 @@
 package com.weit.presentation.ui.post.travellog
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
+import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.follow.FollowUserContent
+import com.weit.domain.model.journal.TravelJournalContentRequest
+import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.model.user.UserProfile
+import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.domain.usecase.journal.RegisterTravelJournalUseCase
+import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.post.place.PlacePredictionDTO
 import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.model.post.travellog.DailyTravelLog
@@ -20,11 +28,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Date
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
+import kotlin.math.min
 
 @HiltViewModel
-class PostTravelLogViewModel @Inject constructor() : ViewModel() {
+class PostTravelLogViewModel @Inject constructor(
+    private val registerTravelJournalUseCase: RegisterTravelJournalUseCase,
+    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase
+) : ViewModel() {
 
     val title = MutableStateFlow("")
 
@@ -36,11 +49,15 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     private val _travelPeriod = MutableStateFlow(TravelPeriod())
     val travelPeriod: StateFlow<TravelPeriod> get() = _travelPeriod
 
-    private val _event = MutableEventFlow<Event>()
-    val event = _event.asEventFlow()
+    private val _visibility = MutableStateFlow(Visibility.PUBLIC)
+    val visibility: StateFlow<Visibility> get() = _visibility
 
     private val _dailyTravelLogs = MutableStateFlow(listOf(DailyTravelLog(day = 1)))
     val dailyTravelLogs: StateFlow<List<DailyTravelLog>> get() = _dailyTravelLogs
+
+
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
 
     fun initViewState(travelFriends: List<FollowUserContent>?, selectPlace: SelectPlaceDTO?) {
         travelFriends?.let {
@@ -51,14 +68,32 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    private suspend fun getStoredCoordinates(date: LocalDate?): List<LatLng> {
+        if (date == null) {
+            return emptyList()
+        }
+
+        val start: Long = date.toMillis()
+        val end = date.plusDays(1).toMillis()
+
+        return getStoredCoordinatesUseCase(start, end).map { LatLng(it.lat.toDouble(), it.lng.toDouble()) }
+    }
+
     private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
         friends.run {
             clear()
             addAll(travelFriends)
         }
-        val friendsSummary = travelFriends
-            .slice(0 until DEFAULT_FRIENDS_SUMMARY_COUNT)
-            .map { it.profile }
+
+        val friendsSummary = if (travelFriends.size >= DEFAULT_FRIENDS_SUMMARY_COUNT) {
+            travelFriends
+                .slice(0 until min(DEFAULT_FRIENDS_SUMMARY_COUNT, travelFriends.size))
+                .map { it.profile }
+        } else {
+            travelFriends
+                .map { it.profile }
+        }
+
         val remainingFriendsCount = travelFriends.size - friendsSummary.size
         viewModelScope.launch {
             _travelFriendsInfo.emit(TravelFriendsInfo(friendsSummary, remainingFriendsCount))
@@ -129,7 +164,8 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     private fun updateSelectPlace(selectPlace: SelectPlaceDTO) {
         val updatedLogs = dailyTravelLogs.value.toMutableList()
-        val log = updatedLogs.removeAt(selectPlace.position).copy(place = selectPlace.toPlacePrediction())
+        val log =
+            updatedLogs.removeAt(selectPlace.position).copy(place = selectPlace.toPlacePrediction())
         updatedLogs.add(selectPlace.position, log)
         updateDailyTravelLogs(updatedLogs)
     }
@@ -160,8 +196,95 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         }
     }
 
+    fun selectTravelLogVisibility(selectedVisibility: Visibility) {
+        viewModelScope.launch {
+            _visibility.emit(selectedVisibility)
+        }
+    }
+
     fun onPost() {
-        // TODO 여행일지 작성
+        viewModelScope.launch {
+            val journalTitle: String = title.value
+            val date = travelPeriod.value
+            val start: List<Int> =
+                listOf(date.start.year, date.start.monthValue, date.start.dayOfMonth)
+            val end: List<Int> = listOf(date.end.year, date.end.monthValue, date.end.dayOfMonth)
+            val visibility = visibility.value.name
+            val companionIds: List<Long> = friends.map { it.userId }
+            val travelCompanionNames: List<String> = friends.map { it.nickname }
+            val dailyTravelLog = dailyTravelLogs.value
+
+            dailyTravelLog.forEach { log ->
+                if (log.date == null) {
+                    onInputWrongDate(log.day)
+                    return@launch
+                }
+            }
+
+            val travelJournalRegistration = TravelJournalRegistrationInfo(
+                title = journalTitle,
+                travelStartDate = start,
+                travelEndDate = end,
+                visibility = visibility,
+                travelCompanionIds = companionIds,
+                travelCompanionNames = travelCompanionNames,
+                travelJournalContentRequests = dailyTravelLog.map { log ->
+                    TravelJournalContentRequest(
+                        content = log.contents,
+                        placeId = log.place?.placeId,
+                        latitudes = getStoredCoordinates(log.date).map { it.latitude },
+                        longitudes = getStoredCoordinates(log.date).map { it.longitude },
+                        travelDate = listOf(
+                            log.date!!.year,
+                            log.date.monthValue,
+                            log.date.dayOfMonth
+                        ),
+                        contentImageNames = log.images.map {
+                            it.split("/").last() + IMAGE_EXTENSION_WEBP
+                        }
+                    )
+                },
+                travelDurationDays = dailyTravelLog.count(),
+                contentImageNameTotalCount = dailyTravelLog.sumOf { it.images.count() }
+            )
+            val travelJournalImages = emptyList<String>().toMutableList()
+
+            if (travelJournalRegistration.title.isBlank()) {
+                _event.emit(Event.DoNotInputTitle)
+                return@launch
+            }
+
+            if (travelJournalRegistration.travelJournalContentRequests.map { it.content.isNullOrBlank() }.contains(true)) {
+                _event.emit(Event.DoNotInputContent)
+                return@launch
+            }
+
+            if (travelJournalRegistration.travelJournalContentRequests.map { it.contentImageNames.isEmpty() }.contains(true)) {
+                _event.emit(Event.DoNotInputImage)
+                return@launch
+            }
+
+            for (log in dailyTravelLog) {
+                log.images.forEach { image ->
+                    travelJournalImages.add(image)
+                }
+            }
+
+            val result = registerTravelJournalUseCase(
+                travelJournalRegistrationInfo = travelJournalRegistration,
+                travelJournalImages = travelJournalImages
+            )
+
+            if (result.isSuccess) {
+                _event.emit(Event.SuccessPostJournal)
+            } else {
+                //todo 에러처리
+                Log.d(
+                    "register travel",
+                    "Register Travel Journal Fail : ${result.exceptionOrNull()}"
+                )
+            }
+        }
     }
 
     fun onPickDailyDate(position: Int) {
@@ -182,8 +305,15 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
     }
 
     private fun getMinDateMillis(position: Int): Long {
-        val minDate = dailyTravelLogs.value.getOrNull(position - 1)?.date ?: travelPeriod.value.start
+        val minDate =
+            dailyTravelLogs.value.getOrNull(position - 1)?.date ?: travelPeriod.value.start
         return minDate.toMillis()
+    }
+
+    private fun onInputWrongDate(day: Int) {
+        viewModelScope.launch {
+            _event.emit(Event.NoDateInLog(day))
+        }
     }
 
     sealed class Event {
@@ -208,6 +338,13 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
         ) : Event()
 
         object ClearDatePickerDialog : Event()
+        object SuccessPostJournal : Event()
+        object DoNotInputTitle : Event()
+        object DoNotInputContent : Event()
+        object DoNotInputImage : Event()
+        data class NoDateInLog(
+            val day: Int
+        ) : Event()
     }
 
     data class TravelFriendsInfo(
@@ -217,5 +354,6 @@ class PostTravelLogViewModel @Inject constructor() : ViewModel() {
 
     companion object {
         private const val DEFAULT_FRIENDS_SUMMARY_COUNT = 3
+        private const val IMAGE_EXTENSION_WEBP = ".webp"
     }
 }

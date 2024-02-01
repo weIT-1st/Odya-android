@@ -1,21 +1,28 @@
 package com.weit.data.source
 
+import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.emptyPreferences
+import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import com.weit.data.model.ListResponse
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalVisibility
 import com.weit.data.service.TravelJournalService
 import com.weit.domain.model.journal.TravelJournalListInfo
+import kotlinx.coroutines.flow.catch
 import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Multipart
+import java.io.IOException
 import java.util.concurrent.CopyOnWriteArrayList
+import java.util.prefs.Preferences
 import javax.inject.Inject
 
 class TravelJournalDataSource @Inject constructor(
-    private val service: TravelJournalService
+    private val service: TravelJournalService,
 ) {
-
     suspend fun registerTravelJournal(
         travelJournal: MultipartBody.Part,
         images: List<MultipartBody.Part>

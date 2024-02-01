@@ -63,6 +63,9 @@ class SelectPlaceFragment :
             handleMenuItem(menu.itemId)
             true
         }
+        binding.tbSelectPlace.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
     }
 
     private fun handleMenuItem(itemId: Int) {

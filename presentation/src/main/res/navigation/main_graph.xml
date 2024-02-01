@@ -39,9 +39,6 @@
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_search"
             app:destination="@id/fragment_feed_search" />
-        <action
-            android:id="@+id/action_fragment_feed_to_notificationListFragment"
-            app:destination="@id/notificationListFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
@@ -150,16 +147,14 @@
         android:label="FeedDetailFragment">
         <argument
             android:name="feedId"
-            app:argType="long"
-            android:defaultValue="0L" />
+            app:argType="long" />
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
         <argument
             android:name="nickname"
             app:argType="string"
-            app:nullable="true"
-            android:defaultValue="username"/>
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -337,9 +332,7 @@
         android:label="OtherProfileFragment" >
         <argument
             android:name="userName"
-            app:argType="string"
-            app:nullable="true"
-            android:defaultValue="username"/>
+            app:argType="string" />
         <action
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
@@ -380,17 +373,6 @@
             app:destination="@id/post_graph" />
     </fragment>
     <fragment
-        android:id="@+id/notificationListFragment"
-        android:name="com.weit.presentation.ui.feed.notification.NotificationListFragment"
-        android:label="NotificationListFragment" >
-        <action
-            android:id="@+id/action_notificationListFragment_to_fragment_feed_detail"
-            app:destination="@id/fragment_feed_detail" />
-        <action
-            android:id="@+id/action_notificationListFragment_to_otherProfileFragment"
-            app:destination="@id/otherProfileFragment" />
-    </fragment>
-     <fragment
         android:id="@+id/repTravelJournalFragment"
         android:name="com.weit.presentation.ui.feed.RepTravelJournalFragment"
         android:label="RepTravelJournalFragment" >

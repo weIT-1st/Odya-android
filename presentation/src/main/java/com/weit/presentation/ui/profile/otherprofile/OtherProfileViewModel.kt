@@ -54,29 +54,16 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
     private val getFriendFavoritePlaceCountUseCase: GetFriendFavoritePlaceCountUseCase,
-    @Assisted private val userName: String="",
     private val getOtherRepTravelJournalListUseCase: GetOtherRepTravelJournalListUseCase,
     private val getUserJournalBookMarkUseCase: GetUserJournalBookMarkUseCase,
     private val createJournalBookMarkUseCase: CreateJournalBookMarkUseCase,
-    private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase, 
+    private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase,
+    @Assisted private val userName: String,
 ) : ViewModel() {
-    private var nickName: String = ""
-
-    fun initialize(savedUserName: String?="") {
-        nickName = if(savedUserName==""){
-            userName
-        }else{
-            savedUserName?:""
-        }
-        lastImageId = null
-        _lifeshots.value = emptyList()
-        getUserInfo()
-    }
-
 
     @AssistedFactory
     interface OtherProfileFactory {
-        fun create(userName: String?): OtherProfileViewModel
+        fun create(userName: String): OtherProfileViewModel
     }
 
 
@@ -138,7 +125,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     private fun getUserInfo() {
         viewModelScope.launch {
             val result = searchUserUseCase(
-                SearchUserRequestInfo(null, null, nickName)
+                SearchUserRequestInfo(null, null, userName)
             )
             if (result.isSuccess) {
                 val newUsers = result.getOrThrow()
@@ -358,7 +345,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     companion object {
         fun provideFactory(
             assistedFactory: OtherProfileFactory,
-            userName: String?,
+            userName: String,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(userName) as T

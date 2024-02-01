@@ -7,7 +7,6 @@ import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
 import com.weit.domain.usecase.setting.VerifyNotificationSettingUseCase
 import com.weit.domain.usecase.user.GetUserUseCase
 import com.weit.domain.usecase.user.SetUserIdUseCase
-import com.weit.domain.usecase.notification.UpdateFcmTokenUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,5 +51,4 @@ class MainViewModel @Inject constructor(
             verifyLocationPermissionUseCase()
         }
     }
-
 }

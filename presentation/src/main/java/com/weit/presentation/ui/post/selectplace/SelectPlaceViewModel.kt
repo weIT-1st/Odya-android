@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PointOfInterest
 import com.weit.domain.model.place.PlaceDetail
 import com.weit.domain.model.place.PlacePrediction
+import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
 import com.weit.presentation.model.post.place.PlacePredictionDTO

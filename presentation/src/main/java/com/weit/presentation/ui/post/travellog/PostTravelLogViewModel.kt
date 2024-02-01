@@ -3,11 +3,14 @@ package com.weit.presentation.ui.post.travellog
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
+import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.journal.TravelJournalContentRequest
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo
 import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.model.user.UserProfile
+import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.journal.RegisterTravelJournalUseCase
 import com.weit.presentation.model.Visibility
@@ -25,13 +28,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.util.Date
 import java.util.concurrent.CopyOnWriteArrayList
 import javax.inject.Inject
 import kotlin.math.min
 
 @HiltViewModel
 class PostTravelLogViewModel @Inject constructor(
-    private val registerTravelJournalUseCase: RegisterTravelJournalUseCase
+    private val registerTravelJournalUseCase: RegisterTravelJournalUseCase,
+    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase
 ) : ViewModel() {
 
     val title = MutableStateFlow("")
@@ -50,6 +55,7 @@ class PostTravelLogViewModel @Inject constructor(
     private val _dailyTravelLogs = MutableStateFlow(listOf(DailyTravelLog(day = 1)))
     val dailyTravelLogs: StateFlow<List<DailyTravelLog>> get() = _dailyTravelLogs
 
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -60,6 +66,17 @@ class PostTravelLogViewModel @Inject constructor(
         selectPlace?.let {
             updateSelectPlace(it)
         }
+    }
+
+    private suspend fun getStoredCoordinates(date: LocalDate?): List<LatLng> {
+        if (date == null) {
+            return emptyList()
+        }
+
+        val start: Long = date.toMillis()
+        val end = date.plusDays(1).toMillis()
+
+        return getStoredCoordinatesUseCase(start, end).map { LatLng(it.lat.toDouble(), it.lng.toDouble()) }
     }
 
     private fun initTravelFriends(travelFriends: List<FollowUserContent>) {
@@ -215,9 +232,13 @@ class PostTravelLogViewModel @Inject constructor(
                     TravelJournalContentRequest(
                         content = log.contents,
                         placeId = log.place?.placeId,
-                        latitudes = emptyList(),
-                        longitudes = emptyList(),
-                        travelDate = listOf(log.date!!.year, log.date.monthValue, log.date.dayOfMonth),
+                        latitudes = getStoredCoordinates(log.date).map { it.latitude },
+                        longitudes = getStoredCoordinates(log.date).map { it.longitude },
+                        travelDate = listOf(
+                            log.date!!.year,
+                            log.date.monthValue,
+                            log.date.dayOfMonth
+                        ),
                         contentImageNames = log.images.map {
                             it.split("/").last() + IMAGE_EXTENSION_WEBP
                         }
@@ -227,6 +248,21 @@ class PostTravelLogViewModel @Inject constructor(
                 contentImageNameTotalCount = dailyTravelLog.sumOf { it.images.count() }
             )
             val travelJournalImages = emptyList<String>().toMutableList()
+
+            if (travelJournalRegistration.title.isBlank()) {
+                _event.emit(Event.DoNotInputTitle)
+                return@launch
+            }
+
+            if (travelJournalRegistration.travelJournalContentRequests.map { it.content.isNullOrBlank() }.contains(true)) {
+                _event.emit(Event.DoNotInputContent)
+                return@launch
+            }
+
+            if (travelJournalRegistration.travelJournalContentRequests.map { it.contentImageNames.isEmpty() }.contains(true)) {
+                _event.emit(Event.DoNotInputImage)
+                return@launch
+            }
 
             for (log in dailyTravelLog) {
                 log.images.forEach { image ->
@@ -243,7 +279,10 @@ class PostTravelLogViewModel @Inject constructor(
                 _event.emit(Event.SuccessPostJournal)
             } else {
                 //todo 에러처리
-                Log.d("register travel", "Register Travel Journal Fail : ${result.exceptionOrNull()}")
+                Log.d(
+                    "register travel",
+                    "Register Travel Journal Fail : ${result.exceptionOrNull()}"
+                )
             }
         }
     }
@@ -271,7 +310,7 @@ class PostTravelLogViewModel @Inject constructor(
         return minDate.toMillis()
     }
 
-    private fun onInputWrongDate(day : Int) {
+    private fun onInputWrongDate(day: Int) {
         viewModelScope.launch {
             _event.emit(Event.NoDateInLog(day))
         }
@@ -300,6 +339,9 @@ class PostTravelLogViewModel @Inject constructor(
 
         object ClearDatePickerDialog : Event()
         object SuccessPostJournal : Event()
+        object DoNotInputTitle : Event()
+        object DoNotInputContent : Event()
+        object DoNotInputImage : Event()
         data class NoDateInLog(
             val day: Int
         ) : Event()

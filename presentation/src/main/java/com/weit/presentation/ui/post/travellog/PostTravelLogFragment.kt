@@ -171,6 +171,15 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
             is PostTravelLogViewModel.Event.NoDateInLog -> {
                 sendSnackBar("DAY${event.day} 날짜를 선택해주세요.")
             }
+            PostTravelLogViewModel.Event.DoNotInputTitle -> {
+                sendSnackBar("여행일지 제목을 입력하세요")
+            }
+            PostTravelLogViewModel.Event.DoNotInputContent -> {
+                sendSnackBar("여행일지를 작성해주세요")
+            }
+            PostTravelLogViewModel.Event.DoNotInputImage -> {
+                sendSnackBar("최소 1장 이상의 사진을 등록해야 합니다.")
+            }
         }
     }
 

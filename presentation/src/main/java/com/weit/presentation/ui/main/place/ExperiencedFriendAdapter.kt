@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace
+package com.weit.presentation.ui.main.place
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,13 +8,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.weit.domain.model.follow.ExperiencedFriendContent
 import com.weit.presentation.databinding.ItemRoundProfileBigBinding
 
-class ExperiencedFriendAdapter() : ListAdapter<ExperiencedFriendContent, ExperiencedFriendAdapter.ViewHolder>(diffUtil) {
+class ExperiencedFriendAdapter() : ListAdapter<ExperiencedFriendContent, ExperiencedFriendAdapter.ViewHolder>(
+    diffUtil
+) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExperiencedFriendAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(ItemRoundProfileBigBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
-    override fun onBindViewHolder(holder: ExperiencedFriendAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val item = getItem(position)
+        holder.bind(item)
     }
 
     inner class ViewHolder(

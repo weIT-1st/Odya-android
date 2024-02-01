@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.journey
+package com.weit.presentation.ui.main.journal
 
 import android.content.Context
 import android.content.res.Resources

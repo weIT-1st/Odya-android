@@ -6,10 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.weit.presentation.databinding.BottomSheetFeedMyMenuBinding
 import com.weit.presentation.databinding.BottomSheetFeedOtherMenuBinding
 import com.weit.presentation.ui.feed.detail.menu.report.FeedReportFragment
-import com.weit.presentation.ui.searchplace.report.ReviewReportFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

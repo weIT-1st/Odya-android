@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.review
+package com.weit.presentation.ui.main.review
 
 import android.content.res.Resources.NotFoundException
 import android.util.Log
@@ -12,6 +12,7 @@ import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.place.PlaceReviewInfo
 import com.weit.domain.usecase.place.DeletePlaceReviewUseCase
 import com.weit.domain.usecase.place.GetAverageRatingUseCase
+import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlaceReviewContentUseCase
 import com.weit.domain.usecase.report.ReviewReportUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
@@ -20,19 +21,24 @@ import com.weit.presentation.util.PlaceReviewContentData
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.util.concurrent.CopyOnWriteArrayList
 
 class PlaceReviewViewModel @AssistedInject constructor(
     private val getAverageRatingUseCase: GetAverageRatingUseCase,
     private val getPlaceReviewContentUseCase: GetPlaceReviewContentUseCase,
     private val deletePlaceReviewUseCase: DeletePlaceReviewUseCase,
-    private val reviewReportUseCase: ReviewReportUseCase,
+    private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     @Assisted private val placeId: String,
 ) : ViewModel() {
 
     val reviewRating = MutableStateFlow(initRating)
+
+    private val _placeName = MutableStateFlow("")
+    val placeName: StateFlow<String> get() = _placeName
 
     private val _placeReviewList = MutableStateFlow<List<PlaceReviewInfo>>(emptyList())
     val placeReviewList: StateFlow<List<PlaceReviewInfo>> get() = _placeReviewList
@@ -40,8 +46,8 @@ class PlaceReviewViewModel @AssistedInject constructor(
     private val _myPlaceReviewData = MutableStateFlow<PlaceReviewContentData?>(null)
     val myPlaceReviewData: StateFlow<PlaceReviewContentData?> get() = _myPlaceReviewData
 
-    private val _review = MutableStateFlow<PlaceReviewInfo?>(null)
-    val review: StateFlow<PlaceReviewInfo?> get() = _review
+    private var lastReviewId: Long? = null
+    private var reviewJob: Job = Job().apply { complete() }
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
@@ -52,13 +58,22 @@ class PlaceReviewViewModel @AssistedInject constructor(
     }
 
     init {
-        getReviewInfo()
+        updateReviewInfo()
+        getPlaceDetail()
     }
 
-    fun getReviewInfo() {
+    fun updateReviewInfo() {
         viewModelScope.launch {
+            lastReviewId = null
             getAverageRating()
-            getPlaceReview()
+            onNextReviews()
+        }
+    }
+
+    private fun getPlaceDetail() {
+        viewModelScope.launch {
+            val placeDetail = getPlaceDetailUseCase(placeId)
+            _placeName.emit(placeDetail.name ?: "")
         }
     }
 
@@ -73,31 +88,57 @@ class PlaceReviewViewModel @AssistedInject constructor(
         }
     }
 
-    private suspend fun getPlaceReview() {
-        val result = getPlaceReviewContentUseCase(placeId)
-        if (result.isSuccess) {
-            val list = result.getOrThrow()
-            _placeReviewList.emit(list)
+    fun onNextReviews() {
+        if (reviewJob.isCompleted.not()) {
+            return
+        }
+        loadNextReviews()
+    }
 
-            val myReview = list.find { it.isMine }
-            if (myReview != null) {
-                _event.emit(Event.GetPlaceReviewWithMineSuccess)
+    private fun loadNextReviews() {
+        reviewJob = viewModelScope.launch {
+            val result = getPlaceReviewContentUseCase(DEFAULT_REVIEW_SIZE, lastReviewId, placeId)
+
+            if (result.isSuccess) {
+                val newReviews = result.getOrThrow()
+                newReviews.lastOrNull()?.let {
+                    lastReviewId = it.placeReviewId
+                    _placeReviewList.emit(makeMyReviewFirst(placeReviewList.value + newReviews))
+                }
+            } else {
+                // todo 에러 처리
+            }
+        }
+    }
+
+    private fun makeMyReviewFirst(reviews: List<PlaceReviewInfo>) : List<PlaceReviewInfo> {
+            val myReview = reviews.find { it.isMine }
+            registrationMyReview(myReview)
+
+            return if (myReview == null) {
+                reviews
+            } else {
+                val reviewsWithMyReview = reviews.toMutableList()
+                reviewsWithMyReview.remove(myReview)
+                reviewsWithMyReview.add(0, myReview)
+                reviewsWithMyReview
+            }
+
+    }
+
+    private fun registrationMyReview(myReview: PlaceReviewInfo?) {
+        viewModelScope.launch {
+            if (myReview == null) {
+                _myPlaceReviewData.emit(null)
+            } else {
                 _myPlaceReviewData.emit(
                     PlaceReviewContentData(
                         myReview.placeReviewId,
                         myReview.review,
                         (myReview.rating * 2).toInt(),
-                    ),
+                    )
                 )
-                if (myPlaceReviewData.value == null) {
-                    _myPlaceReviewData.emit(null)
-                    _event.emit(Event.DoNotGetMyReviewData)
-                }
-            } else {
-                _event.emit(Event.GetPlaceReviewSuccess)
             }
-        } else {
-            handleError(result.exceptionOrNull() ?: UnknownError())
         }
     }
 
@@ -115,7 +156,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
                     val list = placeReviewList.value.filterNot { it.isMine }
                     _placeReviewList.emit(list.toList())
                 } else {
-                    Log.d("jomi", "delete fail : ${result.exceptionOrNull()}")
+                    Log.d("deleteReview", "delete fail : ${result.exceptionOrNull()}")
                     handleError(result.exceptionOrNull() ?: UnknownError())
                 }
             }
@@ -155,6 +196,7 @@ class PlaceReviewViewModel @AssistedInject constructor(
 
     companion object {
         const val initRating = 1.0F
+        const val DEFAULT_REVIEW_SIZE = 15
         fun provideFactory(
             assistedFactory: PlaceIdFactory,
             placeId: String,

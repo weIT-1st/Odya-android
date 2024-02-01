@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/include_post_travel_log_visibility">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_post_visibility"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/corners_all_61"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabBackground="@drawable/selector_tl_place_background"
+        app:tabIndicatorHeight="0dp"
+        app:tabSelectedTextColor="@color/label_reversed_normal"
+        app:tabTextColor="@color/label_inactive">
+
+        <com.google.android.material.tabs.TabItem
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_61"
+            android:text="@string/visibility_all" />
+
+        <com.google.android.material.tabs.TabItem
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_33"
+            android:text="@string/visibility_friend" />
+
+        <com.google.android.material.tabs.TabItem
+            style="@style/body1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/corners_all_61"
+            android:text="@string/visibility_private" />
+    </com.google.android.material.tabs.TabLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

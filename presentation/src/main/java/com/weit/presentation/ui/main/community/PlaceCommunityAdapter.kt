@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.community
+package com.weit.presentation.ui.main.community
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

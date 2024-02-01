@@ -1,12 +1,12 @@
-package com.weit.presentation.ui.searchplace.community
+package com.weit.presentation.ui.main.community
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceCommunityBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragmentDirections
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -49,8 +49,16 @@ class PlaceCommunityFragment(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.postImages.collectLatest { images ->
                 communityAdapter.submitList(images)
+
+                binding.includeTabPlaceNoFeed.root.isGone = images.isNotEmpty()
+                binding.includeTabPlaceNoFeed.tvMainNoContents.text = requireContext().getString(R.string.place_no_community)
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
     }
 
     override fun onDestroyView() {

@@ -162,6 +162,11 @@
     <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
     <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
 
+    <!--  등록 모달   -->
+    <string name="post_travel_log_registration_modal_title">작성한 여행일지를\n등록하시겠습니까?</string>
+    <string name="post_travel_log_registration_modal_negative">취소</string>
+    <string name="post_travel_log_registration_modal_positive">등록</string>
+
     <!--접근권한 관련 -->
     <string name="visibility_title">접근권한</string>
     <string name="visibility_all">전체공개</string>
@@ -185,12 +190,18 @@
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
     <string name="place_my_review">내가 작성한 리뷰</string>
+    <string name="place_more_review">댓글 더보기</string>
 
     <string name="place_journey">여행일지</string>
     <string name="place_journey_date">%s ~ %s</string>
     <string name="place_my_journal">나의 여행일지</string>
+    <string name="place_journal_more_friend">더 보기</string>
     <string name="place_friend_journal">친구의 여행일지</string>
     <string name="place_recommend_journal">추천 여행일지</string>
+
+    <string name="place_no_journal">여행일지가 없어요.</string>
+    <string name="place_no_review">아직 리뷰가 없어요</string>
+    <string name="place_no_community">아직 개시물이 없어요</string>
 
     <string name="place_community">커뮤니티</string>
 

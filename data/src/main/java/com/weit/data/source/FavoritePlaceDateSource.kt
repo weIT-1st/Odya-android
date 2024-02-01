@@ -36,6 +36,10 @@ class FavoritePlaceDateSource @Inject constructor(
         }
     }
 
+    suspend fun deleteByPlaceId(placeId: String): Response<Unit> {
+        return service.deleteByPlaceId(placeId)
+    }
+
     suspend fun isFavoritePlace(placeId: String): Boolean =
         service.isFavoritePlace(placeId)
 

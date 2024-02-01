@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.journal.memory.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orhanobut.logger.Logger
@@ -92,12 +93,13 @@ class MyJournalViewModel @Inject constructor(
                 journals.addAll(newJournals)
 
                 _myJournals.emit(journals)
-                _randomJournal.emit(journals.random())
+                _randomJournal.emit(journals.randomOrNull())
                 _isEmptyMyJournal.emit(journals.isEmpty())
 
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
+                Log.d("jomi", "error : ${result.exceptionOrNull()}")
             }
         }
     }

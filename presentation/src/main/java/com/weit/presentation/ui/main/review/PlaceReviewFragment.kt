@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.searchplace.review
+package com.weit.presentation.ui.main.review
 
 import android.os.Bundle
 import android.text.Spannable
@@ -6,12 +6,13 @@ import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceReviewBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.searchplace.editreview.EditPlaceReviewFragment
-import com.weit.presentation.ui.searchplace.report.ReviewReportFragment
+import com.weit.presentation.ui.main.editreview.EditPlaceReviewFragment
+import com.weit.presentation.ui.main.report.ReviewReportFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import com.weit.presentation.util.PlaceReviewContentData
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,7 +22,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class PlaceReviewFragment(
     private val placeId: String,
-    private val placeTitle: String,
 ) : BaseFragment<FragmentTabPlaceReviewBinding>(
     FragmentTabPlaceReviewBinding::inflate,
 ) {
@@ -46,18 +46,26 @@ class PlaceReviewFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initPlaceReviewRV()
-        binding.tvTabHowAboutThis.text = getString(R.string.place_how_about, placeTitle)
     }
 
     override fun initListener() {
         binding.btnTabCreateReview.setOnClickListener {
             viewModel.onClickCreateReview()
         }
+        binding.btnTabPlaceReviewMore.setOnClickListener {
+            viewModel.onNextReviews()
+        }
     }
     override fun initCollector() {
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.event.collectLatest { event ->
                 handelEvent(event)
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.placeName.collectLatest { name ->
+                binding.tvTabHowAboutThis.text = requireContext().getString(R.string.place_how_about, name)
             }
         }
 
@@ -76,6 +84,9 @@ class PlaceReviewFragment(
                     )
                 }
                 binding.tvTabPlaceRecent.text = spannableStringBuilder
+                binding.includeTabPlaceNoReview.root.isGone = list.isNotEmpty()
+                binding.includeTabPlaceNoReview.tvMainNoContents.text = requireContext().getString(R.string.place_no_review)
+                binding.btnTabPlaceReviewMore.isGone = (list.size < DEFAULT_REVIEW_COUNT)
             }
         }
 
@@ -97,6 +108,11 @@ class PlaceReviewFragment(
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        binding.root.requestLayout()
+    }
+
     override fun onDestroyView() {
         binding.rvTabPlaceReview.adapter = null
         super.onDestroyView()
@@ -116,7 +132,7 @@ class PlaceReviewFragment(
     }
 
     private fun updateReviewList() {
-        viewModel.getReviewInfo()
+        viewModel.updateReviewInfo()
     }
 
     private fun showReviewReport(placeReviewId: Long, writer: String){
@@ -167,5 +183,9 @@ class PlaceReviewFragment(
                 updateMyReview(event.myReview)
             }
         }
+    }
+
+    companion object {
+        const val DEFAULT_REVIEW_COUNT = 15
     }
 }

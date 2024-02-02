@@ -3,9 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
+        <data>
 
-    </data>
+            <variable
+                name="journal"
+                type="com.weit.domain.model.bookmark.JournalBookMarkInfo" />
+        </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="232dp"
@@ -15,7 +18,7 @@
         android:clipToOutline="true">
 
         <ImageView
-            android:id="@+id/iv_item_friend_journey_thumbnail"
+            android:id="@+id/iv_item_journey_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="center"
@@ -49,17 +52,20 @@
             android:layout_marginStart="8dp"
             tools:src="@drawable/ic_star_fill"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tv_item_fiend_journey_title"/>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_bookmark_journal_user"
             android:layout_width="32dp"
             app:shapeAppearance="@style/ShapeableImageViewCircle"
             android:layout_height="32dp"
+            android:scaleType="centerCrop"
             android:layout_marginTop="12dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             android:src="@drawable/ic_profile"
+            app:image_uri="@{journal.writer.profile.url}"
+            app:profile_background="@{journal.writer.profile}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             />

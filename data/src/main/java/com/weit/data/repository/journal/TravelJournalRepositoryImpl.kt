@@ -138,7 +138,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
 
     override suspend fun getFriendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextFriendJournal,
@@ -146,20 +147,30 @@ class TravelJournalRepositoryImpl @Inject constructor(
             runCatching {
                 travelJournalDataSource.getFriendTravelJournalList(
                     size,
-                    lastTravelJournal
+                    lastTravelJournal,
+                    placeId
                 )
             }
         )
 
     override suspend fun getRecommendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>> =
         getInfiniteJournalList(
             hasNextRecommendJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getRecommendTravelJournalList(size, lastTravelJournal) }
+            runCatching {
+                travelJournalDataSource.getRecommendTravelJournalList(
+                    size,
+                    lastTravelJournal,
+                    placeId
+                )
+            }
         )
+
+
 
     override suspend fun getTaggedTravelJournalList(
         size: Int?,
@@ -180,7 +191,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
             val adapter = moshi.adapter(TravelJournalUpdateInfo::class.java)
             val travelJournalUpdateInfoJson = adapter.toJson(travelJournalUpdateInfo)
 
-            val travelJournalUpdateRequestBody = travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+            val travelJournalUpdateRequestBody =
+                travelJournalUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
             val travelJournalUpdatePart = MultipartBody.Part.createFormData(
                 TRAVEL_JOURNAL_UPDATE,
@@ -265,7 +277,12 @@ class TravelJournalRepositoryImpl @Inject constructor(
         travelJournalId: Long,
         travelJournalContentId: Long
     ): Result<Unit> =
-        delete(travelJournalDataSource.deleteTravelJournalContent(travelJournalId, travelJournalContentId))
+        delete(
+            travelJournalDataSource.deleteTravelJournalContent(
+                travelJournalId,
+                travelJournalContentId
+            )
+        )
 
     override suspend fun deleteTravelJournalFriend(travelJournalId: Long): Result<Unit> =
         delete(travelJournalDataSource.deleteTravelJournalFriend(travelJournalId))
@@ -402,7 +419,8 @@ class TravelJournalRepositoryImpl @Inject constructor(
         private const val TRAVEL_JOURNAL_CONTENT_IMAGE = "travel-journal-content-image"
         private const val TRAVEL_JOURNAL = "travel-journal"
         private const val TRAVEL_JOURNAL_UPDATE = "travel-journal-update"
-        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE = "travel-journal-content-image-update"
+        private const val TRAVEL_JOURNAL_CONTENT_IMAGE_UPDATE =
+            "travel-journal-content-image-update"
         private const val TRAVEL_JOURNAL_CONTENT_UPDATE = "travel-journal-content-update"
     }
 }

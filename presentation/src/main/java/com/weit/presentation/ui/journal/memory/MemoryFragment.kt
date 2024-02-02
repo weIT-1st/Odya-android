@@ -97,6 +97,14 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
         binding.includeJournalMemoryLastJournal.root.setOnClickListener {
             myJournalViewModel.moveToRandomJournal()
         }
+
+        binding.btnTravelLogWrite.setOnClickListener {
+           moveToPostTravelJournal()
+        }
+
+        binding.includeJournalMemoryNoJournal.btnFeedNoTravelLogWrite.setOnClickListener {
+            moveToPostTravelJournal()
+        }
     }
 
     override fun initCollector() {
@@ -104,6 +112,7 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
             myJournalViewModel.isEmptyMyJournal.collectLatest {isEmpty ->
                 binding.ivJournalMemoryMyProfile.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.tvFeedNoTravelLogHint2.isGone = true
+                binding.btnTravelLogWrite.isGone = isEmpty
                 binding.lyJournalMemoryDecoration.isGone = isEmpty
                 binding.includeJournalMemoryNoJournal.root.isGone = !isEmpty
                 binding.tvJournalMemory.isGone = isEmpty
@@ -211,6 +220,11 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
 
     private fun moveToJournalDetail(travelId: Long){
         val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
+        findNavController().navigate(action)
+    }
+
+    private fun moveToPostTravelJournal() {
+        val action = MemoryFragmentDirections.actionFragmentMemoryToPostGraph()
         findNavController().navigate(action)
     }
 

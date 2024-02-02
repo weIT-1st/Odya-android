@@ -5,10 +5,12 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.weit.data.BuildConfig
+import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.repository.place.PlaceRepositoryImpl
 import com.weit.data.service.PlaceService
 import com.weit.data.source.ImageDataSource
-import com.weit.data.source.PlaceDataSource
+import com.weit.data.source.PlaceDateSource
+import com.weit.domain.repository.image.ImageRepository
 import com.weit.domain.repository.place.PlaceRepository
 import dagger.Module
 import dagger.Provides
@@ -47,12 +49,12 @@ class PlaceModule {
         service: PlaceService,
         sessionToken: AutocompleteSessionToken,
         placesClient: PlacesClient,
-    ): PlaceDataSource = PlaceDataSource(context, service, sessionToken, placesClient)
+    ): PlaceDateSource = PlaceDateSource(context, service, sessionToken, placesClient)
 
     @Singleton
     @Provides
     fun providePlaceRepository(
         @ApplicationContext context: Context,
-        dataSource: PlaceDataSource,
+        dataSource: PlaceDateSource,
     ): PlaceRepository = PlaceRepositoryImpl(dataSource, ImageDataSource(context.contentResolver))
 }

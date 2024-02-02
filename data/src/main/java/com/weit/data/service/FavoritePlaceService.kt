@@ -23,6 +23,11 @@ interface FavoritePlaceService {
         @Path("id") id: Long,
     ) : Response<Unit>
 
+    @DELETE("/api/v1/favorite-places/places/{placeId}")
+    suspend fun deleteByPlaceId(
+        @Path("placeId") placeId: String
+    ) : Response<Unit>
+
     @GET("/api/v1/favorite-places/{placeId}")
     suspend fun isFavoritePlace(
         @Path("placeId") placeId: String,

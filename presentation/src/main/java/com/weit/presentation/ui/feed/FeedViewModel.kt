@@ -51,6 +51,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
+//    private val getTopicListUseCase: GetTopicListUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
@@ -330,7 +331,7 @@ class FeedViewModel @Inject constructor(
     private fun loadNextJournals() {
         travelJournalJob = viewModelScope.launch {
             val result = getRecommendTravelJournalListUseCase(
-                DEFAULT_PAGE_SIZE,travelJournalLastId
+                DEFAULT_PAGE_SIZE,travelJournalLastId, null
             )
             if (result.isSuccess) {
                 val newJournals = result.getOrThrow()

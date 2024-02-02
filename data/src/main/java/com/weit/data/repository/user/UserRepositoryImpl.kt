@@ -1,17 +1,20 @@
 package com.weit.data.repository.user
 
 import android.content.res.Resources.NotFoundException
+import com.orhanobut.logger.Logger
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
 import com.weit.data.source.UserInfoDataSource
 import com.weit.data.util.exception
-import com.weit.domain.model.exception.ImageNotFoundException
+import com.weit.data.util.getErrorMessage
+import com.weit.domain.model.exception.InvalidPermissionException
 import com.weit.domain.model.exception.InvalidRequestException
 import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.image.UserImageResponseInfo
 import com.weit.domain.model.user.LifeshotRequestInfo
 import com.weit.domain.model.user.SearchUserContent
@@ -23,6 +26,9 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_FORBIDDEN
+import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
+import okhttp3.internal.http.HTTP_NOT_FOUND
 import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
 import retrofit2.Response
@@ -150,8 +156,7 @@ class UserRepositoryImpl @Inject constructor(
 
         val fileName = try {
             imageDataSource.getImageName(uri)
-        } catch (e: Exception) {
-            throw e
+        } catch (_: Exception) {
         }
 
         return MultipartBody.Part.createFormData(
@@ -174,8 +179,6 @@ class UserRepositoryImpl @Inject constructor(
             } else {
                 Result.failure(handleUserError(result))
             }
-        }.getOrElse {
-            Result.failure(ImageNotFoundException())
         }
     }
 

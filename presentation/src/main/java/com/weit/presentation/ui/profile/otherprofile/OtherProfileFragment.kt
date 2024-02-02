@@ -134,12 +134,17 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.lifeshots.collectLatest { lifeshots ->
-                if (!lifeshots.isNullOrEmpty()) {
+                if (lifeshots.isNotEmpty()) {
                     Glide.with(binding.root)
                         .load(lifeshots.first().imageUrl)
                         .into(binding.ivProfileBg)
-                    otherProfileLifeShotAdapter.submitList(lifeshots)
+                    binding.tvProfileNoLifeShot.visibility = View.GONE
+                    binding.rvProfileLifeshot.visibility = View.VISIBLE
+                }else{
+                    binding.tvProfileNoLifeShot.visibility = View.VISIBLE
+                    binding.rvProfileLifeshot.visibility = View.INVISIBLE
                 }
+                    otherProfileLifeShotAdapter.submitList(lifeshots)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
@@ -157,6 +162,13 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
+                if(list.isEmpty()){
+                    binding.tvProfileNoFavoritePlace.visibility = View.VISIBLE
+                    binding.rvProfileFavoritePlace.visibility = View.INVISIBLE
+                }else{
+                    binding.tvProfileNoFavoritePlace.visibility = View.GONE
+                    binding.rvProfileFavoritePlace.visibility = View.VISIBLE
+                }
                 favoritePlaceAdapter.submitList(list)
             }
         }
@@ -172,14 +184,29 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                     binding.tvTabPlaceMyJourneyContent.text = item.content
                     binding.itemProfileRepTravelJournal.tvItemMyJournalTitle.text = item.title
                     binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text = binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
-                    repJournalFriendAdapter.submitList(item.travelCompanionSimpleResponses.map{it.profileUrl})
+                    binding.tvProfileNoRepJournal.visibility = View.GONE
+                    binding.itemProfileRepTravelJournal.root.visibility = View.VISIBLE
+                    binding.viewJournalMemoryDecorationElev2.visibility = View.VISIBLE
+                    binding.viewTabPlaceMyJourney.visibility = View.VISIBLE
+                }else{
+                    binding.tvProfileNoRepJournal.visibility = View.VISIBLE
+                    binding.itemProfileRepTravelJournal.root.visibility = View.GONE
+                    binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
+                    binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl})
             }
         }
         repeatOnStarted(viewLifecycleOwner){
             viewModel.bookMarkTravelJournals.collectLatest { list ->
-                bookmarkJournalAdapter.submitList(list)
-            }
+                if(list.isEmpty()){
+                    binding.rvProfileBookmarkTravelJournal.visibility = View.INVISIBLE
+                    binding.tvProfileNoBookmarkJournal.visibility = View.VISIBLE
+                }else{
+                    binding.rvProfileBookmarkTravelJournal.visibility = View.VISIBLE
+                    binding.tvProfileNoBookmarkJournal.visibility = View.INVISIBLE
+                }
+                bookmarkJournalAdapter.submitList(list)            }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.userInfo.collectLatest { userInfo ->
@@ -201,7 +228,15 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-
+                    if(userInfo.userStatistics.travelJournalCount <= 0){
+                        binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
+                        binding.ivProfileImage.visibility = View.INVISIBLE
+                        binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
+                    }else{
+                        binding.layoutProfileNoTravellog.root.visibility = View.GONE
+                        binding.ivProfileImage.visibility = View.VISIBLE
+                        binding.tvProfileTotalTravelCount.visibility = View.VISIBLE
+                    }
                     binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
                         baseString,
                         HtmlCompat.FROM_HTML_MODE_COMPACT,

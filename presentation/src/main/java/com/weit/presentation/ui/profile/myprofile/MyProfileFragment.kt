@@ -226,6 +226,9 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.itemProfileRepTravelJournal.root.visibility = View.VISIBLE
                     binding.viewJournalMemoryDecorationElev2.visibility = View.VISIBLE
                     binding.viewTabPlaceMyJourney.visibility = View.VISIBLE
+                    binding.layoutRepTravelJournal.setOnClickListener {
+                        moveToJournalDetail(item.travelJournalId)
+                    }
                 }else{
                     binding.tvProfileNoRepJournal.visibility = View.VISIBLE
                     binding.itemProfileRepTravelJournal.root.visibility = View.GONE
@@ -307,8 +310,8 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     }
 
     private fun moveToJournalDetail(travelId: Long){
-//        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
-//        findNavController().navigate(action)
+        val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentTravelJournal(travelId)
+        findNavController().navigate(action)
     }
 
     override fun onDestroyView() {

@@ -87,6 +87,7 @@
     <string name="friend_manage_follower">팔로워</string>
     <string name="friend_manage_following">팔로잉</string>
     <string name="follower">팔로워</string>
+    <string name="follow">팔로우</string>
     <string name="following">팔로잉</string>
     <string name="hint_find_friend">친구를 찾아보세요!</string>
     <string name="friend_manage_following_delete_title">팔로잉을 취소하시겠습니까?</string>

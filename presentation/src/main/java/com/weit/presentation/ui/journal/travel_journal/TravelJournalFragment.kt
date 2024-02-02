@@ -45,7 +45,8 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
+        val travelJournalId = arguments?.getString("travelJournalId")
+        viewModel.initialize(travelJournalId?.toLong())
         initFriendRV()
         initBottomSheet()
     }
@@ -202,6 +203,8 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
             TravelJournalViewModel.Event.PopupTravelJournalFriends -> {
 
             }
+
+            else -> {}
         }
     }
 

@@ -68,6 +68,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_repTravelJournalFragment"
             app:destination="@id/repTravelJournalFragment" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -160,6 +163,9 @@
             app:argType="string"
             app:nullable="true"
             android:defaultValue="username"/>
+        <action
+            android:id="@+id/action_fragment_feed_detail_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -346,6 +352,9 @@
         <action
             android:id="@+id/action_otherProfileFragment_to_otherFriendManageFragment"
             app:destination="@id/otherFriendManageFragment" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/myFriendManageFragment"
@@ -389,6 +398,9 @@
         <action
             android:id="@+id/action_notificationListFragment_to_otherProfileFragment"
             app:destination="@id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_notificationListFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
      <fragment
         android:id="@+id/repTravelJournalFragment"

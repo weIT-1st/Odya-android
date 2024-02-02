@@ -8,6 +8,7 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_rep_travel_jouranl"
         android:layout_width="324dp"
         android:layout_height="wrap_content"
         android:background="@drawable/corners_all_8"

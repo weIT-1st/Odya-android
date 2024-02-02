@@ -133,6 +133,8 @@ class FeedDetailViewModel @AssistedInject constructor(
             val result = getDetailCommunityUseCase(communityId)
             if (result.isSuccess) {
                 val feed = result.getOrThrow()
+                Logger.t("MainTest").i("${feed}")
+
                 userId = feed.writer.userId
                 setPlaceName(feed.placeId)
                 setFeedDetail(feed)

@@ -52,7 +52,7 @@
             android:layout_height="29dp"
             android:background="@drawable/selector_follower_following"
             android:checked="false"
-            android:textOff="@string/follower"
+            android:textOff="@string/follow"
             android:textOn="@string/following"
             android:textColor="@drawable/selector_follow_color"
             android:layout_marginTop="16dp"

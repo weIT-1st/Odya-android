@@ -171,7 +171,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)
-//                    addDestination(R.id.fragment_feed_detail)
+                    addDestination(R.id.fragment_travel_Journal)
                 }
             }
             NotificationType.TRAVEL_JOURNAL_TAG.name -> {
@@ -180,7 +180,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)
-//                    addDestination(R.id.fragment_feed_detail)
+                    addDestination(R.id.fragment_travel_Journal)
                 }
             }
             NotificationType.FOLLOWER_ADD.name -> {

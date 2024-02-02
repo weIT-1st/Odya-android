@@ -308,6 +308,15 @@
     <string name="feed_travel_journal_visibility_content">공개된 여행일지만 연동 가능합니다.</string>
     <string name="feed_travel_journal_visibility_update">변경하기</string>
 
+    <!-- 알림 -->
+    <string name="notification_title">알림</string>
+    <string name="notification_feed_write">%s 님이 &lt;span style=\"color:#FFD41F\">피드&lt;/span>를 작성했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_oyda">%s 님께 &lt;span style=\"color:#FFD41F\">오댜&lt;/span>를 받았습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_feed_comment">%s 님이 &lt;span style=\"color:#FFD41F\">댓글&lt;/span>을남겼습니다 : %s &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_travel_tag">%s 님이 &lt;span style=\"color:#FFD41F\">여행일지&lt;/span>에서 회원님을 태그했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_travel_write">%s 님이 &lt;span style=\"color:#FFD41F\">여행일지&lt;/span>를 작성했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_follow">%s 님이 회원님을 &lt;span style=\"color:#FFD41F\">팔로우&lt;/span>했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+
     <string name="login_topic_question">%s님은\n어떤 여행을 좋아하시나요?</string>
     <string name="login_topic_explain">취향을 선택하고 나에게 맞는 홈을 받아보세요</string>
     <string name="login_topic_minimum">최소 3개 이상</string>

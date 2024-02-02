@@ -149,7 +149,7 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaceCount.collectLatest { count ->
-                if(count > 4){
+                if(count > DEFAULT_FAVORITE_PLACE_COUNT){
                     binding.btnProfileFavoritePlaceMore.text = getString(
                         R.string.profile_bookmark_place,
                         count-4
@@ -228,7 +228,7 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-                    if(userInfo.userStatistics.travelJournalCount <= 0){
+                    if(userInfo.userStatistics.travelJournalCount <= NO_TRAVEL_JOURNAL_COUNT){
                         binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
                         binding.ivProfileImage.visibility = View.INVISIBLE
                         binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
@@ -270,5 +270,10 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         binding.rvProfileBookmarkTravelJournal.adapter = null
         binding.rvProfileBookmarkTravelJournal.removeOnScrollListener(bookMarkJournalInfinityScrollListener)
         super.onDestroyView()
+    }
+
+    companion object{
+        const val DEFAULT_FAVORITE_PLACE_COUNT = 4
+        const val NO_TRAVEL_JOURNAL_COUNT = 0
     }
 }

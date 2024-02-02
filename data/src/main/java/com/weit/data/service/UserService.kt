@@ -3,6 +3,7 @@ package com.weit.data.service
 import com.weit.data.model.ListResponse
 import com.weit.data.model.community.CommunityMyActivityContentDTO
 import com.weit.data.model.image.UserImageResponseDTO
+import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
 import com.weit.data.model.user.UserStatisticsDTO
@@ -44,6 +45,7 @@ interface UserService {
     suspend fun updateUserProfile(
         @Part profile: MultipartBody.Part?,
     ): Response<Unit>
+
 
     @DELETE("/api/v1/users")
     suspend fun deleteUser(): Response<Unit>

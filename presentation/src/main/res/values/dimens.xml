@@ -49,5 +49,8 @@
     <dimen name="marker_width">30dp</dimen>
     <dimen name="marker_height">36dp</dimen>
 
+    <dimen name="marker_with_image_width">48dp</dimen>
+    <dimen name="marker_with_image_height">84dp</dimen>
+
     <dimen name="main_my_journal_margin">-300dp</dimen>
 </resources>

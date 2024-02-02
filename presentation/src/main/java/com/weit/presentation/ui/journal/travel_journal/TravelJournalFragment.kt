@@ -212,7 +212,6 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         }
     }
 
-
     companion object {
         private const val TAG = "TravelJournalFragment"
         private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3

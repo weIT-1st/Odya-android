@@ -31,12 +31,14 @@ interface TravelJournalRepository {
 
     suspend fun getFriendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>>
 
     suspend fun getRecommendTravelJournalList(
         size: Int?,
-        lastTravelJournal: Long?
+        lastTravelJournal: Long?,
+        placeId: String?,
     ): Result<List<TravelJournalListInfo>>
 
     suspend fun getTaggedTravelJournalList(

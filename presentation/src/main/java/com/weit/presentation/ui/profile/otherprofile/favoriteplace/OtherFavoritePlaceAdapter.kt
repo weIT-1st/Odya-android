@@ -22,7 +22,7 @@ class OtherFavoritePlaceAdapter(
             }
         }
         fun bind(item: OtherFavoritePlaceEntity) {
-            val starImage = if(item.isFavoritePlace) R.drawable.ic_star_yellow_fill else R.drawable.ic_star_white_empty
+            val starImage = if(item.isFavoritePlace) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark
             binding.ivBookmarkJournalStar.setImageResource(starImage)
             binding.tvItemPlaceTitle.text = item.placeName
             binding.tvItemPlaceAddress.text = item.placeAddress

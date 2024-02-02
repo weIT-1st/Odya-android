@@ -42,13 +42,14 @@ class LifeShotDialogFragment(
     lateinit var viewModelFactory: LifeShotDialogViewModel.LifeShotFactory
 
     private val viewModel: LifeShotDialogViewModel by viewModels {
-        LifeShotDialogViewModel.provideFactory(viewModelFactory,args.selectImage,args.placeName)
+        LifeShotDialogViewModel.provideFactory(viewModelFactory,args.selectImage)
     }
     private val args: LifeShotDialogFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if(!args.placeName.isNullOrEmpty()){
+            viewModel.setLifeShotPlace(args.placeName)
             binding.btnLifeshotPlace.text = args.placeName
         }
     }

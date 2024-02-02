@@ -31,15 +31,6 @@
             app:titleCentered="true"
             tools:text="홍길동홍길동" />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/map_travel_journal"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="0dp"
             android:layout_height="0dp"

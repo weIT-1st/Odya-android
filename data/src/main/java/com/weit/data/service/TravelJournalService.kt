@@ -81,6 +81,8 @@ interface TravelJournalService {
         @Part images: List<MultipartBody.Part>
     )
 
+    // todo 여행일지 컨텐츠 추가
+
     @PATCH("/api/v1/travel-journals/{travelJournalId}/visibility")
     suspend fun updateTravelJournalVisibility(
         @Path("travelJournalId") travelJournalId: Long,

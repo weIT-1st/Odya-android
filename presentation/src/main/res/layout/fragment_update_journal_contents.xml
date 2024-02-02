@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/elevation2">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/tb_update_journal_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/background_normal"
+            app:titleTextAppearance="@style/h6"
+            app:titleTextColor="@color/label_normal"
+            app:titleCentered="true"
+            app:navigationIcon="@drawable/ic_navigation"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:title="day 1">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/tb_update_journal_content_complete"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textAppearance="@style/body1"
+                android:textColor="@color/primary"
+                android:text="@string/update_travel_log_complete"
+                android:backgroundTint="@color/background_normal"
+                android:layout_gravity="end"
+                android:layout_marginEnd="20dp"/>
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_update_journal_content_start"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_update_journal_content_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_update_journal_content_select_picture"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/elevation4"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:maxLines="1"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_assistive"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_camera"
+            app:iconGravity="textTop"
+            app:iconPadding="4dp"
+            app:layout_constraintStart_toStartOf="@id/gl_update_journal_content_start"
+            app:layout_constraintTop_toBottomOf="@+id/tb_update_journal_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tv_update_journal_content_pictures"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toEndOf="@id/btn_update_journal_content_select_picture"
+            app:layout_constraintEnd_toEndOf="@id/gl_update_journal_content_end"
+            app:layout_constraintBottom_toBottomOf="@id/btn_update_journal_content_select_picture"
+            tools:itemCount="5"
+            tools:listitem="@layout/item_daily_travel_log_picture"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_update_journal_content_date"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/elevation4"
+            android:ellipsize="end"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:maxLines="1"
+            android:textAlignment="textStart"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_assistive"
+            app:cornerRadius="@dimen/button_large_radius"
+            app:icon="@drawable/ic_calender"
+            app:iconSize="24dp"
+            app:iconPadding="16dp"
+            app:iconTint="@color/label_assistive"
+            app:layout_constraintStart_toStartOf="@id/gl_update_journal_content_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_update_journal_content_end"
+            app:layout_constraintTop_toBottomOf="@id/btn_update_journal_content_select_picture"
+            app:strokeColor="@color/line_alternative"
+            app:strokeWidth="1dp"
+            tools:text="2023년 8월 1일 금요일"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tl_update_journal_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@color/elevation4"
+            app:hintEnabled="false"
+            app:startIconDrawable="@drawable/ic_pen"
+            app:startIconTint="@color/label_assistive"
+            app:layout_constraintStart_toStartOf="@id/gl_update_journal_content_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_update_journal_content_end"
+            app:layout_constraintTop_toBottomOf="@id/btn_update_journal_content_date">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_update_journal_contents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minLines="1"
+                android:gravity="top|start"
+                android:textAppearance="@style/body1"
+                android:textColor="@color/label_normal"
+                tools:text="@tools:sample/lorem"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_update_journal_contents_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/elevation4"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:text="@string/post_travel_log_daily_place"
+            android:textAppearance="@style/body1"
+            android:textColor="@color/label_assistive"
+            android:textAlignment="textStart"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/line_alternative"
+            app:cornerRadius="@dimen/button_large_radius"
+            app:icon="@drawable/ic_home"
+            app:iconPadding="16dp"
+            app:iconSize="24dp"
+            app:iconTint="@color/label_assistive"
+            app:layout_constraintStart_toStartOf="@id/gl_update_journal_content_start"
+            app:layout_constraintEnd_toEndOf="@id/gl_update_journal_content_end"
+            app:layout_constraintTop_toBottomOf="@id/tl_update_journal_content"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

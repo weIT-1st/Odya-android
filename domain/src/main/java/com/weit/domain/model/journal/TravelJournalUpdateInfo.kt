@@ -5,6 +5,6 @@ data class TravelJournalUpdateInfo(
     val travelStartDate: String,
     val travelEndDate: String,
     val visibility: String,
-    val travelCompanionIds: List<Long>,
-    val travelCompanionNames: List<String>
+    val travelCompanionIds: List<Long>?,
+    val travelCompanionNames: List<String>?
 )

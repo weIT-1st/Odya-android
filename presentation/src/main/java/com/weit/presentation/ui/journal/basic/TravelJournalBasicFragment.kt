@@ -3,6 +3,7 @@ package com.weit.presentation.ui.journal.basic
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetialModelBinding
@@ -27,7 +28,10 @@ class TravelJournalBasicFragment(
         TravelJournalBasicViewModel.provideFactory(viewModelFactory, travelJournalInfo)
     }
 
-    private val travelJournalBasicAdapter: TravelJournalBasicAdapter = TravelJournalBasicAdapter()
+    private val travelJournalBasicAdapter: TravelJournalBasicAdapter = TravelJournalBasicAdapter(
+        { updateContent(it) },
+        { deleteContent(it) }
+    )
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,5 +61,22 @@ class TravelJournalBasicFragment(
             adapter = travelJournalBasicAdapter
             addItemDecoration(SpaceDecoration(resources, bottomDP = R.dimen.item_memory_day_space))
         }
+    }
+
+    private fun updateContent(contentId: Long) {
+    }
+
+    private fun deleteContent(contentId: Long) {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.journal_content_delete_title))
+            .setMessage(getString(R.string.journal_delete_message))
+            .setNegativeButton(getString(R.string.journal_delete_negative)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.journal_delete_positive)) { dialog, _ ->
+                viewModel.deleteContent(contentId)
+                dialog.dismiss()
+            }
+            .show()
     }
 }

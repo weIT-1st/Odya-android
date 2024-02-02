@@ -10,6 +10,8 @@ import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.usecase.journal.DeleteTravelJournalUseCase
 import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import com.weit.domain.usecase.user.GetUserIdUseCase
+import com.weit.presentation.model.Visibility
+import com.weit.presentation.model.journal.TravelJournalUpdateCompanionsInfo
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -37,20 +39,17 @@ class TravelJournalViewModel @AssistedInject constructor(
     private val _journalInfo = MutableStateFlow<TravelJournalInfo?>(null)
     val journalInfo: StateFlow<TravelJournalInfo?> get() = _journalInfo
 
-    private val _travelJournalDetailToolBarInfo = MutableStateFlow(
-        TravelJournalDetailToolBarInfo(
-            true, null, DEFAULT_JOURNAL_ID)
-    )
+    private val _travelJournalDetailToolBarInfo = MutableStateFlow(TravelJournalDetailToolBarInfo(true, null, DEFAULT_JOURNAL_ID, null))
     val travelJournalDetailToolBarInfo: StateFlow<TravelJournalDetailToolBarInfo> get() = _travelJournalDetailToolBarInfo
 
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
     init {
-        initJournalInfo()
+        getJournalInfo()
     }
 
-    private fun initJournalInfo() {
+    private fun getJournalInfo() {
         viewModelScope.launch {
             val result = getTravelJournalUseCase(travelJournalId)
 
@@ -62,8 +61,9 @@ class TravelJournalViewModel @AssistedInject constructor(
                     _travelJournalDetailToolBarInfo.emit(
                         TravelJournalDetailToolBarInfo(
                             true,
-                            "",
-                            info.travelJournalId
+                            null,
+                            info.travelJournalId,
+                            info.isBookmarked
                         )
                     )
                 } else {
@@ -71,7 +71,8 @@ class TravelJournalViewModel @AssistedInject constructor(
                         TravelJournalDetailToolBarInfo(
                             false,
                             info.writer.nickname,
-                            info.travelJournalId
+                            info.travelJournalId,
+                            null
                         )
                     )
                 }
@@ -95,11 +96,12 @@ class TravelJournalViewModel @AssistedInject constructor(
 
     fun deleteTravelJournal() {
         viewModelScope.launch {
-            Log.d("jomi", "click delete")
+            Log.d("jomi", "onClickDelete")
             val result = deleteTravelJournalUseCase(travelJournalId)
 
             if (result.isSuccess) {
                 _event.emit(Event.DeleteTravelJournalSuccess)
+                getJournalInfo()
             } else {
                 // TODO 에러 처리
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
@@ -121,13 +123,20 @@ class TravelJournalViewModel @AssistedInject constructor(
 
     fun moveToJournalUpdate() {
         viewModelScope.launch {
-            val info = journalInfo.value
+            val info = journalInfo.value ?: return@launch
 
             val updateDTO = TravelJournalUpdateDTO(
-                title = info?.travelJournalTitle,
-                travelStartDate = LocalDate.parse(info?.travelStartDate, DateTimeFormatter.ISO_DATE),
-                travelEndDate = LocalDate.parse(info?.travelEndDate, DateTimeFormatter.ISO_DATE),
-                visibility = info?.visibility
+                title = info.travelJournalTitle,
+                travelStartDate = LocalDate.parse(info.travelStartDate, DateTimeFormatter.ISO_DATE),
+                travelEndDate = LocalDate.parse(info.travelEndDate, DateTimeFormatter.ISO_DATE),
+                visibility = info.visibility,
+                travelJournalCompanions = info.travelJournalCompanions.map { TravelJournalUpdateCompanionsInfo(
+                    it.userId,
+                    it.nickname,
+                    it.profileUrl,
+                    it.isRegistered,
+                    it.isFollowing
+                ) }
             )
             _event.emit(Event.MoveToJournalUpdate(updateDTO))
         }
@@ -137,6 +146,7 @@ class TravelJournalViewModel @AssistedInject constructor(
         val isMyTravelJournal: Boolean,
         val title: String?,
         val travelJournalId: Long,
+        val isBookmark: Boolean?
     )
 
     sealed class Event {

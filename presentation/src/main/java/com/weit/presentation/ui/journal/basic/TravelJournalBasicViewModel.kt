@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.journal.TravelJournalInfo
+import com.weit.domain.usecase.journal.DeleteTravelJournalContentUseCase
 import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -13,7 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class TravelJournalBasicViewModel @AssistedInject constructor(
-    @Assisted private val travelJournalInfo: TravelJournalInfo
+    @Assisted private val travelJournalInfo: TravelJournalInfo,
+    private val deleteTravelJournalContentUseCase: DeleteTravelJournalContentUseCase
 ): ViewModel() {
 
     @AssistedFactory
@@ -41,6 +43,18 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
                 )
             }
             _journalContents.emit(basicJournalInfo)
+        }
+    }
+
+    fun deleteContent(contentId : Long) {
+        viewModelScope.launch{
+            val result = deleteTravelJournalContentUseCase(travelJournalInfo.travelJournalId, contentId)
+
+            if (result.isSuccess) {
+
+            } else {
+                // todo 에러처리
+            }
         }
     }
 

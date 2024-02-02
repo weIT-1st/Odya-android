@@ -1,20 +1,12 @@
 package com.weit.presentation.ui.journal.menu
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.weit.presentation.databinding.BottomSheetJournalMyMenuBinding
-import com.weit.presentation.ui.journal.travel_journal.TravelJournalFragmentDirections
-import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class TravelJournalDetailMenuFragment(
@@ -42,9 +34,10 @@ class TravelJournalDetailMenuFragment(
 
         binding.tvTravelJournalShare.setOnClickListener {
             // todo 공유
+            dismiss()
         }
         binding.tvTravelJournalDelete.setOnClickListener {
-            onClickDelete
+            onClickDelete()
             dismiss()
         }
         binding.tvTravelJournalClose.setOnClickListener {

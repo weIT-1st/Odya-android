@@ -2,12 +2,16 @@ package com.weit.presentation.ui.journal.update.journal
 
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.tabs.TabLayout
 import com.weit.presentation.R
-import com.weit.presentation.databinding.FragmentPostTravelLogBinding
+import com.weit.presentation.databinding.FragmentUpdateTravelLogBinding
+import com.weit.presentation.model.Visibility
+import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
 import com.weit.presentation.ui.post.travellog.TravelFriendsAdapter
@@ -21,11 +25,9 @@ import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
-    FragmentPostTravelLogBinding::inflate
+class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>(
+    FragmentUpdateTravelLogBinding::inflate
 ) {
-    // todo 업데이트 기능 정리하기
-
     @Inject
     lateinit var viewModelFactory: TravelJournalUpdateViewModel.TravelJournalUpdateFactory
 
@@ -34,20 +36,30 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
         TravelJournalUpdateViewModel.provideFactory(viewModelFactory, args.travelJounalUpdateDTO)
     }
 
-    private val travelFriendsAdapter = TravelFriendsAdapter()
-
     private var datePickerDialog: DatePickerDialogFragment? = null
     private var dailyDatePickerDialog: DatePickerDialog? = null
 
+    private val travelFriendsAdapter = TravelFriendsAdapter()
+
+    private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
+        override fun onTabSelected(tab: TabLayout.Tab) {
+            viewModel.selectTravelLogVisibility(Visibility.fromPosition(tab.position))
+        }
+
+        override fun onTabUnselected(tab: TabLayout.Tab?) {
+            // 비워둠
+        }
+
+        override fun onTabReselected(tab: TabLayout.Tab?) {
+            // 비워둠
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.includePostTravelLogFriends.rvTravelFriends.run {
-            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_travel_friends_space))
-            adapter = travelFriendsAdapter
-
-            binding.etPostTravelLogName.hint = viewModel.travelJournalUpdateDTO.title
-        }
+        binding.vm = viewModel
+        binding.etPostTravelLogName.hint = args.travelJounalUpdateDTO.title
+        initRecyclerView()
     }
 
     override fun initListener() {
@@ -69,7 +81,6 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
     }
 
     override fun initCollector() {
-
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.travelPeriod.collectLatest { period ->
                 binding.includePostTravelLogStart.run {
@@ -83,6 +94,58 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentPostTravelLogBinding>(
             }
         }
 
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.travelFriendsInfo.collectLatest { info ->
+                travelFriendsAdapter.submitList(info.friendsSummary)
+                if (info.remainingFriendsCount > 0) {
+                    binding.includePostTravelLogFriends.tvTravelFriendsCount.text = getString(R.string.post_travel_log_friends_count, info.remainingFriendsCount)
+                }
+            }
+        }
+
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
+                handleEvent(event)
+            }
+        }
+    }
+
+    private fun initRecyclerView() {
+        binding.includePostTravelLogFriends.rvTravelFriends.run {
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_travel_friends_space))
+            adapter = travelFriendsAdapter
+        }
+    }
+
+    private fun showDatePickerDialog(period: TravelPeriod) {
+        if (datePickerDialog == null) {
+            datePickerDialog = DatePickerDialogFragment(
+                travelPeriod = period,
+                onComplete = { viewModel.onChangePeriod(it) },
+                onDismiss = { viewModel.onDatePickerDismissed() },
+            )
+        }
+        if (datePickerDialog?.isAdded == false) {
+            datePickerDialog?.show(childFragmentManager, null)
+        }
+    }
+
+    private fun handleEvent(event: TravelJournalUpdateViewModel.Event) {
+        when (event) {
+            is TravelJournalUpdateViewModel.Event.OnEditTravelFriends -> {
+                // todo 프레그먼트간 이동
+            }
+            is TravelJournalUpdateViewModel.Event.ShowDataPicker -> {
+                showDatePickerDialog(event.currentPeriod)
+            }
+            TravelJournalUpdateViewModel.Event.IsBlankTitle -> {
+                sendSnackBar("여행일지 제목을 입력해주세요")
+            }
+            TravelJournalUpdateViewModel.Event.ClearDatePickerDialog -> {
+                datePickerDialog = null
+                dailyDatePickerDialog = null
+            }
+        }
     }
 
     private fun LocalDate.toDateString(): String {

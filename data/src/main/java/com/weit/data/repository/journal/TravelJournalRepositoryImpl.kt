@@ -97,7 +97,6 @@ class TravelJournalRepositoryImpl @Inject constructor(
         }
     }
 
-
     override suspend fun getTravelJournal(travelJournalId: Long): Result<TravelJournalInfo> {
         val result = runCatching { travelJournalDataSource.getTravelJournal(travelJournalId) }
 
@@ -171,7 +170,6 @@ class TravelJournalRepositoryImpl @Inject constructor(
         )
 
 
-
     override suspend fun getTaggedTravelJournalList(
         size: Int?,
         lastTravelJournal: Long?
@@ -179,10 +177,14 @@ class TravelJournalRepositoryImpl @Inject constructor(
         getInfiniteJournalList(
             hasNextTaggedJournal,
             lastTravelJournal,
-            runCatching { travelJournalDataSource.getTaggedTravelJournalList(size, lastTravelJournal) }
+            runCatching {
+                travelJournalDataSource.getTaggedTravelJournalList(
+                    size,
+                    lastTravelJournal
+                )
+            }
         )
 
-    // 여행일지 수정 Api
     override suspend fun updateTravelJournal(
         travelJournalId: Long,
         travelJournalUpdateInfo: TravelJournalUpdateInfo,
@@ -383,16 +385,16 @@ class TravelJournalRepositoryImpl @Inject constructor(
             profile = profile
         )
 
-    private suspend fun  TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
+    private suspend fun TravelJournalContentsDTO.toTravelJournalContentsInfo(): TravelJournalContentsInfo =
         TravelJournalContentsInfo(
             travelJournalContentId = travelJournalContentId,
             content = content,
-            placeDetail = if (placeId == null){
+            placeDetail = if (placeId == null) {
                 // placeId를 입력받지 못한 경우
                 PlaceDetail("", null, null, null, null)
             } else {
                 placeRepository.getPlaceDetail(placeId).getOrThrow()
-                   },
+            },
             latitude = latitude,
             longitude = longitude,
             travelDate = travelDate,

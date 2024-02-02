@@ -94,6 +94,14 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
             val action = MyProfileFragmentDirections.actionFragmentMypageToMyFriendManageFragment()
             findNavController().navigate(action)
         }
+        binding.layoutProfileNoLifeshot.btnAddLifeshot.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToFragmentLifeShotPicker()
+            findNavController().navigate(action)
+        }
+        binding.layoutProfileNoTravellog.btnFeedNoTravelLogWrite.setOnClickListener {
+            val action = MyProfileFragmentDirections.actionFragmentMypageToPostGraph()
+            findNavController().navigate(action)
+        }
     }
 
     private val infinityScrollListener by lazy {
@@ -168,24 +176,43 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.lifeshots.collectLatest { lifeshots ->
-                if (!lifeshots.isNullOrEmpty()) {
+                if (lifeshots.isNotEmpty()) {
                     Glide.with(binding.root)
                         .load(lifeshots.first().imageUrl)
                         .into(binding.ivProfileBg)
-                    myProfileLifeShotAdapter.submitList(lifeshots)
+                    binding.layoutProfileNoLifeshot.root.visibility = View.GONE
+                    binding.rvProfileLifeshot.visibility = View.VISIBLE
+                }else{
+                    binding.layoutProfileNoLifeshot.root.visibility = View.VISIBLE
+                    binding.rvProfileLifeshot.visibility = View.INVISIBLE
                 }
+                myProfileLifeShotAdapter.submitList(lifeshots)
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaceCount.collectLatest { count ->
-                binding.btnProfileFavoritePlaceMore.text = getString(
-                    R.string.profile_bookmark_place,
-                    count
-                )
+                if(count > DEFAULT_FAVORITE_PLACE_COUNT){
+                    binding.btnProfileFavoritePlaceMore.text = getString(
+                        R.string.profile_bookmark_place,
+                        count - 4
+                    )
+                    binding.btnProfileFavoritePlaceMore.visibility = View.VISIBLE
+                }else{
+                    binding.btnProfileFavoritePlaceMore.visibility = View.INVISIBLE
+                }
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
+                if(list.isEmpty()){
+                    binding.tvProfileNoFavoritePlace.visibility = View.VISIBLE
+                    binding.view2.visibility = View.VISIBLE
+                    binding.rvProfileFavoritePlace.visibility = View.INVISIBLE
+                }else{
+                    binding.tvProfileNoFavoritePlace.visibility = View.GONE
+                    binding.view2.visibility = View.INVISIBLE
+                    binding.rvProfileFavoritePlace.visibility = View.VISIBLE
+                }
                 favoritePlaceAdapter.submitList(list)
             }
         }
@@ -195,12 +222,28 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.tvTabPlaceMyJourneyContent.text = item.content
                     binding.itemProfileRepTravelJournal.tvItemMyJournalTitle.text = item.title
                     binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text = binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
-                    repJournalFriendAdapter.submitList(item.travelCompanionSimpleResponses.map{it.profileUrl})
+                    binding.tvProfileNoRepJournal.visibility = View.GONE
+                    binding.itemProfileRepTravelJournal.root.visibility = View.VISIBLE
+                    binding.viewJournalMemoryDecorationElev2.visibility = View.VISIBLE
+                    binding.viewTabPlaceMyJourney.visibility = View.VISIBLE
+                }else{
+                    binding.tvProfileNoRepJournal.visibility = View.VISIBLE
+                    binding.itemProfileRepTravelJournal.root.visibility = View.GONE
+                    binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
+                    binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl})
             }
         }
         repeatOnStarted(viewLifecycleOwner){
             viewModel.bookMarkTravelJournals.collectLatest { list ->
+                if(list.isEmpty()){
+                    binding.rvProfileBookmarkTravelJournal.visibility = View.INVISIBLE
+                    binding.tvProfileNoBookmarkJournal.visibility = View.VISIBLE
+                }else{
+                    binding.rvProfileBookmarkTravelJournal.visibility = View.VISIBLE
+                    binding.tvProfileNoBookmarkJournal.visibility = View.INVISIBLE
+                }
                 bookmarkJournalAdapter.submitList(list)
             }
         }
@@ -224,7 +267,15 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-
+                    if(userInfo.userStatistics.travelJournalCount <= NO_TRAVEL_JOURNAL_COUNT){
+                        binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
+                        binding.ivProfileImage.visibility = View.INVISIBLE
+                        binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
+                    }else{
+                        binding.layoutProfileNoTravellog.root.visibility = View.GONE
+                        binding.ivProfileImage.visibility = View.VISIBLE
+                        binding.tvProfileTotalTravelCount.visibility = View.VISIBLE
+                    }
                     binding.tvProfileTotalTravelCount.text = HtmlCompat.fromHtml(
                         baseString,
                         HtmlCompat.FROM_HTML_MODE_COMPACT,
@@ -267,5 +318,10 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         binding.rvProfileFavoritePlace.adapter = null
         binding.rvProfileBookmarkTravelJournal.adapter = null
         super.onDestroyView()
+    }
+
+    companion object{
+        const val DEFAULT_FAVORITE_PLACE_COUNT = 4
+        const val NO_TRAVEL_JOURNAL_COUNT = 0
     }
 }

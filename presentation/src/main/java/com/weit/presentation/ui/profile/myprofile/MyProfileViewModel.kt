@@ -233,7 +233,7 @@ class MyProfileViewModel @Inject constructor(
                 RepTravelJournalRequest(DEFAULT_DATA_SIZE, null)
             )
             if (result.isSuccess) {
-                val newRepTravelJournal = result.getOrThrow().first()
+                val newRepTravelJournal = result.getOrThrow().firstOrNull()
                 _repTravelJournal.emit(newRepTravelJournal)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())

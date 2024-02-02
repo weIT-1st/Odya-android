@@ -262,7 +262,7 @@ class OtherProfileViewModel @AssistedInject constructor(
                 user.userId
             )
             if (result.isSuccess) {
-                val newRepTravelJournal = result.getOrThrow().first()
+                val newRepTravelJournal = result.getOrThrow().firstOrNull()
                 _repTravelJournal.emit(newRepTravelJournal)
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())

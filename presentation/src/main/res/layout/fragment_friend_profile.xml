@@ -32,6 +32,7 @@
                     android:id="@+id/iv_profile_bg"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
+                    android:alpha="0.5"
                     android:background="@drawable/corners_top_8"
                     android:scaleType="centerCrop"
                     app:layout_constraintDimensionRatio="1.2"
@@ -55,6 +56,7 @@
                     android:layout_width="96dp"
                     android:layout_height="96dp"
                     android:layout_marginTop="73dp"
+                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_profile"
                     app:layout_constraintEnd_toEndOf="@+id/iv_profile_bg"
                     app:layout_constraintStart_toStartOf="@+id/iv_profile_bg"
@@ -244,6 +246,16 @@
                     app:layout_constraintEnd_toEndOf="@+id/view_profile_total_travel" />
 
 
+                <include
+                    layout="@layout/layout_other_profile_no_travellog"
+                    android:id="@+id/layout_profile_no_travellog"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="@+id/view_profile_total_travel"
+                    app:layout_constraintStart_toStartOf="@+id/view_profile_total_travel"
+                    app:layout_constraintEnd_toEndOf="@+id/view_profile_total_travel" />
+
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_profile_lifeshot_title"
                     style="@style/h4"
@@ -256,6 +268,20 @@
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_profile_total_travel" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_no_life_shot"
+                    style="@style/body1"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/elevation6"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_lifeshot_title"
+                    android:text="@string/profile_no_lifeshot" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_lifeshot"
@@ -294,6 +320,22 @@
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_line1" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_no_rep_journal"
+                    style="@style/body1"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="20dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/elevation6"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_profile_bookmark_travel_journal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_rep_travel_journal"
+                    android:text="@string/profile_no_rep_journal" />
 
                 <include
                     android:id="@+id/item_profile_rep_travel_journal"
@@ -364,6 +406,28 @@
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_tab_place_my_journey" />
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    app:layout_constraintBottom_toTopOf="@+id/tv_profile_bookmark_place"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_travel_journal"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_no_bookmark_journal"
+                    style="@style/body1"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_height="50dp"
+                    android:textColor="@color/elevation6"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_travel_journal"
+                    android:text="@string/profile_no_journal" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_bookmark_travel_journal"
@@ -390,6 +454,20 @@
                     android:textColor="@color/label_alternative"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rv_profile_bookmark_travel_journal" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_profile_no_favorite_place"
+                    style="@style/body1"
+                    android:layout_width="match_parent"
+                    android:textAlignment="center"
+                    android:layout_height="50dp"
+                    android:textColor="@color/elevation6"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_profile_bookmark_place"
+                    android:text="@string/profile_no_favorite_place" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_profile_favorite_place"

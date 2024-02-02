@@ -233,6 +233,9 @@
     <string name="profile_no_rep_journal">대표 여행일지가 없어요.</string>
     <string name="profile_no_journal">여행일지가 없어요.</string>
     <string name="profile_no_favorite_place">관심장소가 없어요.</string>
+    <string name="profile_no_lifeshot">인생샷이 없어요.</string>
+    <string name="profile_no_post">아직 게시물이 없어요.</string>
+
 
     <!-- lifeshot -->
     <string name="lifeshot_title">인생샷</string>

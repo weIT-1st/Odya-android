@@ -32,7 +32,7 @@
             android:id="@+id/tv_mayknow_friend_summary_nickname"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            tools:text="@{friend.nickname}"
+            android:text="@{friend.nickname}"
             android:maxLines="1"
             android:ellipsize="end"
             style="@style/body1"

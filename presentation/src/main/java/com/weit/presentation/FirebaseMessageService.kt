@@ -124,8 +124,8 @@ class FirebaseMessageService : FirebaseMessagingService() {
     private fun showNotification(message: RemoteMessage) {
         val builder = NotificationCompat.Builder(this, getString(R.string.app_name))
             .setSmallIcon(R.drawable.ic_logo_black)
-            .setContentTitle("데이터로 받아야함")
-            .setContentText("데이터로 받아야함")
+            .setContentTitle(message.data["title"])
+            .setContentText(message.data["body"])
             .setContentIntent(createPendingIntent(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)

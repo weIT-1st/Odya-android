@@ -21,6 +21,7 @@ import com.weit.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -34,9 +35,6 @@ class FirebaseMessageService : FirebaseMessagingService() {
 
     @Inject
     lateinit var insertNotificationUseCase: InsertNotificationUseCase
-
-    @Inject
-    lateinit var getNotificationsUseCase: GetNotificationsUseCase
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -106,23 +104,33 @@ class FirebaseMessageService : FirebaseMessagingService() {
         scope.launch {
             val noti = getNotificationInfo(message)
             withContext(Dispatchers.IO) {
-               insertNotificationUseCase(noti)
+                insertNotificationUseCase(noti)
             }
         }
 
     }
 
+    private fun handleDataMessage(message: RemoteMessage) {
+        setNoti(message)
+        showNotification(message)
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
+        if (message.data.isNotEmpty()) {
+            handleDataMessage(message)
+        }
+    }
+
+    private fun showNotification(message: RemoteMessage) {
         val builder = NotificationCompat.Builder(this, getString(R.string.app_name))
             .setSmallIcon(R.drawable.ic_logo_black)
-            .setContentTitle(message.notification?.title)
-            .setContentText(message.notification?.body)
+            .setContentTitle("데이터로 받아야함")
+            .setContentText("데이터로 받아야함")
             .setContentIntent(createPendingIntent(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
         notificationManager.notify(0, builder.build())
-        setNoti(message)
     }
 
     private fun createPendingIntent(message: RemoteMessage): PendingIntent {
@@ -201,5 +209,8 @@ class FirebaseMessageService : FirebaseMessagingService() {
         return randomUUID.toString().replace("-", "").toUpperCase()
     }
 
-
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
 }

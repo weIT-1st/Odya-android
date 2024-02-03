@@ -14,6 +14,8 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
+import com.weit.presentation.ui.journal.map.PinMode
+import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
 import com.weit.presentation.ui.journal.map.main.TravelJournalMapFragment
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
 import com.weit.presentation.ui.util.SpaceDecoration
@@ -45,8 +47,7 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        val travelJournalId = arguments?.getString("journalId")
-        viewModel.initialize(travelJournalId?.toLong())
+
         initFriendRV()
         initBottomSheet()
     }
@@ -81,7 +82,13 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
                     initJournalModelViewPager(info)
 
                     childFragmentManager.beginTransaction()
-                        .add(R.id.fragment_travel_journal_map , TravelJournalMapFragment(info))
+                        .add(R.id.fragment_travel_journal_map ,
+                            TravelJournalMapFragment(
+                                travelJournalInfo = info,
+                                pinMode = PinMode.IMAGE_PIN,
+                                isMapLine = true
+                            )
+                        )
                         .setReorderingAllowed(true)
                         .commit()
                 }

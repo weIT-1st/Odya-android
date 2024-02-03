@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.map.simple
+package com.weit.presentation.ui.journal.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.place.PlaceDetail
-import com.weit.presentation.ui.journal.map.ImagePinInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -84,7 +83,5 @@ class TravelJournalMapViewModel @AssistedInject constructor(
                 return assistedFactory.create(travelJournalInfo) as T
             }
         }
-
-        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
     }
 }

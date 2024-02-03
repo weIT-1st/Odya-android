@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.map.main
+package com.weit.presentation.ui.journal.map
 
 import android.os.Bundle
 import android.view.View
@@ -15,7 +15,6 @@ import com.weit.domain.model.place.PlaceDetail
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalMapBinding
 import com.weit.presentation.ui.base.BaseMapFragment
-import com.weit.presentation.ui.journal.map.ImagePinInfo
 import com.weit.presentation.ui.util.getImageMarkerIconFromLayout
 import com.weit.presentation.ui.util.getMarkerIconFromDrawable
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -26,6 +25,8 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class TravelJournalMapFragment(
     private val travelJournalInfo: TravelJournalInfo,
+    private val pinMode: PinMode,
+    private val isMapLine: Boolean
 ) : BaseMapFragment<FragmentTravelJournalMapBinding>(
     FragmentTravelJournalMapBinding::inflate,
     FragmentTravelJournalMapBinding::mapTravelJournalMap
@@ -46,7 +47,6 @@ class TravelJournalMapFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel
-        setByMapMode(travelJournalInfo)
     }
 
     override fun initCollector() {
@@ -54,10 +54,11 @@ class TravelJournalMapFragment(
 
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.mainPlaceList.collectLatest { placePinInfo ->
-//                setMapPin(placePinInfo)
+                setMapPin(placePinInfo)
                 moveToTravelCenter(
                     placePinInfo.map { it.latitude },
-                    placePinInfo.map { it.longitude })
+                    placePinInfo.map { it.longitude }
+                )
             }
         }
 
@@ -68,19 +69,14 @@ class TravelJournalMapFragment(
         }
 
         repeatOnStarted(viewLifecycleOwner) {
-            viewModel.mainPlaceImageList.collectLatest {
-                setMapImagePin(it)
+            viewModel.mainPlaceImageList.collectLatest { imagePinInfo ->
+                setMapImagePin(imagePinInfo)
+                moveToTravelCenter(
+                    imagePinInfo.map { it.latitude },
+                    imagePinInfo.map { it.longitude }
+                )
             }
         }
-    }
-
-    private fun setByMapMode(info: TravelJournalInfo) {
-        binding.tvTravelJournalMapTitle.text = info.travelJournalTitle
-        binding.tvTravelJournalMapDate.text = requireContext().getString(
-            R.string.journal_memory_my_travel_date,
-            info.travelStartDate,
-            info.travelEndDate
-        )
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -92,9 +88,15 @@ class TravelJournalMapFragment(
             )
         )
 
-        viewModel.initMainPlaceList()
-        viewModel.initAllPlaceList()
-        viewModel.initMainImage()
+        if (pinMode == PinMode.BASIC_PIN) {
+            viewModel.initMainPlaceList()
+        } else {
+            viewModel.initMainImage()
+        }
+
+        if (isMapLine) {
+            viewModel.initAllPlaceList()
+        }
     }
 
     private fun setMapPin(placeList: List<PlaceDetail>) {
@@ -156,7 +158,6 @@ class TravelJournalMapFragment(
     }
 
     companion object {
-        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
         private const val DEFAULT_ZOOM = 15f
     }
 }

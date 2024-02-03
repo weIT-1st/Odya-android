@@ -45,7 +45,7 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        val travelJournalId = arguments?.getString("travelJournalId")
+        val travelJournalId = arguments?.getString("journalId")
         viewModel.initialize(travelJournalId?.toLong())
         initFriendRV()
         initBottomSheet()

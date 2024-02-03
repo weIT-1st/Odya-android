@@ -52,7 +52,6 @@ class FirebaseMessageService : FirebaseMessagingService() {
     }
     override fun onNewToken(token: String) {
         scope.launch {
-            Logger.t("fcmtoken").i("$token")
             updateFcmTokenUseCase(token)
         }
     }
@@ -167,7 +166,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
             }
             NotificationType.FOLLOWING_TRAVEL_JOURNAL.name -> {
                 val arguments = Bundle().apply {
-                    putString("travelJournalId", message.data["travelJournalId"])
+                    putString("journalId", message.data["travelJournalId"])
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)
@@ -176,7 +175,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
             }
             NotificationType.TRAVEL_JOURNAL_TAG.name -> {
                 val arguments = Bundle().apply {
-                    putString("travelJournalId", message.data["travelJournalId"])
+                    putString("journalId", message.data["travelJournalId"])
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)

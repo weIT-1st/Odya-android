@@ -49,7 +49,7 @@ class TravelJournalViewModel @AssistedInject constructor(
     private var journalId: Long = 0
 
     fun initialize(savedJournalId : Long?) {
-        journalId = if(savedJournalId == null){
+        journalId = if(savedJournalId == null || savedJournalId == 0L){
             travelJournalId
         }else{
             savedJournalId.toLong()

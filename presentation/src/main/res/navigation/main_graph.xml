@@ -136,7 +136,8 @@
         android:label="TravelJournalFragment">
         <argument
             android:name="travelJournalId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_fragment_travel_Journal_to_travelJournalDetailFragment"
             app:destination="@id/travelJournalDetailFragment" />

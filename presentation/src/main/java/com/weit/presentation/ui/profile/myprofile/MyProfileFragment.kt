@@ -3,6 +3,8 @@ package com.weit.presentation.ui.profile.myprofile
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -11,6 +13,9 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.journal.map.PinMode
+import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
+import com.weit.presentation.ui.journal.travel_journal.TravelJournalFragment
 import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
 import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
@@ -39,7 +44,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     )
 
-    private val bookmarkJournalAdapter = ProfileBookmarkJournalAdapter (
+    private val bookmarkJournalAdapter = ProfileBookmarkJournalAdapter(
         showDetail = { moveToJournalDetail(it) },
         updateBookmarkState = { viewModel.updateBookmarkTravelJournalBookmarkState(it) }
     )
@@ -120,7 +125,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
     }
 
-    private fun initRecyclerView(){
+    private fun initRecyclerView() {
         binding.rvProfileLifeshot.run {
             addItemDecoration(
                 SpaceDecoration(
@@ -182,7 +187,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                         .into(binding.ivProfileBg)
                     binding.layoutProfileNoLifeshot.root.visibility = View.GONE
                     binding.rvProfileLifeshot.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.layoutProfileNoLifeshot.root.visibility = View.VISIBLE
                     binding.rvProfileLifeshot.visibility = View.INVISIBLE
                 }
@@ -191,24 +196,24 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaceCount.collectLatest { count ->
-                if(count > DEFAULT_FAVORITE_PLACE_COUNT){
+                if (count > DEFAULT_FAVORITE_PLACE_COUNT) {
                     binding.btnProfileFavoritePlaceMore.text = getString(
                         R.string.profile_bookmark_place,
                         count - 4
                     )
                     binding.btnProfileFavoritePlaceMore.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.btnProfileFavoritePlaceMore.visibility = View.INVISIBLE
                 }
             }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.favoritePlaces.collectLatest { list ->
-                if(list.isEmpty()){
+                if (list.isEmpty()) {
                     binding.tvProfileNoFavoritePlace.visibility = View.VISIBLE
                     binding.view2.visibility = View.VISIBLE
                     binding.rvProfileFavoritePlace.visibility = View.INVISIBLE
-                }else{
+                } else {
                     binding.tvProfileNoFavoritePlace.visibility = View.GONE
                     binding.view2.visibility = View.INVISIBLE
                     binding.rvProfileFavoritePlace.visibility = View.VISIBLE
@@ -221,7 +226,12 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                 if (item != null) {
                     binding.tvTabPlaceMyJourneyContent.text = item.content
                     binding.itemProfileRepTravelJournal.tvItemMyJournalTitle.text = item.title
-                    binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text = binding.root.context.getString(R.string.place_journey_date, item.travelStartDate, item.travelEndDate)
+                    binding.itemProfileRepTravelJournal.tvItemMyJournalDate.text =
+                        binding.root.context.getString(
+                            R.string.place_journey_date,
+                            item.travelStartDate,
+                            item.travelEndDate
+                        )
                     binding.tvProfileNoRepJournal.visibility = View.GONE
                     binding.itemProfileRepTravelJournal.root.visibility = View.VISIBLE
                     binding.viewJournalMemoryDecorationElev2.visibility = View.VISIBLE
@@ -229,21 +239,24 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.layoutRepTravelJournal.setOnClickListener {
                         moveToJournalDetail(item.travelJournalId)
                     }
-                }else{
+                } else {
                     binding.tvProfileNoRepJournal.visibility = View.VISIBLE
                     binding.itemProfileRepTravelJournal.root.visibility = View.GONE
                     binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
-                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl})
+                binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.isVisible = item?.travelCompanionSimpleResponses != null
+                //TODO 더보기 눌렀을 때 바텀시트 올라오기
+
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map { it.profileUrl })
             }
         }
-        repeatOnStarted(viewLifecycleOwner){
+        repeatOnStarted(viewLifecycleOwner) {
             viewModel.bookMarkTravelJournals.collectLatest { list ->
-                if(list.isEmpty()){
+                if (list.isEmpty()) {
                     binding.rvProfileBookmarkTravelJournal.visibility = View.INVISIBLE
                     binding.tvProfileNoBookmarkJournal.visibility = View.VISIBLE
-                }else{
+                } else {
                     binding.rvProfileBookmarkTravelJournal.visibility = View.VISIBLE
                     binding.tvProfileNoBookmarkJournal.visibility = View.INVISIBLE
                 }
@@ -270,11 +283,11 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                             userInfo.userStatistics.travelPlaceCount,
                             userInfo.userStatistics.travelJournalCount
                         )
-                    if(userInfo.userStatistics.travelJournalCount <= NO_TRAVEL_JOURNAL_COUNT){
+                    if (userInfo.userStatistics.travelJournalCount <= NO_TRAVEL_JOURNAL_COUNT) {
                         binding.layoutProfileNoTravellog.root.visibility = View.VISIBLE
                         binding.ivProfileImage.visibility = View.INVISIBLE
                         binding.tvProfileTotalTravelCount.visibility = View.INVISIBLE
-                    }else{
+                    } else {
                         binding.layoutProfileNoTravellog.root.visibility = View.GONE
                         binding.ivProfileImage.visibility = View.VISIBLE
                         binding.tvProfileTotalTravelCount.visibility = View.VISIBLE
@@ -283,6 +296,23 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                         baseString,
                         HtmlCompat.FROM_HTML_MODE_COMPACT,
                     )
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.journalInfo.collectLatest { info ->
+                if (info != null) {
+                    childFragmentManager.beginTransaction()
+                        .add(
+                            R.id.fragment_travel_journal_map,
+                            TravelJournalMapFragment(
+                                travelJournalInfo = info,
+                                pinMode = PinMode.IMAGE_PIN,
+                                isMapLine = true
+                            )
+                        )
+                        .setReorderingAllowed(true)
+                        .commit()
                 }
             }
         }

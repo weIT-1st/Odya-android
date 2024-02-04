@@ -16,7 +16,6 @@ import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
 import com.weit.presentation.ui.journal.map.PinMode
 import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
-import com.weit.presentation.ui.journal.map.main.TravelJournalMapFragment
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted

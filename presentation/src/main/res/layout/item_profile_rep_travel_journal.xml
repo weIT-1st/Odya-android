@@ -14,16 +14,16 @@
         android:background="@drawable/corners_all_8"
         android:clipToOutline="true">
 
-
-        <include
-            android:id="@+id/include_item_my_journal_map"
-            layout="@layout/item_journal_map"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_travel_journal_map"
             android:layout_width="324dp"
             android:layout_height="280dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout="@layout/fragment_travel_journal_map"/>
+
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_item_my_journal_title"
@@ -81,7 +81,7 @@
             android:layout_marginEnd="12dp"
             app:backgroundTint="@android:color/transparent"
             app:layout_constraintStart_toEndOf="@+id/rv_item_my_journal_friends"
-            app:layout_constraintBottom_toBottomOf="@id/include_item_my_journal_map"/>
+            app:layout_constraintBottom_toBottomOf="@id/fragment_travel_journal_map"/>
 
 
 

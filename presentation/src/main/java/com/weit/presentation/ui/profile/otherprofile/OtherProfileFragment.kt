@@ -3,6 +3,7 @@ package com.weit.presentation.ui.profile.otherprofile
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -197,6 +198,9 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                     binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
+                binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.isVisible = item?.travelCompanionSimpleResponses != null
+                //TODO 더보기 눌렀을 때 바텀시트 올라오기
+
                 repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl})
             }
         }
@@ -245,6 +249,23 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                         HtmlCompat.FROM_HTML_MODE_COMPACT,
                     )
 
+                }
+            }
+        }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.journalInfo.collectLatest { info ->
+                if (info != null) {
+                    childFragmentManager.beginTransaction()
+                        .add(
+                            com.weit.presentation.R.id.fragment_travel_journal_map,
+                            com.weit.presentation.ui.journal.map.TravelJournalMapFragment(
+                                travelJournalInfo = info,
+                                pinMode = com.weit.presentation.ui.journal.map.PinMode.IMAGE_PIN,
+                                isMapLine = true
+                            )
+                        )
+                        .setReorderingAllowed(true)
+                        .commit()
                 }
             }
         }

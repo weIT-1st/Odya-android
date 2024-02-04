@@ -6,53 +6,73 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.weit.presentation.ui.login.user.login.LoginFragment"
+        android:name="com.weit.presentation.ui.login.login.LoginFragment"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_loginFragment_to_userRegistrationFragment"
-            app:destination="@id/userRegistrationFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_loginPreviewThirdFragment"
-            app:destination="@id/loginPreviewThirdFragment" />
+            android:id="@+id/action_loginFragment_to_loginOnboardingFragment"
+            app:destination="@id/loginOnboardingFragment" />
     </fragment>
 
 
+
     <fragment
-        android:id="@+id/userRegistrationFragment"
-        android:name="com.weit.presentation.ui.login.user.registration.UserRegistrationFragment"
-        android:label="UserRegistrationFragment" >
-        <argument android:name="username"
-            app:argType="string" />
+        android:id="@+id/loginConsentDeviceFragment"
+        android:name="com.weit.presentation.ui.login.consent.device.LoginConsentDeviceFragment"
+        android:label="LoginConsentDeviceFragment">
+
+        <action
+            android:id="@+id/action_loginConsentDeviceFragment_to_loginConsentPrivacyDialogFragment"
+            app:destination="@id/loginConsentPrivacyDialogFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/loginNicknameFragment"
-        android:name="com.weit.presentation.ui.login.input.nickname.nickname.LoginNicknameFragment"
+        android:name="com.weit.presentation.ui.login.input.nickname.LoginNicknameFragment"
         android:label="LoginNicknameFragment">
         <action
-            android:id="@+id/action_loginNicknameFragment_to_loginInputUserInfoFragment"
-            app:destination="@+id/loginInputUserInfoFragment"/>
+            android:id="@+id/action_loginNicknameFragment_to_loginInputUserInfoFragment2"
+            app:destination="@id/loginInputUserInfoFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/loginInputUserInfoFragment"
-        android:name="com.weit.presentation.ui.login.inputuserinfo.LoginInputUserInfoFragment"
+        android:name="com.weit.presentation.ui.login.input.userinfo.LoginInputUserInfoFragment"
         android:label="LoginInputUserInfoFragment">
+        <action
+            android:id="@+id/action_loginInputUserInfoFragment_to_loginLoadingFragment"
+            app:destination="@id/loginLoadingFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/loginPreviewThirdFragment"
-        android:name="com.weit.presentation.ui.login.preview.LoginPreviewThirdFragment"
-        android:label="LoginPreviewThirdFragment" >
+        android:id="@+id/loginLoadingFragment"
+        android:name="com.weit.presentation.ui.login.loading.LoginLoadingFragment"
+        android:label="LoginLoadingFragment">
+
         <action
-            android:id="@+id/action_loginPreviewThirdFragment_to_loginConsentDialogFragment"
-            app:destination="@id/loginConsentDialogFragment" />
+            android:id="@+id/action_loginLoadingFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"/>
         <action
-            android:id="@+id/action_loginPreviewThirdFragment_to_loginNicknameFragment"
-            app:destination="@id/loginNicknameFragment" />
+            android:id="@+id/action_loginLoadingFragment_to_loginNicknameFragment"
+            app:destination="@id/loginNicknameFragment"
+            app:popUpTo="@id/loginNicknameFragment"/>
     </fragment>
+
     <dialog
-        android:id="@+id/loginConsentDialogFragment"
-        android:name="com.weit.presentation.ui.login.consent.LoginConsentDialogFragment"
-        android:label="LoginConsentDialogFragment" />
+        android:id="@+id/loginConsentPrivacyDialogFragment"
+        android:name="com.weit.presentation.ui.login.consent.privacy.LoginConsentPrivacyDialogFragment"
+        android:label="LoginConsentDialogFragment" >
+        <action
+            android:id="@+id/action_loginConsentDialogFragment_to_loginNicknameFragment"
+            app:destination="@id/loginNicknameFragment" />
+    </dialog>
+    <fragment
+        android:id="@+id/loginOnboardingFragment"
+        android:name="com.weit.presentation.ui.login.onboarding.LoginOnboardingFragment"
+        android:label="LoginOnboardingFragment" >
+        <action
+            android:id="@+id/action_loginOnboardingFragment_to_loginConsentDeviceFragment"
+            app:destination="@id/loginConsentDeviceFragment" />
+    </fragment>
 
 </navigation>

@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/tv_login_gender_spinner"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:textColor="@color/label_inactive"
-    style="@style/body1"
-    android:padding="12dp"
-    tools:text="남/여"
-    />
+    android:layout_height="48dp"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tv_login_gender_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_gender_hint"
+        android:textAppearance="@style/body1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

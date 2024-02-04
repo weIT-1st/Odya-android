@@ -1,18 +1,20 @@
-package com.weit.presentation.ui.login.input.nickname.nickname
+package com.weit.presentation.ui.login.input.nickname
 
+import android.annotation.SuppressLint
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.weit.presentation.databinding.FragmentLoginNicknameBinding
+import com.weit.presentation.databinding.FragmentLoginInputNicknameBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
-    FragmentLoginNicknameBinding::inflate,
+class LoginNicknameFragment : BaseFragment<FragmentLoginInputNicknameBinding>(
+    FragmentLoginInputNicknameBinding::inflate,
 ) {
 
     val viewModel: LoginNicknameViewModel by viewModels()
@@ -23,11 +25,7 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
     }
 
     override fun initListener() {
-        binding.btnLoginOneGoNextStep.setOnClickListener {
-            val action =
-                LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginInputUserInfoFragment()
-            findNavController().navigate(action)
-        }
+        deleteEditTextAll()
     }
 
     override fun initCollector() {
@@ -38,10 +36,32 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
         }
     }
 
+    private fun moveToInitUserInfo(){
+        val action =
+            LoginNicknameFragmentDirections.actionLoginNicknameFragmentToLoginInputUserInfoFragment2()
+        findNavController().navigate(action)
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun deleteEditTextAll(){
+        val etLoginInputName = binding.etLoginInputName
+
+        etLoginInputName.setOnTouchListener(
+            View.OnTouchListener { v, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    if (event.x >= (etLoginInputName.right - etLoginInputName.compoundDrawables[2].bounds.width())) {
+                        etLoginInputName.text = null
+                    }
+                }
+                false
+            },
+        )
+    }
+
     private fun handleEvent(event: LoginNicknameViewModel.Event) {
         when (event) {
             LoginNicknameViewModel.Event.GoodNickname -> {
-                sendSnackBar("사용가능한 닉네임입니다.")
+                sendSnackBar("사용 가능한 닉네임 입니다.")
             }
             LoginNicknameViewModel.Event.DuplicateNickname -> {
                 sendSnackBar("중복된 닉네임 입니다. 다른 닉네임을 입력하세요")
@@ -58,8 +78,11 @@ class LoginNicknameFragment : BaseFragment<FragmentLoginNicknameBinding>(
             LoginNicknameViewModel.Event.NullDefaultNickname -> {
                 sendSnackBar("새로운 닉네임을 입력하세요. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
             }
-            else -> {
+            LoginNicknameViewModel.Event.UnknownNickname -> {
                 sendSnackBar("새로운 닉네임을 입력하세요. 닉네임 최소 2자, 최대 8자, 특수문자 불가능")
+            }
+            LoginNicknameViewModel.Event.SuccessSetNickname -> {
+                moveToInitUserInfo()
             }
         }
     }

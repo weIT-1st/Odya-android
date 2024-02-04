@@ -89,7 +89,7 @@
                 style="@style/detail2"
                 android:textColor="@color/label_assistive"
                 android:background="@android:color/transparent"
-                android:onClickListener="@{() -> vm.deleteAllRecentPlaceSearch()}"
+                android:onClickListener="@{() -> vm.deleteAllRecentPlaceSearchWord()}"
                 app:layout_constraintTop_toTopOf="@+id/tv_place_search_recent"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_place_search_recent"
                 app:layout_constraintEnd_toEndOf="parent" />

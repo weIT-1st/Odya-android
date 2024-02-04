@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.login.user.login
+package com.weit.presentation.ui.login.login
 
 import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel

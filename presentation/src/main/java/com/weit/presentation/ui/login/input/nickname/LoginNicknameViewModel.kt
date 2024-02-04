@@ -1,21 +1,16 @@
-package com.weit.presentation.ui.login.input.nickname.nickname
+package com.weit.presentation.ui.login.input.nickname
 
-import androidx.annotation.MainThread
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.orhanobut.logger.Logger
 import com.weit.domain.model.NicknameState
-import com.weit.domain.usecase.userinfo.GetNicknameUseCase
 import com.weit.domain.usecase.userinfo.GetUsernameUseCase
 import com.weit.domain.usecase.userinfo.SetNicknameUseCase
 import com.weit.domain.usecase.userinfo.ValidateNicknameUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,8 +18,7 @@ class LoginNicknameViewModel @Inject constructor(
     private val getUsernameUseCase: GetUsernameUseCase,
     private val setNicknameUseCase: SetNicknameUseCase,
     private val validateNicknameUseCase: ValidateNicknameUseCase,
-    private val getNicknameUseCase: GetNicknameUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     val nickname = MutableStateFlow("")
 
@@ -32,24 +26,32 @@ class LoginNicknameViewModel @Inject constructor(
     val event = _event.asEventFlow()
 
     init {
+        getUserName()
+    }
+
+    private fun getUserName() {
         viewModelScope.launch {
-            getUsernameUseCase().onSuccess { it ->
-                if (it == null) {
+            val result = getUsernameUseCase()
+
+            if (result.isSuccess) {
+                val userName = result.getOrThrow()
+                if (userName == null) {
                     _event.emit(Event.NullDefaultNickname)
                 } else {
-                    nickname.emit(it.toString())
+                    nickname.emit(userName)
                 }
             }
         }
     }
 
-    @MainThread
     fun setNickname() {
         viewModelScope.launch {
             val newNickname = nickname.value
             if (handleIsGoodNickname(newNickname)) {
-                setNicknameUseCase(newNickname)
-
+                val settingNickname = setNicknameUseCase(newNickname)
+                if(settingNickname.isSuccess){
+                    _event.emit(Event.SuccessSetNickname)
+                }
             }
         }
     }
@@ -70,6 +72,7 @@ class LoginNicknameViewModel @Inject constructor(
     }
 
     sealed class Event {
+        object SuccessSetNickname : Event()
         object NullDefaultNickname : Event()
         object TooShortNickname : Event()
         object TooLongNickname : Event()

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SetGenderUseCase @Inject constructor(
     private val userInfoRepository: UserInfoRepository,
 ) {
-    suspend operator fun invoke(genderType: GenderType) {
+    suspend operator fun invoke(genderType: GenderType): Result<Unit> =
         userInfoRepository.setGender(genderType.type)
-    }
 }
+

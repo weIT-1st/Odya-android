@@ -7,9 +7,9 @@ import java.time.LocalDate
 
 @Parcelize
 data class TravelJournalUpdateDTO (
+    val travelJournalId: Long,
     val title: String?,
     val travelStartDate: LocalDate,
     val travelEndDate: LocalDate,
     val visibility: String?,
-    val travelJournalCompanions: List<TravelJournalUpdateCompanionsInfo>,
 ) : Parcelable

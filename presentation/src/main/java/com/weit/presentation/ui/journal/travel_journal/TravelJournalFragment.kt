@@ -7,10 +7,6 @@ import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
@@ -18,10 +14,7 @@ import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.base.BaseMapFragment
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
-import com.weit.presentation.ui.util.SpaceDecoration
-import com.weit.presentation.ui.util.getMarkerIconFromDrawable
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -199,9 +192,10 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     private fun handleEvent(event: TravelJournalViewModel.Event) {
         when (event) {
             is TravelJournalViewModel.Event.MoveToJournalUpdate -> {
-                val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalUpdateFragment(event.travelJournalUpdateDTO)
+                val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalUpdateFragment(
+                    event.travelFriendsDTO.toTypedArray(),
+                    event.travelJournalUpdateDTO)
                 findNavController().navigate(action)
-
             }
 
             is TravelJournalViewModel.Event.PopupTravelJournalMenu -> {

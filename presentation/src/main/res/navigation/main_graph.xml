@@ -239,14 +239,23 @@
         android:label="TravelJournalDetailMenuFragment">
     </dialog>
 
-
     <fragment
         android:id="@+id/travelJournalUpdateFragment"
         android:name="com.weit.presentation.ui.journal.update.journal.TravelJournalUpdateFragment"
         android:label="TravelJournalUpdateFragment">
         <argument
+            android:name="followers"
+            android:defaultValue="@null"
+            app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
+            app:nullable="true" />
+        <argument
             android:name="travelJounalUpdateDTO"
-            app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO" />
+            android:defaultValue="@null"
+            app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO"
+            app:nullable="true"/>
+        <action
+            android:id="@+id/action_travelJournalUpdateFragment_to_travelFriendUpdateFragment"
+            app:destination="@id/travelFriendUpdateFragment" />
     </fragment>
 
 
@@ -380,12 +389,6 @@
             android:name="repJournalInfo"
             app:argType="com.weit.presentation.model.profile.lifeshot.SelectRepTravelJournalDTO" />
     </fragment>
-    <dialog
-        android:id="@+id/travelJournalDetailFragment"
-        android:name="com.weit.presentation.ui.journal.detail.TravelJournalDetailFragment"
-        android:label="TravelJournalDetailFragment">
-
-    </dialog>
 
     <dialog
         android:id="@+id/travelJournalDetailMenuFragment"
@@ -393,15 +396,6 @@
         android:label="TravelJournalDetailMenuFragment">
     </dialog>
 
-
-    <fragment
-        android:id="@+id/travelJournalUpdateFragment"
-        android:name="com.weit.presentation.ui.journal.update.journal.TravelJournalUpdateFragment"
-        android:label="TravelJournalUpdateFragment">
-        <argument
-            android:name="travelJounalUpdateDTO"
-            app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO" />
-    </fragment>
     <fragment
         android:id="@+id/placeJournalFragment"
         android:name="com.weit.presentation.ui.main.journal.PlaceJournalFragment"
@@ -422,4 +416,22 @@
         android:id="@+id/editPlaceReviewFragment"
         android:name="com.weit.presentation.ui.main.editreview.EditPlaceReviewFragment"
         android:label="EditPlaceReviewFragment" />
+    <fragment
+        android:id="@+id/travelFriendUpdateFragment"
+        android:name="com.weit.presentation.ui.journal.update.journal.travelfriend.TravelFriendUpdateFragment"
+        android:label="TravelFriendUpdateFragment" >
+        <argument
+            android:name="travelJounalUpdateDTO"
+            android:defaultValue="@null"
+            app:argType="com.weit.presentation.model.journal.TravelJournalUpdateDTO"
+            app:nullable="true"/>
+        <argument
+            android:name="followers"
+            android:defaultValue="@null"
+            app:argType="com.weit.presentation.model.post.travellog.FollowUserContentDTO[]"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_travelFriendUpdateFragment_to_travelJournalUpdateFragment"
+            app:destination="@id/travelJournalUpdateFragment" />
+    </fragment>
 </navigation>

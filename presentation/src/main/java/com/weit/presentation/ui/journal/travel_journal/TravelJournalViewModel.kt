@@ -13,6 +13,8 @@ import com.weit.domain.usecase.user.GetUserIdUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.journal.TravelJournalUpdateCompanionsInfo
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
+import com.weit.presentation.model.post.travellog.FollowUserContentDTO
+import com.weit.presentation.model.user.UserProfileDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -125,20 +127,23 @@ class TravelJournalViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val info = journalInfo.value ?: return@launch
 
+            val friends = info.travelJournalCompanions.map {
+                FollowUserContentDTO(
+                    it.userId,
+                    it.nickname,
+                    UserProfileDTO(it.profileUrl, null),
+                    it.isFollowing
+                )
+            }
+
             val updateDTO = TravelJournalUpdateDTO(
+                travelJournalId = info.travelJournalId,
                 title = info.travelJournalTitle,
                 travelStartDate = LocalDate.parse(info.travelStartDate, DateTimeFormatter.ISO_DATE),
                 travelEndDate = LocalDate.parse(info.travelEndDate, DateTimeFormatter.ISO_DATE),
-                visibility = info.visibility,
-                travelJournalCompanions = info.travelJournalCompanions.map { TravelJournalUpdateCompanionsInfo(
-                    it.userId,
-                    it.nickname,
-                    it.profileUrl,
-                    it.isRegistered,
-                    it.isFollowing
-                ) }
+                visibility = info.visibility
             )
-            _event.emit(Event.MoveToJournalUpdate(updateDTO))
+            _event.emit(Event.MoveToJournalUpdate(friends, updateDTO))
         }
     }
 
@@ -151,6 +156,7 @@ class TravelJournalViewModel @AssistedInject constructor(
 
     sealed class Event {
         data class MoveToJournalUpdate(
+            val travelFriendsDTO: List<FollowUserContentDTO>,
             val travelJournalUpdateDTO : TravelJournalUpdateDTO
         ) : Event()
 

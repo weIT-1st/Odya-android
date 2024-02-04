@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
+import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.user.UserProfile
 import com.weit.domain.usecase.journal.GetTravelJournalUseCase
+import com.weit.domain.usecase.journal.UpdateTravelJournalContentUseCase
+import com.weit.domain.usecase.journal.UpdateTravelJournalUseCase
 import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.journal.TravelJournalUpdateCompanionsInfo
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
@@ -27,7 +30,7 @@ import kotlin.math.min
 
 class TravelJournalUpdateViewModel @AssistedInject constructor(
     @Assisted val travelJournalUpdateDTO: TravelJournalUpdateDTO,
-    private val getTravelJournalUseCase: GetTravelJournalUseCase
+    private val updateTravelJournalUseCase: UpdateTravelJournalUseCase
 ) : ViewModel() {
     @AssistedFactory
     interface TravelJournalUpdateFactory {
@@ -62,13 +65,36 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
                     travelJournalUpdateDTO.travelEndDate
                 )
             )
+            _visibility.emit(
+                when (travelJournalUpdateDTO.visibility) {
+                    "PUBLIC" -> Visibility.PUBLIC
+                    "FRIEND_ONLY" -> Visibility.FRIEND_ONLY
+                    else -> Visibility.PRIVATE
+                }
+            )
+        }
+    }
+
+    fun initViewState(travelFriends: List<FollowUserContent>?){
+        travelFriends?.let {
+            initTravelFriend(it)
         }
     }
 
     fun onEditTravelFriends() {
         viewModelScope.launch {
+            val newTitle = title.value
+            val newPeriod = travelPeriod.value
+            val newVisibility = visibility.value
             val friendsDTO = friends.map { it.toDTO() }
-            _event.emit(Event.OnEditTravelFriends(friendsDTO))
+            val newTravelJournalUpdateDTO = TravelJournalUpdateDTO(
+                travelJournalUpdateDTO.travelJournalId,
+                newTitle,
+                newPeriod.start,
+                newPeriod.end,
+                newVisibility.name
+            )
+            _event.emit(Event.OnEditTravelFriends(newTravelJournalUpdateDTO, friendsDTO))
         }
     }
 
@@ -90,7 +116,7 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
         }
     }
 
-    private fun initTravelFriend(travelFriends: List<FollowUserContentDTO>) {
+    private fun initTravelFriend(travelFriends: List<FollowUserContent>) {
         friends.run {
             clear()
             addAll(travelFriends)
@@ -122,16 +148,38 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
         viewModelScope.launch {
             val newTitle = title.value
             val newPeriod = travelPeriod.value
+            val start = listOf(newPeriod.start.year, newPeriod.start.monthValue, newPeriod.start.dayOfMonth)
+            val end = listOf(newPeriod.end.year, newPeriod.end.monthValue, newPeriod.end.dayOfMonth)
+            val newVisibility = visibility.value
 
             if (newTitle.isBlank()) {
                 _event.emit(Event.IsBlankTitle)
                 return@launch
+            }
+
+            val result = updateTravelJournalUseCase(
+                travelJournalUpdateDTO.travelJournalId,
+                TravelJournalUpdateInfo(
+                    newTitle,
+                    start,
+                    end,
+                    newVisibility.name,
+                    friends.map { it.userId },
+                    friends.map { it.nickname }
+                )
+            )
+
+            if (result.isSuccess) {
+                _event.emit(Event.SuccessUpdateJournal)
+            } else {
+                // todo 에러 처리
             }
         }
     }
 
     sealed class Event {
         data class OnEditTravelFriends(
+            val travelJournalUpdateDTO: TravelJournalUpdateDTO,
             val travelFriends: List<FollowUserContentDTO>
         ) : Event()
 
@@ -140,6 +188,7 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
         ) : Event()
         object ClearDatePickerDialog : Event()
         object IsBlankTitle : Event()
+        object SuccessUpdateJournal : Event()
     }
 
     data class TravelFriendsInfo(

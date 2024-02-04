@@ -7,12 +7,15 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUpdateTravelLogBinding
 import com.weit.presentation.model.Visibility
+import com.weit.presentation.model.journal.TravelJournalUpdateDTO
 import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.journal.update.journal.travelfriend.TravelFriendUpdateFragmentDirections
 import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
 import com.weit.presentation.ui.post.travellog.TravelFriendsAdapter
 import com.weit.presentation.ui.util.SpaceDecoration
@@ -33,7 +36,11 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
 
     private val args: TravelJournalUpdateFragmentArgs by navArgs()
     private val viewModel : TravelJournalUpdateViewModel by viewModels {
-        TravelJournalUpdateViewModel.provideFactory(viewModelFactory, args.travelJounalUpdateDTO)
+        TravelJournalUpdateViewModel.provideFactory(
+            viewModelFactory,
+            args.travelJounalUpdateDTO ?:
+            TravelJournalUpdateDTO(0L,null, LocalDate.now(), LocalDate.now(), null)
+        )
     }
 
     private var datePickerDialog: DatePickerDialogFragment? = null
@@ -58,8 +65,10 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-        binding.etPostTravelLogName.hint = args.travelJounalUpdateDTO.title
+        binding.etPostTravelLogName.hint = args.travelJounalUpdateDTO?.title
         initRecyclerView()
+        viewModel.initViewState(args.followers?.toList())
+        binding.includePostTravelLogVisibility.tlPostVisibility.addOnTabSelectedListener(tabSelectedListener)
     }
 
     override fun initListener() {
@@ -77,6 +86,18 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
 
         binding.tbPostTravelLog.setNavigationOnClickListener {
             findNavController().popBackStack()
+        }
+
+        binding.btnPostTravelLogPost.setOnClickListener {
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.post_travel_log_registration_modal_title))
+                .setNegativeButton(getString(R.string.post_travel_log_registration_modal_negative)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.post_travel_log_registration_modal_positive)) { _, _ ->
+                    viewModel.updateTravelJournal()
+                }
+                .show()
         }
     }
 
@@ -110,6 +131,12 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
         }
     }
 
+    override fun onDestroyView() {
+        binding.includePostTravelLogFriends.rvTravelFriends.adapter = null
+        binding.includePostTravelLogVisibility.tlPostVisibility.removeOnTabSelectedListener(tabSelectedListener)
+        super.onDestroyView()
+    }
+
     private fun initRecyclerView() {
         binding.includePostTravelLogFriends.rvTravelFriends.run {
             addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_travel_friends_space))
@@ -133,7 +160,11 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
     private fun handleEvent(event: TravelJournalUpdateViewModel.Event) {
         when (event) {
             is TravelJournalUpdateViewModel.Event.OnEditTravelFriends -> {
-                // todo 프레그먼트간 이동
+                val action = TravelJournalUpdateFragmentDirections.actionTravelJournalUpdateFragmentToTravelFriendUpdateFragment(
+                    event.travelJournalUpdateDTO,
+                    event.travelFriends.toTypedArray()
+                )
+                findNavController().navigate(action)
             }
             is TravelJournalUpdateViewModel.Event.ShowDataPicker -> {
                 showDatePickerDialog(event.currentPeriod)
@@ -144,6 +175,10 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
             TravelJournalUpdateViewModel.Event.ClearDatePickerDialog -> {
                 datePickerDialog = null
                 dailyDatePickerDialog = null
+            }
+            TravelJournalUpdateViewModel.Event.SuccessUpdateJournal -> {
+                sendSnackBar("여행일지가 수정되었습니다.")
+                findNavController().popBackStack()
             }
         }
     }

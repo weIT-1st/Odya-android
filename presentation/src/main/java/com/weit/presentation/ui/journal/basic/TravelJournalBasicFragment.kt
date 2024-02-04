@@ -64,6 +64,7 @@ class TravelJournalBasicFragment(
     }
 
     private fun updateContent(contentId: Long) {
+
     }
 
     private fun deleteContent(contentId: Long) {

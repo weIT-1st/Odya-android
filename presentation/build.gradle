@@ -94,6 +94,8 @@ dependencies {
 
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'com.github.jgabrielfreitas:BlurImageView:1.0.1'
+
+    implementation 'com.airbnb.android:lottie:5.0.2'
 }
 
 secrets {

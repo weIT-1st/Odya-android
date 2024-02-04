@@ -4,22 +4,20 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isGone
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.orhanobut.logger.Logger
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentMyProfileBinding
 import com.weit.presentation.model.profile.lifeshot.LifeShotRequestDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.map.PinMode
 import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
-import com.weit.presentation.ui.journal.travel_journal.TravelJournalFragment
 import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
 import com.weit.presentation.ui.profile.favoriteplace.FavoritePlaceAdapter
 import com.weit.presentation.ui.profile.menu.ProfileMenuFragment
 import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalFriendAdapter
+import com.weit.presentation.ui.profile.reptraveljournal.TogetherFriendBottomFragment
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -50,6 +48,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     )
 
     private val repJournalFriendAdapter = RepTravelJournalFriendAdapter()
+    private var togetherFriendBottomFragment: TogetherFriendBottomFragment? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -245,8 +244,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
-                binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.isVisible = item?.travelCompanionSimpleResponses != null
-                //TODO 더보기 눌렀을 때 바텀시트 올라오기
 
                 repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map { it.profileUrl })
             }
@@ -313,6 +310,22 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                         )
                         .setReorderingAllowed(true)
                         .commit()
+
+                    binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.isGone =
+                        info.travelJournalCompanions.size < MAX_ABLE_SHOW_FRIENDS_NUM
+
+                    binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.setOnClickListener {
+                        if (togetherFriendBottomFragment == null) {
+                            togetherFriendBottomFragment = TogetherFriendBottomFragment(info.travelJournalCompanions)
+
+                        }
+                        if (togetherFriendBottomFragment?.isAdded?.not() == true) {
+                            togetherFriendBottomFragment?.show(
+                                requireActivity().supportFragmentManager,
+                                TogetherFriendBottomFragment.TAG,
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -356,5 +369,6 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
     companion object{
         const val DEFAULT_FAVORITE_PLACE_COUNT = 4
         const val NO_TRAVEL_JOURNAL_COUNT = 0
+        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
     }
 }

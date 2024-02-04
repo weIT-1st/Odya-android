@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.journal.friends
+package com.weit.presentation.ui.profile.reptraveljournal
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -8,13 +8,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
 import com.weit.presentation.R
-import com.weit.presentation.databinding.ItemFriendManageFollowBinding
+import com.weit.presentation.databinding.ItemTogetherFriendBinding
 
-class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(
+class TogetherFriendAdapter(
+    private val selectFriend: (TravelJournalCompanionsInfo) -> Unit,
+): ListAdapter<TravelJournalCompanionsInfo, TogetherFriendAdapter.ViewHolder>(
     diffUtil
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-        = ViewHolder(ItemFriendManageFollowBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+            = ViewHolder(ItemTogetherFriendBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -22,8 +24,13 @@ class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, Trave
     }
 
     inner class ViewHolder(
-        private val binding: ItemFriendManageFollowBinding
+        private val binding: ItemTogetherFriendBinding
     ): RecyclerView.ViewHolder(binding.root){
+        init{
+            binding.ivFriendFollow.setOnClickListener {
+                selectFriend(getItem(absoluteAdapterPosition))
+            }
+        }
         fun bind(item: TravelJournalCompanionsInfo) {
             binding.tvFriendName.text = item.nickname
             Glide.with(binding.root.context)

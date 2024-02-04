@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.input.nickname.nickname.LoginNicknameViewModel"/>
+            type="com.weit.presentation.ui.login.input.nickname.LoginNicknameViewModel"/>
 
     </data>
 

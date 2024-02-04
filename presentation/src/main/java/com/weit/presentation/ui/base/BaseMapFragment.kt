@@ -8,6 +8,8 @@ import androidx.databinding.ViewDataBinding
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.weit.presentation.R
 import kotlin.reflect.KProperty1
 
 abstract class BaseMapFragment<VB : ViewDataBinding>(
@@ -27,6 +29,9 @@ abstract class BaseMapFragment<VB : ViewDataBinding>(
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
+        map!!.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(requireContext(), R.raw.style_json),
+        )
     }
 
     override fun onStart() {

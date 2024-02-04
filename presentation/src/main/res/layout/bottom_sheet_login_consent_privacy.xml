@@ -7,7 +7,7 @@
 
         <variable
             name="vm"
-            type="com.weit.presentation.ui.login.consent.LoginConsentDialogViewModel" />
+            type="com.weit.presentation.ui.login.consent.privacy.LoginConsentPrivacyDialogViewModel" />
 
     </data>
 
@@ -33,28 +33,30 @@
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_terms_title"
-            style="@style/h3"
-            android:layout_width="match_parent"
+            android:textAppearance="@style/h3"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
+            android:layout_marginEnd="28dp"
             android:layout_marginTop="37dp"
-            tools:text="약관 타이틀"
+            tools:text="@string/login_consent_privacy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_bottom_sheet" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_terms_content"
-            style="@style/body2"
+            android:textAppearance="@style/body2"
+            android:text="@string/login_consent_privacy_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="37dp"
-            android:textColor="?attr/colorOnSurface"
+            android:layout_marginEnd="28dp"
+            android:layout_marginTop="36dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_terms_title"
-            tools:text="약관내용" />
+            tools:text="@string/login_consent_privacy_detail" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_terms_consent"

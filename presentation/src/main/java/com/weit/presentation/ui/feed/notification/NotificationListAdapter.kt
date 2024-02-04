@@ -179,7 +179,7 @@ class NotificationListAdapter(
 
     private fun getCreatedAt(context: Context, date: String): String {
 
-        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+        val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val dateTime = LocalDateTime.parse(date, dateFormat)
 
         val now = LocalDateTime.now()

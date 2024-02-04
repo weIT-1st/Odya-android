@@ -13,6 +13,7 @@ import com.weit.domain.usecase.image.GetCoordinateUserImageUseCase
 import com.weit.domain.usecase.place.GetCurrentPlaceUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetPlacesByCoordinateUseCase
+import com.weit.domain.usecase.topic.GetFavoriteTopicListUseCase
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +31,8 @@ class MapViewModel @Inject constructor(
     val getPlacesByCoordinateUseCase: GetPlacesByCoordinateUseCase,
     val getCurrentPlaceUseCase: GetCurrentPlaceUseCase,
     val getPlaceDetailUseCase: GetPlaceDetailUseCase,
-    val getCoordinateUserImageUseCase: GetCoordinateUserImageUseCase
+    val getCoordinateUserImageUseCase: GetCoordinateUserImageUseCase,
+    val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase
 ) : ViewModel() {
 
     private val _touchPlaceId = MutableStateFlow("")
@@ -50,7 +52,8 @@ class MapViewModel @Inject constructor(
 
     private val _odyaToggle = MutableStateFlow<Boolean>(false)
     val odyaToggle: StateFlow<Boolean> get() = _odyaToggle
-
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
     init {
         viewModelScope.launch {
             val current = getCurrentPlaceUseCase()
@@ -59,6 +62,7 @@ class MapViewModel @Inject constructor(
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
             }
         }
+        getTopic()
     }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
@@ -117,6 +121,25 @@ class MapViewModel @Inject constructor(
         } else {
             _odyaList.emit(list.filterNot { it.imageUserType == ImageUserType.OTHER })
         }
+    }
+
+    private fun getTopic() {
+        viewModelScope.launch {
+            val result = getFavoriteTopicListUseCase()
+            if (result.isSuccess) {
+                val list = result.getOrThrow()
+
+                if (list.isEmpty()) {
+                    _event.emit(Event.FirstLogin)
+                }
+            } else {
+                Log.d("getFavoriteTopic", "Get Favorite Topic Fail : ${result.exceptionOrNull()}")
+            }
+        }
+    }
+
+    sealed class Event {
+        object FirstLogin : Event()
     }
 
     companion object {

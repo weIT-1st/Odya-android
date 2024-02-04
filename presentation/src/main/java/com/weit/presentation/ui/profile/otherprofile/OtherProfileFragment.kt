@@ -3,6 +3,7 @@ package com.weit.presentation.ui.profile.otherprofile
 import android.os.Bundle
 import android.view.View
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -11,8 +12,10 @@ import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentFriendProfileBinding
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.profile.bookmarkjournal.ProfileBookmarkJournalAdapter
+import com.weit.presentation.ui.profile.myprofile.MyProfileFragment
 import com.weit.presentation.ui.profile.otherprofile.favoriteplace.OtherFavoritePlaceAdapter
 import com.weit.presentation.ui.profile.reptraveljournal.RepTravelJournalFriendAdapter
+import com.weit.presentation.ui.profile.reptraveljournal.TogetherFriendBottomFragment
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -46,6 +49,8 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
         showDetail = { moveToJournalDetail(it) },
         updateBookmarkState = { viewModel.updateBookmarkTravelJournalBookmarkState(it) }
     )
+    private var togetherFriendBottomFragment: TogetherFriendBottomFragment? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val userName = arguments?.getString("userName")
@@ -188,6 +193,9 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                     binding.itemProfileRepTravelJournal.root.visibility = View.VISIBLE
                     binding.viewJournalMemoryDecorationElev2.visibility = View.VISIBLE
                     binding.viewTabPlaceMyJourney.visibility = View.VISIBLE
+                    binding.layoutRepTravelJournal.setOnClickListener {
+                        moveToJournalDetail(item.travelJournalId)
+                    }
                 }else{
                     binding.tvProfileNoRepJournal.visibility = View.VISIBLE
                     binding.itemProfileRepTravelJournal.root.visibility = View.GONE
@@ -245,11 +253,44 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                 }
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.journalInfo.collectLatest { info ->
+                if (info != null) {
+                    childFragmentManager.beginTransaction()
+                        .add(
+                            com.weit.presentation.R.id.fragment_travel_journal_map,
+                            com.weit.presentation.ui.journal.map.TravelJournalMapFragment(
+                                travelJournalInfo = info,
+                                pinMode = com.weit.presentation.ui.journal.map.PinMode.IMAGE_PIN,
+                                isMapLine = true
+                            )
+                        )
+                        .setReorderingAllowed(true)
+                        .commit()
+
+                    binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.isGone =
+                        info.travelJournalCompanions.size < MAX_ABLE_SHOW_FRIENDS_NUM
+
+                    binding.itemProfileRepTravelJournal.btnItemMyJournalMoreFriend.setOnClickListener {
+                        if (togetherFriendBottomFragment == null) {
+                            togetherFriendBottomFragment = TogetherFriendBottomFragment(info.travelJournalCompanions)
+
+                        }
+                        if (togetherFriendBottomFragment?.isAdded?.not() == true) {
+                            togetherFriendBottomFragment?.show(
+                                requireActivity().supportFragmentManager,
+                                TogetherFriendBottomFragment.TAG,
+                            )
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun moveToJournalDetail(travelId: Long){
-//        val action = MemoryFragmentDirections.actionFragmentMemoryToFragmentTravelJournal(travelId)
-//        findNavController().navigate(action)
+        val action = OtherProfileFragmentDirections.actionOtherProfileFragmentToFragmentTravelJournal(travelId)
+        findNavController().navigate(action)
     }
 
     private fun handleEvent(event: OtherProfileViewModel.Event) {
@@ -275,5 +316,7 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
     companion object{
         const val DEFAULT_FAVORITE_PLACE_COUNT = 4
         const val NO_TRAVEL_JOURNAL_COUNT = 0
+        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
+
     }
 }

@@ -9,6 +9,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.favoritePlace.FavoritePlaceInfo
 import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.reptraveljournal.RepTravelJournalListInfo
 import com.weit.domain.model.reptraveljournal.RepTravelJournalRequest
 import com.weit.domain.model.user.LifeshotRequestInfo
@@ -19,6 +20,7 @@ import com.weit.domain.usecase.bookmark.GetMyJournalBookMarkUseCase
 import com.weit.domain.usecase.favoritePlace.DeleteFavoritePlaceUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFavoritePlacesUseCase
+import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.repjournal.GetMyRepTravelJournalListUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
@@ -50,7 +52,8 @@ class MyProfileViewModel @Inject constructor(
     private val getMyRepTravelJournalListUseCase: GetMyRepTravelJournalListUseCase,
     private val getMyJournalBookMarkUseCase: GetMyJournalBookMarkUseCase,
     private val createJournalBookMarkUseCase: CreateJournalBookMarkUseCase,
-    private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase
+    private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase,
+    private val getTravelJournalUseCase: GetTravelJournalUseCase,
 ) : ViewModel() {
 
     private val _bookMarkTravelJournals = MutableStateFlow<List<JournalBookMarkInfo>>(emptyList())
@@ -93,12 +96,16 @@ class MyProfileViewModel @Inject constructor(
         complete()
     }
 
+    private val _journalInfo = MutableStateFlow<TravelJournalInfo?>(null)
+    val journalInfo: StateFlow<TravelJournalInfo?> get() = _journalInfo
+
     fun initData() {
         viewModelScope.launch {
             lastImageId = null
             _lifeshots.value = emptyList()
             lastRepTravelJournalId = null
             _repTravelJournal.value = null
+            _journalInfo.value = null
             getUserUseCase().onSuccess {
                 user = it
                 getUserStatistics()
@@ -235,9 +242,17 @@ class MyProfileViewModel @Inject constructor(
             if (result.isSuccess) {
                 val newRepTravelJournal = result.getOrThrow().firstOrNull()
                 _repTravelJournal.emit(newRepTravelJournal)
+                if(newRepTravelJournal != null){
+                    val getJournalInfoResult = getTravelJournalUseCase(newRepTravelJournal.travelJournalId)
+                    if (getJournalInfoResult.isSuccess) {
+                        val info = getJournalInfoResult.getOrThrow()
+                        _journalInfo.emit(info)
+                    }else{
+                        handleError(result.exceptionOrNull() ?: UnKnownException())
+                    }
+                }
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
-
             }
         }
     }

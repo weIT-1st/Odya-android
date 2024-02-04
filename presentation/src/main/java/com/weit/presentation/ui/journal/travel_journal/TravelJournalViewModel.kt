@@ -27,7 +27,7 @@ class TravelJournalViewModel @AssistedInject constructor(
     private val getUserIdUseCase: GetUserIdUseCase,
     private val getTravelJournalUseCase: GetTravelJournalUseCase,
     private val deleteTravelJournalUseCase: DeleteTravelJournalUseCase,
-    @Assisted private val travelJournalId: Long
+    @Assisted private val travelJournalId: Long=0
 ) : ViewModel() {
     @AssistedFactory
     interface TravelJournalIdFactory {
@@ -46,13 +46,20 @@ class TravelJournalViewModel @AssistedInject constructor(
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
-    init {
+    private var journalId: Long = 0
+
+    fun initialize(savedJournalId : Long?) {
+        journalId = if(savedJournalId == null || savedJournalId == 0L){
+            travelJournalId
+        }else{
+            savedJournalId.toLong()
+        }
         initJournalInfo()
     }
 
     private fun initJournalInfo() {
         viewModelScope.launch {
-            val result = getTravelJournalUseCase(travelJournalId)
+            val result = getTravelJournalUseCase(journalId)
 
             if (result.isSuccess) {
                 val info = result.getOrThrow()
@@ -96,7 +103,7 @@ class TravelJournalViewModel @AssistedInject constructor(
     fun deleteTravelJournal() {
         viewModelScope.launch {
             Log.d("jomi", "click delete")
-            val result = deleteTravelJournalUseCase(travelJournalId)
+            val result = deleteTravelJournalUseCase(journalId)
 
             if (result.isSuccess) {
                 _event.emit(Event.DeleteTravelJournalSuccess)

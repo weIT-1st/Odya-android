@@ -47,7 +47,8 @@ class NotificationListFragment : BaseFragment<FragmentNotificationListBinding>(
             }
 
             is NotificationAction.OnClickTravelJournal -> {
-               //TODO 연결
+               val direction = NotificationListFragmentDirections.actionNotificationListFragmentToFragmentTravelJournal(action.journalId)
+                findNavController().navigate(direction)
             }
             is NotificationAction.OnClickOtherProfile -> {
                 val direction = NotificationListFragmentDirections.actionNotificationListFragmentToOtherProfileFragment(action.userName)

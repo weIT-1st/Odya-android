@@ -1,4 +1,4 @@
-package com.weit.presentation.ui.login.consent
+package com.weit.presentation.ui.login.consent.privacy
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginConsentDialogViewModel @Inject constructor(
+class LoginConsentPrivacyDialogViewModel @Inject constructor(
     private val getTermContentUseCase: GetTermContentUseCase,
     private val getTermListUseCase: GetTermListUseCase,
     private val setTermIdListUsecase: SetTermIdListUseCase,
@@ -30,7 +30,7 @@ class LoginConsentDialogViewModel @Inject constructor(
 
     private  val _termContent = MutableStateFlow<String>("")
     val termContent : StateFlow<String> get() = _termContent
-    private val _event = MutableEventFlow<LoginConsentDialogViewModel.Event>()
+    private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
     private val termIdList  = mutableSetOf<String>()

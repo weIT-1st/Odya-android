@@ -21,6 +21,7 @@ import com.weit.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
@@ -34,9 +35,6 @@ class FirebaseMessageService : FirebaseMessagingService() {
 
     @Inject
     lateinit var insertNotificationUseCase: InsertNotificationUseCase
-
-    @Inject
-    lateinit var getNotificationsUseCase: GetNotificationsUseCase
 
     private val scope = CoroutineScope(Dispatchers.Main)
 
@@ -52,7 +50,6 @@ class FirebaseMessageService : FirebaseMessagingService() {
     }
     override fun onNewToken(token: String) {
         scope.launch {
-            Logger.t("fcmtoken").i("$token")
             updateFcmTokenUseCase(token)
         }
     }
@@ -107,23 +104,33 @@ class FirebaseMessageService : FirebaseMessagingService() {
         scope.launch {
             val noti = getNotificationInfo(message)
             withContext(Dispatchers.IO) {
-               insertNotificationUseCase(noti)
+                insertNotificationUseCase(noti)
             }
         }
 
     }
 
+    private fun handleDataMessage(message: RemoteMessage) {
+        setNoti(message)
+        showNotification(message)
+    }
+
     override fun onMessageReceived(message: RemoteMessage) {
+        if (message.data.isNotEmpty()) {
+            handleDataMessage(message)
+        }
+    }
+
+    private fun showNotification(message: RemoteMessage) {
         val builder = NotificationCompat.Builder(this, getString(R.string.app_name))
             .setSmallIcon(R.drawable.ic_logo_black)
-            .setContentTitle(message.notification?.title)
-            .setContentText(message.notification?.body)
+            .setContentTitle(message.data["title"])
+            .setContentText(message.data["body"])
             .setContentIntent(createPendingIntent(message))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
 
         notificationManager.notify(0, builder.build())
-        setNoti(message)
     }
 
     private fun createPendingIntent(message: RemoteMessage): PendingIntent {
@@ -167,20 +174,20 @@ class FirebaseMessageService : FirebaseMessagingService() {
             }
             NotificationType.FOLLOWING_TRAVEL_JOURNAL.name -> {
                 val arguments = Bundle().apply {
-                    putString("travelJournalId", message.data["travelJournalId"])
+                    putString("journalId", message.data["travelJournalId"])
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)
-//                    addDestination(R.id.fragment_feed_detail)
+                    addDestination(R.id.fragment_travel_Journal)
                 }
             }
             NotificationType.TRAVEL_JOURNAL_TAG.name -> {
                 val arguments = Bundle().apply {
-                    putString("travelJournalId", message.data["travelJournalId"])
+                    putString("journalId", message.data["travelJournalId"])
                 }
                 deepLinkBuilder.apply {
                     setArguments(arguments)
-//                    addDestination(R.id.fragment_feed_detail)
+                    addDestination(R.id.fragment_travel_Journal)
                 }
             }
             NotificationType.FOLLOWER_ADD.name -> {
@@ -202,5 +209,8 @@ class FirebaseMessageService : FirebaseMessagingService() {
         return randomUUID.toString().replace("-", "").toUpperCase()
     }
 
-
+    override fun onDestroy() {
+        scope.cancel()
+        super.onDestroy()
+    }
 }

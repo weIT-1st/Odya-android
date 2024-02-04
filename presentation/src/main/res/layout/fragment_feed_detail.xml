@@ -63,6 +63,7 @@
                     android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="@+id/view_community_content"
                     app:layout_constraintTop_toTopOf="@+id/view_community_content"
+                    app:image_uri="@{vm.feed.writer.profile.url}"
                     app:profile_background="@{vm.feed.writer.profile}" />
 
 

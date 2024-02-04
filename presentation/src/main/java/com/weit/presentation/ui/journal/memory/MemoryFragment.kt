@@ -237,6 +237,8 @@ class MemoryFragment : BaseFragment<FragmentMemoryBinding>(
             is MyJournalViewModel.Event.MoveToJournal -> {
                 moveToJournalDetail(event.travelJournalId)
             }
+
+            else -> {}
         }
     }
 }

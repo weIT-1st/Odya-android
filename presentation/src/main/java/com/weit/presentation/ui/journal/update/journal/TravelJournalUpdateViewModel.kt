@@ -1,18 +1,13 @@
 package com.weit.presentation.ui.journal.update.journal
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.follow.FollowUserContent
-import com.weit.domain.model.journal.TravelJournalCompanionsInfo
 import com.weit.domain.model.journal.TravelJournalUpdateInfo
 import com.weit.domain.model.user.UserProfile
-import com.weit.domain.usecase.journal.GetTravelJournalUseCase
-import com.weit.domain.usecase.journal.UpdateTravelJournalContentUseCase
 import com.weit.domain.usecase.journal.UpdateTravelJournalUseCase
 import com.weit.presentation.model.Visibility
-import com.weit.presentation.model.journal.TravelJournalUpdateCompanionsInfo
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
 import com.weit.presentation.model.post.travellog.FollowUserContentDTO
 import com.weit.presentation.model.post.travellog.TravelPeriod

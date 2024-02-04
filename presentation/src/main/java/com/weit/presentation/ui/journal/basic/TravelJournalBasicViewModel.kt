@@ -1,32 +1,41 @@
 package com.weit.presentation.ui.journal.basic
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.usecase.journal.DeleteTravelJournalContentUseCase
 import com.weit.domain.usecase.journal.UpdateTravelJournalContentUseCase
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.model.journal.TravelJournalDetailInfo
+import com.weit.presentation.model.journal.TravelJournalUpdateDTO
+import com.weit.presentation.ui.util.MutableEventFlow
+import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class TravelJournalBasicViewModel @AssistedInject constructor(
     @Assisted private val travelJournalInfo: TravelJournalInfo,
     private val deleteTravelJournalContentUseCase: DeleteTravelJournalContentUseCase,
-    private val updateTravelJournalContentUseCase: UpdateTravelJournalContentUseCase
-): ViewModel() {
+) : ViewModel() {
 
     @AssistedFactory
-    interface TravelJournalInfoFactory{
+    interface TravelJournalInfoFactory {
         fun crate(travelJournalInfo: TravelJournalInfo): TravelJournalBasicViewModel
     }
 
     private val _journalContents = MutableStateFlow<List<TravelJournalDetailInfo>>(emptyList())
     val journalContents: StateFlow<List<TravelJournalDetailInfo>> get() = _journalContents
+
+    private val _event = MutableEventFlow<Event>()
+    val event = _event.asEventFlow()
 
     init {
         initContentsInfo()
@@ -48,9 +57,10 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
         }
     }
 
-    fun deleteContent(contentId : Long) {
-        viewModelScope.launch{
-            val result = deleteTravelJournalContentUseCase(travelJournalInfo.travelJournalId, contentId)
+    fun deleteContent(contentId: Long) {
+        viewModelScope.launch {
+            val result =
+                deleteTravelJournalContentUseCase(travelJournalInfo.travelJournalId, contentId)
 
             if (result.isSuccess) {
 
@@ -60,10 +70,32 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
         }
     }
 
-    fun updateTravelJournalContent() {
+    fun updateTravelJournalContent(contentId: Long) {
         viewModelScope.launch {
-            
+            val info = travelJournalInfo.travelJournalContents.find { it.travelJournalContentId == contentId }
+            info?.let {
+                val travelJournalUpdateDTO = TravelJournalContentUpdateDTO(
+                    travelJournalInfo.travelJournalId,
+                    info.travelJournalContentId,
+                    LocalDate.parse(info.travelDate, DateTimeFormatter.ISO_DATE),
+                    LocalDate.parse(travelJournalInfo.travelStartDate, DateTimeFormatter.ISO_DATE),
+                    LocalDate.parse(travelJournalInfo.travelEndDate, DateTimeFormatter.ISO_DATE),
+                    info.content,
+                    info.placeDetail.name,
+                    info.placeDetail.placeId,
+                    info.latitude,
+                    info.longitude,
+                    info.travelJournalContentImages.map { it.contentImageUrl },
+                )
+                _event.emit(Event.MoveToUpdate(travelJournalUpdateDTO))
+            }
         }
+    }
+
+    sealed class Event {
+        data class MoveToUpdate(
+            val travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO
+        ) : Event()
     }
 
     companion object {

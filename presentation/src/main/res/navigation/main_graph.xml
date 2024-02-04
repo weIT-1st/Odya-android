@@ -140,6 +140,9 @@
         <action
             android:id="@+id/action_fragment_travel_Journal_to_travelJournalUpdateFragment"
             app:destination="@id/travelJournalUpdateFragment" />
+        <action
+            android:id="@+id/action_fragment_travel_Journal_to_travelJournalContentUpdateFragment"
+            app:destination="@id/travelJournalContentUpdateFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_detail"
@@ -433,5 +436,27 @@
         <action
             android:id="@+id/action_travelFriendUpdateFragment_to_travelJournalUpdateFragment"
             app:destination="@id/travelJournalUpdateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/travelJournalContentUpdateFragment"
+        android:name="com.weit.presentation.ui.journal.update.content.TravelJournalContentUpdateFragment"
+        android:label="TravelJournalContentUpdateFragment" >
+        <argument
+            android:name="travelJournalUpdateContentDTO"
+            app:argType="com.weit.presentation.model.journal.TravelJournalContentUpdateDTO" />
+        <action
+            android:id="@+id/action_travelJournalContentUpdateFragment_to_selectPlaceUpdateFragment"
+            app:destination="@id/selectPlaceUpdateFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectPlaceUpdateFragment"
+        android:name="com.weit.presentation.ui.journal.update.content.selectplace.SelectPlaceUpdateFragment"
+        android:label="SelectPlaceUpdateFragment" >
+        <argument
+            android:name="imagePlaces"
+            app:argType="com.weit.presentation.model.post.place.PlacePredictionDTO[]" />
+        <action
+            android:id="@+id/action_selectPlaceUpdateFragment_to_travelJournalContentUpdateFragment"
+            app:destination="@id/travelJournalContentUpdateFragment" />
     </fragment>
 </navigation>

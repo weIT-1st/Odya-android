@@ -6,6 +6,7 @@ import androidx.fragment.app.viewModels
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetialModelBinding
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -15,7 +16,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TravelJournalAlbumFragment(
-    private val travelJournalInfo: TravelJournalInfo
+    private val travelJournalInfo: TravelJournalInfo,
+    val moveToTravelJournalContentsUpdate: (TravelJournalContentUpdateDTO) -> Unit
 ): BaseFragment<ItemJournalDetialModelBinding>(
     ItemJournalDetialModelBinding::inflate
 ) {

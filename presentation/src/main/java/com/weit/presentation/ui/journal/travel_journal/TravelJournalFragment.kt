@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -146,7 +147,11 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         val tabLayout = binding.tlJournalDetailChooseModel
 
         viewPager.apply {
-            adapter = TravelJournalModelAdapter(childFragmentManager, lifecycle, info)
+            adapter = TravelJournalModelAdapter(childFragmentManager, lifecycle, info) {
+                moveToTravelJournalContentsUpdate(
+                    it
+                )
+            }
             isUserInputEnabled = false
         }
 
@@ -187,6 +192,13 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
                 viewModel.deleteTravelJournal()
             }
             .show()
+    }
+
+    private fun moveToTravelJournalContentsUpdate(travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO) {
+        val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalContentUpdateFragment(
+            travelJournalContentUpdateDTO
+        )
+        findNavController().navigate(action)
     }
 
     private fun handleEvent(event: TravelJournalViewModel.Event) {

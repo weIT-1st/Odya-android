@@ -23,13 +23,13 @@
             tools:title="day 1">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/tb_update_journal_content_complete"
+                android:id="@+id/btn_update_journal_content_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:textAppearance="@style/body1"
                 android:textColor="@color/primary"
                 android:text="@string/update_travel_log_complete"
-                android:backgroundTint="@color/background_normal"
+                android:backgroundTint="@android:color/transparent"
                 android:layout_gravity="end"
                 android:layout_marginEnd="20dp"/>
         </com.google.android.material.appbar.MaterialToolbar>
@@ -75,7 +75,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tb_update_journal_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tv_update_journal_content_pictures"
+            android:id="@+id/rv_update_journal_content_pictures"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

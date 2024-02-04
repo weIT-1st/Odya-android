@@ -3,10 +3,12 @@ package com.weit.presentation.ui.journal.basic
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.ItemJournalDetialModelBinding
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -16,7 +18,8 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TravelJournalBasicFragment(
-    private val travelJournalInfo: TravelJournalInfo
+    private val travelJournalInfo: TravelJournalInfo,
+    val moveToTravelJournalContentsUpdate: (TravelJournalContentUpdateDTO) -> Unit
 ): BaseFragment<ItemJournalDetialModelBinding>(
     ItemJournalDetialModelBinding::inflate
 ) {
@@ -49,6 +52,11 @@ class TravelJournalBasicFragment(
                 travelJournalBasicAdapter.submitList(info)
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest { event ->
+                handleEvent(event)
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -64,7 +72,7 @@ class TravelJournalBasicFragment(
     }
 
     private fun updateContent(contentId: Long) {
-
+        viewModel.updateTravelJournalContent(contentId)
     }
 
     private fun deleteContent(contentId: Long) {
@@ -79,5 +87,13 @@ class TravelJournalBasicFragment(
                 dialog.dismiss()
             }
             .show()
+    }
+
+    private fun handleEvent(event: TravelJournalBasicViewModel.Event) {
+        when (event) {
+            is TravelJournalBasicViewModel.Event.MoveToUpdate -> {
+                moveToTravelJournalContentsUpdate(event.travelJournalContentUpdateDTO)
+            }
+        }
     }
 }

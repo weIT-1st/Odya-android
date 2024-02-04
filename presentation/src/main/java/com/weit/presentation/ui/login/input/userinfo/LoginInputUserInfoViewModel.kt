@@ -78,12 +78,12 @@ class LoginInputUserInfoViewModel @Inject constructor(
     fun setGender(gender: GenderType) {
         viewModelScope.launch {
             if (gender != GenderType.IDLE){
-                val result = setGenderUseCase(gender)
-                if (result.isSuccess){
-                    _gender.emit(gender)
-                } else {
-                    _event.emit(Event.GenderNotSelected)
-                }
+//                val result = setGenderUseCase(gender)
+//                if (result.isSuccess){
+//                    _gender.emit(gender)
+//                } else {
+//                    _event.emit(Event.GenderNotSelected)
+//                }
             }
         }
     }

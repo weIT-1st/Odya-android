@@ -2,7 +2,7 @@ package com.weit.data.repository.place
 
 import com.weit.data.model.map.Place
 import com.weit.data.source.ImageDataSource
-import com.weit.data.source.PlaceDataSource
+import com.weit.data.source.PlaceDateSource
 import com.weit.data.util.exception
 import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.exception.ImageNotFoundException
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 
 class PlaceRepositoryImpl @Inject constructor(
-    private val dataSource: PlaceDataSource,
+    private val dataSource: PlaceDateSource,
     private val imageDataSource: ImageDataSource,
 ) : PlaceRepository {
 

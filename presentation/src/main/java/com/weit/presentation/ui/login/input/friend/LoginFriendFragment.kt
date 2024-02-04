@@ -58,7 +58,7 @@ class LoginFriendFragment: BaseFragment<DialogLoginFriendBinding>(
     private fun initMayKnowFriendRV() {
         binding.rvLoginFriend.apply {
             adapter = mayKnowFriendAdapter
-            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_may_know_friend_space))
+//            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_may_know_friend_space))
             addOnScrollListener(infinityScrollListener)
         }
     }
@@ -69,8 +69,8 @@ class LoginFriendFragment: BaseFragment<DialogLoginFriendBinding>(
                 findNavController().popBackStack()
             }
             LoginFriendViewModel.Event.StartOdya -> {
-                val action = LoginFriendFragmentDirections.actionLoginFriendFragmentToFragmentMap()
-                findNavController().navigate(action)
+//                val action = LoginFriendFragmentDirections.actionLoginFriendFragmentToFragmentMap()
+//                findNavController().navigate(action)
             }
 
             is LoginFriendViewModel.Event.CreateFollowSuccess -> {

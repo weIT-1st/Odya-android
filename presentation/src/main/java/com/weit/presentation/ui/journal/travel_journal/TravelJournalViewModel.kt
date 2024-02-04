@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.journal.travel_journal
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -94,6 +95,7 @@ class TravelJournalViewModel @AssistedInject constructor(
 
     fun deleteTravelJournal() {
         viewModelScope.launch {
+            Log.d("jomi", "click delete")
             val result = deleteTravelJournalUseCase(travelJournalId)
 
             if (result.isSuccess) {

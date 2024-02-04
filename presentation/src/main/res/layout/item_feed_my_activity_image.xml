@@ -13,7 +13,6 @@
             android:id="@+id/iv_feed_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scaleType="centerCrop"
             app:layout_constraintDimensionRatio="1"
             tools:src="@drawable/ic_heart"
             app:layout_constraintBottom_toBottomOf="parent"

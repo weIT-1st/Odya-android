@@ -30,8 +30,8 @@ class LoginConsentDeviceFragment: BaseFragment<FragmentLoginConsentDeviceBinding
     }
 
     private fun consentPrivacyBottomSheetUp(){
-        val action = LoginConsentDeviceFragmentDirections.actionLoginConsentDeviceFragmentToLoginConsentPrivacyDialogFragment()
-        findNavController().navigate(action)
+//        val action = LoginConsentDeviceFragmentDirections.actionLoginConsentDeviceFragmentToLoginConsentPrivacyDialogFragment()
+//        findNavController().navigate(action)
     }
 
     private fun handleEvent(event: LoginConsentDeviceViewModel.Event){

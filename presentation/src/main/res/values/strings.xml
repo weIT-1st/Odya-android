@@ -48,16 +48,31 @@
         <item>여성</item>
     </string-array>
     <string name="login_loading">메인페이지를\n생성중이에요</string>
-    
-    <string name="login_topic_question">%s님은\n어떤 여행을 좋아하시나요?</string>
-    <string name="login_topic_explain">취향을 선택하고 나에게 맞는 홈을 받아보세요</string>
-    <string name="login_topic_minimum">최소 3개 이상</string>
+    <string name="sign_complete">등록 완료</string>
 
-    <string name="login_friend_active_friend">활동중인 친구를\n오댜에서 만나요!</string>
-    <string name="login_friend_recommend">연락처에 있는 친구를 추천해드려요</string>
+    <string name="login_topic_sea">바다여행</string>
+    <string name="login_topic_camping">캠핑여행</string>
+    <string name="login_topic_hobby">취미여행</string>
+    <string name="login_topic_food">식도락</string>
+    <string name="login_topic_rest">휴양지</string>
+    <string name="login_topic_winter">겨울여행</string>
+    <string name="login_topic_summer">여름여행</string>
+    <string name="login_topic_flower">꽃놀이</string>
+    <string name="login_topic_fall">가을여행</string>
+    <string name="login_topic_festival">지역축제</string>
+    <string name="login_topic_family">가족여행</string>
+    <string name="login_topic_couple">커플여행</string>
+    <string name="login_topic_alone">나홀로여행</string>
+    <string name="login_topic_country">촌캉스</string>
 
     <string name="sign_up">등록하기</string>
-    <string name="sign_complete">등록 완료</string>
+
+    <string name="login_consent_all">전체 동의</string>
+    <string name="login_random_name">랜덤 닉네임</string>
+    <string name="login_preview_third_title">한 눈에 담아보는\n나의 여행 동선</string>
+    <string name="login_preview_third_content">동선을 보여드려요</string>
+    <string name="login_preview_third_start">오댜 시작하기</string>
+
     <string name="text_home">홈</string>
     <string name="text_memory">내추억</string>
     <string name="text_feed">피드</string>
@@ -88,7 +103,7 @@
     <!-- maykonw_friend -->
     <string name="mayknow_friend_title">알 수도 있는 친구</string>
 
-    <!--  review  -->로
+    <!--  review  -->
     <string name="create_review_title">리뷰 작성</string>
     <string name="edit_review_title">리뷰 수정</string>
     <string name="review_detail_hint">리뷰를 작성해주세요(30자 이내)</string>
@@ -147,6 +162,11 @@
     <string name="date_picker_daily">%d년 %d월 %d일 %s</string>
     <string name="date_picker_daily_empty">날짜를 선택해주세요</string>
 
+    <!--  등록 모달   -->
+    <string name="post_travel_log_registration_modal_title">작성한 여행일지를\n등록하시겠습니까?</string>
+    <string name="post_travel_log_registration_modal_negative">취소</string>
+    <string name="post_travel_log_registration_modal_positive">등록</string>
+
     <!--접근권한 관련 -->
     <string name="visibility_title">접근권한</string>
     <string name="visibility_all">전체공개</string>
@@ -170,12 +190,18 @@
     <string name="place_recent_review_sort">최신순</string>
     <string name="place_write_review">리뷰 작성</string>
     <string name="place_my_review">내가 작성한 리뷰</string>
+    <string name="place_more_review">댓글 더보기</string>
 
     <string name="place_journey">여행일지</string>
     <string name="place_journey_date">%s ~ %s</string>
     <string name="place_my_journal">나의 여행일지</string>
+    <string name="place_journal_more_friend">더 보기</string>
     <string name="place_friend_journal">친구의 여행일지</string>
     <string name="place_recommend_journal">추천 여행일지</string>
+
+    <string name="place_no_journal">여행일지가 없어요.</string>
+    <string name="place_no_review">아직 리뷰가 없어요</string>
+    <string name="place_no_community">아직 개시물이 없어요</string>
 
     <string name="place_community">커뮤니티</string>
 
@@ -207,6 +233,8 @@
     <string name="profile_no_rep_journal">대표 여행일지가 없어요.</string>
     <string name="profile_no_journal">여행일지가 없어요.</string>
     <string name="profile_no_favorite_place">관심장소가 없어요.</string>
+    <string name="profile_no_lifeshot">인생샷이 없어요.</string>
+    <string name="profile_no_post">아직 게시물이 없어요.</string>
 
 
     <!-- lifeshot -->
@@ -280,6 +308,14 @@
     <string name="feed_travel_journal_visibility_content">공개된 여행일지만 연동 가능합니다.</string>
     <string name="feed_travel_journal_visibility_update">변경하기</string>
 
+    <!-- 알림 -->
+    <string name="notification_title">알림</string>
+    <string name="notification_feed_write">%s 님이 &lt;span style=\"color:#FFD41F\">피드&lt;/span>를 작성했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_oyda">%s 님께 &lt;span style=\"color:#FFD41F\">오댜&lt;/span>를 받았습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_feed_comment">%s 님이 &lt;span style=\"color:#FFD41F\">댓글&lt;/span>을남겼습니다 : %s &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_travel_tag">%s 님이 &lt;span style=\"color:#FFD41F\">여행일지&lt;/span>에서 회원님을 태그했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_travel_write">%s 님이 &lt;span style=\"color:#FFD41F\">여행일지&lt;/span>를 작성했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
+    <string name="notification_follow">%s 님이 회원님을 &lt;span style=\"color:#FFD41F\">팔로우&lt;/span>했습니다 &lt;span style=\"color:#99FFFFFF\">· %s&lt;/span></string>
     <!--  setting  -->
     <string name="setting_title">환경설정</string>
     <string name="setting_update_user_info">회원정보 수정</string>
@@ -295,6 +331,12 @@
     <string name="setting_location_detail">해당 기능을 끄면 여행일지의 동선이 간략화 됩니다.</string>
     <string name="setting_version">버전 정보</string>
 
+    <string name="login_topic_question">%s님은\n어떤 여행을 좋아하시나요?</string>
+    <string name="login_topic_explain">취향을 선택하고 나에게 맞는 홈을 받아보세요</string>
+    <string name="login_topic_minimum">최소 3개 이상</string>
+
+    <string name="login_friend_active_friend">활동중인 친구를\n오댜에서 만나요!</string>
+    <string name="login_friend_recommend">연락처에 있는 친구를 추천해드려요</string>
     <!--  update_user_info  -->
     <string name="update_info_title">회원 정보 수정</string>
     <string name="update_info_nickname">닉네임</string>

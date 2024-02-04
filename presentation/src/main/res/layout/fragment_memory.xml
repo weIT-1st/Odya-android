@@ -15,213 +15,237 @@
             type="com.weit.domain.model.user.User" />
     </data>
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_travel_log_write"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="end|bottom"
+            android:backgroundTint="@color/primary"
+            android:src="@drawable/ic_writing_pen"
+            android:tint="@color/label_reversed"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="56dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gl_journal_memory_start"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_begin="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gl_journal_memory_end"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintGuide_end="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <include
-                android:id="@+id/include_journal_memory_no_journal"
-                layout="@layout/fragment_feed_post_no_travellog"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_journal_memory"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="48dp"
-                android:layout_marginEnd="36dp"
-                android:text="@string/journal_memory_last_travel"
-                android:textAppearance="@style/h3"
-                android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toStartOf="@id/iv_journal_memory_my_profile"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/include_journal_memory_no_journal"
-                tools:text="이은재님,\n지난 여행을 다시 볼까요?" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_journal_memory_my_profile"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                app:image_uri="@{user.profile.url}"
-                app:profile_background="@{user.profile}"
-                app:layout_constraintBottom_toBottomOf="@+id/tv_journal_memory"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintTop_toTopOf="@+id/tv_journal_memory"
-                app:layout_constraintVertical_bias="0.487"
-                app:shapeAppearance="@style/ShapeableImageViewCircle"
-                tools:src="@tools:sample/avatars" />
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ly_journal_memory_decoration"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="36dp"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintTop_toBottomOf="@id/tv_journal_memory">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <View
-                    android:id="@+id/view_journal_memory_decoration_elev1"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:background="@drawable/corners_top_8"
-                    android:backgroundTint="@color/label_reversed_normal"
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_journal_memory_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintGuide_begin="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/gl_journal_memory_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintGuide_end="20dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <include
+                    android:id="@+id/include_journal_memory_no_journal"
+                    layout="@layout/fragment_feed_post_no_travellog"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"/>
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                <View
-                    android:id="@+id/view_journal_memory_decoration_elev2"
-                    android:layout_width="match_parent"
-                    android:layout_height="24dp"
-                    android:background="@drawable/corners_top_8"
-                    android:backgroundTint="@color/label_inactive"
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_journal_memory"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="48dp"
+                    android:layout_marginEnd="36dp"
+                    android:text="@string/journal_memory_last_travel"
+                    android:textAppearance="@style/h3"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintEnd_toStartOf="@id/iv_journal_memory_my_profile"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/include_journal_memory_no_journal"
+                    tools:text="이은재님,\n지난 여행을 다시 볼까요?" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/iv_journal_memory_my_profile"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:image_uri="@{user.profile.url}"
+                    app:profile_background="@{user.profile}"
+                    app:layout_constraintBottom_toBottomOf="@+id/tv_journal_memory"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintTop_toTopOf="@+id/tv_journal_memory"
+                    app:layout_constraintVertical_bias="0.487"
+                    app:shapeAppearance="@style/ShapeableImageViewCircle"
+                    tools:src="@tools:sample/avatars" />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/ly_journal_memory_decoration"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="36dp"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintTop_toBottomOf="@id/tv_journal_memory">
+
+                    <View
+                        android:id="@+id/view_journal_memory_decoration_elev1"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:background="@drawable/corners_top_8"
+                        android:backgroundTint="@color/label_reversed_normal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"/>
+
+                    <View
+                        android:id="@+id/view_journal_memory_decoration_elev2"
+                        android:layout_width="match_parent"
+                        android:layout_height="24dp"
+                        android:background="@drawable/corners_top_8"
+                        android:backgroundTint="@color/label_inactive"
+                        android:layout_marginTop="-12dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view_journal_memory_decoration_elev1"/>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <include
+                    android:id="@+id/include_journal_memory_last_journal"
+                    layout="@layout/item_journal_memory_last_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="-12dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_journal_memory_decoration_elev1"/>
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/ly_journal_memory_decoration"
+                    />
 
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_journal_memory_my_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="52dp"
+                    android:text="@string/journal_memory_my_travel"
+                    android:textAppearance="@style/h4"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/include_journal_memory_last_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_journal_memory_my_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@id/tv_journal_memory_my_journal"
+                    tools:itemCount="2"
+                    tools:listitem="@layout/item_journal_memory_my_journal" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_journal_memory_bookmark_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="52dp"
+                    android:text="@string/journal_memory_bookmark_travel"
+                    android:textAppearance="@style/h4"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_journal_memory_my_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_journal_memory_bookmark_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_bookmark_journal"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_journal_memory_bookmark_journal" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_journal_memory_tag_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="52dp"
+                    android:text="@string/journal_memory_tag_travel"
+                    android:textAppearance="@style/h4"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@id/rv_journal_memory_bookmark_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_journal_memory_tag_journal"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_tag_journal"
+                    tools:itemCount="4"
+                    tools:listitem="@layout/item_journal_memory_tag_journal" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_journal_memory_my_review"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="52dp"
+                    android:text="@string/journal_memory_my_review"
+                    android:textAppearance="@style/h4"
+                    android:textColor="@color/label_normal"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_journal_memory_tag_journal" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_journal_memory_my_review"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="32dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
+                    app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
+                    app:layout_constraintTop_toBottomOf="@id/tv_journal_memory_my_review"
+                    tools:itemCount="3"
+                    tools:listitem="@layout/item_my_review" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
-            <include
-                android:id="@+id/include_journal_memory_last_journal"
-                layout="@layout/item_journal_memory_last_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="-12dp"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/ly_journal_memory_decoration"
-                />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_journal_memory_my_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
-                android:text="@string/journal_memory_my_travel"
-                android:textAppearance="@style/h4"
-                android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/include_journal_memory_last_journal" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_journal_memory_my_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@id/tv_journal_memory_my_journal"
-                tools:itemCount="2"
-                tools:listitem="@layout/item_journal_memory_my_journal" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_journal_memory_bookmark_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
-                android:text="@string/journal_memory_bookmark_travel"
-                android:textAppearance="@style/h4"
-                android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/rv_journal_memory_my_journal" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_journal_memory_bookmark_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_bookmark_journal"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_journal_memory_bookmark_journal" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_journal_memory_tag_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
-                android:text="@string/journal_memory_tag_travel"
-                android:textAppearance="@style/h4"
-                android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@id/rv_journal_memory_bookmark_journal" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_journal_memory_tag_journal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:orientation="horizontal"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="@+id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/tv_journal_memory_tag_journal"
-                tools:itemCount="4"
-                tools:listitem="@layout/item_journal_memory_tag_journal" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_journal_memory_my_review"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="52dp"
-                android:text="@string/journal_memory_my_review"
-                android:textAppearance="@style/h4"
-                android:textColor="@color/label_normal"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@+id/rv_journal_memory_tag_journal" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_journal_memory_my_review"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="@id/gl_journal_memory_end"
-                app:layout_constraintStart_toStartOf="@id/gl_journal_memory_start"
-                app:layout_constraintTop_toBottomOf="@id/tv_journal_memory_my_review"
-                tools:itemCount="3"
-                tools:listitem="@layout/item_my_review" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
 </layout>

@@ -5,14 +5,16 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.weit.domain.model.journal.TravelJournalCompanionsInfo
-import com.weit.presentation.databinding.ItemRoundProfileBigBinding
+import com.weit.presentation.R
+import com.weit.presentation.databinding.ItemFriendManageFollowBinding
 
 class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, TravelJournalFriendAdapter.ViewHolder>(
     diffUtil
 ) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-        = ViewHolder(ItemRoundProfileBigBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        = ViewHolder(ItemFriendManageFollowBinding.inflate(LayoutInflater.from(parent.context), parent, false))
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
@@ -20,11 +22,20 @@ class TravelJournalFriendAdapter: ListAdapter<TravelJournalCompanionsInfo, Trave
     }
 
     inner class ViewHolder(
-        private val binding: ItemRoundProfileBigBinding
+        private val binding: ItemFriendManageFollowBinding
     ): RecyclerView.ViewHolder(binding.root){
         fun bind(item: TravelJournalCompanionsInfo) {
-            //todo 수정
-//            binding.profile = item
+            binding.tvFriendName.text = item.nickname
+            Glide.with(binding.root.context)
+                .load(item.profileUrl)
+                .placeholder(R.color.system_inactive)
+                .into(binding.ivFriendProfile)
+
+            if (item.isFollowing) {
+                binding.ivFriendFollow.setBackgroundResource(R.drawable.bt_following)
+            } else {
+                binding.ivFriendFollow.setBackgroundResource(R.drawable.bt_follow)
+            }
         }
     }
     companion object{

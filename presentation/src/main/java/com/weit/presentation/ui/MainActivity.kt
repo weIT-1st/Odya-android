@@ -8,6 +8,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase
@@ -35,6 +37,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
 
     @Inject
     lateinit var pickImageUseCase: PickImageUseCase
+
+
 
     private val destinationChangedListener =
         NavController.OnDestinationChangedListener { _, destination, _ ->
@@ -79,8 +83,8 @@ class MainActivity : BaseActivity<ActivityMainBinding>(ActivityMainBinding::infl
         startForegroundService(serviceIntent)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        navController.removeOnDestinationChangedListener(destinationChangedListener)
-    }
+//    override fun onDestroy() {
+//        navController.removeOnDestinationChangedListener(destinationChangedListener)
+//        super.onDestroy()
+//    }
 }

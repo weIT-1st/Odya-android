@@ -1,6 +1,7 @@
 package com.weit.data.repository.bookmark
 
 import android.content.res.Resources.NotFoundException
+import com.orhanobut.logger.Logger
 import com.weit.data.source.BookMarkDataSource
 import com.weit.data.util.exception
 import com.weit.domain.model.bookmark.JournalBookMarkInfo
@@ -32,6 +33,11 @@ class BookMarkRepositoryImpl @Inject constructor(
         lastId: Long?,
         sortType: String?
     ): Result<List<JournalBookMarkInfo>> {
+
+        if(lastId == null){
+            hasNextMyBookMark.set(true)
+        }
+
         if (hasNextMyBookMark.get().not()){
             return Result.failure(NoMoreItemException())
         }
@@ -48,7 +54,7 @@ class BookMarkRepositoryImpl @Inject constructor(
             hasNextMyBookMark.set(myJournals.hasNext)
             Result.success(myJournals.content.map {
                 JournalBookMarkInfo(
-                    it.travelJournalBookMarkId,
+                    it.travelJournalBookmarkId,
                     it.travelJournalId,
                     it.title,
                     it.travelStartDate,
@@ -58,10 +64,13 @@ class BookMarkRepositoryImpl @Inject constructor(
                         it.writer.nickname,
                         it.writer.profile,
                         it.writer.isFollowing
-                    )
+                    ),
+                    it.isBookmarked
                 )
             })
         } else {
+            Logger.t("MainTest").i("${result.exceptionOrNull()}")
+
             Result.failure(handleBookMarkError(result.exception()))
         }
     }
@@ -72,6 +81,9 @@ class BookMarkRepositoryImpl @Inject constructor(
         lastId: Long?,
         sortType: String?
     ): Result<List<JournalBookMarkInfo>> {
+        if(lastId == null){
+            hasNextUserBookMark.set(true)
+        }
         if (hasNextUserBookMark.get().not()){
             return Result.failure(NoMoreItemException())
         }
@@ -89,7 +101,7 @@ class BookMarkRepositoryImpl @Inject constructor(
             hasNextUserBookMark.set(userJournal.hasNext)
             Result.success(userJournal.content.map{
                 JournalBookMarkInfo(
-                    it.travelJournalBookMarkId,
+                    it.travelJournalBookmarkId,
                     it.travelJournalId,
                     it.title,
                     it.travelStartDate,
@@ -99,7 +111,8 @@ class BookMarkRepositoryImpl @Inject constructor(
                         it.writer.nickname,
                         it.writer.profile,
                         it.writer.isFollowing
-                    )
+                    ),
+                    it.isBookmarked
                 )
             })
         } else {

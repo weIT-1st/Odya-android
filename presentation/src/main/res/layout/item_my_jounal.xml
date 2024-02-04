@@ -3,30 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <data>
-
-    </data>
-
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="324dp"
-        android:layout_height="280dp"
-        android:background="@drawable/corners_all_8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/corners_all_12"
         android:clipToOutline="true">
 
-        <ImageView
-            android:id="@+id/iv_item_my_journey_thumbnail"
+        <include
+            android:id="@+id/include_item_my_journal_map"
+            layout="@layout/item_journal_map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/haeundae"/>
-        
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_item_my_journal_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/place_journey_date"
             android:textAppearance="@style/h6"
             android:textColor="@color/label_normal"
             android:maxLines="1"
@@ -50,6 +45,32 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_item_my_journal_title"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="2023.08.01 ~ 08.12"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toStartOf="@id/btn_item_my_journal_more_friend"
+            app:layout_constraintTop_toTopOf="@id/btn_item_my_journal_more_friend"
+            app:layout_constraintBottom_toBottomOf="@id/btn_item_my_journal_more_friend"
+            tools:listitem="@layout/item_round_profile"
+            tools:itemCount="2"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_item_my_journal_more_friend"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/detail2"
+            android:textColor="@color/label_normal"
+            android:text="@string/place_journal_more_friend"
+            android:background="@drawable/corners_all_8"
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="12dp"
+            app:backgroundTint="@android:color/transparent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,13 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.weit.domain.model.journal.TravelJournalContentUpdateInfo
+import com.weit.domain.usecase.coordinate.GetStoredCoordinatesUseCase
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.journal.UpdateTravelJournalContentUseCase
 import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.model.post.place.PlacePredictionDTO
-import com.weit.presentation.model.post.travellog.DailyTravelLog
-import com.weit.presentation.ui.post.travellog.PostTravelLogViewModel
+import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import com.weit.presentation.ui.util.toMillis
@@ -24,7 +25,8 @@ import java.time.LocalDate
 
 class TravelJournalContentUpdateViewModel @AssistedInject constructor(
     @Assisted val travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO,
-    private val updateTravelJournalContentUseCase: UpdateTravelJournalContentUseCase
+    private val updateTravelJournalContentUseCase: UpdateTravelJournalContentUseCase,
+    private val getStoredCoordinatesUseCase: GetStoredCoordinatesUseCase
 ): ViewModel() {
     @AssistedFactory
     interface TravelJournalContentUpdateFactory{
@@ -44,6 +46,10 @@ class TravelJournalContentUpdateViewModel @AssistedInject constructor(
     private val _images = MutableStateFlow(travelJournalContentUpdateDTO.updateContentImages)
     val images : StateFlow<List<String>> get() = _images
 
+    private val _deleteImages = MutableStateFlow<List<Long>>(emptyList())
+    val deleteImages : StateFlow<List<Long>> get() = _deleteImages
+
+
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
 
@@ -52,6 +58,7 @@ class TravelJournalContentUpdateViewModel @AssistedInject constructor(
             val date = travelJournalContentUpdateDTO.travelJournalContentDate
             val minDateMillis = travelJournalContentUpdateDTO.travelJournalStart.toMillis()
             val maxDateMillis = travelJournalContentUpdateDTO.travelJournalEnd.toMillis()
+            Log.d("jomi", "$minDateMillis / $maxDateMillis")
             _event.emit(Event.ShowDailyDatePicker(date, minDateMillis, maxDateMillis ))
         }
     }
@@ -77,25 +84,44 @@ class TravelJournalContentUpdateViewModel @AssistedInject constructor(
         }
     }
 
-    fun deletePicture(newImages : List<String>){
+    fun deletePicture(deleteImage: String, newImages : List<String>){
         viewModelScope.launch {
             _images.emit(newImages)
+            val deleteImageIndex = travelJournalContentUpdateDTO.updateContentImages.indexOf(deleteImage)
+
+            val currentDeleteImages = deleteImages.value
+            val newDeleteImages = currentDeleteImages.toMutableList().plus(travelJournalContentUpdateDTO.updateContentImageIds[deleteImageIndex])
+            _deleteImages.emit(newDeleteImages)
         }
     }
+
+    private suspend fun getStoredCoordinates(date: LocalDate?): List<LatLng> {
+        if (date == null) {
+            return emptyList()
+        }
+
+        val start: Long = date.toMillis()
+        val end = date.plusDays(1).toMillis()
+
+        return getStoredCoordinatesUseCase(start, end).map { LatLng(it.lat.toDouble(), it.lng.toDouble()) }
+    }
+
     fun updateTravelJournalContent() {
         viewModelScope.launch{
-            Log.d("jomi", "click update")
             val newDate = date.value
             val newContent = content.value
             val newPlaceId = placeId.value
-            val newImages = images.value
+            val allImage = images.value
+            val newImages = allImage.filterNot { travelJournalContentUpdateDTO.updateContentImages.contains(it) }
+            val newDeleteImages = deleteImages.value
+            val latLngs = getStoredCoordinates(newDate)
 
             if (newContent.isNullOrBlank()) {
                 _event.emit(Event.NoContentData)
                 return@launch
             }
 
-            if (newImages.isEmpty()) {
+            if (allImage.isEmpty()) {
                 _event.emit(Event.NoImagesData)
                 return@launch
             }
@@ -106,14 +132,51 @@ class TravelJournalContentUpdateViewModel @AssistedInject constructor(
                 TravelJournalContentUpdateInfo(
                     newContent,
                     newPlaceId,
-                    emptyList(), // latitude
-                    emptyList(), // longitude
-                    newDate,
-                    emptyList(), // image name
-                    emptyList() // image id
+                    latLngs.map { it.latitude },
+                    latLngs.map { it.longitude },
+                    newDate.toString(),
+                    newImages.map {
+                        it.split("/").last() + IMAGE_EXTENSION_WEBP
+                    },
+                    newDeleteImages
                 ),
                 newImages
             )
+
+            if (result.isSuccess) {
+                _event.emit(Event.SuccessUpdate(travelJournalContentUpdateDTO.travelJournalId))
+            } else {
+                //todo 에러처리
+                Log.d("update travel",
+                    "update Travel Journal Fail : ${result.exceptionOrNull()}")
+            }
+        }
+    }
+
+    fun showSelectedPlace() {
+        viewModelScope.launch {
+            val dto = TravelJournalContentUpdateDTO(
+                travelJournalContentUpdateDTO.travelJournalId,
+                travelJournalContentUpdateDTO.travelJournalContentId,
+                travelJournalContentUpdateDTO.travelJournalStart,
+                travelJournalContentUpdateDTO.travelJournalEnd,
+                date.value,
+                content.value,
+                placeName.value,
+                placeId.value,
+                travelJournalContentUpdateDTO.latitude,
+                travelJournalContentUpdateDTO.longitude,
+                images.value,
+                deleteImages.value
+            )
+            _event.emit(Event.ShowSelectPlace(dto, emptyList()))
+        }
+    }
+
+    fun updatePlace(dto: SelectPlaceDTO) {
+        viewModelScope.launch {
+            _placeId.emit(dto.placeId)
+            _placeName.emit(dto.name)
         }
     }
 
@@ -125,14 +188,19 @@ class TravelJournalContentUpdateViewModel @AssistedInject constructor(
         ) : Event()
 
         data class ShowSelectPlace(
+            val updateDTO: TravelJournalContentUpdateDTO,
             val placePredictionDTO : List<PlacePredictionDTO>
         ): Event()
 
         object ClearDatePickerDialog : Event()
         object NoContentData : Event()
         object NoImagesData : Event()
+        data class SuccessUpdate(
+            val travelJournalId: Long
+        ) : Event()
     }
     companion object {
+        private const val IMAGE_EXTENSION_WEBP = ".webp"
         fun provideFactory(
             assistedFactory: TravelJournalContentUpdateFactory,
             travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO

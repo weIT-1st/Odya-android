@@ -1,7 +1,6 @@
 package com.weit.data.service
 
 import com.weit.data.model.ListResponse
-import com.weit.data.model.favoritePlace.FavoritePlaceRegistration
 import com.weit.data.model.journal.TravelJournalDTO
 import com.weit.data.model.journal.TravelJournalListDTO
 import com.weit.data.model.journal.TravelJournalVisibility
@@ -70,7 +69,7 @@ interface TravelJournalService {
     suspend fun updateTravelJournal(
         @Path("travelJournalId") travelJournalId: Long,
         @Part travelJournalUpdate: MultipartBody.Part,
-    )
+    ): Response<Unit>
 
     @Multipart
     @PUT("/api/v1/travel-journals/{travelJournalId}/{travelJournalContentId}")
@@ -79,9 +78,14 @@ interface TravelJournalService {
         @Path("travelJournalContentId") travelJournalContentId: Long,
         @Part travelJournalContentUpdate: MultipartBody.Part,
         @Part images: List<MultipartBody.Part>
-    )
+    ): Response<Unit>
 
-    // todo 여행일지 컨텐츠 추가
+    @Multipart
+    @POST("/api/v1/travel-journals/{travelJournalId}")
+    suspend fun addTravelJournalContent(
+        @Path("travelJournalId") travelJournalId: Long,
+        @Part travelJournalContent: MultipartBody.Part,
+    )
 
     @PATCH("/api/v1/travel-journals/{travelJournalId}/visibility")
     suspend fun updateTravelJournalVisibility(

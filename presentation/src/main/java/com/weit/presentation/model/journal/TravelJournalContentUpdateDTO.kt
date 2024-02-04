@@ -1,8 +1,6 @@
 package com.weit.presentation.model.journal
 
 import android.os.Parcelable
-import com.weit.domain.model.journal.TravelJournalContentsInfo
-import com.weit.presentation.model.post.travellog.TravelPeriod
 import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
@@ -19,4 +17,5 @@ data class TravelJournalContentUpdateDTO (
     val latitude : List<Double>,
     val longitude : List<Double>,
     val updateContentImages: List<String>,
+    val updateContentImageIds: List<Long>,
 ) : Parcelable

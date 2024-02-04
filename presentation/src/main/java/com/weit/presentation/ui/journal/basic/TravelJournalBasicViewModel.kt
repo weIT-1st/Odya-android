@@ -6,10 +6,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.usecase.journal.DeleteTravelJournalContentUseCase
-import com.weit.domain.usecase.journal.UpdateTravelJournalContentUseCase
 import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.model.journal.TravelJournalDetailInfo
-import com.weit.presentation.model.journal.TravelJournalUpdateDTO
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
 import dagger.assisted.Assisted
@@ -59,13 +57,12 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
 
     fun deleteContent(contentId: Long) {
         viewModelScope.launch {
-            val result =
-                deleteTravelJournalContentUseCase(travelJournalInfo.travelJournalId, contentId)
+            val result = deleteTravelJournalContentUseCase(travelJournalInfo.travelJournalId, contentId)
 
             if (result.isSuccess) {
-
+                _event.emit(Event.DeleteTravelJournalContent)
             } else {
-                // todo 에러처리
+                Log.d("delete journal content", "delete content error : ${result.exceptionOrNull()}")
             }
         }
     }
@@ -86,6 +83,7 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
                     info.latitude,
                     info.longitude,
                     info.travelJournalContentImages.map { it.contentImageUrl },
+                    info.travelJournalContentImages.map { it.travelJournalContentImageId }
                 )
                 _event.emit(Event.MoveToUpdate(travelJournalUpdateDTO))
             }
@@ -96,6 +94,7 @@ class TravelJournalBasicViewModel @AssistedInject constructor(
         data class MoveToUpdate(
             val travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO
         ) : Event()
+        object DeleteTravelJournalContent: Event()
     }
 
     companion object {

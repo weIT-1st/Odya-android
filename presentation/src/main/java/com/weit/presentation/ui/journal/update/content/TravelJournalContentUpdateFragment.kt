@@ -2,16 +2,15 @@ package com.weit.presentation.ui.journal.update.content
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentUpdateJournalContentsBinding
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.post.travellog.DailyTravelLogAction
 import com.weit.presentation.ui.post.travellog.DailyTravelLogPictureAdapter
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -54,7 +53,15 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
 
     override fun initListener() {
         binding.btnUpdateJournalContentComplete.setOnClickListener {
-            viewModel.updateTravelJournalContent()
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle(getString(R.string.post_travel_log_registration_modal_title))
+                .setNegativeButton(getString(R.string.post_travel_log_registration_modal_negative)) { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton(getString(R.string.post_travel_log_registration_modal_positive)) { _, _ ->
+                    viewModel.updateTravelJournalContent()
+                }
+                .show()
         }
         binding.tbUpdateJournalContent.setNavigationOnClickListener {
             findNavController().popBackStack()
@@ -63,6 +70,7 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
             viewModel.onPickDailyDate()
         }
         binding.btnUpdateJournalContentsPlace.setOnClickListener {
+            viewModel.showSelectedPlace()
         }
 
         binding.btnUpdateJournalContentSelectPicture.setOnClickListener {
@@ -84,7 +92,6 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.images.collectLatest {
-                Log.d("jomi", "imgaeList : $it")
                 pictureAdapter.submitList(it)
             }
         }
@@ -95,16 +102,23 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        args.selectPlace ?.let {
+            viewModel.updatePlace(it)
+        }
+    }
     override fun onDestroyView() {
         binding.rvUpdateJournalContentPictures.adapter = null
         super.onDestroyView()
     }
 
     private fun deleteSelectedPicture(imageIndex: Int) {
+        val deleteImage = pictureAdapter.currentList[imageIndex]
         val newImages = pictureAdapter.currentList.toMutableList().apply {
             removeAt(imageIndex)
         }
-        viewModel.deletePicture(newImages)
+        viewModel.deletePicture(deleteImage, newImages)
     }
 
     private fun showDailyDatePickerDialog(
@@ -166,6 +180,13 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
                     event.maxDateMillis
                 )
             }
+            is TravelJournalContentUpdateViewModel.Event.ShowSelectPlace -> {
+                val action = TravelJournalContentUpdateFragmentDirections.actionTravelJournalContentUpdateFragmentToSelectPlaceUpdateFragment(
+                    event.updateDTO,
+                    event.placePredictionDTO.toTypedArray(),
+                )
+                findNavController().navigate(action)
+            }
             TravelJournalContentUpdateViewModel.Event.ClearDatePickerDialog -> {
                 dailyDatePickerDialog = null
             }
@@ -174,6 +195,13 @@ class TravelJournalContentUpdateFragment : BaseFragment<FragmentUpdateJournalCon
             }
             TravelJournalContentUpdateViewModel.Event.NoImagesData -> {
                 sendSnackBar("최소 한장 이상의 이미지를 선택해주세요")
+            }
+            is TravelJournalContentUpdateViewModel.Event.SuccessUpdate -> {
+                sendSnackBar("여행일지 수정을 완료 하였습니다.")
+                val action = TravelJournalContentUpdateFragmentDirections.actionTravelJournalContentUpdateFragmentToFragmentTravelJournal(
+                    event.travelJournalId
+                )
+                findNavController().navigate(action)
             }
         }
     }

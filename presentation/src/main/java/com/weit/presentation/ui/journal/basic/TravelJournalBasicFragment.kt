@@ -3,7 +3,6 @@ package com.weit.presentation.ui.journal.basic
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
@@ -93,6 +92,9 @@ class TravelJournalBasicFragment(
         when (event) {
             is TravelJournalBasicViewModel.Event.MoveToUpdate -> {
                 moveToTravelJournalContentsUpdate(event.travelJournalContentUpdateDTO)
+            }
+            TravelJournalBasicViewModel.Event.DeleteTravelJournalContent -> {
+                sendSnackBar("여행일지 컨텐츠가 삭제되었습니다.")
             }
         }
     }

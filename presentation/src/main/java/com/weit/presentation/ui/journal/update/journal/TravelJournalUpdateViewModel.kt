@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.journal.update.journal
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -165,9 +166,13 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
             )
 
             if (result.isSuccess) {
-                _event.emit(Event.SuccessUpdateJournal)
+                Log.d("jomi", "update success")
+                _event.emit(Event.SuccessUpdateJournal(
+                    travelJournalUpdateDTO.travelJournalId
+                ))
             } else {
                 // todo 에러 처리
+                Log.d("jomi", "update error : ${result.exceptionOrNull()}")
             }
         }
     }
@@ -181,9 +186,11 @@ class TravelJournalUpdateViewModel @AssistedInject constructor(
         data class ShowDataPicker(
             val currentPeriod: TravelPeriod
         ) : Event()
+        data class SuccessUpdateJournal(
+            val travelJournalId: Long
+        ) : Event()
         object ClearDatePickerDialog : Event()
         object IsBlankTitle : Event()
-        object SuccessUpdateJournal : Event()
     }
 
     data class TravelFriendsInfo(

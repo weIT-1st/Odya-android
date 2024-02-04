@@ -205,7 +205,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
         }
 
         return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
+            Result.success(Unit)
         } else {
             Result.failure(result.exception())
         }
@@ -232,27 +232,23 @@ class TravelJournalRepositoryImpl @Inject constructor(
                     requestFile
                 )
             }
+
             val adapter = moshi.adapter(TravelJournalContentUpdateInfo::class.java)
             val travelJournalContentUpdateInfoJson = adapter.toJson(travelJournalContentUpdateInfo)
 
-            val travelJournalContentRequestBody =
-                travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
+            val travelJournalContentUpdateRequestBody = travelJournalContentUpdateInfoJson.toRequestBody("application/json".toMediaTypeOrNull())
 
-            val travelJournalContentPart = MultipartBody.Part.createFormData(
+            val travelJournalContentUpdatePart = MultipartBody.Part.createFormData(
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
                 TRAVEL_JOURNAL_CONTENT_UPDATE,
-                travelJournalContentRequestBody
+                travelJournalContentUpdateRequestBody
             )
-            travelJournalDataSource.updateTravelJournalContent(
-                travelJournalId,
-                travelJournalContentId,
-                travelJournalContentPart,
-                files
-            )
+            travelJournalDataSource.updateTravelJournalContent(travelJournalId, travelJournalContentId, travelJournalContentUpdatePart, files)
         }
 
+
         return if (result.isSuccess) {
-            Result.success(result.getOrThrow())
+            Result.success(Unit)
         } else {
             Result.failure(handleJournalError(result.exception()))
         }

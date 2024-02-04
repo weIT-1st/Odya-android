@@ -123,6 +123,9 @@
                 android:defaultValue="0"
                 app:argType="integer" />
         </fragment>
+        <action
+            android:id="@+id/action_global_fragment_memory"
+            app:destination="@id/fragment_memory" />
     </navigation>
     <fragment
         android:id="@+id/fragment_travel_Journal"
@@ -259,6 +262,9 @@
         <action
             android:id="@+id/action_travelJournalUpdateFragment_to_travelFriendUpdateFragment"
             app:destination="@id/travelFriendUpdateFragment" />
+        <action
+            android:id="@+id/action_travelJournalUpdateFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
 
 
@@ -444,17 +450,31 @@
         <argument
             android:name="travelJournalUpdateContentDTO"
             app:argType="com.weit.presentation.model.journal.TravelJournalContentUpdateDTO" />
+
+        <argument
+            android:name="selectPlace"
+            android:defaultValue="@null"
+            app:argType="com.weit.presentation.model.post.place.SelectPlaceDTO"
+            app:nullable="true" />
         <action
             android:id="@+id/action_travelJournalContentUpdateFragment_to_selectPlaceUpdateFragment"
             app:destination="@id/selectPlaceUpdateFragment" />
+        <action
+            android:id="@+id/action_travelJournalContentUpdateFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/selectPlaceUpdateFragment"
         android:name="com.weit.presentation.ui.journal.update.content.selectplace.SelectPlaceUpdateFragment"
         android:label="SelectPlaceUpdateFragment" >
         <argument
+            android:name="travelJournalUpdateContentDTO"
+            app:argType="com.weit.presentation.model.journal.TravelJournalContentUpdateDTO" />
+
+        <argument
             android:name="imagePlaces"
-            app:argType="com.weit.presentation.model.post.place.PlacePredictionDTO[]" />
+            app:argType="com.weit.presentation.model.post.place.PlacePredictionDTO[]"
+            app:nullable="true"/>
         <action
             android:id="@+id/action_selectPlaceUpdateFragment_to_travelJournalContentUpdateFragment"
             app:destination="@id/travelJournalContentUpdateFragment" />

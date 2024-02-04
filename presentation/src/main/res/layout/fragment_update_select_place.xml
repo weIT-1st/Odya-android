@@ -17,13 +17,14 @@
             android:id="@+id/tb_select_place"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:navigationIcon="@drawable/ic_navigation"
-            app:menu="@menu/menu_travel_friend"
-            app:title="@string/select_place_title"
-            app:titleCentered="true"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/menu_travel_friend"
+            app:navigationIcon="@drawable/ic_navigation"
+            app:title="@string/select_place_title"
+            app:titleCentered="true" />
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/map_select_place"

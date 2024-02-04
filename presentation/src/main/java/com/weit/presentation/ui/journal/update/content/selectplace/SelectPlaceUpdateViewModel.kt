@@ -10,6 +10,7 @@ import com.weit.domain.model.place.PlacePrediction
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.place.GetSearchPlaceUseCase
 import com.weit.presentation.model.post.place.PlacePredictionDTO
+import com.weit.presentation.model.post.place.SelectPlaceDTO
 import com.weit.presentation.ui.post.selectplace.SelectPlaceEntity
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow
@@ -49,7 +50,7 @@ class SelectPlaceUpdateViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface SelectPlaceUpdateFactory{
-        fun create(imagePlaces: List<PlacePredictionDTO>): SelectPlaceUpdateFragment
+        fun create(imagePlaces: List<PlacePredictionDTO>): SelectPlaceUpdateViewModel
     }
 
     fun onClickPointOfInterest(pointOfInterest: PointOfInterest) {
@@ -76,6 +77,24 @@ class SelectPlaceUpdateViewModel @AssistedInject constructor(
         }
     }
 
+    fun onSearch(query: String) {
+        searchJob.cancel()
+        searchPlace(query)
+    }
+
+    fun onComplete() {
+        val entity = selectedPlaceEntity ?: return
+        val selectPlaceDTO = SelectPlaceDTO(
+            placeId = entity.place.placeId,
+            name = entity.place.name,
+            address = entity.place.address,
+            0
+        )
+        viewModelScope.launch {
+            _event.emit(Event.OnComplete(selectPlaceDTO))
+        }
+    }
+
     private fun setSelectedPlaceEntity(place: PlacePrediction) {
         // 두 번 선택은 취소로 간주
         selectedPlaceEntity = if (selectedPlaceEntity?.place?.placeId == place.placeId) {
@@ -99,6 +118,17 @@ class SelectPlaceUpdateViewModel @AssistedInject constructor(
         }
     }
 
+    private fun searchPlace(query: String) {
+        searchJob = viewModelScope.launch {
+            searchedPlaces = if (query.isBlank()) {
+                imagePlaces.toList()
+            } else {
+                getSearchPlaceUseCase(query)
+            }
+            updateSelectPlaceEntities(searchedPlaces.toSelectPlaceEntity())
+        }
+    }
+
     private fun List<PlacePredictionDTO>.toPlacePredictions() = map {
         PlacePrediction(it.placeId, it.name, it.address)
     }
@@ -117,6 +147,7 @@ class SelectPlaceUpdateViewModel @AssistedInject constructor(
     sealed class Event {
         data class SetMarker(val latLng: LatLng): Event()
         data class MoveMap(val latLng: LatLng): Event()
+        data class OnComplete(val dto: SelectPlaceDTO) : Event()
     }
     companion object {
         fun create(

@@ -2,7 +2,6 @@ package com.weit.presentation.ui.journal.update.journal
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -15,7 +14,6 @@ import com.weit.presentation.model.Visibility
 import com.weit.presentation.model.journal.TravelJournalUpdateDTO
 import com.weit.presentation.model.post.travellog.TravelPeriod
 import com.weit.presentation.ui.base.BaseFragment
-import com.weit.presentation.ui.journal.update.journal.travelfriend.TravelFriendUpdateFragmentDirections
 import com.weit.presentation.ui.post.datepicker.DatePickerDialogFragment
 import com.weit.presentation.ui.post.travellog.TravelFriendsAdapter
 import com.weit.presentation.ui.util.SpaceDecoration
@@ -176,9 +174,12 @@ class TravelJournalUpdateFragment : BaseFragment<FragmentUpdateTravelLogBinding>
                 datePickerDialog = null
                 dailyDatePickerDialog = null
             }
-            TravelJournalUpdateViewModel.Event.SuccessUpdateJournal -> {
+            is TravelJournalUpdateViewModel.Event.SuccessUpdateJournal -> {
                 sendSnackBar("여행일지가 수정되었습니다.")
-                findNavController().popBackStack()
+                val action = TravelJournalUpdateFragmentDirections.actionTravelJournalUpdateFragmentToFragmentTravelJournal(
+                    event.travelJournalId
+                )
+                findNavController().navigate(action)
             }
         }
     }

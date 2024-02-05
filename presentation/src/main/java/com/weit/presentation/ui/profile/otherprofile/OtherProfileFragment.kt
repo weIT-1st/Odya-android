@@ -198,11 +198,11 @@ class OtherProfileFragment() : BaseFragment<FragmentFriendProfileBinding>(
                     }
                 }else{
                     binding.tvProfileNoRepJournal.visibility = View.VISIBLE
-                    binding.itemProfileRepTravelJournal.root.visibility = View.GONE
-                    binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
+                    binding.itemProfileRepTravelJournal.root.visibility = View.INVISIBLE
+                    binding.viewJournalMemoryDecorationElev2.visibility = View.INVISIBLE
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
-                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl})
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl?:""})
             }
         }
         repeatOnStarted(viewLifecycleOwner){

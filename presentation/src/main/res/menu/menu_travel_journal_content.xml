@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/item_content_update"
+        android:title="@string/update_travel_log" />
+
+    <item
+        android:id="@+id/item_content_delete"
+        android:title="@string/post_travel_log_daily_delete" />
+</menu>

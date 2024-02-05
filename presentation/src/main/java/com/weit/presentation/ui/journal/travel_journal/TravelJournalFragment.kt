@@ -8,10 +8,12 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
 import com.weit.presentation.ui.journal.map.PinMode
@@ -160,7 +162,11 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         val tabLayout = binding.tlJournalDetailChooseModel
 
         viewPager.apply {
-            adapter = TravelJournalModelAdapter(childFragmentManager, lifecycle, info)
+            adapter = TravelJournalModelAdapter(childFragmentManager, lifecycle, info) {
+                moveToTravelJournalContentsUpdate(
+                    it
+                )
+            }
             isUserInputEnabled = false
         }
 
@@ -182,7 +188,7 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         if (travelJournalDetailMenuFragment == null) {
             travelJournalDetailMenuFragment = TravelJournalDetailMenuFragment(
                 { viewModel.moveToJournalUpdate() },
-                { viewModel.deleteTravelJournal() }
+                { onClickDeleteJournal() }
             )
         }
 
@@ -191,12 +197,33 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         }
     }
 
+    private fun onClickDeleteJournal() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(getString(R.string.journal_delete_title))
+            .setMessage(getString(R.string.journal_delete_message))
+            .setNegativeButton(getString(R.string.journal_delete_negative)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton(getString(R.string.journal_delete_positive)) { _, _ ->
+                viewModel.deleteTravelJournal()
+            }
+            .show()
+    }
+
+    private fun moveToTravelJournalContentsUpdate(travelJournalContentUpdateDTO: TravelJournalContentUpdateDTO) {
+        val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalContentUpdateFragment(
+            travelJournalContentUpdateDTO
+        )
+        findNavController().navigate(action)
+    }
+
     private fun handleEvent(event: TravelJournalViewModel.Event) {
         when (event) {
             is TravelJournalViewModel.Event.MoveToJournalUpdate -> {
-                val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalUpdateFragment(event.travelJournalUpdateDTO)
+                val action = TravelJournalFragmentDirections.actionFragmentTravelJournalToTravelJournalUpdateFragment(
+                    event.travelFriendsDTO.toTypedArray(),
+                    event.travelJournalUpdateDTO)
                 findNavController().navigate(action)
-
             }
 
             is TravelJournalViewModel.Event.PopupTravelJournalMenu -> {
@@ -219,6 +246,5 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     companion object {
         private const val TAG = "TravelJournalFragment"
         private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
-        private const val DEFAULT_ZOOM = 15f
     }
 }

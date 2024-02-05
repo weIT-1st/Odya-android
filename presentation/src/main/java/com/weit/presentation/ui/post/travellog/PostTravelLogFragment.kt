@@ -9,6 +9,7 @@ import androidx.navigation.navGraphViewModels
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayout
 import com.weit.domain.usecase.image.PickImageUseCase
+import com.weit.presentation.PostGraphDirections
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentPostTravelLogBinding
 import com.weit.presentation.model.Visibility
@@ -164,8 +165,10 @@ class PostTravelLogFragment : BaseFragment<FragmentPostTravelLogBinding>(
                 )
             }
 
-            PostTravelLogViewModel.Event.SuccessPostJournal -> {
-               findNavController().popBackStack()
+            is PostTravelLogViewModel.Event.SuccessPostJournal -> {
+                sendSnackBar("여행일지가 등록 되었습니다.")
+                val action = PostGraphDirections.actionGlobalFragmentMemory()
+                findNavController().navigate(action)
             }
 
             is PostTravelLogViewModel.Event.NoDateInLog -> {

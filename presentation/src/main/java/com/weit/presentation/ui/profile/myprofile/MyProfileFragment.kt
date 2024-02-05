@@ -248,9 +248,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.viewJournalMemoryDecorationElev2.visibility = View.GONE
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
-
-                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl?:""})
-            }
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl?:""})            }
         }
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.bookMarkTravelJournals.collectLatest { list ->

@@ -132,6 +132,10 @@
     <string name="post_travel_log_upload_feed">공개 여부</string>
     <string name="post_travel_log_daily_picture_count">%d / %d</string>
 
+    <string name="update_travel_log_title">여행일지 편집하기</string>
+    <string name="update_travel_log_complete">수정 완료</string>기
+    <string name="update_travel_log">편집하기</string>기
+
     <!--  journal memory  -->
     <string name="journal_memory_last_travel">%s님\n지난 여행을 다시 볼까요?</string>
     <string name="journal_memory_my_travel">내 여행일지</string>
@@ -145,6 +149,14 @@
     <string name="journal_detail_all_journal">전부 펼처보기</string>
     <string name="journal_detail_day">Day %d</string>
     <string name="journal_detail_friends">함께 간 친구</string>
+
+    <string name="journal_delete_title">해당 여행일지를 삭제할까요?</string>
+    <string name="journal_content_delete_title">해당 날짜의 여행일지를 삭제할까요?</string>
+    <string name="journal_delete_content_message">삭제된 내용은 복구될 수 없습니다.</string>
+    <string name="journal_delete_message">삭제된 내용은 복구될 수 없습니다.</string>
+
+    <string name="journal_delete_negative">취소</string>
+    <string name="journal_delete_positive">삭제</string>
 
     <!-- travel friend search -->
     <string name="travel_friend_title">함께 간 친구</string>

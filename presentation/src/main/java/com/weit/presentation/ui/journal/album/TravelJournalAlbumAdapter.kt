@@ -1,7 +1,11 @@
 package com.weit.presentation.ui.journal.album
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,7 +15,10 @@ import com.weit.presentation.databinding.ItemJournalDetailAlbumModelBinding
 import com.weit.presentation.model.journal.TravelJournalDetailInfo
 import com.weit.presentation.ui.util.SpaceDecoration
 
-class TravelJournalAlbumAdapter :
+class TravelJournalAlbumAdapter(
+    private val updateContent: (contentId : Long) -> Unit,
+    private val deleteContent: (contentId : Long) -> Unit
+) :
     ListAdapter<TravelJournalDetailInfo, TravelJournalAlbumAdapter.ViewHolder>(diffUtil) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
@@ -43,7 +50,7 @@ class TravelJournalAlbumAdapter :
             }
 
             binding.btnItemJournalDetailKebab.setOnClickListener {
-                // todo 여행일지 컨텐츠 수정
+                showPopUpMenu(getItem(absoluteAdapterPosition).travelJournalContentId, it)
             }
         }
 
@@ -56,6 +63,40 @@ class TravelJournalAlbumAdapter :
 
             imageAdapter.submitList(item.travelJournalContentImages)
         }
+    }
+
+    private fun showPopUpMenu(contentId: Long, it : View) {
+        val popupMenu = PopupMenu(it.context, it)
+        popupMenu.menuInflater.inflate(R.menu.menu_travel_journal_content, popupMenu.menu)
+
+        val updateContentItem = popupMenu.menu.findItem(R.id.item_content_update)
+        val deleteContentItem = popupMenu.menu.findItem(R.id.item_content_delete)
+
+        updateContentItem.title = it.context.getString(R.string.update_travel_log)
+        deleteContentItem.title = it.context.getString(R.string.post_travel_log_daily_delete)
+
+        if (updateContentItem.itemId == R.id.item_content_update) {
+            val updateContentView = updateContentItem.actionView as? TextView
+            updateContentView?.setTextColor(ContextCompat.getColor(it.context, R.color.label_normal))
+        }
+        if (deleteContentItem.itemId == R.id.item_content_delete) {
+            val deleteContentView = deleteContentItem.actionView as? TextView
+            deleteContentView?.setTextColor(ContextCompat.getColor(it.context, R.color.warning))
+        }
+
+        popupMenu.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_content_update -> {
+                    updateContent(contentId)
+                }
+
+                R.id.item_content_delete -> {
+                    deleteContent(contentId)
+                }
+            }
+            false
+        }
+        popupMenu.show()
     }
 
     companion object {

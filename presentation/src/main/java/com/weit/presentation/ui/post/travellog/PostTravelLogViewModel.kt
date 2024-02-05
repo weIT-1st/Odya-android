@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import com.weit.domain.model.CoordinateInfo
 import com.weit.domain.model.follow.FollowUserContent
 import com.weit.domain.model.journal.TravelJournalContentRequest
 import com.weit.domain.model.journal.TravelJournalRegistrationInfo

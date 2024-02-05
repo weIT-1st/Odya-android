@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_marginEnd="8dp"
     android:background="@drawable/corners_all_8"
-    android:layout_height="wrap_content">
+    android:layout_height="270dp">
 
     <ImageView
         android:id="@+id/iv_lifeshot"
@@ -24,6 +24,7 @@
         android:layout_marginTop="20dp"
         android:layout_width="20dp"
         android:layout_height="20dp"
+        android:layout_marginBottom="10dp"
         android:src="@drawable/ic_location"
         app:layout_constraintTop_toBottomOf="@+id/iv_lifeshot"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -37,6 +38,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/label_assistive"
         app:layout_constraintTop_toBottomOf="@+id/iv_lifeshot"
         app:layout_constraintStart_toEndOf="@+id/iv_location"

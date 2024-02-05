@@ -31,6 +31,12 @@
             app:titleCentered="true"
             tools:text="홍길동홍길동" />
 
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_travel_journal_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_travel_journal_map"/>
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="0dp"
             android:layout_height="0dp"

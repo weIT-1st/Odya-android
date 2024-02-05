@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentTabFeedCommentBinding
 import com.weit.presentation.databinding.FragmentTabPlaceCommunityBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.feed.myactivity.FeedMyActivityFragmentDirections
 import com.weit.presentation.ui.feed.myactivity.FeedMyActivityImageAdapter
 import com.weit.presentation.ui.feed.myactivity.like.FeedMyActivityLikeViewModel
 import com.weit.presentation.ui.feed.myactivity.post.FeedMyActivityPostFragmentDirections
@@ -16,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
-class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBinding>(
+class FeedMyActivityCommentFragment(val nickname: String) : BaseFragment<FragmentTabFeedCommentBinding>(
     FragmentTabFeedCommentBinding::inflate,
 ) {
     private val viewModel: FeedMyActivityCommentViewModel by viewModels()
@@ -48,10 +49,13 @@ class FeedMyActivityCommentFragment() : BaseFragment<FragmentTabFeedCommentBindi
     }
 
     private fun navigateFeedDetail(feedId: Long) {
-        val action = FeedMyActivityPostFragmentDirections.actionFeedMyActivityPostFragmentToFragmentFeedDetail(feedId,null)
+        val action =
+            FeedMyActivityFragmentDirections.actionFragmentFeedMyActivityToFragmentFeedDetail(
+                feedId,
+                nickname
+            )
         findNavController().navigate(action)
     }
-
     override fun onDestroyView() {
         binding.rvTabFeedComment.removeOnScrollListener(infinityScrollListener)
         binding.rvTabFeedComment.adapter = null

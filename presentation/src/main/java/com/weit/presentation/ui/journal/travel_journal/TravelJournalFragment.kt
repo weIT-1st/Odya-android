@@ -13,9 +13,12 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
-import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
+import com.weit.presentation.ui.journal.map.PinMode
+import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
 import com.weit.presentation.ui.journal.menu.TravelJournalDetailMenuFragment
+import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -23,7 +26,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
-    FragmentTravelJournalBinding::inflate
+    FragmentTravelJournalBinding::inflate,
 ) {
     @Inject
     lateinit var viewModelFactory: TravelJournalViewModel.TravelJournalIdFactory
@@ -35,7 +38,7 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
 
     private var travelJournalDetailMenuFragment: TravelJournalDetailMenuFragment? = null
 
-//    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
+    private val travelJournalFriendAdapter = TravelJournalFriendAdapter()
 
     private val sheetBehavior by lazy {
         BottomSheetBehavior.from(binding.bsTravelJournalDetail)
@@ -44,8 +47,9 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
-
-//        initFriendRV()
+        val travelJournalId = arguments?.getString("travelJournalId")
+        viewModel.initialize(travelJournalId?.toLong())
+        initFriendRV()
         initBottomSheet()
     }
 
@@ -77,6 +81,17 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
                         info.travelJournalCompanions.size < MAX_ABLE_SHOW_FRIENDS_NUM
 
                     initJournalModelViewPager(info)
+
+                    childFragmentManager.beginTransaction()
+                        .add(R.id.fragment_travel_journal_map ,
+                            TravelJournalMapFragment(
+                                travelJournalInfo = info,
+                                pinMode = PinMode.IMAGE_PIN,
+                                isMapLine = true
+                            )
+                        )
+                        .setReorderingAllowed(true)
+                        .commit()
                 }
             }
         }
@@ -102,11 +117,10 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
     private fun initMenu(info: TravelJournalViewModel.TravelJournalDetailToolBarInfo) {
         if (info.isMyTravelJournal) {
             binding.tbTravelJournal.title = info.title
-            binding.tbTravelJournal
             binding.tbTravelJournal.setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.menu_journal_bookmark -> {
-                        // todo 즐겨찾기
+                        // todo bookmark 처리
                     }
 
                     R.id.menu_journal_alert -> {
@@ -121,18 +135,18 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
         }
     }
 
-//    private fun initFriendRV() {
-//        binding.rvJournalDetailFriends.apply {
-//            addItemDecoration(
-//                SpaceDecoration(
-//                    resources,
-//                    rightDP = R.dimen.item_journal_friends_space
-//                )
-//            )
-//            adapter = travelJournalFriendAdapter
-//        }
-//        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
-//    }
+    private fun initFriendRV() {
+        binding.rvJournalDetailFriends.apply {
+            addItemDecoration(
+                SpaceDecoration(
+                    resources,
+                    rightDP = R.dimen.item_journal_friends_space
+                )
+            )
+            adapter = travelJournalFriendAdapter
+        }
+        travelJournalFriendAdapter.submitList(viewModel.handleFriendsCount())
+    }
 
     private fun initBottomSheet() {
         sheetBehavior.run {
@@ -167,6 +181,7 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
             }
         }.attach()
     }
+
 
     private fun popUpJournalMenuBottomSheet() {
         if (travelJournalDetailMenuFragment == null) {
@@ -221,8 +236,11 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
             TravelJournalViewModel.Event.PopupTravelJournalFriends -> {
 
             }
+
+            else -> {}
         }
     }
+
 
     companion object {
         private const val TAG = "TravelJournalFragment"

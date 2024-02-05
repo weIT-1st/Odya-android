@@ -67,7 +67,7 @@
             app:layout_constraintStart_toStartOf="@id/gl_journal_friends_start"
             app:layout_constraintEnd_toEndOf="@id/gl_journal_friends_end"
             app:layout_constraintTop_toBottomOf="@+id/tv_travel_journal_friends_title"
-            tools:listitem="@layout/item_friends"
+            tools:listitem="@layout/item_friend_manage_follow"
             tools:itemCount="3"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

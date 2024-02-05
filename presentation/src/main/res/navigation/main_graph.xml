@@ -19,7 +19,11 @@
     <fragment
         android:id="@+id/fragment_map"
         android:name="com.weit.presentation.ui.map.MapFragment"
-        android:label="MapFragment" />
+        android:label="MapFragment" >
+    <action
+        android:id="@+id/action_fragment_map_to_loginTopicFragment"
+        app:destination="@id/loginTopicFragment" />
+    </fragment>
     <fragment
         android:id="@+id/fragment_feed"
         android:name="com.weit.presentation.ui.feed.FeedFragment"
@@ -39,6 +43,28 @@
         <action
             android:id="@+id/action_fragment_feed_to_fragment_feed_search"
             app:destination="@id/fragment_feed_search" />
+        <action
+            android:id="@+id/action_fragment_feed_to_notificationListFragment"
+            app:destination="@id/notificationListFragment" />
+        <action
+            android:id="@+id/action_fragment_map_to_loginTopicFragment"
+            app:destination="@id/loginTopicFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginTopicFragment"
+        android:name="com.weit.presentation.ui.login.input.topic.LoginTopicFragment"
+        android:label="LoginTopicFragment" >
+        <action
+            android:id="@+id/action_loginTopicFragment_to_loginFriendFragment"
+            app:destination="@id/loginFriendFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFriendFragment"
+        android:name="com.weit.presentation.ui.login.input.friend.LoginFriendFragment"
+        android:label="LoginFriendFragment" >
+        <action
+            android:id="@+id/action_loginFriendFragment_to_fragment_map"
+            app:destination="@id/fragment_map" />
     </fragment>
     <fragment
         android:id="@+id/fragment_mypage"
@@ -65,6 +91,9 @@
         <action
             android:id="@+id/action_fragment_mypage_to_repTravelJournalFragment"
             app:destination="@id/repTravelJournalFragment" />
+        <action
+            android:id="@+id/action_fragment_mypage_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <navigation android:id="@+id/post_graph"
         app:startDestination="@id/postTravelLogFragment">
@@ -133,7 +162,8 @@
         android:label="TravelJournalFragment">
         <argument
             android:name="travelJournalId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_fragment_travel_Journal_to_travelJournalDetailFragment"
             app:destination="@id/travelJournalDetailFragment" />
@@ -153,14 +183,19 @@
         android:label="FeedDetailFragment">
         <argument
             android:name="feedId"
-            app:argType="long" />
+            app:argType="long"
+            android:defaultValue="0L" />
         <action
             android:id="@+id/action_fragment_feed_detail_to_fragment_feed_post"
             app:destination="@id/fragment_feed_post" />
         <argument
             android:name="nickname"
             app:argType="string"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="username"/>
+        <action
+            android:id="@+id/action_fragment_feed_detail_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed_post"
@@ -350,13 +385,18 @@
         android:label="OtherProfileFragment" >
         <argument
             android:name="userName"
-            app:argType="string" />
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="username"/>
         <action
             android:id="@+id/action_otherProfileFragment_to_fragment_map"
             app:destination="@id/fragment_map" />
         <action
             android:id="@+id/action_otherProfileFragment_to_otherFriendManageFragment"
             app:destination="@id/otherFriendManageFragment" />
+        <action
+            android:id="@+id/action_otherProfileFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/myFriendManageFragment"
@@ -391,6 +431,20 @@
             app:destination="@id/post_graph" />
     </fragment>
     <fragment
+        android:id="@+id/notificationListFragment"
+        android:name="com.weit.presentation.ui.feed.notification.NotificationListFragment"
+        android:label="NotificationListFragment" >
+        <action
+            android:id="@+id/action_notificationListFragment_to_fragment_feed_detail"
+            app:destination="@id/fragment_feed_detail" />
+        <action
+            android:id="@+id/action_notificationListFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+        <action
+            android:id="@+id/action_notificationListFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
+    </fragment>
+     <fragment
         android:id="@+id/repTravelJournalFragment"
         android:name="com.weit.presentation.ui.feed.RepTravelJournalFragment"
         android:label="RepTravelJournalFragment" >

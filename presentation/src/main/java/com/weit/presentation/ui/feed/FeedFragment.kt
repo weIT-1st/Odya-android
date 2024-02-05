@@ -64,6 +64,10 @@ class FeedFragment : BaseFragment<FragmentFeedBinding>(
             val action = FeedFragmentDirections.actionFragmentFeedToFragmentFeedSearch()
             findNavController().navigate(action)
         }
+        binding.ivFeedAlarm.setOnClickListener {
+            val action = FeedFragmentDirections.actionFragmentFeedToNotificationListFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun initTopicRecyclerView() {

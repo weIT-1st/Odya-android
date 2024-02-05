@@ -51,7 +51,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedViewModel @Inject constructor(
-//    private val getTopicListUseCase: GetTopicListUseCase,
     private val getPlaceDetailUseCase: GetPlaceDetailUseCase,
     private val getFavoriteTopicListUseCase: GetFavoriteTopicListUseCase,
     private val changeFollowStateUseCase: ChangeFollowStateUseCase,
@@ -251,7 +250,6 @@ class FeedViewModel @Inject constructor(
                     it.createdDate,
                 )
             }
-            Logger.t("MainTest").i("${feeds}")
 
             val original = feedItems
             feedItems.clear()

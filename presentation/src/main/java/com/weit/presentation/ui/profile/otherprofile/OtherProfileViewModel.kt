@@ -10,6 +10,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.UnKnownException
 import com.weit.domain.model.favoritePlace.FriendFavoritePlaceInfo
 import com.weit.domain.model.image.UserImageResponseInfo
+import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.reptraveljournal.RepTravelJournalListInfo
 import com.weit.domain.model.reptraveljournal.RepTravelJournalRequest
 import com.weit.domain.model.user.LifeshotRequestInfo
@@ -25,6 +26,7 @@ import com.weit.domain.usecase.favoritePlace.GetFriendFavoritePlaceCountUseCase
 import com.weit.domain.usecase.favoritePlace.GetFriendFavoritePlacesUseCase
 import com.weit.domain.usecase.favoritePlace.RegisterFavoritePlaceUseCase
 import com.weit.domain.usecase.follow.ChangeFollowStateUseCase
+import com.weit.domain.usecase.journal.GetTravelJournalUseCase
 import com.weit.domain.usecase.place.GetPlaceDetailUseCase
 import com.weit.domain.usecase.repjournal.GetOtherRepTravelJournalListUseCase
 import com.weit.domain.usecase.user.GetUserLifeshotUseCase
@@ -54,16 +56,30 @@ class OtherProfileViewModel @AssistedInject constructor(
     private val registerFavoritePlaceUseCase: RegisterFavoritePlaceUseCase,
     private val deleteFavoritePlaceUseCase: DeleteFavoritePlaceUseCase,
     private val getFriendFavoritePlaceCountUseCase: GetFriendFavoritePlaceCountUseCase,
+    @Assisted private val userName: String="",
     private val getOtherRepTravelJournalListUseCase: GetOtherRepTravelJournalListUseCase,
     private val getUserJournalBookMarkUseCase: GetUserJournalBookMarkUseCase,
     private val createJournalBookMarkUseCase: CreateJournalBookMarkUseCase,
     private val deleteJournalBookMarkUseCase: DeleteJournalBookMarkUseCase,
-    @Assisted private val userName: String,
+    private val getTravelJournalUseCase: GetTravelJournalUseCase,
 ) : ViewModel() {
+    private var nickName: String = ""
+
+    fun initialize(savedUserName: String?="") {
+        nickName = if(savedUserName==""){
+            userName
+        }else{
+            savedUserName?:""
+        }
+        lastImageId = null
+        _lifeshots.value = emptyList()
+        getUserInfo()
+    }
+
 
     @AssistedFactory
     interface OtherProfileFactory {
-        fun create(userName: String): OtherProfileViewModel
+        fun create(userName: String?): OtherProfileViewModel
     }
 
 
@@ -108,6 +124,10 @@ class OtherProfileViewModel @AssistedInject constructor(
         complete()
     }
 
+    private val _journalInfo = MutableStateFlow<TravelJournalInfo?>(null)
+    val journalInfo: StateFlow<TravelJournalInfo?> get() = _journalInfo
+
+
     init {
         initData()
     }
@@ -118,6 +138,7 @@ class OtherProfileViewModel @AssistedInject constructor(
             _lifeshots.value = emptyList()
             lastRepTravelJournalId = null
             _repTravelJournal.value = null
+            _journalInfo.value = null
             getUserInfo()
         }
     }
@@ -125,7 +146,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     private fun getUserInfo() {
         viewModelScope.launch {
             val result = searchUserUseCase(
-                SearchUserRequestInfo(null, null, userName)
+                SearchUserRequestInfo(null, null, nickName)
             )
             if (result.isSuccess) {
                 val newUsers = result.getOrThrow()
@@ -262,8 +283,17 @@ class OtherProfileViewModel @AssistedInject constructor(
                 user.userId
             )
             if (result.isSuccess) {
-                val newRepTravelJournal = result.getOrThrow().first()
+                val newRepTravelJournal = result.getOrThrow().firstOrNull()
                 _repTravelJournal.emit(newRepTravelJournal)
+                if(newRepTravelJournal != null){
+                    val getJournalInfoResult = getTravelJournalUseCase(newRepTravelJournal.travelJournalId)
+                    if (getJournalInfoResult.isSuccess) {
+                        val info = getJournalInfoResult.getOrThrow()
+                        _journalInfo.emit(info)
+                    }else{
+                        handleError(result.exceptionOrNull() ?: UnKnownException())
+                    }
+                }
             } else {
                 handleError(result.exceptionOrNull() ?: UnKnownException())
 
@@ -345,7 +375,7 @@ class OtherProfileViewModel @AssistedInject constructor(
     companion object {
         fun provideFactory(
             assistedFactory: OtherProfileFactory,
-            userName: String,
+            userName: String?,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return assistedFactory.create(userName) as T

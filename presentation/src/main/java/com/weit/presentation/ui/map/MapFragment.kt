@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -105,6 +106,11 @@ class MapFragment :
                 }
             }
         }
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.event.collectLatest {event ->
+                handleEvent(event)
+            }
+        }
     }
 
     private fun showMap(latLng: LatLng) {
@@ -179,11 +185,11 @@ class MapFragment :
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        map?.clear()
-        mapFragment?.onDestroyView()
-    }
+//    override fun onDestroyView() {
+//        super.onDestroyView()
+//        map?.clear()
+//        mapFragment?.onDestroyView()
+//    }
 
     private fun placeBottomSheetUp(placeId: String) {
         if (searchPlaceBottomSheetFragment == null){
@@ -202,10 +208,10 @@ class MapFragment :
     }
 
     private fun showMainSearchTopSheet(){
-        if (mainSearchTopSheetFragment == null){
-            mainSearchTopSheetFragment = MainSearchTopSheetFragment{
-                viewModel.getDetailPlace(it)
-            }
+        mainSearchTopSheetFragment = null
+        mainSearchTopSheetFragment = MainSearchTopSheetFragment{placeId ->
+            viewModel.getDetailPlace(placeId)
+            placeBottomSheetUp(placeId)
         }
         if (!mainSearchTopSheetFragment!!.isAdded) {
             mainSearchTopSheetFragment!!.show(childFragmentManager, TAG)
@@ -270,10 +276,17 @@ class MapFragment :
             }
         }
     }
-
+    private fun handleEvent(event : MapViewModel.Event) {
+        when (event) {
+            MapViewModel.Event.FirstLogin -> {
+                val action = MapFragmentDirections.actionFragmentMapToLoginTopicFragment()
+                findNavController().navigate(action)
+            }
+        }
+    }
 
     companion object {
-        private val TAG = "MapFragment"
+        private const val TAG = "MapFragment"
         private const val MAP_FRAGMENT_TAG = "MAP"
     }
 }

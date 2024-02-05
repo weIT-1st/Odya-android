@@ -38,7 +38,7 @@ class ProfileBookmarkJournalAdapter(
         }
 
         fun bind(item: JournalBookMarkInfo){
-            val starImage = if(item.isBookmarked) R.drawable.ic_bookmark_fill else R.drawable.ic_bookmark
+            val starImage = if(item.isBookmarked) R.drawable.ic_star_yellow_fill else R.drawable.ic_star_white_empty
             binding.ivBookmarkJournalStar.setImageResource(starImage)
             Glide.with(binding.root.context)
                 .load(item.travelJournalMainImageUrl)

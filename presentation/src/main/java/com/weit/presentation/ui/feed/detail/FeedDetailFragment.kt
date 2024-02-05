@@ -51,6 +51,8 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.vm = viewModel
+        val feedId = arguments?.getString("communityId")
+        viewModel.initialize(feedId?.toLong())
         initCommentRecyclerView()
     }
 
@@ -78,7 +80,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
 
 
     private fun navigateTravelLog(travelLogId: Long) {
-        val action = FeedFragmentDirections.actionFragmentFeedToFragmentTravelJournal(travelLogId)
+        val action = FeedDetailFragmentDirections.actionFragmentFeedDetailToFragmentTravelJournal(travelLogId)
         findNavController().navigate(action)
     }
 
@@ -129,7 +131,7 @@ class FeedDetailFragment : BaseFragment<FragmentFeedDetailBinding>(
                     }
                 } else {
                     if (otherMenuDialog == null) {
-                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId,args.nickname?:"")
+                        otherMenuDialog = FeedDetailOtherMenuFragment(args.feedId,arguments?.getString("userName")?:args.nickname?:"")
 
                     }
                     if (otherMenuDialog?.isAdded?.not() == true) {

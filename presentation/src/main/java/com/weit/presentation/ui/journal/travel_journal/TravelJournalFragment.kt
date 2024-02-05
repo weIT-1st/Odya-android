@@ -13,6 +13,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTravelJournalBinding
+import com.weit.presentation.model.journal.TravelJournalContentUpdateDTO
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
 import com.weit.presentation.ui.journal.map.PinMode

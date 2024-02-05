@@ -5,7 +5,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:paddingStart="20dp"
         android:paddingEnd="20dp">
 
@@ -14,7 +14,7 @@
             android:id="@+id/iv_no_lifeshot"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="10dp"
             android:src="@drawable/ic_lifeshot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,16 +57,10 @@
             android:layout_marginTop="24dp"
             android:text="@string/profile_no_lifeshot_add"
             android:textColor="@color/label_reversed"
+            android:layout_marginBottom="10dp"
             app:layout_constraintTop_toBottomOf="@+id/tv_no_lifeshot2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            app:layout_constraintTop_toBottomOf="@+id/btn_no_lifeshot"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -28,7 +28,6 @@ class RepTravelJournalFriendAdapter(
     ): RecyclerView.ViewHolder(binding.root){
 
         fun bind(item: String){
-            Logger.t("MainTest").i("$item")
             Glide.with(binding.root)
                 .load(item)
                 .into(binding.ivProfile)

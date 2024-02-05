@@ -41,28 +41,36 @@ class MapViewModel @Inject constructor(
     private val _detailPlace = MutableEventFlow<PlaceDetail>()
     val detailPlace = _detailPlace.asEventFlow()
 
-    private val _currentLatLng = MutableStateFlow<LatLng>(DEFAULT_LAT_LNG)
+    private val _currentLatLng = MutableStateFlow(DEFAULT_LAT_LNG)
     val currentLatLng: StateFlow<LatLng> get() = _currentLatLng
 
+    private val allOdyaList = MutableStateFlow<List<CoordinateUserImageResponseInfo>>(emptyList())
+
     private val _odyaList = MutableStateFlow<List<CoordinateUserImageResponseInfo>>(emptyList())
-    val odyaList: StateFlow<List<CoordinateUserImageResponseInfo>> get() = _odyaList
+    val odyaList : StateFlow<List<CoordinateUserImageResponseInfo>> get() = _odyaList
 
-    private val _odyaAllList = MutableStateFlow<List<CoordinateUserImageResponseInfo>>(emptyList())
-    val odyaAllList: StateFlow<List<CoordinateUserImageResponseInfo>> get() = _odyaAllList
+    val isListOnlyMy = MutableStateFlow<Boolean>(true)
 
-    private val _odyaToggle = MutableStateFlow<Boolean>(false)
-    val odyaToggle: StateFlow<Boolean> get() = _odyaToggle
     private val _event = MutableEventFlow<Event>()
     val event = _event.asEventFlow()
+
     init {
+        getCurrentPlace()
+        getTopic()
+    }
+
+    fun getCurrentPlace() {
         viewModelScope.launch {
             val current = getCurrentPlaceUseCase()
+
             if (current.isSuccess) {
                 val result = current.getOrThrow()
+                _currentLatLng.emit(DEFAULT_LAT_LNG)
                 _currentLatLng.emit(LatLng(result.lat.toDouble(), result.lng.toDouble()))
+            } else {
+                // todo 에러처리
             }
         }
-        getTopic()
     }
 
     fun getPlaceByCoordinate(latitude: Double, longitude: Double) {
@@ -86,7 +94,6 @@ class MapViewModel @Inject constructor(
 
     fun getOdyaList(northeast: LatLng, southwest: LatLng ) {
         viewModelScope.launch {
-            val toggleOdyaOnOff = odyaToggle.value
             val rightUp = ImageDoubleLatLng(northeast.latitude, northeast.longitude)
             val leftDown = ImageDoubleLatLng(southwest.latitude, southwest.longitude)
             val result = getCoordinateUserImageUseCase(
@@ -96,9 +103,8 @@ class MapViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 val list = result.getOrThrow()
-                _odyaAllList.emit(list)
-                setOdyaByToggleOnOff(toggleOdyaOnOff, list)
-
+                allOdyaList.emit(list)
+                setOdyaByIsListOnlyMy()
             } else {
                 Log.d("getCoordinateUserImage", "fail : ${result.exceptionOrNull()}")
             }
@@ -106,20 +112,16 @@ class MapViewModel @Inject constructor(
 
     }
 
-    fun changeOdyaToggleOff(isChecked: Boolean) {
-        viewModelScope.launch {
-            _odyaToggle.emit(isChecked)
-            val list = odyaAllList.value
+    fun setOdyaByIsListOnlyMy(){
+        viewModelScope.launch{
+            val list = allOdyaList.value
+            val isChecked = isListOnlyMy.value
 
-            setOdyaByToggleOnOff(isChecked, list)
-        }
-    }
-
-    private suspend fun setOdyaByToggleOnOff(isChecked: Boolean, list: List<CoordinateUserImageResponseInfo>){
-        if (isChecked){
-            _odyaList.emit(list.filter { it.imageUserType == ImageUserType.USER })
-        } else {
-            _odyaList.emit(list.filterNot { it.imageUserType == ImageUserType.OTHER })
+            if (isChecked){
+                _odyaList.emit(list)
+            } else {
+                _odyaList.emit(list.filter { it.imageUserType == ImageUserType.USER })
+            }
         }
     }
 
@@ -138,7 +140,23 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    fun popUpSearchPlace(placeId: String?) {
+        viewModelScope.launch {
+            _event.emit(Event.PopUpSearchPlace(placeId))
+        }
+    }
+
+    fun popUpMainSearch() {
+        viewModelScope.launch{
+            _event.emit(Event.PopUpMainSearch)
+        }
+    }
+
     sealed class Event {
+        data class PopUpSearchPlace(
+            val placeId: String?
+        ) : Event()
+        object PopUpMainSearch: Event()
         object FirstLogin : Event()
     }
 

@@ -16,6 +16,10 @@ import com.weit.domain.model.user.search.UserProfileInfo
 import com.weit.domain.usecase.notification.GetNotificationsUseCase
 import com.weit.domain.usecase.notification.InsertNotificationUseCase
 import com.weit.domain.usecase.notification.UpdateFcmTokenUseCase
+import com.weit.domain.usecase.userinfo.GetIsAlarmAllUseCase
+import com.weit.domain.usecase.userinfo.GetIsAlarmCommentUseCase
+import com.weit.domain.usecase.userinfo.GetIsAlarmLikeUseCase
+import com.weit.domain.usecase.userinfo.GetIsAlarmMarketingUseCase
 import com.weit.presentation.model.NotificationType
 import com.weit.presentation.ui.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,7 +32,12 @@ import java.util.UUID
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class FirebaseMessageService : FirebaseMessagingService() {
+class FirebaseMessageService(
+    private val getIsAlarmAllUseCase: GetIsAlarmAllUseCase,
+    private val getIsAlarmLikeUseCase: GetIsAlarmLikeUseCase,
+    private val getIsAlarmCommentUseCase: GetIsAlarmCommentUseCase,
+    private val getIsAlarmMarketingUseCase: GetIsAlarmMarketingUseCase
+) : FirebaseMessagingService() {
 
     @Inject
     lateinit var updateFcmTokenUseCase: UpdateFcmTokenUseCase
@@ -48,6 +57,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
             createNotificationChannel(channel)
         }
     }
+
     override fun onNewToken(token: String) {
         scope.launch {
             updateFcmTokenUseCase(token)
@@ -116,8 +126,33 @@ class FirebaseMessageService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        if (message.data.isNotEmpty()) {
-            handleDataMessage(message)
+        scope.launch{
+            val isAllAlarm = getIsAlarmAllUseCase().getOrNull() ?: true
+            val isLikeAlarm = getIsAlarmLikeUseCase().getOrNull() ?: true
+            val isCommentAlarm = getIsAlarmCommentUseCase().getOrNull() ?: true
+            val isMarketingAlarm = getIsAlarmMarketingUseCase().getOrNull() ?: true
+
+            if (message.data.isNotEmpty()) {
+                if (isAllAlarm) {
+                    handleDataMessage(message)
+                } else {
+                    when(message.data["eventType"]){
+                        "COMMUNITY_LIKE" -> {
+                            if(isLikeAlarm){
+                                handleDataMessage(message)
+                            }
+                        }
+                        "COMMUNITY_COMMENT" -> {
+                            if(isCommentAlarm){
+                                handleDataMessage(message)
+                            }
+                        }
+                        else -> {
+                            handleDataMessage(message)
+                        }
+                    }
+                }
+            }
         }
     }
 

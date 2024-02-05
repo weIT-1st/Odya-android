@@ -23,6 +23,9 @@
     <action
         android:id="@+id/action_fragment_map_to_loginTopicFragment"
         app:destination="@id/loginTopicFragment" />
+        <action
+            android:id="@+id/action_fragment_map_to_searchPlaceBottomSheetFragment"
+            app:destination="@id/searchPlaceBottomSheetFragment" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed"
@@ -466,6 +469,9 @@
         <action
             android:id="@+id/action_placeJournalFragment_to_post_graph"
             app:destination="@id/post_graph" />
+        <action
+            android:id="@+id/action_placeJournalFragment_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/placeReviewFragment"
@@ -502,4 +508,16 @@
         android:id="@+id/updateUserInfoFragment"
         android:name="com.weit.presentation.ui.profile.preferences.update.UpdateUserInfoFragment"
         android:label="UpdateUserInfoFragment" />
+    <dialog
+        android:id="@+id/searchPlaceBottomSheetFragment"
+        android:name="com.weit.presentation.ui.main.place.SearchPlaceBottomSheetFragment"
+        android:label="SearchPlaceBottomSheetFragment" >
+        <argument
+            android:name="placeId"
+            app:argType="string" />
+    </dialog>
+    <dialog
+        android:id="@+id/mainSearchTopSheetFragment"
+        android:name="com.weit.presentation.ui.map.search.MainSearchTopSheetFragment"
+        android:label="MainSearchTopSheetFragment" />
 </navigation>

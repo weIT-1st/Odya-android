@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.IntRange
 import androidx.core.graphics.drawable.toDrawable
-import androidx.fragment.app.findFragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayoutMediator
 import com.weit.presentation.R
 import com.weit.presentation.databinding.BottomSheetPlaceSearchBinding
-import com.weit.presentation.ui.main.community.PlaceCommunityFragment
-import com.weit.presentation.ui.main.journal.PlaceJournalFragment
-import com.weit.presentation.ui.main.review.PlaceReviewFragment
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,25 +19,21 @@ import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class SearchPlaceBottomSheetFragment(
-    private val placeId: String,
-    private val reset : () -> Unit
-) : BottomSheetDialogFragment() {
+class SearchPlaceBottomSheetFragment : BottomSheetDialogFragment() {
 
     @Inject
     lateinit var viewModelFactory: SearchPlaceBottomSheetViewModel.PlaceIdFactory
 
+    private val args: SearchPlaceBottomSheetFragmentArgs by navArgs()
     private val viewModel: SearchPlaceBottomSheetViewModel by viewModels {
-        SearchPlaceBottomSheetViewModel.provideFactory(viewModelFactory, placeId)
+        SearchPlaceBottomSheetViewModel.provideFactory(viewModelFactory, args.placeId)
     }
 
     private var _binding: BottomSheetPlaceSearchBinding? = null
     private val binding get() = _binding!!
 
     private val experiencedFriendAdapter = ExperiencedFriendAdapter()
-
     private val placeHolder = R.layout.image_placeholder.toDrawable()
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +101,6 @@ class SearchPlaceBottomSheetFragment(
         binding.rvPlaceExperiencedFriendProfile.adapter = null
         binding.viewPagerBsPlace.adapter = null
         _binding = null
-        reset()
     }
 
     private fun initTabViewPager() {
@@ -118,7 +108,7 @@ class SearchPlaceBottomSheetFragment(
         val tabLayout = binding.tlBsPlace
 
         viewPager.apply {
-            adapter = SearchPlaceTapAdapter(childFragmentManager, lifecycle, placeId)
+            adapter = SearchPlaceTapAdapter(childFragmentManager, lifecycle, args.placeId)
             isUserInputEnabled = false
         }
 

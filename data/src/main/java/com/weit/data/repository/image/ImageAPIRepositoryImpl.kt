@@ -1,6 +1,5 @@
 package com.weit.data.repository.image
 
-import androidx.datastore.dataStore
 import com.weit.data.model.image.PlaceNameDTO
 import com.weit.data.source.ImageAPIDataSource
 import com.weit.data.util.exception
@@ -102,8 +101,8 @@ class ImageAPIRepositoryImpl @Inject constructor(
                     it.latitude,
                     it.longitude,
                     setImageUserType(it.imageUserType),
-                    it.journalId,
-                    it.communityId
+                    it.journalId ?: 0L,
+                    it.communityId ?: 0L
                 )
             })
         } else {

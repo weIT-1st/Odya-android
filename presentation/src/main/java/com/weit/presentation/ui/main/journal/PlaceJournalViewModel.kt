@@ -4,12 +4,14 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.weit.domain.model.journal.TravelJournalCompanionsInfo
 import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.domain.model.journal.TravelJournalListInfo
 import com.weit.domain.usecase.journal.GetFriendTravelJournalListUseCase
 import com.weit.domain.usecase.journal.GetMyTravelJournalListUseCase
 import com.weit.domain.usecase.journal.GetRecommendTravelJournalListUseCase
 import com.weit.domain.usecase.journal.GetTravelJournalUseCase
+import com.weit.presentation.ui.journal.travel_journal.TravelJournalViewModel
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -17,16 +19,21 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 class PlaceJournalViewModel @AssistedInject constructor(
     private val getMyTravelJournalListUseCase: GetMyTravelJournalListUseCase,
     private val getFriendTravelJournalListUseCase: GetFriendTravelJournalListUseCase,
     private val getRecommendTravelJournalListUseCase: GetRecommendTravelJournalListUseCase,
+    private val getTravelJournalUseCase: GetTravelJournalUseCase,
     @Assisted private val placeId: String
 ) : ViewModel(){
 
     private val _myRandomJournal = MutableStateFlow<TravelJournalListInfo?>(null)
     val myRandomJournal : StateFlow<TravelJournalListInfo?> get() = _myRandomJournal
+
+    private val _myRandomJournalInfo = MutableStateFlow<TravelJournalInfo?>(null)
+    val myRandomJournalInfo: StateFlow<TravelJournalInfo?> get() = _myRandomJournalInfo
 
     val myJournalContent = MutableStateFlow("")
 
@@ -104,11 +111,40 @@ class PlaceJournalViewModel @AssistedInject constructor(
             if (result.isSuccess){
                 val random = result.getOrThrow().randomOrNull()
                 _myRandomJournal.emit(random)
+                getMyRandomJournal()
 
                 setMyJournalContent()
             } else {
                 Log.d("getMyJournalList", "fail : ${result.exceptionOrNull()}")
             }
+        }
+    }
+
+    private fun getMyRandomJournal() {
+        viewModelScope.launch {
+            val myRandomJournal = myRandomJournal.value
+
+            myRandomJournal?.let {
+                val result = getTravelJournalUseCase(myRandomJournal.travelJournalId)
+
+                if (result.isSuccess) {
+                    val info = result.getOrThrow()
+                    _myRandomJournalInfo.emit(info)
+                } else {
+                    // todo 에러처리
+                }
+            }
+        }
+    }
+
+    fun handleFriendsCount(info: TravelJournalInfo): List<TravelJournalCompanionsInfo>{
+        info ?: return emptyList()
+
+        val friendCount = info.travelJournalCompanions.size
+        return if (friendCount < MAX_ABLE_SHOW_FRIENDS_NUM) {
+            info.travelJournalCompanions
+        } else {
+            info.travelJournalCompanions.slice(0 until min(MAX_ABLE_SHOW_FRIENDS_NUM, friendCount))
         }
     }
 
@@ -123,6 +159,7 @@ class PlaceJournalViewModel @AssistedInject constructor(
 
     companion object{
         const val DEFAULT_PAGE_SIZE = 10
+        private const val MAX_ABLE_SHOW_FRIENDS_NUM = 3
         fun provideFactory(
            assistedFactory: PlaceIdFactory,
            placeId: String

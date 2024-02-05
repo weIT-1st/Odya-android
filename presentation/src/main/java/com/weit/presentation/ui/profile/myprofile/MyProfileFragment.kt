@@ -249,7 +249,7 @@ class MyProfileFragment : BaseFragment<FragmentMyProfileBinding>(
                     binding.viewTabPlaceMyJourney.visibility = View.INVISIBLE
                 }
 
-                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map { it.profileUrl })
+                repJournalFriendAdapter.submitList(item?.travelCompanionSimpleResponses?.map{it.profileUrl?:""})
             }
         }
         repeatOnStarted(viewLifecycleOwner) {

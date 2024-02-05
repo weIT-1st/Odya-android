@@ -50,42 +50,42 @@ class UpdateUserInfoViewModel @Inject constructor(
     }
 
     fun updatePhone() {
-        viewModelScope.launch {
-            val newPhoneNum = newPhoneNum.value
-            val originalUser = user.value
-
-            if (originalUser != null) {
-                originalUser.phoneNumber = newPhoneNum
-
-                val result = updateUserInformationUseCase(originalUser)
-
-                if (result.isSuccess) {
-                    _event.emit(Event.SuccessUpdatePhone)
-                } else {
-                    // todo 에러 처리
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            val newPhoneNum = newPhoneNum.value
+//            val originalUser = user.value
+//
+//            if (originalUser != null) {
+//                originalUser.phoneNumber = newPhoneNum
+//
+//                val result = updateUserInformationUseCase(originalUser)
+//
+//                if (result.isSuccess) {
+//                    _event.emit(Event.SuccessUpdatePhone)
+//                } else {
+//                    // todo 에러 처리
+//                }
+//            }
+//        }
     }
 
     fun updateNickname() {
-        viewModelScope.launch {
-            val newNickname = newNickname.value
-            val originalUser = user.value
-
-            if (originalUser != null) {
-                originalUser.nickname = newNickname
-
-                val result = updateUserInformationUseCase(originalUser)
-
-                if (result.isSuccess) {
-                    saveUserNickname(newNickname)
-                    _event.emit(Event.SuccessUpdateNickname)
-                } else {
-                    // todo 에러 처리
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            val newNickname = newNickname.value
+//            val originalUser = user.value
+//
+//            if (originalUser != null) {
+//                originalUser.nickname = newNickname
+//
+//                val result = updateUserInformationUseCase(originalUser)
+//
+//                if (result.isSuccess) {
+//                    saveUserNickname(newNickname)
+//                    _event.emit(Event.SuccessUpdateNickname)
+//                } else {
+//                    // todo 에러 처리
+//                }
+//            }
+//        }
     }
 
     private fun saveUserNickname(newNickname: String) {
@@ -99,22 +99,22 @@ class UpdateUserInfoViewModel @Inject constructor(
     }
 
     fun updateEmail() {
-        viewModelScope.launch {
-            val newEmail = newEmail.value
-            val originalUser = user.value
-
-            if (originalUser != null) {
-                originalUser.email = newEmail
-
-                val result = updateUserInformationUseCase(originalUser)
-
-                if (result.isSuccess) {
-                    _event.emit(Event.SuccessUpdateEmail)
-                } else {
-                    // todo 에러 처리
-                }
-            }
-        }
+//        viewModelScope.launch {
+//            val newEmail = newEmail.value
+//            val originalUser = user.value
+//
+//            if (originalUser != null) {
+//                originalUser.email = newEmail
+//
+//                val result = updateUserInformationUseCase(originalUser)
+//
+//                if (result.isSuccess) {
+//                    _event.emit(Event.SuccessUpdateEmail)
+//                } else {
+//                    // todo 에러 처리
+//                }
+//            }
+//        }
     }
 
 

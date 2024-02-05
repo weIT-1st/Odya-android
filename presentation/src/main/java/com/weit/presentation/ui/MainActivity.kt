@@ -8,8 +8,6 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.messaging.FirebaseMessaging
 import com.weit.domain.usecase.image.PickImageUseCase
 import com.weit.domain.usecase.setting.VerifyIgnoringBatteryOptimizationUseCase
 import com.weit.domain.usecase.setting.VerifyLocationPermissionUseCase

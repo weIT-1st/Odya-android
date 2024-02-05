@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="vm"
             type="com.weit.presentation.ui.map.MapViewModel"/>
 
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -19,7 +19,7 @@
             android:id="@+id/btn_map_popular_odya"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/detail1"
+            android:textAppearance="@style/detail1"
             android:text="@string/place_main_popular_odya"
             android:textColor="@color/label_inactive"
             android:drawableEnd="@drawable/ic_search"
@@ -28,6 +28,7 @@
             app:backgroundTint="@color/elevation1"
             android:layout_marginStart="24dp"
             android:layout_marginTop="28dp"
+            android:onClickListener="@{ () -> vm.popUpMainSearch() }"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
@@ -35,10 +36,12 @@
             android:id="@+id/toggle_map_loog_odya"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/detail1"
+            android:textAppearance="@style/detail1"
             android:textColor="@drawable/selector_look_odya_text_color"
             android:textOff="@string/place_main_only_my_odya"
             android:textOn="@string/place_main_with_friend_odya"
+            android:checked="@={vm.isListOnlyMy()}"
+            android:onClickListener="@{ () -> vm.setOdyaByIsListOnlyMy() }"
             android:background="@drawable/selector_look_odya"
             android:padding="12dp"
             android:layout_marginEnd="16dp"
@@ -57,14 +60,10 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-
-        <fragment
-            android:id="@+id/confirmation_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/map_main_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
+            android:layout_height="match_parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

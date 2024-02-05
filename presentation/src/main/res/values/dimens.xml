@@ -37,8 +37,6 @@
     <dimen name="item_feed_comment_space">16dp</dimen>
     <dimen name="item_travel_journal_space">10dp</dimen>
 
-    <dimen name="item_may_know_friend_space">32dp</dimen>
-
     <dimen name="item_memory_all_space">12dp</dimen>
     <dimen name="item_memory_day_space">50dp</dimen>
     <dimen name="item_memory_album_space">4dp</dimen>
@@ -50,6 +48,9 @@
 
     <dimen name="marker_width">30dp</dimen>
     <dimen name="marker_height">36dp</dimen>
+
+    <dimen name="current_marker_width">148dp</dimen>
+    <dimen name="current_marker_height">148dp</dimen>
 
     <dimen name="marker_with_image_width">48dp</dimen>
     <dimen name="marker_with_image_height">84dp</dimen>

@@ -1,14 +1,18 @@
 package com.weit.presentation.ui.main.journal
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.weit.domain.model.journal.TravelJournalInfo
 import com.weit.presentation.R
 import com.weit.presentation.databinding.FragmentTabPlaceJourneyBinding
 import com.weit.presentation.ui.base.BaseFragment
+import com.weit.presentation.ui.journal.friends.TravelJournalFriendAdapter
+import com.weit.presentation.ui.journal.map.PinMode
+import com.weit.presentation.ui.journal.map.TravelJournalMapFragment
+import com.weit.presentation.ui.profile.reptraveljournal.TogetherFriendBottomFragment
 import com.weit.presentation.ui.util.InfinityScrollListener
 import com.weit.presentation.ui.util.SpaceDecoration
 import com.weit.presentation.ui.util.repeatOnStarted
@@ -29,6 +33,8 @@ class PlaceJournalFragment(
         PlaceJournalViewModel.provideFactory(viewModelFactory, placeId)
     }
 
+    private var togetherFriendBottomFragment: TogetherFriendBottomFragment? = null
+    private val travelFriendJournalAdapter = TravelJournalFriendAdapter()
     private val friendJournalAdapter: FriendJournalAdapter = FriendJournalAdapter()
     private val recommendJournalAdapter: RecommendJournalAdapter = RecommendJournalAdapter()
 
@@ -63,20 +69,13 @@ class PlaceJournalFragment(
 
                 binding.lyTabPlaceMyJournal.isGone = (journal == null)
                 binding.lyTabPlaceMyJournalContent.isGone = (journal == null)
+            }
+        }
 
-                if (journal != null) {
-                    binding.lyTabPlaceMyJournal.setOnClickListener {
-                        moveToTravelJournalDetail(journal.travelJournalId)
-                    }
-                    binding.includeTabPlaceMyJournal.tvItemMyJournalTitle.text = journal.travelJournalTitle
-                    binding.includeTabPlaceMyJournal.tvItemMyJournalDate.text =
-                        requireContext().getString(R.string.place_journey_date, journal.travelStartDate, journal.travelEndDate)
-                    binding.tvTabPlaceMyJournalContent.text = journal.content
-
-                    binding.includeTabPlaceMyJournal.btnItemMyJournalMoreFriend.isGone =
-                        journal.travelCompanionSimpleResponses.size < DEFAULT_FRIEND_COUNT
-
-                    // todo 친구 더보기 연결
+        repeatOnStarted(viewLifecycleOwner) {
+            viewModel.myRandomJournalInfo.collectLatest { info ->
+                info?.let {
+                    setMyTravelJournal(info)
                 }
             }
         }
@@ -108,12 +107,52 @@ class PlaceJournalFragment(
     }
 
     override fun onDestroyView() {
+        binding.includeTabPlaceMyJournal.rvItemMyJournalFriends.adapter = null
         binding.rvTabPlaceFriendJournal.adapter = null
         binding.rvTabPlaceRecommendJournal.adapter = null
 
         binding.rvTabPlaceFriendJournal.removeOnScrollListener(friendInfinityScrollListener)
         binding.rvTabPlaceRecommendJournal.removeOnScrollListener(recommendInfinityScrollListener)
         super.onDestroyView()
+    }
+
+    private fun setMyTravelJournal(info: TravelJournalInfo) {
+        childFragmentManager.beginTransaction()
+            .add(R.id.fragment_item_my_journal_map,
+                TravelJournalMapFragment(
+                    travelJournalInfo = info,
+                    pinMode = PinMode.IMAGE_PIN,
+                    isMapLine = true
+                ))
+            .setReorderingAllowed(true)
+            .commit()
+
+        binding.lyTabPlaceMyJournalContent.setOnClickListener {
+            moveToTravelJournalDetail(info.travelJournalId)
+        }
+        binding.includeTabPlaceMyJournal.tvItemMyJournalTitle.text = info.travelJournalTitle
+        binding.includeTabPlaceMyJournal.tvItemMyJournalDate.text =
+            requireContext().getString(R.string.place_journey_date, info.travelStartDate, info.travelEndDate)
+        binding.tvTabPlaceMyJournalContent.text = info.travelJournalContents.first().content
+        binding.includeTabPlaceMyJournal.btnItemMyJournalMoreFriend.isGone =
+            info.travelJournalCompanions.size < DEFAULT_FRIEND_COUNT
+        binding.includeTabPlaceMyJournal.rvItemMyJournalFriends.apply {
+            adapter = travelFriendJournalAdapter
+            addItemDecoration(SpaceDecoration(resources, rightDP = R.dimen.item_journal_friends_space))
+        }
+        travelFriendJournalAdapter.submitList(viewModel.handleFriendsCount(info))
+        binding.includeTabPlaceMyJournal.btnItemMyJournalMoreFriend.setOnClickListener {
+            if (togetherFriendBottomFragment == null) {
+                togetherFriendBottomFragment = TogetherFriendBottomFragment(info.travelJournalCompanions)
+
+            }
+            if (togetherFriendBottomFragment?.isAdded?.not() == true) {
+                togetherFriendBottomFragment?.show(
+                    requireActivity().supportFragmentManager,
+                    TogetherFriendBottomFragment.TAG,
+                )
+            }
+        }
     }
 
     private fun setFriendJournalRecyclerView(){
@@ -133,7 +172,10 @@ class PlaceJournalFragment(
     }
 
     private fun moveToTravelJournalDetail(travelJournalId: Long){
-        // todo 여행일지 상세 보기로 이동
+        val action = PlaceJournalFragmentDirections.actionPlaceJournalFragmentToFragmentTravelJournal(
+            travelJournalId = travelJournalId
+        )
+        findNavController().navigate(action)
     }
 
     private fun moveToPostTravelJournal() {

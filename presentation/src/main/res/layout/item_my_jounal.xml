@@ -9,14 +9,10 @@
         android:background="@drawable/corners_all_12"
         android:clipToOutline="true">
 
-        <include
-            android:id="@+id/include_item_my_journal_map"
-            layout="@layout/item_journal_map"
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/fragment_item_my_journal_map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_item_my_journal_title"
@@ -47,6 +43,7 @@
             tools:text="2023.08.01 ~ 08.12"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_item_my_journal_friends"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"

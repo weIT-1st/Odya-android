@@ -38,6 +38,26 @@ fun getMarkerIconFromDrawable(
     return BitmapDescriptorFactory.fromBitmap(bitmap)
 }
 
+fun getCurrentMarkerIconFromDrawable(
+    resources: Resources,
+    @DrawableRes drawableRes: Int = R.drawable.ic_current_locate,
+    @DimenRes widthDp: Int = R.dimen.current_marker_width,
+    @DimenRes heightDp: Int = R.dimen.current_marker_height,
+): BitmapDescriptor? {
+    val width = resources.getDimension(widthDp).roundToInt()
+    val height = resources.getDimension(heightDp).roundToInt()
+    val drawable = ResourcesCompat.getDrawable(resources, drawableRes, null) ?: return null
+    val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+    val canvas = Canvas().apply {
+        setBitmap(bitmap)
+    }
+    drawable.run {
+        setBounds(0, 0, width, height)
+        draw(canvas)
+    }
+    return BitmapDescriptorFactory.fromBitmap(bitmap)
+}
+
 fun getImageMarkerIconFromLayout(
     context: Context,
     imageUrl: String?,

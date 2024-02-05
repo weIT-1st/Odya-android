@@ -210,8 +210,6 @@ class TravelJournalFragment : BaseFragment<FragmentTravelJournalBinding>(
             TravelJournalViewModel.Event.PopupTravelJournalFriends -> {
 
             }
-
-            else -> {}
         }
     }
 

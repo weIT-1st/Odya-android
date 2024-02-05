@@ -6,7 +6,7 @@ data class CoordinateUserImageResponseInfo(
     val imageId: Long,
     val userId: Long,
     val imageUrl: String,
-    val placeId: Long,
+    val placeId: String,
     val latitude: Double,
     val longitude: Double,
     val imageUserType: ImageUserType,

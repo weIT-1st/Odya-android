@@ -11,11 +11,11 @@ interface UserRepository {
 
     suspend fun getUser(): Result<User>
 
-    suspend fun updateEmail(emailUpdateUser: User): Result<Unit>
+    suspend fun updateEmail(email: String): Result<Unit>
 
-    suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit>
+    suspend fun updatePhoneNumber(phoneNumber: String): Result<Unit>
 
-    suspend fun updateInformation(informationUpdateUser: User): Result<Unit>
+    suspend fun updateInformation(nickname: String): Result<Unit>
 
     suspend fun updateProfile(uri: String?): Result<Unit>
 

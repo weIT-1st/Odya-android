@@ -6,6 +6,9 @@ import com.weit.data.model.image.UserImageResponseDTO
 import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
+import com.weit.data.model.user.UserEmailDTO
+import com.weit.data.model.user.UserNicknameDTO
+import com.weit.data.model.user.UserPhoneNumDTO
 import com.weit.data.model.user.UserStatisticsDTO
 import com.weit.data.service.UserService
 import com.weit.domain.model.user.LifeshotRequestInfo
@@ -26,16 +29,16 @@ class UserDataSource @Inject constructor(
         return userService.getUser()
     }
 
-    suspend fun updateEmail(emailUpdateUser: User) {
+    suspend fun updateEmail(emailUpdateUser: UserEmailDTO) {
         userService.updateEmail(emailUpdateUser)
     }
 
-    suspend fun updatePhoneNumber(phoneNumberUpdateUser: User) {
+    suspend fun updatePhoneNumber(phoneNumberUpdateUser: UserPhoneNumDTO) {
         userService.updatePhoneNumber(phoneNumberUpdateUser)
     }
 
-    suspend fun updateInformation(informationUpdateUser: User) {
-        userService.updateInformation(informationUpdateUser)
+    suspend fun updateInformation(nickname: UserNicknameDTO) {
+        userService.updateInformation(nickname)
     }
 
     suspend fun updateProfile(profile: MultipartBody.Part?): Response<Unit> {

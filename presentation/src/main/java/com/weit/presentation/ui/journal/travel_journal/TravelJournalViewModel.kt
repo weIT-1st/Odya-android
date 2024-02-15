@@ -65,6 +65,7 @@ class TravelJournalViewModel @AssistedInject constructor(
             if (result.isSuccess) {
                 val info = result.getOrThrow()
                 _journalInfo.emit(info)
+                Log.d("jomi", "info : ${result.getOrThrow()}")
 
                 if (info.writer.userId == getUserIdUseCase()) {
                     _travelJournalDetailToolBarInfo.emit(
@@ -87,6 +88,7 @@ class TravelJournalViewModel @AssistedInject constructor(
                 }
             } else {
                 //todo 에러 처리
+                Log.d("jomi", "fail : ${result.exceptionOrNull()}")
                 Logger.t("MainTest").i("${result.exceptionOrNull()?.javaClass?.name}")
             }
         }

@@ -369,6 +369,7 @@ class TravelJournalRepositoryImpl @Inject constructor(
             travelEndDate = travelEndDate,
             visibility = visibility,
             isBookmarked = isBookmarked,
+            isRepresentative = isRepresentative,
             writer = writer.toTravelJournalWriterInfo(),
             travelJournalContents.map { it.toTravelJournalContentsInfo() },
             travelJournalCompanions.map { it.toTravelJournalCompanionsInfo() }

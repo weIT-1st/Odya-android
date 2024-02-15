@@ -100,6 +100,10 @@ class MapFragment :
                 map!!.projection.visibleRegion.latLngBounds.southwest
             )
         }
+
+        map?.setOnMapClickListener {
+            viewModel.clickMarker(it)
+        }
     }
 
     private fun setMapImagePin(placeList: List<CoordinateUserImageResponseInfo>) {
@@ -149,6 +153,12 @@ class MapFragment :
                     )
                     findNavController().navigate(action)
                 }
+            }
+            is MapViewModel.Event.MoveToTravelJournal -> {
+                val action = MapFragmentDirections.actionFragmentMapToFragmentTravelJournal(
+                    event.travelJournalId
+                )
+                findNavController().navigate(action)
             }
             MapViewModel.Event.PopUpMainSearch -> {
                 showMainSearchTopSheet()

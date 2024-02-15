@@ -26,6 +26,9 @@
         <action
             android:id="@+id/action_fragment_map_to_searchPlaceBottomSheetFragment"
             app:destination="@id/searchPlaceBottomSheetFragment" />
+        <action
+            android:id="@+id/action_fragment_map_to_fragment_travel_Journal"
+            app:destination="@id/fragment_travel_Journal" />
     </fragment>
     <fragment
         android:id="@+id/fragment_feed"

@@ -2,6 +2,7 @@ package com.weit.presentation.ui.journal.map
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -121,7 +122,7 @@ class TravelJournalMapFragment(
             placeList.forEach {
                 add(it)
             }
-            color(R.color.primary)
+            color(ContextCompat.getColor(requireContext(), R.color.primary))
             jointType(JointType.ROUND)
         }
 

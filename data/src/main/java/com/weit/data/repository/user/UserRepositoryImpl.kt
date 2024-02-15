@@ -2,6 +2,9 @@ package com.weit.data.repository.user
 
 import android.content.res.Resources.NotFoundException
 import com.weit.data.model.user.FcmToken
+import com.weit.data.model.user.UserEmailDTO
+import com.weit.data.model.user.UserNicknameDTO
+import com.weit.data.model.user.UserPhoneNumDTO
 import com.weit.data.repository.image.ImageRepositoryImpl
 import com.weit.data.source.ImageDataSource
 import com.weit.data.source.UserDataSource
@@ -14,6 +17,7 @@ import com.weit.domain.model.exception.InvalidTokenException
 import com.weit.domain.model.exception.NoMoreItemException
 import com.weit.domain.model.exception.RegexException
 import com.weit.domain.model.exception.UnKnownException
+import com.weit.domain.model.exception.auth.DuplicatedSomethingException
 import com.weit.domain.model.exception.community.NotExistCommunityIdOrCommunityCommentsException
 import com.weit.domain.model.image.UserImageResponseInfo
 import com.weit.domain.model.user.LifeshotRequestInfo
@@ -22,10 +26,12 @@ import com.weit.domain.model.user.SearchUserRequestInfo
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserStatistics
 import com.weit.domain.repository.user.UserRepository
+import com.weit.domain.usecase.auth.IsDuplicateNicknameUseCase
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.internal.http.HTTP_BAD_REQUEST
+import okhttp3.internal.http.HTTP_CONFLICT
 import okhttp3.internal.http.HTTP_FORBIDDEN
 import okhttp3.internal.http.HTTP_INTERNAL_SERVER_ERROR
 import okhttp3.internal.http.HTTP_NOT_FOUND
@@ -51,10 +57,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateEmail(emailUpdateUser: User): Result<Unit> {
+    override suspend fun updateEmail(email: String): Result<Unit> {
         val result: Result<Unit> = runCatching {
-            if (Pattern.matches(REGEX_EMAIL, emailUpdateUser.email.toString())) {
-                userDataSource.updateEmail(emailUpdateUser)
+            if (Pattern.matches(REGEX_EMAIL, email)) {
+                userDataSource.updateEmail(UserEmailDTO(email))
             } else {
                 throw RegexException()
             }
@@ -62,15 +68,15 @@ class UserRepositoryImpl @Inject constructor(
         return result
     }
 
-    override suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit> {
+    override suspend fun updatePhoneNumber(phoneNumber: String): Result<Unit> {
         return runCatching {
-            userDataSource.updatePhoneNumber(phoneNumberUpdateUser)
+            userDataSource.updatePhoneNumber(UserPhoneNumDTO(phoneNumber))
         }
     }
 
-    override suspend fun updateInformation(informationUpdateUser: User): Result<Unit> {
+    override suspend fun updateInformation(nickname: String): Result<Unit> {
         return runCatching {
-            userDataSource.updateInformation(informationUpdateUser)
+            userDataSource.updateInformation(UserNicknameDTO(nickname))
         }
     }
 
@@ -196,6 +202,7 @@ class UserRepositoryImpl @Inject constructor(
         return when (code) {
             HTTP_BAD_REQUEST -> InvalidRequestException()
             HTTP_UNAUTHORIZED -> InvalidTokenException()
+            HTTP_CONFLICT -> DuplicatedSomethingException()
             else -> {
                 UnKnownException()
             }

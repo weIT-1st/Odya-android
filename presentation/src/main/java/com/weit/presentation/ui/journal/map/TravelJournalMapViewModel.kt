@@ -1,5 +1,6 @@
 package com.weit.presentation.ui.journal.map
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -41,17 +42,16 @@ class TravelJournalMapViewModel @AssistedInject constructor(
 
     fun initAllPlaceList() {
         viewModelScope.launch {
-            val latitudes = emptyList<Double>().toMutableList()
-            val longitudes = emptyList<Double>().toMutableList()
-            val placeList = emptyList<LatLng>().toMutableList()
+            var latitudes = emptyList<Double>()
+            var longitudes = emptyList<Double>()
+            var placeList = emptyList<LatLng>()
 
             travelJournalInfo.travelJournalContents.forEach {
-                latitudes.plus(it.latitude)
-                longitudes.plus(it.longitude)
+                latitudes = latitudes + it.latitude
+                longitudes = longitudes + it.longitude
             }
-
-            for (i in 0 until latitudes.size) {
-                placeList.add(LatLng(latitudes[i], longitudes[i]))
+            for (i in latitudes.indices) {
+                placeList = placeList + LatLng(latitudes[i], longitudes[i])
             }
 
             _allPlaceList.emit(placeList)

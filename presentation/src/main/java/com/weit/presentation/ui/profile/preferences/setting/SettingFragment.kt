@@ -1,10 +1,13 @@
 package com.weit.presentation.ui.profile.preferences.setting
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.weit.presentation.databinding.FragmentSettingBinding
+import com.weit.presentation.ui.CoordinateForegroundService
 import com.weit.presentation.ui.base.BaseFragment
 import com.weit.presentation.ui.util.repeatOnStarted
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +18,9 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
     FragmentSettingBinding::inflate
 ) {
     val viewModel : SettingViewModel by viewModels()
+    private val intent :Intent by lazy {
+        Intent(context, CoordinateForegroundService::class.java)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -55,6 +61,12 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
         repeatOnStarted(viewLifecycleOwner) {
             viewModel.isLocationInfo.collectLatest {
                 viewModel.setIsLocationInfo(it)
+
+                if (it) {
+                    startCoordinateService()
+                } else {
+                    stopCoordinateService()
+                }
             }
         }
 
@@ -64,6 +76,15 @@ class SettingFragment : BaseFragment<FragmentSettingBinding>(
             }
         }
     }
+
+    private fun startCoordinateService() {
+        requireActivity().startService(intent)
+    }
+
+    private fun stopCoordinateService() {
+        requireActivity().stopService(intent)
+    }
+
 
     private fun handleEvent(event: SettingViewModel.Event) {
         when (event) {

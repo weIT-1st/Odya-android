@@ -7,6 +7,7 @@ data class TravelJournalInfo(
     val travelEndDate: String,
     val visibility: String,
     val isBookmarked: Boolean,
+    val isRepresentative: Boolean,
     val writer: TravelJournalWriterInfo,
     val travelJournalContents: List<TravelJournalContentsInfo>,
     val travelJournalCompanions: List<TravelJournalCompanionsInfo>,

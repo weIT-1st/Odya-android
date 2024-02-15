@@ -1,5 +1,8 @@
 package com.weit.presentation.ui.profile.preferences.setting
 
+import android.content.Context
+import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.weit.domain.usecase.userinfo.GetIsAlarmAllUseCase
@@ -12,6 +15,7 @@ import com.weit.domain.usecase.userinfo.SetIsAlarmCommentUseCase
 import com.weit.domain.usecase.userinfo.SetIsAlarmLikeUseCase
 import com.weit.domain.usecase.userinfo.SetIsAlarmMarketingUseCase
 import com.weit.domain.usecase.userinfo.SetIsLocationInfoUseCase
+import com.weit.presentation.ui.CoordinateForegroundService
 import com.weit.presentation.ui.profile.preferences.detail.DetailType
 import com.weit.presentation.ui.util.MutableEventFlow
 import com.weit.presentation.ui.util.asEventFlow

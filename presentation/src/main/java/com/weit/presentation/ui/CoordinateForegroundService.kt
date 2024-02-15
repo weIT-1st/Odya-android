@@ -12,6 +12,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.weit.domain.usecase.coordinate.InsertCoordinateUseCase
 import com.weit.presentation.R
@@ -68,7 +69,8 @@ class CoordinateForegroundService : Service() {
                 insertCoordinateDB(it)
             }
         }
-        return START_STICKY
+
+        return START_REDELIVER_INTENT
     }
 
     private fun trackLocation(context: Context): Flow<Location> = callbackFlow {

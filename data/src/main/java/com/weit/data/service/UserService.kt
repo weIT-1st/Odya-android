@@ -6,6 +6,9 @@ import com.weit.data.model.image.UserImageResponseDTO
 import com.weit.data.model.user.FcmToken
 import com.weit.data.model.user.SearchUserContentDTO
 import com.weit.data.model.user.UserDTO
+import com.weit.data.model.user.UserEmailDTO
+import com.weit.data.model.user.UserNicknameDTO
+import com.weit.data.model.user.UserPhoneNumDTO
 import com.weit.data.model.user.UserStatisticsDTO
 import com.weit.domain.model.user.User
 import com.weit.domain.model.user.UserStatistics
@@ -27,17 +30,17 @@ interface UserService {
 
     @PATCH("/api/v1/users/email")
     suspend fun updateEmail(
-        @Body emailUpdateUser: User,
+        @Body emailDTO: UserEmailDTO,
     ): Response<Unit>
 
     @PATCH("/api/v1/users/phone-number")
     suspend fun updatePhoneNumber(
-        @Body phoneNumberUpdateUser: User,
+        @Body phoneNumDTO: UserPhoneNumDTO,
     ): Response<Unit>
 
     @PATCH("/api/v1/users/information")
     suspend fun updateInformation(
-        @Body informationUpdateUser: User,
+        @Body information: UserNicknameDTO,
     ): Response<Unit>
 
     @Multipart

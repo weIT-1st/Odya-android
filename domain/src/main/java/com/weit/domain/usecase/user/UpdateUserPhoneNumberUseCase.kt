@@ -7,6 +7,6 @@ import javax.inject.Inject
 class UpdateUserPhoneNumberUseCase@Inject constructor(
     private val userRepository: UserRepository,
 ) {
-    suspend fun updatePhoneNumber(phoneNumberUpdateUser: User): Result<Unit> =
-        userRepository.updatePhoneNumber(phoneNumberUpdateUser)
+    suspend operator fun invoke(phoneNumber: String): Result<Unit> =
+        userRepository.updatePhoneNumber(phoneNumber)
 }

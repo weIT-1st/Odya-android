@@ -23,6 +23,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -125,6 +126,16 @@ class MapViewModel @Inject constructor(
         }
     }
 
+    fun clickMarker(latLng: LatLng) {
+        viewModelScope.launch {
+            val list = odyaList.value
+            val target = list.find { it.latitude == latLng.latitude && it.longitude == latLng.longitude }
+            target?.let {
+                _event.emit(Event.MoveToTravelJournal(target.journalId))
+            }
+        }
+    }
+
     private fun getTopic() {
         viewModelScope.launch {
             val result = getFavoriteTopicListUseCase()
@@ -156,6 +167,9 @@ class MapViewModel @Inject constructor(
         data class PopUpSearchPlace(
             val placeId: String?
         ) : Event()
+        data class MoveToTravelJournal(
+            val travelJournalId : Long
+        ): Event()
         object PopUpMainSearch: Event()
         object FirstLogin : Event()
     }

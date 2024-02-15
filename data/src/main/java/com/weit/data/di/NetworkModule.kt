@@ -27,6 +27,10 @@ annotation class NormalNetworkObject
 @Retention(AnnotationRetention.BINARY)
 annotation class AuthNetworkObject
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class PhoneAuthNetworkObject
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
@@ -94,6 +98,7 @@ object NetworkModule {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
     }
+
 
     @Singleton
     @Provides
